@@ -31,7 +31,10 @@ class LoginScreen extends HookWidget {
           if (state is LoginLoading) {
             SnackBarHelper.showLoadingSnackBar(context);
           } else if (state is LoginFailure) {
-            SnackBarHelper.showErrorSnackBar(context, 'Incorrect credentials. Please try again.');
+            SnackBarHelper.showErrorSnackBar(
+              context,
+              'Incorrect credentials. Please try again.',
+            );
           } else if (state is LoginSuccess) {
             SnackBarHelper.showSuccessSnackBar(context, 'Login successful!');
             Navigator.of(context).pushReplacement(

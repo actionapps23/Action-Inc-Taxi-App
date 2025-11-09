@@ -47,7 +47,7 @@ class CustomTabBar extends StatelessWidget {
                 left: index == 0 ? 0 : 8,
                 right: index == tabs.length - 1 ? 0 : 0,
               ),
-              padding: EdgeInsets.symmetric(horizontal: 16 , vertical: 4),
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
               decoration: BoxDecoration(
                 color: isSelected ? selectedColor : Colors.transparent,
                 borderRadius: BorderRadius.circular(borderRadius),

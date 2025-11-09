@@ -174,7 +174,7 @@ class DbService {
   Future<List<Map<String, dynamic>>> fetchAllRenewals() async {
     try {
       final q = await _firestore.collection(renewalsCollection).get();
-  return q.docs.map((d) => d.data()..['id'] = d.id).toList();
+      return q.docs.map((d) => d.data()..['id'] = d.id).toList();
     } catch (e) {
       rethrow;
     }

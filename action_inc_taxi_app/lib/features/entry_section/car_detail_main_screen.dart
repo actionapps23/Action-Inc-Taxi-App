@@ -78,7 +78,7 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                           DailyRentCollectionInfoScreen(taxiNo: 'ABC-123'),
                         if (selectedTabIndex == 1)
                           RenewalDataTable(taxiNo: 'ABC-123'),
-                                             ],
+                      ],
                     ),
                   ),
                 ],

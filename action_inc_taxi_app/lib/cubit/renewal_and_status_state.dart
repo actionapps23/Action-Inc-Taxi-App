@@ -16,9 +16,17 @@ class RenewalAndStatusLoaded extends RenewalAndStatusState {
   final List<Map<String, dynamic>> filteredRows;
   final int selectedFilter; // 0: week, 1: month, 2: year
 
-  const RenewalAndStatusLoaded({required this.allRows, required this.filteredRows, required this.selectedFilter});
+  const RenewalAndStatusLoaded({
+    required this.allRows,
+    required this.filteredRows,
+    required this.selectedFilter,
+  });
 
-  RenewalAndStatusLoaded copyWith({List<Map<String, dynamic>>? allRows, List<Map<String, dynamic>>? filteredRows, int? selectedFilter}) {
+  RenewalAndStatusLoaded copyWith({
+    List<Map<String, dynamic>>? allRows,
+    List<Map<String, dynamic>>? filteredRows,
+    int? selectedFilter,
+  }) {
     return RenewalAndStatusLoaded(
       allRows: allRows ?? this.allRows,
       filteredRows: filteredRows ?? this.filteredRows,

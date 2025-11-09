@@ -53,33 +53,53 @@ class Navbar extends StatelessWidget {
                     selected: true,
                     icon: AppAssets.entrySection,
                     onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) => const CarDetailScreen(),
-                      ));
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const CarDetailScreen(),
+                        ),
+                      );
                     },
                   ),
                   SizedBox(width: 12.w),
-                  NavButton('Renewal & Status', icon: AppAssets.entryList, onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => RenewalAndStatusScreen(),
-                    ));
-                  }),
+                  NavButton(
+                    'Renewal & Status',
+                    icon: AppAssets.entryList,
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => RenewalAndStatusScreen(),
+                        ),
+                      );
+                    },
+                  ),
                   SizedBox(width: 12.w),
-                  NavButton('Dashboard', icon: AppAssets.dashboard, onTap: () {
-                    SnackBarHelper.showInfoSnackBar(context, 'Dashboard');
-                  }),
+                  NavButton(
+                    'Dashboard',
+                    icon: AppAssets.dashboard,
+                    onTap: () {
+                      SnackBarHelper.showInfoSnackBar(context, 'Dashboard');
+                    },
+                  ),
                   SizedBox(width: 12.w),
-                  NavButton('Log out', icon: AppAssets.logout, onTap: () {
-                    // Simple logout: navigate back to login screen
-                    Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (_) => const LoginScreen()),
-                      (route) => false,
-                    );
-                  }),
+                  NavButton(
+                    'Log out',
+                    icon: AppAssets.logout,
+                    onTap: () {
+                      // Simple logout: navigate back to login screen
+                      Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (_) => const LoginScreen()),
+                        (route) => false,
+                      );
+                    },
+                  ),
                   SizedBox(width: 12.w),
-                  NavButton('Notification', icon: AppAssets.notifications, onTap: () {
-                    SnackBarHelper.showInfoSnackBar(context, 'Notifications');
-                  }),
+                  NavButton(
+                    'Notification',
+                    icon: AppAssets.notifications,
+                    onTap: () {
+                      SnackBarHelper.showInfoSnackBar(context, 'Notifications');
+                    },
+                  ),
                   SizedBox(width: 16.w),
                   // User avatar and name
                   Row(
@@ -102,7 +122,10 @@ class Navbar extends StatelessWidget {
                           ),
                           Text(
                             'Assistant',
-                            style: TextStyle(color: Colors.white70, fontSize: 12),
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 12,
+                            ),
                           ),
                         ],
                       ),

@@ -1050,12 +1050,10 @@ class _DailyRentCollectionInfoScreenState
                       // SizedBox(width: 8.w),
                       AppButton(
                         text: 'Next',
-                        onPressed: () async{
+                        onPressed: () async {
                           _updateDraftFromControllers();
                           // persist the draft so returning later restores values
-                         await _cubit.saveDraft();
-
-                         
+                          await _cubit.saveDraft();
                         },
                         backgroundColor: Colors.green,
                         textColor: AppColors.buttonText,

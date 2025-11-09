@@ -1,11 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../core/db_service.dart';
 import 'renewal_and_status_state.dart';
+
 class RenewalAndStatusCubit extends Cubit<RenewalAndStatusState> {
   final DbService dbService;
 
   RenewalAndStatusCubit(this.dbService) : super(RenewalAndStatusInitial()) {
-     load();
+    load();
   }
 
   Future<void> load() async {
@@ -13,7 +14,13 @@ class RenewalAndStatusCubit extends Cubit<RenewalAndStatusState> {
       emit(RenewalAndStatusLoading());
       final rows = await dbService.fetchAllRenewals();
       final filtered = _filterBy(rows, 0);
-      emit(RenewalAndStatusLoaded(allRows: rows, filteredRows: filtered, selectedFilter: 0));
+      emit(
+        RenewalAndStatusLoaded(
+          allRows: rows,
+          filteredRows: filtered,
+          selectedFilter: 0,
+        ),
+      );
     } catch (e) {
       emit(RenewalAndStatusFailure(e.toString()));
     }
@@ -21,7 +28,7 @@ class RenewalAndStatusCubit extends Cubit<RenewalAndStatusState> {
 
   Future<void> filterBy(int index) async {
     final current = state;
-     if (current is RenewalAndStatusLoaded) {
+    if (current is RenewalAndStatusLoaded) {
       try {
         emit(RenewalAndStatusLoading());
         final filtered = _filterBy(current.allRows, index);
@@ -32,7 +39,10 @@ class RenewalAndStatusCubit extends Cubit<RenewalAndStatusState> {
     }
   }
 
-  List<Map<String, dynamic>> _filterBy(List<Map<String, dynamic>> rows, int index) {
+  List<Map<String, dynamic>> _filterBy(
+    List<Map<String, dynamic>> rows,
+    int index,
+  ) {
     final now = DateTime.now();
     return rows.where((r) {
       final dateStr = (r['date'] ?? '').toString();
@@ -58,7 +68,8 @@ class RenewalAndStatusCubit extends Cubit<RenewalAndStatusState> {
         case 0:
           final weekStart = now.subtract(Duration(days: now.weekday - 1));
           final weekEnd = weekStart.add(const Duration(days: 7));
-          return d.isAfter(weekStart.subtract(const Duration(seconds: 1))) && d.isBefore(weekEnd.add(const Duration(seconds: 1)));
+          return d.isAfter(weekStart.subtract(const Duration(seconds: 1))) &&
+              d.isBefore(weekEnd.add(const Duration(seconds: 1)));
         case 1:
           return d.year == now.year && d.month == now.month;
         case 2:
