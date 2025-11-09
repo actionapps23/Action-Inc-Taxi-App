@@ -4,6 +4,7 @@ import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
 import 'package:action_inc_taxi_app/core/widgets/buttons/app_outline_button.dart';
 import 'package:action_inc_taxi_app/core/widgets/common/tab_button.dart';
 import 'package:action_inc_taxi_app/core/widgets/tabbar/tabbar.dart';
+import 'package:action_inc_taxi_app/features/entry_section/renewal/renewal_dates_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -1049,17 +1050,12 @@ class _DailyRentCollectionInfoScreenState
                       // SizedBox(width: 8.w),
                       AppButton(
                         text: 'Next',
-                        onPressed: () {
+                        onPressed: () async{
                           _updateDraftFromControllers();
                           // persist the draft so returning later restores values
-                          _cubit.saveDraft();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                'Saved to draft. Proceed to next step.',
-                              ),
-                            ),
-                          );
+                         await _cubit.saveDraft();
+
+                         
                         },
                         backgroundColor: Colors.green,
                         textColor: AppColors.buttonText,
