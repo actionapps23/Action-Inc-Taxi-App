@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1076735938183",
+    "project_id": "action-inc-taxi-app",
+    "storage_bucket": "action-inc-taxi-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1076735938183:android:efa8ca175254927da27222",
+        "android_client_info": {
+          "package_name": "com.actioninc.actioninctaxi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDMump_wQp15lxo9PA1fcKywU5ROF5-V8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1076735938183:android:552fca797e20fe74a27222",
+        "android_client_info": {
+          "package_name": "com.example.action_inc_taxi_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDMump_wQp15lxo9PA1fcKywU5ROF5-V8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
