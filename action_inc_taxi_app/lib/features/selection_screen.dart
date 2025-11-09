@@ -45,22 +45,6 @@ class SelectionScreen extends StatelessWidget {
                                 color: Colors.white,
                               ),
                             ),
-                            // AppButton(
-                            //   text: '+ Add Notes',
-                            //   onPressed: () {},
-                            //   backgroundColor: Colors.black,
-                            //   textColor: Colors.white,
-                            //   width: 120.w,
-                            //   height: 40.h,
-                            //   style: ElevatedButton.styleFrom(
-                            //     backgroundColor: Colors.black,
-                            //     foregroundColor: Colors.white,
-                            //     side: BorderSide(color: Colors.white24),
-                            //     shape: RoundedRectangleBorder(
-                            //       borderRadius: BorderRadius.circular(8),
-                            //     ),
-                            //   ),
-                            // ),
                           ],
                         ),
                         SizedBox(height: 24.h),

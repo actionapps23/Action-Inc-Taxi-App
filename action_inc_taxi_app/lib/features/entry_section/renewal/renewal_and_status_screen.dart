@@ -1,29 +1,57 @@
+import 'package:action_inc_taxi_app/core/db_service.dart';
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:action_inc_taxi_app/core/widgets/navbar/navbar.dart';
+import 'package:action_inc_taxi_app/core/widgets/snackbar/snackbar.dart';
 import 'package:action_inc_taxi_app/core/widgets/tabbar/tabbar.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:action_inc_taxi_app/cubit/renewal_and_status_cubit.dart';
+import 'package:action_inc_taxi_app/cubit/renewal_and_status_state.dart';
 
-class RenewalAndStatusScreen extends StatelessWidget {
-  final List<Map<String, dynamic>> renewalRows;
+class RenewalAndStatusScreen extends StatefulWidget {
   final Color? backgroundColor;
-  final int selectedFilter; // 0: This week, 1: Month, 2: Year
   final void Function(int)? onFilterChanged;
 
   const RenewalAndStatusScreen({
     super.key,
-    required this.renewalRows,
     this.backgroundColor,
-    this.selectedFilter = 0,
     this.onFilterChanged,
   });
 
   @override
+  State<RenewalAndStatusScreen> createState() => _RenewalAndStatusScreenState();
+}
+
+class _RenewalAndStatusScreenState extends State<RenewalAndStatusScreen> {
+  late final RenewalAndStatusCubit _cubit;
+
+  @override
+  void initState() {
+    super.initState();
+    _cubit = RenewalAndStatusCubit(DbService());
+  }
+
+  @override
+  void dispose() {
+    _cubit.close();
+    super.dispose();
+  }
+  @override
   Widget build(BuildContext context) {
-    final Widget scaffold = Scaffold(
-      backgroundColor: AppColors.background,
-      body: Column(
+    final Widget scaffold = BlocProvider.value(
+      value: _cubit,
+      child: BlocListener<RenewalAndStatusCubit, RenewalAndStatusState>(
+        listener: (context, state) {
+          if (state is RenewalAndStatusFailure) {
+            // Show a transient snackbar in addition to the inline error block.
+            SnackBarHelper.showErrorSnackBar(context, state.error);
+          }
+        },
+        child: Scaffold(
+          backgroundColor: AppColors.background,
+          body: Column(
         children: [
           const Navbar(),
           Expanded(
@@ -45,36 +73,44 @@ class RenewalAndStatusScreen extends StatelessWidget {
                         vertical: 12.h,
                         horizontal: 12.w,
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Renewal & Status',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 260,
-                            child: CustomTabBar(
-                              tabs: const ['This week', 'Month', 'Year'],
-                              selectedIndex: selectedFilter,
-                              onTabSelected: onFilterChanged ?? (i) {},
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 0,
-                                horizontal: 0,
+                      child: BlocBuilder<RenewalAndStatusCubit, RenewalAndStatusState>(
+                        builder: (context, state) {
+                          int selected = 0;
+                          if (state is RenewalAndStatusLoaded) selected = state.selectedFilter;
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                'Renewal & Status',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
                               ),
-                              backgroundColor: Colors.transparent,
-                              selectedColor: Color(0xFF2ECC40),
-                              unselectedTextColor: Colors.white70,
-                              selectedTextColor: Colors.white,
-                              height: 36,
-                              borderRadius: 20,
-                            ),
-                          ),
-                        ],
+                              SizedBox(
+                                width: 260,
+                                child: CustomTabBar(
+                                  tabs: const ['This week', 'Month', 'Year'],
+                                  selectedIndex: selected,
+                                  onTabSelected: widget.onFilterChanged ?? (i) {
+                                    context.read<RenewalAndStatusCubit>().filterBy(i);
+                                  },
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 0,
+                                    horizontal: 0,
+                                  ),
+                                  backgroundColor: Colors.transparent,
+                                  selectedColor: const Color(0xFF2ECC40),
+                                  unselectedTextColor: Colors.white70,
+                                  selectedTextColor: Colors.white,
+                                  height: 36,
+                                  borderRadius: 20,
+                                ),
+                              ),
+                            ],
+                          );
+                        },
                       ),
                     ),
                     // Ensure the table area gets a finite height.
@@ -91,40 +127,98 @@ class RenewalAndStatusScreen extends StatelessWidget {
 
                         return ConstrainedBox(
                           constraints: BoxConstraints(maxHeight: maxHeight),
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: DataTable(
-                              dataRowColor: WidgetStateProperty.all(
-                                Colors.transparent,
-                              ),
-                              dividerThickness: 0.5,
-                              columnSpacing: 32.w,
-                              horizontalMargin: 0,
-                              columns: const [
-                                DataColumn(label: _TableHeader('Renewals')),
-                                DataColumn(label: _TableHeader('Taxi Number')),
-                                DataColumn(label: _TableHeader('Status')),
-                                DataColumn(
-                                  label: _TableHeader('Required Date'),
-                                ),
-                              ],
-                              rows: renewalRows
-                                  .map(
-                                    (row) => DataRow(
-                                      cells: [
-                                        DataCell(
-                                          _TableCell(row['renewal'] ?? ''),
+                          child: BlocBuilder<RenewalAndStatusCubit, RenewalAndStatusState>(
+                            builder: (context, state) {
+                              List<Map<String, dynamic>> rows = [];
+                              if (state is RenewalAndStatusLoaded) rows = state.filteredRows;
+                              if (state is RenewalAndStatusLoading) {
+                                return const Center(child: CircularProgressIndicator());
+                              }
+
+                              // On failure show a friendly error block with retry.
+                              if (state is RenewalAndStatusFailure) {
+                                return Center(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(Icons.error_outline, size: 48, color: Colors.red[400]),
+                                      const SizedBox(height: 8),
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 24.w),
+                                        child: Text(
+                                          'Failed to load renewals:\n${state.error}',
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(color: Colors.white70),
                                         ),
-                                        DataCell(_TableCell(row['taxi'] ?? '')),
-                                        DataCell(
-                                          _StatusPill(row['status'] ?? ''),
-                                        ),
-                                        DataCell(_TableCell(row['date'] ?? '')),
-                                      ],
+                                      ),
+                                      const SizedBox(height: 12),
+                                      ElevatedButton(
+                                        onPressed: () => context.read<RenewalAndStatusCubit>().load(),
+                                        child: const Text('Retry'),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+
+                              // When loaded but no rows, show an empty state with a retry option.
+                              if (state is RenewalAndStatusLoaded && rows.isEmpty) {
+                                return Center(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(Icons.inbox_outlined, size: 48, color: Colors.white24),
+                                      const SizedBox(height: 8),
+                                      const Text(
+                                        'No renewals found',
+                                        style: TextStyle(color: Colors.white70, fontSize: 16),
+                                      ),
+                                      const SizedBox(height: 12),
+                                      ElevatedButton(
+                                        onPressed: () => context.read<RenewalAndStatusCubit>().load(),
+                                        child: const Text('Refresh'),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+
+                              return SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: DataTable(
+                                  dataRowColor: WidgetStateProperty.all(
+                                    Colors.transparent,
+                                  ),
+                                  dividerThickness: 0.5,
+                                  columnSpacing: 32.w,
+                                  horizontalMargin: 0,
+                                  columns: const [
+                                    DataColumn(label: _TableHeader('Renewals')),
+                                    DataColumn(label: _TableHeader('Taxi Number')),
+                                    DataColumn(label: _TableHeader('Status')),
+                                    DataColumn(
+                                      label: _TableHeader('Required Date'),
                                     ),
-                                  )
-                                  .toList(),
-                            ),
+                                  ],
+                                  rows: rows
+                                      .map(
+                                        (row) => DataRow(
+                                          cells: [
+                                            DataCell(
+                                              _TableCell(row['renewal'] ?? ''),
+                                            ),
+                                            DataCell(_TableCell(row['taxi'] ?? '')),
+                                            DataCell(
+                                              _StatusPill(row['status'] ?? ''),
+                                            ),
+                                            DataCell(_TableCell(row['date'] ?? '')),
+                                          ],
+                                        ),
+                                      )
+                                      .toList(),
+                                ),
+                              );
+                            },
                           ),
                         );
                       },
@@ -136,7 +230,9 @@ class RenewalAndStatusScreen extends StatelessWidget {
           ),
         ],
       ),
-    );
+      ),
+    ),
+  );
 
     return SizedBox(
       height: MediaQuery.of(context).size.height,

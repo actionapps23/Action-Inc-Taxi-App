@@ -1,5 +1,11 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:action_inc_taxi_app/core/theme/app_assets.dart';
 import 'package:action_inc_taxi_app/core/widgets/navbar/navbar_buttton.dart';
+import 'package:action_inc_taxi_app/features/entry_section/car_detail_main_screen.dart';
+import 'package:action_inc_taxi_app/features/auth/login_screen.dart';
+import 'package:action_inc_taxi_app/core/widgets/snackbar/snackbar.dart';
+import 'package:action_inc_taxi_app/features/entry_section/renewal/renewal_and_status_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -36,51 +42,75 @@ class Navbar extends StatelessWidget {
               SvgPicture.asset(AppAssets.logoText, height: 24.h),
             ],
           ),
-          // Navigation
-          Row(
-            children: [
-              NavButton(
-                'Entry Section',
-                selected: true,
-                icon: AppAssets.entrySection,
-              ),
-              SizedBox(width: 12),
-              NavButton('Entry List', icon: AppAssets.entryList),
-              SizedBox(width: 12),
-              NavButton('Dashboard', icon: AppAssets.dashboard),
-              SizedBox(width: 12),
-              NavButton('Log out', icon: AppAssets.logout),
-              SizedBox(width: 12),
-              NavButton('Notification', icon: AppAssets.notifications),
-              SizedBox(width: 16.w),
-              // User avatar and name
-              Row(
+          // Navigation - make this horizontally scrollable so it doesn't overflow
+          Expanded(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
                 children: [
-                  CircleAvatar(
-                    backgroundImage: AssetImage(AppAssets.userAvatar),
-                    radius: 18,
+                  NavButton(
+                    'Entry Section',
+                    selected: true,
+                    icon: AppAssets.entrySection,
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) => const CarDetailScreen(),
+                      ));
+                    },
                   ),
-                  SizedBox(width: 8.w),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  SizedBox(width: 12.w),
+                  NavButton('Renewal & Status', icon: AppAssets.entryList, onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => RenewalAndStatusScreen(),
+                    ));
+                  }),
+                  SizedBox(width: 12.w),
+                  NavButton('Dashboard', icon: AppAssets.dashboard, onTap: () {
+                    SnackBarHelper.showInfoSnackBar(context, 'Dashboard');
+                  }),
+                  SizedBox(width: 12.w),
+                  NavButton('Log out', icon: AppAssets.logout, onTap: () {
+                    // Simple logout: navigate back to login screen
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (_) => const LoginScreen()),
+                      (route) => false,
+                    );
+                  }),
+                  SizedBox(width: 12.w),
+                  NavButton('Notification', icon: AppAssets.notifications, onTap: () {
+                    SnackBarHelper.showInfoSnackBar(context, 'Notifications');
+                  }),
+                  SizedBox(width: 16.w),
+                  // User avatar and name
+                  Row(
                     children: [
-                      Text(
-                        'David Smith',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
+                      CircleAvatar(
+                        backgroundImage: AssetImage(AppAssets.userAvatar),
+                        radius: 18,
                       ),
-                      Text(
-                        'Assistant',
-                        style: TextStyle(color: Colors.white70, fontSize: 12),
+                      SizedBox(width: 8.w),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'David Smith',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                          ),
+                          Text(
+                            'Assistant',
+                            style: TextStyle(color: Colors.white70, fontSize: 12),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ],
               ),
-            ],
+            ),
           ),
         ],
       ),
