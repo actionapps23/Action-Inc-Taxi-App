@@ -55,23 +55,18 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                                   ),
                                 ),
                                 // Tabs
-                                Expanded(
-                                  child: SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: CustomTabBar(
-                                      tabs: const [
-                                        'Rental Information',
-                                        // 'Car Plan',
-                                        'Renewal Date',
-                                      ],
-                                      selectedIndex: selectedTabIndex,
-                                      onTabSelected: (index) {
-                                        setState(() {
-                                          selectedTabIndex = index;
-                                        });
-                                      },
-                                    ),
-                                  ),
+                                CustomTabBar(
+                                  tabs: const [
+                                    'Rental Information',
+                                    // 'Car Plan',
+                                    'Renewal Date',
+                                  ],
+                                  selectedIndex: selectedTabIndex,
+                                  onTabSelected: (index) {
+                                    setState(() {
+                                      selectedTabIndex = index;
+                                    });
+                                  },
                                 ),
                               ],
                             ),

@@ -36,31 +36,29 @@ class CustomTabBar extends StatelessWidget {
         borderRadius: BorderRadius.circular(borderRadius),
       ),
       child: Row(
-        mainAxisSize: MainAxisSize.min,
         children: List.generate(tabs.length, (index) {
           final bool isSelected = index == selectedIndex;
-          return Flexible(
-            child: GestureDetector(
-              onTap: () => onTabSelected(index),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                height: height,
-                margin: EdgeInsets.only(
-                  left: index == 0 ? 0 : 8,
-                  right: index == tabs.length - 1 ? 0 : 0,
-                ),
-                decoration: BoxDecoration(
-                  color: isSelected ? selectedColor : Colors.transparent,
-                  borderRadius: BorderRadius.circular(borderRadius),
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  tabs[index],
-                  style: TextStyle(
-                    color: isSelected ? selectedTextColor : unselectedTextColor,
-                    fontWeight: isSelected ? FontWeight.w400 : FontWeight.w200,
-                    fontSize: 12,
-                  ),
+          return GestureDetector(
+            onTap: () => onTabSelected(index),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              height: height,
+              margin: EdgeInsets.only(
+                left: index == 0 ? 0 : 8,
+                right: index == tabs.length - 1 ? 0 : 0,
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 16 , vertical: 4),
+              decoration: BoxDecoration(
+                color: isSelected ? selectedColor : Colors.transparent,
+                borderRadius: BorderRadius.circular(borderRadius),
+              ),
+              alignment: Alignment.center,
+              child: Text(
+                tabs[index],
+                style: TextStyle(
+                  color: isSelected ? selectedTextColor : unselectedTextColor,
+                  fontWeight: isSelected ? FontWeight.w400 : FontWeight.w200,
+                  fontSize: 12,
                 ),
               ),
             ),

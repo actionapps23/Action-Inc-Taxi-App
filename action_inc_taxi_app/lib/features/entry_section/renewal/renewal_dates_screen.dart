@@ -33,10 +33,8 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
   @override
   void initState() {
     super.initState();
-    // if contract controllers provided, listen and auto-generate
     widget.contractStartController?.addListener(_onContractChanged);
     widget.contractEndController?.addListener(_onContractChanged);
-    // load DB items; if none, populate predefined defaults
     _init();
   }
 
@@ -332,17 +330,18 @@ class _RenewalDataRowWidget extends StatelessWidget {
               },
             ),
           ),
-          SizedBox(width: 16),
+          // SizedBox(width: 24.w),
           Expanded(
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Expanded(
-                  child: Text(
-                    'Periodic',
-                    style: TextStyle(color: Colors.white70),
-                  ),
+                Text(
+                  'Periodic',
+                  style: TextStyle(color: Colors.white70),
+                  textAlign: TextAlign.center,
                 ),
                 DropdownButton<int>(
+                  menuWidth: 16.w,
                   value: renewal.periodMonths,
                   dropdownColor: AppColors.background,
                   items: [1, 3, 6, 7, 12, 24, 36]
@@ -360,7 +359,7 @@ class _RenewalDataRowWidget extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(width: 16),
+          // SizedBox(width: 24.w),
           Expanded(
             child: AppTextFormField(
               labelText: 'Fees',

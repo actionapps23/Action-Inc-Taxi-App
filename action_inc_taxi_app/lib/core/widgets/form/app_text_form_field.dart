@@ -112,7 +112,7 @@ class AppTextFormField extends StatelessWidget {
         children: [
           if (labelText != null)
             Expanded(
-              // flex: 2,
+              flex: 2,
               child: Padding(
                 padding: const EdgeInsets.only(right: 16.0),
                 child: Text(
@@ -123,7 +123,7 @@ class AppTextFormField extends StatelessWidget {
               ),
             ),
           Expanded(
-            // flex: 3,
+            flex: 3,
             child: TextFormField(
               onTap: onTap,
               readOnly: isReadOnly,
