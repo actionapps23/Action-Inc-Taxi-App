@@ -5,13 +5,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:action_inc_taxi_app/core/widgets/navbar/navbar.dart';
 import 'package:action_inc_taxi_app/core/widgets/tabbar/tabbar.dart';
 
-class RenewalDatesDataTable extends StatelessWidget {
+class RenewalAndStatusScreen extends StatelessWidget {
   final List<Map<String, dynamic>> renewalRows;
   final Color? backgroundColor;
   final int selectedFilter; // 0: This week, 1: Month, 2: Year
   final void Function(int)? onFilterChanged;
 
-  const RenewalDatesDataTable({
+  const RenewalAndStatusScreen({
     super.key,
     required this.renewalRows,
     this.backgroundColor,
@@ -81,7 +81,7 @@ class RenewalDatesDataTable extends StatelessWidget {
                     LayoutBuilder(
                       builder: (context, constraints) {
                         debugPrint(
-                          'RenewalDatesDataTable table area constraints: $constraints',
+                          'RenewalAndStatusScreen table area constraints: $constraints',
                         );
                         final double fallbackMaxHeight =
                             MediaQuery.of(context).size.height * 0.6;
