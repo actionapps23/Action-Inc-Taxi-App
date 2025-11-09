@@ -8,7 +8,6 @@ import 'package:action_inc_taxi_app/core/widgets/snackbar/snackbar.dart';
 import 'package:action_inc_taxi_app/features/entry_section/renewal/renewal_and_status_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 
 class Navbar extends StatelessWidget {
   const Navbar({super.key});
@@ -35,11 +34,14 @@ class Navbar extends StatelessWidget {
         children: [
           // Logo and title
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Logo (SVG or Image)
-              SvgPicture.asset(AppAssets.logo, height: 32.h),
-              SizedBox(width: 12.w),
-              SvgPicture.asset(AppAssets.logoText, height: 24.h),
+              Image.asset(
+                AppAssets.logoPNG,
+                width: 64.w,
+                height: 48.h,
+                fit: BoxFit.contain,
+              ),
             ],
           ),
           // Navigation - make this horizontally scrollable so it doesn't overflow
@@ -63,9 +65,10 @@ class Navbar extends StatelessWidget {
                   SizedBox(width: 12.w),
                   NavButton(
                     'Renewal & Status',
+                    selected: true,
                     icon: AppAssets.entryList,
                     onTap: () {
-                      Navigator.of(context).push(
+                      Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
                           builder: (_) => RenewalAndStatusScreen(),
                         ),

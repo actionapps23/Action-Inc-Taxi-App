@@ -6,6 +6,7 @@ class AppAssets {
   // Logos
   static const logo = '${baseLogoPath}logo.svg';
   static const logoText = '${baseLogoPath}logo_text.svg';
+  static const completeLogo = '${baseLogoPath}complete_logo.svg';
 
   // Icons
   static const carDetailsIcon = '${baseIconPath}car_details.svg';
@@ -24,4 +25,5 @@ class AppAssets {
   // Images
 
   static const userAvatar = '${baseImagePath}user_avatar.png';
+  static const logoPNG = '${baseImagePath}logo.png';
 }

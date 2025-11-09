@@ -157,8 +157,9 @@ class _RenewalAndStatusScreenState extends State<RenewalAndStatusScreen> {
                                   >(
                                     builder: (context, state) {
                                       List<Map<String, dynamic>> rows = [];
-                                      if (state is RenewalAndStatusLoaded)
+                                      if (state is RenewalAndStatusLoaded) {
                                         rows = state.filteredRows;
+                                      }
                                       if (state is RenewalAndStatusLoading) {
                                         return const Center(
                                           child: CircularProgressIndicator(),

@@ -4,6 +4,7 @@ import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
 import 'package:action_inc_taxi_app/core/widgets/buttons/app_outline_button.dart';
 import 'package:action_inc_taxi_app/core/widgets/common/tab_button.dart';
 import 'package:action_inc_taxi_app/core/widgets/tabbar/tabbar.dart';
+import 'package:action_inc_taxi_app/cubit/car_detail_cubit.dart';
 import 'package:action_inc_taxi_app/features/entry_section/renewal/renewal_dates_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -1054,6 +1055,9 @@ class _DailyRentCollectionInfoScreenState
                           _updateDraftFromControllers();
                           // persist the draft so returning later restores values
                           await _cubit.saveDraft();
+                          if (context.mounted) {
+                            context.read<CarDetailCubit>().selectTab(1);
+                          }
                         },
                         backgroundColor: Colors.green,
                         textColor: AppColors.buttonText,
