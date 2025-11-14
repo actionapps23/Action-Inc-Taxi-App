@@ -461,19 +461,18 @@ class _StatusPill extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.w),
+      padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 14.w),
       decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(6),
+        borderRadius: BorderRadius.circular(8),
       ),
       alignment: Alignment.center,
       child: Text(
         label,
         style: TextStyle(
           color: textColor,
-          fontWeight: FontWeight.w600,
-          fontSize: 11,
-          letterSpacing: 0.2,
+          fontWeight: FontWeight.w700,
+          fontSize: 12,
+          letterSpacing: 0.3,
         ),
         textAlign: TextAlign.center,
       ),

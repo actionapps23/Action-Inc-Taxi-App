@@ -112,6 +112,7 @@ class Rent {
     final end = DateTime.fromMillisecondsSinceEpoch(endUtc, isUtc: true);
     if (!end.isAfter(start)) return 0;
     
+    // Calculate months based on year and month difference
     int months = (end.year - start.year) * 12;
     months += (end.month - start.month);
     
