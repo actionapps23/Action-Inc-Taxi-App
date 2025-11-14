@@ -130,6 +130,16 @@ class _DailyRentCollectionInfoScreenState
   }
 
   void _updateDraftFromControllers() {
+    // Set default values if empty
+    if (carWashFeesController.text.trim().isEmpty) {
+      carWashFeesController.text = '75';
+    }
+    if (maintenanceFeesController.text.trim().isEmpty) {
+      maintenanceFeesController.text = '100';
+    }
+    if (paymentGCashController.text.trim().isEmpty) {
+      paymentGCashController.text = '0';
+    }
     final rentCents = _centsFromController(rentAmountController);
     final maintenanceCents = _centsFromController(maintenanceFeesController);
     final carWashCents = _centsFromController(carWashFeesController);
@@ -225,23 +235,47 @@ class _DailyRentCollectionInfoScreenState
     }
 
     // Additional required-field checks
-    if (taxiNoController.text.trim().isEmpty)
+    if (taxiNoController.text.trim().isEmpty) {
       errors['taxiNo'] = 'Taxi number is required.';
-    if (numberPlateController.text.trim().isEmpty)
+    }
+    if (numberPlateController.text.trim().isEmpty) {
       errors['numberPlate'] = 'Number plate is required.';
-    if (fleetNoController.text.trim().isEmpty)
+    }
+    if (fleetNoController.text.trim().isEmpty) {
       errors['fleetNo'] = 'Fleet number is required.';
-    if (firstDriverNameController.text.trim().isEmpty)
+    }
+    if (firstDriverNameController.text.trim().isEmpty) {
       errors['firstDriverName'] = 'Driver name is required.';
-    if (firstDriverDobController.text.trim().isEmpty)
+    }
+    if (firstDriverDobController.text.trim().isEmpty) {
       errors['firstDriverDob'] = 'Driver DOB is required.';
-    if (rentAmountController.text.trim().isEmpty)
-      errors['rentAmount'] = 'Rent amount is required.';
-    if (paymentDateController.text.trim().isEmpty)
-      errors['paymentDate'] = 'Payment date is required.';
-    // at least one payment method must have non-zero amount
-    if (paymentCashCents + paymentGCashCents <= 0)
+    }
+    if (rentAmountController.text.trim().isEmpty || rentCents <= 0) {
+      errors['rentAmount'] = 'Rent amount is required and must be greater than 0.';
+    }
+    if (maintenanceCents <= 0) {
+      errors['maintenanceFees'] = 'Maintenance fees must be greater than 0.';
+    }
+    if (carWashCents <= 0) {
+      errors['carWashFees'] = 'Car wash fees must be greater than 0.';
+    }
+    // Payment validation
+    if (paymentCashController.text.trim().isEmpty || paymentCashCents <= 0) {
+      errors['paymentCash'] = 'Payment in cash is required and must be greater than 0.';
+    }
+    if (paymentGCashCents < 0) {
+      errors['paymentGCash'] = 'Payment in G-Cash must be 0 or greater.';
+    }
+    if ((paymentCashCents <= 0 && paymentGCashCents <= 0)) {
       errors['payments'] = 'At least one payment required.';
+    }
+    if (paymentDateController.text.trim().isEmpty) {
+      errors['paymentDate'] = 'Payment date is required.';
+    }
+    // If GCash > 0, ref is required
+    if (paymentGCashCents > 0 && gCashRefController.text.trim().isEmpty) {
+      errors['gCashRef'] = 'G-Cash Ref. No is required if G-Cash payment is entered.';
+    }
 
     _cubit.updateDraft(driver: driver, rent: rent, fieldErrors: errors);
 
@@ -1055,6 +1089,23 @@ class _DailyRentCollectionInfoScreenState
                           _updateDraftFromControllers();
                           // persist the draft so returning later restores values
                           await _cubit.saveDraft();
+                          // Check for errors before navigating
+                          final currentState = _cubit.state;
+                          Map<String, String> errors = {};
+                          if (currentState is DailyRentLoaded) {
+                            errors = currentState.fieldErrors;
+                          }
+                          if (errors.isNotEmpty) {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Please fill all required fields.'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                            return;
+                          }
                           if (context.mounted) {
                             context.read<CarDetailCubit>().selectTab(1);
                           }
