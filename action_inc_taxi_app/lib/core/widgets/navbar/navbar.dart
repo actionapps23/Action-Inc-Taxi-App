@@ -6,6 +6,7 @@ import 'package:action_inc_taxi_app/features/entry_section/car_detail_main_scree
 import 'package:action_inc_taxi_app/features/auth/login_screen.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/snackbar.dart';
 import 'package:action_inc_taxi_app/features/entry_section/renewal/renewal_and_status_screen.dart';
+import 'package:action_inc_taxi_app/features/selection_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -33,16 +34,25 @@ class Navbar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           // Logo and title
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                AppAssets.logoPNG,
-                width: 64.w,
-                height: 48.h,
-                fit: BoxFit.contain,
-              ),
-            ],
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (_) => const SelectionScreen(),
+                ),
+              );
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  AppAssets.logoPNG,
+                  width: 64.w,
+                  height: 48.h,
+                  fit: BoxFit.contain,
+                ),
+              ],
+            ),
           ),
           // Navigation - make this horizontally scrollable so it doesn't overflow
           Expanded(

@@ -55,6 +55,11 @@ class _DailyRentCollectionInfoScreenState
   bool mainCheck = true;
   bool secondCheck = false;
 
+  // Store original values for public holiday toggle
+  double? _originalRent;
+  double? _originalMaintenance;
+  double? _originalCarWash;
+
   final List<Map<String, String>> renewalData = const [
     {
       'renewal': 'Sealing',
@@ -133,7 +138,8 @@ class _DailyRentCollectionInfoScreenState
     if (paymentGCashController.text.trim().isEmpty) {
       paymentGCashController.text = '0';
     }
-    final rentCents = _centsFromController(rentAmountController);
+    // Get original rent value
+    int rentCents = _centsFromController(rentAmountController);
     final maintenanceCents = _centsFromController(maintenanceFeesController);
     final carWashCents = _centsFromController(carWashFeesController);
     final paymentCashCents = _centsFromController(paymentCashController);
@@ -155,6 +161,25 @@ class _DailyRentCollectionInfoScreenState
     final extraDays =
         int.tryParse(contractExtraDaysController.text.trim()) ?? 0;
 
+    // Business logic for birthday/public holiday
+    int computedRentCents = rentCents;
+    if (birthday) {
+      computedRentCents = 0;
+      return;
+      // Do not change rentAmountController, just set due/total to 0 below
+    } else if (publicHoliday) {
+      computedRentCents = (rentCents / 2).round();
+      rentAmountController.text = (computedRentCents / 100).toString();
+    }
+    else if (!publicHoliday && _originalRent != null && _originalMaintenance != null && _originalCarWash != null) {
+      // restore original values
+      rentAmountController.text = (_originalRent!).toString();
+      maintenanceFeesController.text = (_originalMaintenance!).toString();
+      carWashFeesController.text = (_originalCarWash!).toString();
+      // Convert original values (assumed double) to cents (int)
+      computedRentCents = ((_originalRent ?? 0) * 100).round();
+    }
+
     final rent = Rent(
       taxiNo: taxiNoController.text.isNotEmpty
           ? taxiNoController.text
@@ -164,7 +189,7 @@ class _DailyRentCollectionInfoScreenState
       contractEndUtc: contractEndUtc,
       monthsCount: months,
       extraDays: extraDays,
-      rentAmountCents: rentCents,
+      rentAmountCents: computedRentCents,
       maintenanceFeesCents: maintenanceCents,
       carWashFeesCents: carWashCents,
       paymentCashCents: paymentCashCents,
@@ -276,8 +301,16 @@ class _DailyRentCollectionInfoScreenState
     _cubit.updateDraft(driver: driver, rent: rent, fieldErrors: errors);
 
     // update computed fields in UI
-    final total = rent.totalCents;
-    final due = rent.dueRentCents;
+    int total = rent.totalCents;
+    int due = rent.dueRentCents;
+    // Override for birthday/public holiday
+    if (birthday) {
+      total = 0;
+      due = 0;
+    } else if (publicHoliday) {
+      total = (total / 2).round();
+      due = (due / 2).round();
+    }
     totalRentController.text = (total / 100).toString();
     dueRentController.text = (due / 100).toString();
     // update months display if contract dates provided
@@ -714,9 +747,6 @@ class _DailyRentCollectionInfoScreenState
                         value: birthday,
                         onChanged: (v) => setState(() {
                           birthday = v ?? false;
-                          if (birthday) {
-                            rentAmountController.text = '0';
-                          }
                           _updateDraftFromControllers();
                         }),
                         activeColor: Colors.greenAccent,
@@ -812,7 +842,7 @@ class _DailyRentCollectionInfoScreenState
                                         hintText: 'Enter Amount',
                                         onChanged: (s) {
                                           if (birthday) {
-                                            rentAmountController.text = '0';
+                                            // Do not change rentAmountController, just skip further logic
                                             return;
                                           }
                                           if (publicHoliday) {
@@ -836,6 +866,7 @@ class _DailyRentCollectionInfoScreenState
                                             _updateDraftFromControllers(),
                                         errorText:
                                             fieldErrors['maintenanceFees'],
+                                        isReadOnly: true,
                                       ),
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
@@ -845,6 +876,7 @@ class _DailyRentCollectionInfoScreenState
                                         onChanged: (s) =>
                                             _updateDraftFromControllers(),
                                         errorText: fieldErrors['carWashFees'],
+                                        isReadOnly: true,
                                       ),
                                     ],
                                   ),

@@ -1,6 +1,7 @@
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
 import 'package:action_inc_taxi_app/core/widgets/buttons/app_button.dart';
 import 'package:action_inc_taxi_app/core/widgets/buttons/app_outline_button.dart';
+import 'package:action_inc_taxi_app/core/widgets/snackbar/snackbar.dart';
 import 'package:action_inc_taxi_app/features/entry_section/renewal/renewal_and_status_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:action_inc_taxi_app/core/widgets/form/app_text_form_field.dart';
@@ -213,8 +214,10 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
                       }
                     }
                     await _cubit.saveDraft();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Renewals saved.')),
+                  SnackBarHelper.showSuccessSnackBar(
+                      context,
+                      'Renewal data saved successfully.',
+                      duration: Duration(seconds: 2)
                     );
                     // Navigate to renewal_n_status screen after successful save
                     if (mounted) {
