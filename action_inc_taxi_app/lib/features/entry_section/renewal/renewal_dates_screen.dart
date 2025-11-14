@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:action_inc_taxi_app/core/db_service.dart';
 import 'package:action_inc_taxi_app/cubit/renewal/renewal_cubit.dart';
 import 'package:action_inc_taxi_app/core/models/renewal.dart';
+import 'package:action_inc_taxi_app/core/models/renewal_type_data.dart';
 
 class RenewalDataTable extends StatefulWidget {
   final String taxiNo;
@@ -27,8 +28,8 @@ class RenewalDataTable extends StatefulWidget {
 
 class _RenewalDataTableState extends State<RenewalDataTable> {
   late final RenewalCubit _cubit = RenewalCubit(DbService());
-  final Map<int, TextEditingController> _feesControllers = {};
-  final Map<int, TextEditingController> _dateControllers = {};
+  final Map<String, TextEditingController> _feesControllers = {};
+  final Map<String, TextEditingController> _dateControllers = {};
 
   @override
   void initState() {
@@ -42,66 +43,19 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
     await _cubit.loadByTaxi(widget.taxiNo);
     final cur = _cubit.state;
     if (cur is RenewalLoaded && cur.renewals.isEmpty) {
-      // populate predefined defaults (use contract start when available to compute dates)
-      final startUtc = widget.contractStartController == null
-          ? null
-          : _parseDateToUtcMs(widget.contractStartController!.text.trim());
-
-      DateTime _addMonthsLocal(DateTime from, int months) {
-        final y = from.year + ((from.month - 1 + months) ~/ 12);
-        final m = ((from.month - 1 + months) % 12) + 1;
-        final d = from.day;
-        final lastDayOfTarget = DateTime(y, m + 1, 0).day;
-        final day = d <= lastDayOfTarget ? d : lastDayOfTarget;
-        return DateTime.utc(y, m, day, from.hour, from.minute, from.second);
-      }
-
-      DateTime _fallback(DateTime dt) => dt; // identity for readability
-
-      final now = DateTime.now().toUtc();
-      final defaultsSpec = [
-        {'label': 'LTEFB Renewal', 'period': 6, 'fees': 5000},
-        {'label': 'Resealing', 'period': 12, 'fees': 3000},
-        {'label': 'Sealing', 'period': 6, 'fees': 2500},
-        {'label': 'Franchise Renewal', 'period': 24, 'fees': 10000},
-        {'label': 'LTO Renewal', 'period': 12, 'fees': 7500},
-        {'label': 'Car Insurance', 'period': 12, 'fees': 15000},
-      ];
-
-      final defaults = <Renewal>[];
-      for (final spec in defaultsSpec) {
-        final period = spec['period'] as int;
-        final fees = spec['fees'] as int;
-        int dateUtc;
-        if (startUtc != null) {
-          final startDt = DateTime.fromMillisecondsSinceEpoch(
-            startUtc,
-            isUtc: true,
-          );
-          final computed = _addMonthsLocal(startDt, period);
-          dateUtc = computed.toUtc().millisecondsSinceEpoch;
-        } else {
-          // fallback fixed dates (approximate) relative to now if no contract start provided
-          final fallbackDate = _fallback(
-            DateTime.utc(now.year, now.month, now.day),
-          ).add(Duration(days: 30 * period));
-          dateUtc = fallbackDate.millisecondsSinceEpoch;
-        }
-        defaults.add(
-          Renewal(
-            taxiNo: widget.taxiNo,
-            label: spec['label'] as String,
-            dateUtc: dateUtc,
-            periodMonths: period,
-            feesCents: fees * 100,
-            createdAtUtc: DateTime.now().toUtc().millisecondsSinceEpoch,
-          ),
-        );
-      }
-
-      _cubit.setDrafts(defaults);
+      final todayUtc = DateTime.now().toUtc().millisecondsSinceEpoch;
+      final renewal = Renewal(
+        taxiNo: widget.taxiNo,
+        sealing: RenewalTypeData(dateUtc: todayUtc, periodMonths: 6, feesCents: 2500 ),
+        inspection: RenewalTypeData(dateUtc: todayUtc, periodMonths: 12, feesCents: 3000 ),
+        ltefb: RenewalTypeData(dateUtc: todayUtc, periodMonths: 6, feesCents: 5000 ),
+        registeration: RenewalTypeData(dateUtc: todayUtc, periodMonths: 24, feesCents: 10000 ),
+        drivingLicense: RenewalTypeData(dateUtc: todayUtc, periodMonths: 12, feesCents: 0),
+        lto: RenewalTypeData(dateUtc: todayUtc, periodMonths: 12, feesCents: 7500 ),
+        createdAtUtc: DateTime.now().toUtc().millisecondsSinceEpoch,
+      );
+      _cubit.setDrafts([renewal]);
     }
-    // also trigger generation if contract start present (only if DB empty would have been replaced above)
     _onContractChanged();
   }
 
@@ -117,7 +71,7 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
         contractStartUtc: startUtc,
         contractEndUtc: endUtc,
         periodMonths: 6,
-        feesCents: 1000 * 100,
+        feesCents: 1000 ,
       );
     }
   }
@@ -162,26 +116,58 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
     return BlocBuilder<RenewalCubit, RenewalState>(
       bloc: _cubit,
       builder: (context, state) {
-        final renewals = state is RenewalLoaded ? state.renewals : <Renewal>[];
-        // ensure controllers
-        for (var i = 0; i < renewals.length; i++) {
-          _feesControllers.putIfAbsent(
-            i,
-            () => TextEditingController(
-              text: (renewals[i].feesCents / 100).toString(),
+        if (state is! RenewalLoaded) {
+          // Show loading indicator while renewals are loading
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 48),
+              child: CircularProgressIndicator(),
             ),
           );
-          _dateControllers.putIfAbsent(i, () {
-            final d = DateTime.fromMillisecondsSinceEpoch(
-              renewals[i].dateUtc,
-              isUtc: true,
-            ).toLocal();
-            return TextEditingController(
-              text:
-                  '${d.day.toString().padLeft(2, '0')}/${d.month.toString().padLeft(2, '0')}/${d.year}',
-            );
-          });
         }
+        final renewals = state.renewals;
+        if (renewals.isEmpty) return SizedBox();
+        final renewal = renewals.first;
+
+        // Map of field keys to display names
+        const fieldDisplayNames = {
+          'sealing': 'Sealing',
+          'inspection': 'Inspection',
+          'ltefb': 'LTEFB Renewal',
+          'registeration': 'Franchise Renewal',
+          'drivingLicense': 'Driving Licence',
+          'lto': 'LTO Renewal',
+        };
+
+        // Map of field keys to RenewalTypeData
+        final Map<String, RenewalTypeData?> renewalFields = {
+          'sealing': renewal.sealing,
+          'inspection': renewal.inspection,
+          'ltefb': renewal.ltefb,
+          'registeration': renewal.registeration,
+          'drivingLicense': renewal.drivingLicense,
+          'lto': renewal.lto,
+        };
+
+        // Ensure controllers
+        renewalFields.forEach((key, data) {
+          _feesControllers.putIfAbsent(
+            key,
+            () => TextEditingController(
+              text: data?.feesCents != null ? (data!.feesCents! / 100).toString() : '',
+            ),
+          );
+          _dateControllers.putIfAbsent(key, () {
+            if (data?.dateUtc != null) {
+              final d = DateTime.fromMillisecondsSinceEpoch(data!.dateUtc!, isUtc: true).toLocal();
+              return TextEditingController(
+                text: '${d.day.toString().padLeft(2, '0')}/${d.month.toString().padLeft(2, '0')}/${d.year}',
+              );
+            } else {
+              return TextEditingController(text: '');
+            }
+          });
+        });
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -195,26 +181,24 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
               ),
             ),
             SizedBox(height: 16),
-            ...renewals.asMap().entries.map((entry) {
-              final i = entry.key;
-              final r = entry.value;
+            ...renewalFields.entries.map((entry) {
+              final key = entry.key;
+              final data = entry.value;
               return _RenewalDataRowWidget(
-                index: i,
-                renewal: r,
+                fieldKey: key,
+                displayName: fieldDisplayNames[key] ?? key,
+                data: data,
                 isWide: isWide,
-                dateController: _dateControllers[i]!,
-                feesController: _feesControllers[i]!,
+                dateController: _dateControllers[key]!,
+                feesController: _feesControllers[key]!,
                 onFeesChanged: (s) {
-                  final raw = s.replaceAll(RegExp(r'[^0-9\.]'), '');
-                  final d = raw.isEmpty ? 0.0 : double.tryParse(raw) ?? 0.0;
-                  final cents = (d * 100).round();
-                  _cubit.updateFees(i, cents);
+                  // TODO: update cubit for this field
                 },
                 onDateChanged: (utcMs) {
-                  _cubit.updateDate(i, utcMs);
+                  // TODO: update cubit for this field
                 },
                 onPeriodChanged: (period) {
-                  _cubit.updatePeriod(i, period);
+                  // TODO: update cubit for this field
                 },
               );
             }).toList(),
@@ -234,8 +218,8 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
                     // validate all fields required
                     final current = _cubit.state;
                     if (current is! RenewalLoaded) return;
-                    for (var i = 0; i < current.renewals.length; i++) {
-                      final feesText = _feesControllers[i]!.text.trim();
+                    for (final key in renewalFields.keys) {
+                      final feesText = _feesControllers[key]!.text.trim();
                       if (feesText.isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
@@ -249,6 +233,10 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Renewals saved.')),
                     );
+                    // Navigate to renewal_n_status screen after successful save
+                    if (mounted) {
+                      Navigator.pushReplacementNamed(context, '/renewal_n_status');
+                    }
                   },
                   backgroundColor: Colors.green,
                   textColor: AppColors.buttonText,
@@ -277,9 +265,11 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
   }
 }
 
+
 class _RenewalDataRowWidget extends StatelessWidget {
-  final int index;
-  final Renewal renewal;
+  final String fieldKey;
+  final String displayName;
+  final RenewalTypeData? data;
   final bool isWide;
   final TextEditingController dateController;
   final TextEditingController feesController;
@@ -288,8 +278,9 @@ class _RenewalDataRowWidget extends StatelessWidget {
   final void Function(int) onPeriodChanged;
 
   const _RenewalDataRowWidget({
-    required this.index,
-    required this.renewal,
+    required this.fieldKey,
+    required this.displayName,
+    required this.data,
     required this.isWide,
     required this.dateController,
     required this.feesController,
@@ -307,15 +298,13 @@ class _RenewalDataRowWidget extends StatelessWidget {
         children: [
           Expanded(
             child: AppTextFormField(
-              labelText: renewal.label,
+              labelText: displayName,
               suffix: Icon(Icons.calendar_today, size: 16, color: Colors.white),
               controller: dateController,
               onTap: () async {
-                // show date picker and call onDateChanged with new utc ms
-                final initial = DateTime.fromMillisecondsSinceEpoch(
-                  renewal.dateUtc,
-                  isUtc: true,
-                ).toLocal();
+                final initial = data?.dateUtc != null
+                    ? DateTime.fromMillisecondsSinceEpoch(data!.dateUtc!, isUtc: true).toLocal()
+                    : DateTime.now();
                 final picked = await showDatePicker(
                   context: context,
                   initialDate: initial,
@@ -330,7 +319,6 @@ class _RenewalDataRowWidget extends StatelessWidget {
               },
             ),
           ),
-          // SizedBox(width: 24.w),
           Expanded(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -342,7 +330,7 @@ class _RenewalDataRowWidget extends StatelessWidget {
                 ),
                 DropdownButton<int>(
                   menuWidth: 16.w,
-                  value: renewal.periodMonths,
+                  value: data?.periodMonths ?? 6,
                   dropdownColor: AppColors.background,
                   items: [1, 3, 6, 7, 12, 24, 36]
                       .map(
@@ -359,7 +347,6 @@ class _RenewalDataRowWidget extends StatelessWidget {
               ],
             ),
           ),
-          // SizedBox(width: 24.w),
           Expanded(
             child: AppTextFormField(
               labelText: 'Fees',

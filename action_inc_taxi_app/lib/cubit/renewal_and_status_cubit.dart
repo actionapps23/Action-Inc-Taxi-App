@@ -14,10 +14,11 @@ class RenewalAndStatusCubit extends Cubit<RenewalAndStatusState> {
       emit(RenewalAndStatusLoading());
       final rows = await dbService.fetchAllRenewals();
       final filtered = _filterBy(rows, 0);
+      final displayRows = _mapToDisplayRows(filtered);
       emit(
         RenewalAndStatusLoaded(
           allRows: rows,
-          filteredRows: filtered,
+          filteredRows: displayRows,
           selectedFilter: 0,
         ),
       );
@@ -32,11 +33,77 @@ class RenewalAndStatusCubit extends Cubit<RenewalAndStatusState> {
       try {
         emit(RenewalAndStatusLoading());
         final filtered = _filterBy(current.allRows, index);
-        emit(current.copyWith(filteredRows: filtered, selectedFilter: index));
+        final displayRows = _mapToDisplayRows(filtered);
+        emit(current.copyWith(filteredRows: displayRows, selectedFilter: index));
       } catch (e) {
         emit(RenewalAndStatusFailure(e.toString()));
       }
     }
+  }
+  // Map filtered rows to display rows for the DataTable
+  List<Map<String, dynamic>> _mapToDisplayRows(List<Map<String, dynamic>> filteredRows) {
+    const renewalKeys = [
+      'lto',
+      'sealing',
+      'inspection',
+      'ltefb',
+      'registeration',
+      'drivingLicense',
+    ];
+    const renewalLabels = {
+      'lto': 'LTO',
+      'sealing': 'Sealing',
+      'inspection': 'Inspection',
+      'ltefb': 'LTEFB',
+      'registeration': 'Registration',
+      'drivingLicense': 'Driving License',
+    };
+    List<Map<String, dynamic>> displayRows = [];
+    for (final row in filteredRows) {
+      for (final key in renewalKeys) {
+        final renewal = row[key];
+        if (renewal is Map<String, dynamic> && renewal['dateUtc'] != null) {
+          // Format date
+          String dateStr = '';
+          final dateRaw = renewal['dateUtc'];
+          if (dateRaw != null) {
+            DateTime? d;
+            try {
+              if (dateRaw is int) {
+                d = DateTime.fromMillisecondsSinceEpoch(dateRaw, isUtc: true).toLocal();
+              } else if (dateRaw is String) {
+                final ms = int.tryParse(dateRaw);
+                if (ms != null) {
+                  d = DateTime.fromMillisecondsSinceEpoch(ms, isUtc: true).toLocal();
+                } else if (dateRaw.contains('/')) {
+                  final parts = dateRaw.split('/');
+                  if (parts.length >= 3) {
+                    final day = int.tryParse(parts[0]) ?? 1;
+                    final month = int.tryParse(parts[1]) ?? 1;
+                    final year = int.tryParse(parts[2]) ?? DateTime.now().year;
+                    d = DateTime(year, month, day);
+                  }
+                } else {
+                  d = DateTime.tryParse(dateRaw);
+                }
+              }
+            } catch (_) {
+              d = null;
+            }
+            if (d != null) {
+              dateStr = "${d.day.toString().padLeft(2, '0')}/${d.month.toString().padLeft(2, '0')}/${d.year}";
+            }
+          }
+          displayRows.add({
+            'renewal': renewalLabels[key] ?? key,
+            'taxi': row['taxiNo'] ?? '',
+            'status': renewal['status'] ?? '',
+            'date': dateStr,
+          });
+        }
+      }
+    }
+    return displayRows;
   }
 
   List<Map<String, dynamic>> _filterBy(
@@ -44,39 +111,74 @@ class RenewalAndStatusCubit extends Cubit<RenewalAndStatusState> {
     int index,
   ) {
     final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    // List of renewal type keys to check
+    const renewalKeys = [
+      'lto',
+      'sealing',
+      'inspection',
+      'ltefb',
+      'registeration',
+      'drivingLicense',
+    ];
     return rows.where((r) {
-      final dateStr = (r['date'] ?? '').toString();
-      if (dateStr.isEmpty) return false;
-      DateTime? d;
-      try {
-        if (dateStr.contains('/')) {
-          final parts = dateStr.split('/');
-          if (parts.length >= 3) {
-            final day = int.tryParse(parts[0]) ?? 1;
-            final month = int.tryParse(parts[1]) ?? 1;
-            final year = int.tryParse(parts[2]) ?? now.year;
-            d = DateTime(year, month, day);
+      // For each renewal type, check if its dateUtc matches the filter
+      bool matchesAny = false;
+      for (final key in renewalKeys) {
+        final renewal = r[key];
+        if (renewal is Map<String, dynamic> && renewal['dateUtc'] != null) {
+          final dateRaw = renewal['dateUtc'];
+          DateTime? d;
+          try {
+            if (dateRaw is int) {
+              d = DateTime.fromMillisecondsSinceEpoch(dateRaw, isUtc: true).toLocal();
+            } else if (dateRaw is String) {
+              if (dateRaw.isEmpty) continue;
+              final ms = int.tryParse(dateRaw);
+              if (ms != null) {
+                d = DateTime.fromMillisecondsSinceEpoch(ms, isUtc: true).toLocal();
+              } else if (dateRaw.contains('/')) {
+                final parts = dateRaw.split('/');
+                if (parts.length >= 3) {
+                  final day = int.tryParse(parts[0]) ?? 1;
+                  final month = int.tryParse(parts[1]) ?? 1;
+                  final year = int.tryParse(parts[2]) ?? now.year;
+                  d = DateTime(year, month, day);
+                }
+              } else {
+                d = DateTime.tryParse(dateRaw);
+              }
+            }
+          } catch (_) {
+            d = null;
           }
-        } else {
-          d = DateTime.parse(dateStr);
+          if (d == null) continue;
+          final dateOnly = DateTime(d.year, d.month, d.day);
+          bool match = false;
+          switch (index) {
+            case 0:
+              // This week: Monday to Sunday
+              final weekDay = today.weekday;
+              final weekStart = today.subtract(Duration(days: weekDay - 1));
+              final weekEnd = weekStart.add(const Duration(days: 6));
+              match = !dateOnly.isBefore(weekStart) && !dateOnly.isAfter(weekEnd);
+              break;
+            case 1:
+              match = dateOnly.year == today.year && dateOnly.month == today.month;
+              break;
+            case 2:
+              match = dateOnly.year == today.year;
+              break;
+            default:
+              match = true;
+          }
+          if (match) {
+            matchesAny = true;
+            break;
+          }
         }
-      } catch (_) {
-        d = null;
       }
-      if (d == null) return false;
-      switch (index) {
-        case 0:
-          final weekStart = now.subtract(Duration(days: now.weekday - 1));
-          final weekEnd = weekStart.add(const Duration(days: 7));
-          return d.isAfter(weekStart.subtract(const Duration(seconds: 1))) &&
-              d.isBefore(weekEnd.add(const Duration(seconds: 1)));
-        case 1:
-          return d.year == now.year && d.month == now.month;
-        case 2:
-          return d.year == now.year;
-        default:
-          return true;
-      }
+      return matchesAny;
     }).toList();
   }
 }

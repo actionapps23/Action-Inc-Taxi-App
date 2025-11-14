@@ -46,7 +46,6 @@ class _RenewalAndStatusScreenState extends State<RenewalAndStatusScreen> {
       child: BlocListener<RenewalAndStatusCubit, RenewalAndStatusState>(
         listener: (context, state) {
           if (state is RenewalAndStatusFailure) {
-            // Show a transient snackbar in addition to the inline error block.
             SnackBarHelper.showErrorSnackBar(context, state.error);
           }
         },

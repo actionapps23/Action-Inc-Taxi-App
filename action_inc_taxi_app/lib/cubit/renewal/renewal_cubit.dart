@@ -1,5 +1,6 @@
 import 'package:action_inc_taxi_app/core/db_service.dart';
 import 'package:action_inc_taxi_app/core/models/renewal.dart';
+import 'package:action_inc_taxi_app/core/models/renewal_type_data.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'renewal_state.dart';
@@ -28,48 +29,21 @@ class RenewalCubit extends Cubit<RenewalState> {
     int periodMonths = 6,
     int feesCents = 1000 * 100,
   }) {
-    final list = <Renewal>[];
-    DateTime current = DateTime.fromMillisecondsSinceEpoch(
-      contractStartUtc,
-      isUtc: true,
+    // For demonstration, only generate LTO renewal. Expand as needed for other types.
+    final ltoData = RenewalTypeData(
+      dateUtc: contractEndUtc ?? _addMonths(DateTime.fromMillisecondsSinceEpoch(contractStartUtc, isUtc: true), periodMonths).toUtc().millisecondsSinceEpoch,
+      periodMonths: periodMonths,
+      feesCents: feesCents,
     );
-    DateTime next = _addMonths(current, periodMonths);
-
-    if (contractEndUtc == null) {
-      final r = Renewal(
-        taxiNo: taxiNo,
-        label: 'Auto-generated',
-        dateUtc: next.toUtc().millisecondsSinceEpoch,
-        periodMonths: periodMonths,
-        feesCents: feesCents,
-        createdAtUtc: DateTime.now().toUtc().millisecondsSinceEpoch,
-        contractStartUtc: contractStartUtc,
-        contractEndUtc: null,
-      );
-      list.add(r);
-    } else {
-      final end = DateTime.fromMillisecondsSinceEpoch(
-        contractEndUtc,
-        isUtc: true,
-      );
-      while (!next.isAfter(end)) {
-        list.add(
-          Renewal(
-            taxiNo: taxiNo,
-            label: 'Auto-generated',
-            dateUtc: next.toUtc().millisecondsSinceEpoch,
-            periodMonths: periodMonths,
-            feesCents: feesCents,
-            createdAtUtc: DateTime.now().toUtc().millisecondsSinceEpoch,
-            contractStartUtc: contractStartUtc,
-            contractEndUtc: contractEndUtc,
-          ),
-        );
-        next = _addMonths(next, periodMonths);
-      }
-    }
-
-    emit(RenewalLoaded(renewals: list));
+    final renewal = Renewal(
+      taxiNo: taxiNo,
+      lto: ltoData,
+      createdAtUtc: DateTime.now().toUtc().millisecondsSinceEpoch,
+      contractStartUtc: contractStartUtc,
+      contractEndUtc: contractEndUtc,
+      // Add other types as needed
+    );
+    emit(RenewalLoaded(renewals: [renewal]));
   }
 
   /// Replace draft list in cubit (used to set defaults or import)
@@ -89,63 +63,111 @@ class RenewalCubit extends Cubit<RenewalState> {
     }
   }
 
-  /// Update fees for a draft renewal at [index]
-  void updateFees(int index, int feesCents) {
+  /// Update a nested renewal type's fees by field key (e.g., 'lto', 'sealing')
+  void updateFees(int index, String fieldKey, int feesCents) {
     final current = state;
     if (current is! RenewalLoaded) return;
     final list = List<Renewal>.from(current.renewals);
     final old = list[index];
-    list[index] = Renewal(
-      id: old.id,
-      taxiNo: old.taxiNo,
-      label: old.label,
-      dateUtc: old.dateUtc,
-      periodMonths: old.periodMonths,
-      feesCents: feesCents,
-      createdAtUtc: old.createdAtUtc,
-      contractStartUtc: old.contractStartUtc,
-      contractEndUtc: old.contractEndUtc,
-    );
+    RenewalTypeData? updated;
+    switch (fieldKey) {
+      case 'lto':
+        updated = (old.lto ?? RenewalTypeData()).copyWith(feesCents: feesCents);
+        list[index] = old.copyWith(lto: updated);
+        break;
+      case 'sealing':
+        updated = (old.sealing ?? RenewalTypeData()).copyWith(feesCents: feesCents);
+        list[index] = old.copyWith(sealing: updated);
+        break;
+      case 'inspection':
+        updated = (old.inspection ?? RenewalTypeData()).copyWith(feesCents: feesCents);
+        list[index] = old.copyWith(inspection: updated);
+        break;
+      case 'ltefb':
+        updated = (old.ltefb ?? RenewalTypeData()).copyWith(feesCents: feesCents);
+        list[index] = old.copyWith(ltefb: updated);
+        break;
+      case 'registeration':
+        updated = (old.registeration ?? RenewalTypeData()).copyWith(feesCents: feesCents);
+        list[index] = old.copyWith(registeration: updated);
+        break;
+      case 'drivingLicense':
+        updated = (old.drivingLicense ?? RenewalTypeData()).copyWith(feesCents: feesCents);
+        list[index] = old.copyWith(drivingLicense: updated);
+        break;
+    }
     emit(RenewalLoaded(renewals: list));
   }
 
-  /// Update date for a draft renewal at [index]
-  void updateDate(int index, int dateUtc) {
+  /// Update a nested renewal type's date by field key
+  void updateDate(int index, String fieldKey, int dateUtc) {
     final current = state;
     if (current is! RenewalLoaded) return;
     final list = List<Renewal>.from(current.renewals);
     final old = list[index];
-    list[index] = Renewal(
-      id: old.id,
-      taxiNo: old.taxiNo,
-      label: old.label,
-      dateUtc: dateUtc,
-      periodMonths: old.periodMonths,
-      feesCents: old.feesCents,
-      createdAtUtc: old.createdAtUtc,
-      contractStartUtc: old.contractStartUtc,
-      contractEndUtc: old.contractEndUtc,
-    );
+    RenewalTypeData? updated;
+    switch (fieldKey) {
+      case 'lto':
+        updated = (old.lto ?? RenewalTypeData()).copyWith(dateUtc: dateUtc);
+        list[index] = old.copyWith(lto: updated);
+        break;
+      case 'sealing':
+        updated = (old.sealing ?? RenewalTypeData()).copyWith(dateUtc: dateUtc);
+        list[index] = old.copyWith(sealing: updated);
+        break;
+      case 'inspection':
+        updated = (old.inspection ?? RenewalTypeData()).copyWith(dateUtc: dateUtc);
+        list[index] = old.copyWith(inspection: updated);
+        break;
+      case 'ltefb':
+        updated = (old.ltefb ?? RenewalTypeData()).copyWith(dateUtc: dateUtc);
+        list[index] = old.copyWith(ltefb: updated);
+        break;
+      case 'registeration':
+        updated = (old.registeration ?? RenewalTypeData()).copyWith(dateUtc: dateUtc);
+        list[index] = old.copyWith(registeration: updated);
+        break;
+      case 'drivingLicense':
+        updated = (old.drivingLicense ?? RenewalTypeData()).copyWith(dateUtc: dateUtc);
+        list[index] = old.copyWith(drivingLicense: updated);
+        break;
+    }
     emit(RenewalLoaded(renewals: list));
   }
 
-  /// Update periodMonths for a draft renewal at [index]
-  void updatePeriod(int index, int periodMonths) {
+  /// Update a nested renewal type's period by field key
+  void updatePeriod(int index, String fieldKey, int periodMonths) {
     final current = state;
     if (current is! RenewalLoaded) return;
     final list = List<Renewal>.from(current.renewals);
     final old = list[index];
-    list[index] = Renewal(
-      id: old.id,
-      taxiNo: old.taxiNo,
-      label: old.label,
-      dateUtc: old.dateUtc,
-      periodMonths: periodMonths,
-      feesCents: old.feesCents,
-      createdAtUtc: old.createdAtUtc,
-      contractStartUtc: old.contractStartUtc,
-      contractEndUtc: old.contractEndUtc,
-    );
+    RenewalTypeData? updated;
+    switch (fieldKey) {
+      case 'lto':
+        updated = (old.lto ?? RenewalTypeData()).copyWith(periodMonths: periodMonths);
+        list[index] = old.copyWith(lto: updated);
+        break;
+      case 'sealing':
+        updated = (old.sealing ?? RenewalTypeData()).copyWith(periodMonths: periodMonths);
+        list[index] = old.copyWith(sealing: updated);
+        break;
+      case 'inspection':
+        updated = (old.inspection ?? RenewalTypeData()).copyWith(periodMonths: periodMonths);
+        list[index] = old.copyWith(inspection: updated);
+        break;
+      case 'ltefb':
+        updated = (old.ltefb ?? RenewalTypeData()).copyWith(periodMonths: periodMonths);
+        list[index] = old.copyWith(ltefb: updated);
+        break;
+      case 'registeration':
+        updated = (old.registeration ?? RenewalTypeData()).copyWith(periodMonths: periodMonths);
+        list[index] = old.copyWith(registeration: updated);
+        break;
+      case 'drivingLicense':
+        updated = (old.drivingLicense ?? RenewalTypeData()).copyWith(periodMonths: periodMonths);
+        list[index] = old.copyWith(drivingLicense: updated);
+        break;
+    }
     emit(RenewalLoaded(renewals: list));
   }
 

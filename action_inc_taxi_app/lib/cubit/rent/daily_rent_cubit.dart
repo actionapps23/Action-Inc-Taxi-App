@@ -30,9 +30,9 @@ class DailyRentCubit extends Cubit<DailyRentState> {
         final rent = rentMap != null ? Rent.fromMap(rentMap) : null;
         final driver = driverMap != null ? Driver.fromMap(driverMap) : null;
         final carInfo = carMap != null ? CarInfo.fromMap(carMap) : car;
-        emit(DailyRentLoaded(carInfo: carInfo, driver: driver, rent: rent));
+        emit(DailyRentLoaded(carInfo: carInfo, driver: driver, rent: rent, fieldErrors: {}));
       } else {
-        emit(DailyRentLoaded(carInfo: car));
+        emit(DailyRentLoaded(carInfo: car, fieldErrors: {}));
       }
     } catch (e) {
       emit(DailyRentError(e.toString()));

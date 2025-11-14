@@ -1,27 +1,35 @@
 class RenewalTypeData {
-  final String label;
-  final int dateUtc;
-  final int periodMonths;
-  final int createdAtUtc;
+  final int? dateUtc;
+  final int? periodMonths;
+  final int? feesCents;
+
   RenewalTypeData({
-    required this.label,
-    required this.dateUtc,
-    required this.periodMonths,
-    required this.createdAtUtc,
+    this.dateUtc,
+    this.periodMonths,
+    this.feesCents,
   });
 
-
-Map<String , dynamic> toMap() => {
-        'label': label,
+  Map<String, dynamic> toMap() => {
         'dateUtc': dateUtc,
         'periodMonths': periodMonths,
-        'createdAtUtc': createdAtUtc,
+        'feesCents': feesCents,
       };
 
   factory RenewalTypeData.fromMap(Map<String, dynamic> m) => RenewalTypeData(
-        label: (m['label'] as String?) ?? '',
-        dateUtc: (m['dateUtc'] as int?) ?? DateTime.now().toUtc().millisecondsSinceEpoch,
-        periodMonths: (m['periodMonths'] as int?) ?? 6,
-        createdAtUtc: (m['createdAtUtc'] as int?) ?? DateTime.now().toUtc().millisecondsSinceEpoch,
+        dateUtc: m['dateUtc'] as int?,
+        periodMonths: m['periodMonths'] as int?,
+        feesCents: m['feesCents'] as int?,
       );
+
+  RenewalTypeData copyWith({
+    int? dateUtc,
+    int? periodMonths,
+    int? feesCents,
+  }) {
+    return RenewalTypeData(
+      dateUtc: dateUtc ?? this.dateUtc,
+      periodMonths: periodMonths ?? this.periodMonths,
+      feesCents: feesCents ?? this.feesCents,
+    );
+  }
 }
