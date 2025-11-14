@@ -105,14 +105,21 @@ class Rent {
   }
 
   /// Helper: compute months count given start and end timestamps (UTC ms).
-  /// Uses days difference and rounds up by 30-day month.
+  /// Calculates the exact number of months between two dates.
   static int computeMonthsCountFromTimestamps(int? startUtc, int? endUtc) {
     if (startUtc == null || endUtc == null) return 0;
     final start = DateTime.fromMillisecondsSinceEpoch(startUtc, isUtc: true);
     final end = DateTime.fromMillisecondsSinceEpoch(endUtc, isUtc: true);
     if (!end.isAfter(start)) return 0;
-    final days = end.difference(start).inDays;
-    if (days <= 0) return 0;
-    return ((days) / 30).ceil();
+    
+    int months = (end.year - start.year) * 12;
+    months += (end.month - start.month);
+    
+    // If the end day is before the start day, subtract 1 month
+    if (end.day < start.day) {
+      months--;
+    }
+    
+    return months;
   }
 }

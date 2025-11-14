@@ -140,7 +140,7 @@ class RenewalCubit extends Cubit<RenewalState> {
   }
 
   /// Update a nested renewal type's period by field key
-  void updatePeriod(String fieldKey, int periodMonths) {
+  void updatePeriod(String fieldKey, int? periodMonths) {
     final current = state;
     if (current is! RenewalLoaded) return;
     final old = current.renewal;
@@ -148,28 +148,52 @@ class RenewalCubit extends Cubit<RenewalState> {
     Renewal newRenewal;
     switch (fieldKey) {
       case 'lto':
-        updated = (old.lto ?? RenewalTypeData()).copyWith(periodMonths: periodMonths);
-        newRenewal = old.copyWith(lto: updated);
+        if (periodMonths == null) {
+          newRenewal = old.copyWith(lto: null);
+        } else {
+          updated = (old.lto ?? RenewalTypeData()).copyWith(periodMonths: periodMonths);
+          newRenewal = old.copyWith(lto: updated);
+        }
         break;
       case 'sealing':
-        updated = (old.sealing ?? RenewalTypeData()).copyWith(periodMonths: periodMonths);
-        newRenewal = old.copyWith(sealing: updated);
+        if (periodMonths == null) {
+          newRenewal = old.copyWith(sealing: null);
+        } else {
+          updated = (old.sealing ?? RenewalTypeData()).copyWith(periodMonths: periodMonths);
+          newRenewal = old.copyWith(sealing: updated);
+        }
         break;
       case 'inspection':
-        updated = (old.inspection ?? RenewalTypeData()).copyWith(periodMonths: periodMonths);
-        newRenewal = old.copyWith(inspection: updated);
+        if (periodMonths == null) {
+          newRenewal = old.copyWith(inspection: null);
+        } else {
+          updated = (old.inspection ?? RenewalTypeData()).copyWith(periodMonths: periodMonths);
+          newRenewal = old.copyWith(inspection: updated);
+        }
         break;
       case 'ltefb':
-        updated = (old.ltefb ?? RenewalTypeData()).copyWith(periodMonths: periodMonths);
-        newRenewal = old.copyWith(ltefb: updated);
+        if (periodMonths == null) {
+          newRenewal = old.copyWith(ltefb: null);
+        } else {
+          updated = (old.ltefb ?? RenewalTypeData()).copyWith(periodMonths: periodMonths);
+          newRenewal = old.copyWith(ltefb: updated);
+        }
         break;
       case 'registeration':
-        updated = (old.registeration ?? RenewalTypeData()).copyWith(periodMonths: periodMonths);
-        newRenewal = old.copyWith(registeration: updated);
+        if (periodMonths == null) {
+          newRenewal = old.copyWith(registeration: null);
+        } else {
+          updated = (old.registeration ?? RenewalTypeData()).copyWith(periodMonths: periodMonths);
+          newRenewal = old.copyWith(registeration: updated);
+        }
         break;
       case 'drivingLicense':
-        updated = (old.drivingLicense ?? RenewalTypeData()).copyWith(periodMonths: periodMonths);
-        newRenewal = old.copyWith(drivingLicense: updated);
+        if (periodMonths == null) {
+          newRenewal = old.copyWith(drivingLicense: null);
+        } else {
+          updated = (old.drivingLicense ?? RenewalTypeData()).copyWith(periodMonths: periodMonths);
+          newRenewal = old.copyWith(drivingLicense: updated);
+        }
         break;
       default:
         return;

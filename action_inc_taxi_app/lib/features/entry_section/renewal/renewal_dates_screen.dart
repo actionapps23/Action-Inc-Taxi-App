@@ -12,16 +12,10 @@ import 'package:action_inc_taxi_app/core/models/renewal.dart';
 import 'package:action_inc_taxi_app/core/models/renewal_type_data.dart';
 import 'package:action_inc_taxi_app/core/models/enums.dart';
 import 'package:action_inc_taxi_app/cubit/selection/selection_cubit.dart';
+import 'package:action_inc_taxi_app/cubit/rent/daily_rent_cubit.dart';
 
 class RenewalDataTable extends StatefulWidget {
-  final TextEditingController? contractStartController;
-  final TextEditingController? contractEndController;
-
-  const RenewalDataTable({
-    super.key,
-    this.contractStartController,
-    this.contractEndController,
-  });
+  const RenewalDataTable({super.key});
 
   @override
   State<RenewalDataTable> createState() => _RenewalDataTableState();
@@ -30,15 +24,12 @@ class RenewalDataTable extends StatefulWidget {
 class _RenewalDataTableState extends State<RenewalDataTable> {
   late final RenewalCubit _cubit = RenewalCubit(DbService());
   final Map<String, TextEditingController> _feesControllers = {};
-  final Map<String, TextEditingController> _dateControllers = {};
   late String _taxiNo;
 
   @override
   void initState() {
     super.initState();
     _taxiNo = context.read<SelectionCubit>().state.taxiNo;
-    widget.contractStartController?.addListener(_onContractChanged);
-    widget.contractEndController?.addListener(_onContractChanged);
     _init();
   }
 
@@ -89,41 +80,14 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
       );
       _cubit.setDraft(renewal);
     }
-    _onContractChanged();
   }
 
-  void _onContractChanged() {
-    final startText = widget.contractStartController?.text.trim() ?? '';
-    if (startText.isEmpty) return;
-    final startUtc = _parseDateToUtcMs(startText);
-    final endText = widget.contractEndController?.text.trim() ?? '';
-    final endUtc = endText.isEmpty ? null : _parseDateToUtcMs(endText);
-    if (startUtc != null) {
-      _cubit.generateFromContract(
-        taxiNo: _taxiNo,
-        contractStartUtc: startUtc,
-        contractEndUtc: endUtc,
-        periodMonths: 6,
-        feesCents: 1000,
-      );
-    }
-  }
-
-  int? _parseDateToUtcMs(String input) {
+  int? _getContractStartUtc() {
     try {
-      if (input.trim().isEmpty) return null;
-      try {
-        return DateTime.parse(input).toUtc().millisecondsSinceEpoch;
-      } catch (_) {
-        try {
-          final parts = input.split('/');
-          if (parts.length == 3) {
-            final d = int.parse(parts[0]);
-            final m = int.parse(parts[1]);
-            final y = int.parse(parts[2]);
-            return DateTime.utc(y, m, d).millisecondsSinceEpoch;
-          }
-        } catch (_) {}
+      final dailyRentCubit = context.read<DailyRentCubit>();
+      if (dailyRentCubit.state is DailyRentLoaded) {
+        final state = dailyRentCubit.state as DailyRentLoaded;
+        return state.rent?.contractStartUtc;
       }
     } catch (_) {}
     return null;
@@ -131,12 +95,7 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
 
   @override
   void dispose() {
-    widget.contractStartController?.removeListener(_onContractChanged);
-    widget.contractEndController?.removeListener(_onContractChanged);
     for (final c in _feesControllers.values) {
-      c.dispose();
-    }
-    for (final c in _dateControllers.values) {
       c.dispose();
     }
     _cubit.close();
@@ -146,6 +105,8 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
   @override
   Widget build(BuildContext context) {
     final bool isWide = MediaQuery.of(context).size.width > 800;
+    final contractStartUtc = _getContractStartUtc();
+
     return BlocBuilder<RenewalCubit, RenewalState>(
       bloc: _cubit,
       builder: (context, state) {
@@ -180,7 +141,7 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
           'lto': renewal.lto,
         };
 
-        // Ensure controllers
+        // Ensure controllers and update dates based on period
         renewalFields.forEach((key, data) {
           _feesControllers.putIfAbsent(
             key,
@@ -190,20 +151,6 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
                   : '',
             ),
           );
-          _dateControllers.putIfAbsent(key, () {
-            if (data?.dateUtc != null) {
-              final d = DateTime.fromMillisecondsSinceEpoch(
-                data!.dateUtc!,
-                isUtc: true,
-              ).toLocal();
-              return TextEditingController(
-                text:
-                    '${d.day.toString().padLeft(2, '0')}/${d.month.toString().padLeft(2, '0')}/${d.year}',
-              );
-            } else {
-              return TextEditingController(text: '');
-            }
-          });
         });
 
         return Column(
@@ -226,22 +173,16 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
                 displayName: fieldDisplayNames[key] ?? key,
                 data: data,
                 isWide: isWide,
-                dateController: _dateControllers[key]!,
                 feesController: _feesControllers[key]!,
+                contractStartUtc: contractStartUtc,
                 onFeesChanged: (s) {
                   final cents = int.tryParse(s.replaceAll(',', ''));
                   if (cents != null) {
                     _cubit.updateFees(key, cents * 100);
                   }
                 },
-                onDateChanged: (utcMs) {
-                  _cubit.updateDate(key, utcMs);
-                },
                 onPeriodChanged: (period) {
                   _cubit.updatePeriod(key, period);
-                },
-                onStatusChanged: (status) {
-                  _cubit.updateStatus(key, status);
                 },
               );
             }),
@@ -277,9 +218,12 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
                     );
                     // Navigate to renewal_n_status screen after successful save
                     if (mounted) {
-                     Navigator.push(context, MaterialPageRoute(
-                        builder: (_) => RenewalAndStatusScreen(),
-                      ));
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => RenewalAndStatusScreen(),
+                        ),
+                      );
                     }
                   },
                   backgroundColor: Colors.green,
@@ -309,30 +253,100 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
   }
 }
 
-class _RenewalDataRowWidget extends StatelessWidget {
+class _RenewalDataRowWidget extends StatefulWidget {
   final String fieldKey;
   final String displayName;
   final RenewalTypeData? data;
   final bool isWide;
-  final TextEditingController dateController;
   final TextEditingController feesController;
   final void Function(String) onFeesChanged;
-  final void Function(int) onDateChanged;
-  final void Function(int) onPeriodChanged;
-  final void Function(RenewalStatus) onStatusChanged;
+  final void Function(int?) onPeriodChanged;
+  final int? contractStartUtc;
 
   const _RenewalDataRowWidget({
     required this.fieldKey,
     required this.displayName,
     required this.data,
     required this.isWide,
-    required this.dateController,
     required this.feesController,
     required this.onFeesChanged,
-    required this.onDateChanged,
     required this.onPeriodChanged,
-    required this.onStatusChanged,
+    required this.contractStartUtc,
   });
+
+  @override
+  State<_RenewalDataRowWidget> createState() => _RenewalDataRowWidgetState();
+}
+
+class _RenewalDataRowWidgetState extends State<_RenewalDataRowWidget> {
+  late int? _selectedPeriod;
+  late TextEditingController dateController;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedPeriod = widget.data?.periodMonths;
+    dateController = TextEditingController();
+    // Schedule update after widget builds so contractStartUtc is ready
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _updateDateDisplay();
+    });
+  }
+
+  @override
+  void didUpdateWidget(_RenewalDataRowWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.data?.periodMonths != widget.data?.periodMonths ||
+        oldWidget.contractStartUtc != widget.contractStartUtc) {
+      _selectedPeriod = widget.data?.periodMonths;
+      _updateDateDisplay();
+    }
+  }
+
+  void _updateDateDisplay() {
+    if (_selectedPeriod == null) {
+      dateController.text = '';
+    } else {
+      // Try to use contractStartUtc, fallback to now if not available
+      final baseUtc = widget.contractStartUtc ?? DateTime.now().toUtc().millisecondsSinceEpoch;
+      final renewalDate = _calculateRenewalDate(
+        baseUtc,
+        _selectedPeriod,
+      );
+      dateController.text = _formatDate(renewalDate);
+    }
+  }
+
+  DateTime? _calculateRenewalDate(int? contractStartUtc, int? periodMonths) {
+    if (contractStartUtc == null || periodMonths == null || periodMonths <= 0) {
+      return null;
+    }
+    final startDate = DateTime.fromMillisecondsSinceEpoch(
+      contractStartUtc,
+      isUtc: true,
+    );
+    return DateTime.utc(
+      startDate.year,
+      startDate.month + periodMonths,
+      startDate.day,
+    );
+  }
+
+  String _formatDate(DateTime? dt) {
+    if (dt == null) return '';
+    return '${dt.day.toString().padLeft(2, '0')}/${dt.month.toString().padLeft(2, '0')}/${dt.year}';
+  }
+
+  String _getPeriodLabel(int? period) {
+    if (period == null) return 'None';
+    return '$period month${period == 1 ? '' : 's'}';
+  }
+
+  @override
+  void dispose() {
+    dateController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -342,81 +356,110 @@ class _RenewalDataRowWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
+            flex: 2,
             child: AppTextFormField(
-              labelText: displayName,
+              labelText: widget.displayName,
               suffix: Icon(Icons.calendar_today, size: 16, color: Colors.white),
               controller: dateController,
-              onTap: () async {
-                final initial = data?.dateUtc != null
-                    ? DateTime.fromMillisecondsSinceEpoch(
-                        data!.dateUtc!,
-                        isUtc: true,
-                      ).toLocal()
-                    : DateTime.now();
-                final picked = await showDatePicker(
-                  context: context,
-                  initialDate: initial,
-                  firstDate: DateTime(2000),
-                  lastDate: DateTime(2100),
-                );
-                if (picked != null) {
-                  dateController.text =
-                      '${picked.day.toString().padLeft(2, '0')}/${picked.month.toString().padLeft(2, '0')}/${picked.year}';
-                  onDateChanged(picked.toUtc().millisecondsSinceEpoch);
-                }
-              },
+              isReadOnly: true,
+              enabled: false,
             ),
           ),
+          SizedBox(width: 16),
           Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+            flex: 2,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   'Periodic',
-                  style: TextStyle(color: Colors.white70),
-                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.white70, fontSize: 12),
                 ),
-                DropdownButton<int>(
-                  menuWidth: 16.w,
-                  value: data?.periodMonths ?? 6,
-                  dropdownColor: AppColors.background,
-                  items: [1, 3, 6, 7, 12, 24, 36]
-                      .map(
-                        (m) => DropdownMenuItem<int>(
-                          value: m,
-                          child: Text('After $m month${m == 1 ? '' : 's'}'),
+                SizedBox(height: 4),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.white30, width: 1.5),
+                    borderRadius: BorderRadius.circular(8),
+                    color: Colors.black26,
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          _getPeriodLabel(_selectedPeriod),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 13,
+                          ),
                         ),
-                      )
-                      .toList(),
-                  onChanged: (v) {
-                    if (v != null) onPeriodChanged(v);
-                  },
+                      ),
+                      DropdownButton<int?>(
+                        underline: SizedBox(),
+                        value: _selectedPeriod,
+                        dropdownColor: Color(0xFF1a1a1a),
+                        icon: Icon(
+                          Icons.arrow_drop_down_rounded,
+                          color: Colors.white70,
+                          size: 20,
+                        ),
+                        items: [
+                          DropdownMenuItem<int?>(
+                            value: null,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              child: Text(
+                                'None',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ),
+                          ),
+                          ...[1, 3, 6, 7, 12, 24, 36]
+                              .map(
+                                (m) => DropdownMenuItem<int?>(
+                                  value: m,
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                    child: Text(
+                                      '$m month${m == 1 ? '' : 's'}',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                              .toList(),
+                        ],
+                        onChanged: (v) {
+                          setState(() {
+                            _selectedPeriod = v;
+                            _updateDateDisplay();
+                          });
+                          widget.onPeriodChanged(v);
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
+          SizedBox(width: 16),
           Expanded(
+            flex: 1,
             child: AppTextFormField(
               labelText: 'Fees',
-              controller: feesController,
-              onChanged: onFeesChanged,
-            ),
-          ),
-          Expanded(
-            child: DropdownButton<RenewalStatus>(
-              value: data?.status ?? RenewalStatus.inProgress,
-              dropdownColor: AppColors.background,
-              items: RenewalStatus.values
-                  .map(
-                    (s) => DropdownMenuItem<RenewalStatus>(
-                      value: s,
-                      child: Text(s.name[0].toUpperCase() + s.name.substring(1)),
-                    ),
-                  )
-                  .toList(),
-              onChanged: (v) {
-                if (v != null) onStatusChanged(v);
-              },
+              controller: widget.feesController,
+              onChanged: widget.onFeesChanged,
             ),
           ),
         ],

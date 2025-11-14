@@ -59,14 +59,14 @@ class _RenewalAndStatusScreenState extends State<RenewalAndStatusScreen> {
               Expanded(
                 child: Padding(
                   padding: EdgeInsets.symmetric(
-                    vertical: 16.h,
+                    vertical: 20.h,
                     horizontal: 32.w,
                   ),
                   child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: Colors.grey[900],
-                      borderRadius: BorderRadius.circular(0),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                     margin: EdgeInsets.zero,
                     padding: EdgeInsets.zero,
@@ -75,8 +75,8 @@ class _RenewalAndStatusScreenState extends State<RenewalAndStatusScreen> {
                       children: [
                         Padding(
                           padding: EdgeInsets.symmetric(
-                            vertical: 12.h,
-                            horizontal: 12.w,
+                            vertical: 18.h,
+                            horizontal: 24.w,
                           ),
                           child:
                               BlocBuilder<
@@ -91,16 +91,29 @@ class _RenewalAndStatusScreenState extends State<RenewalAndStatusScreen> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      const Text(
-                                        'Renewal & Status',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18,
-                                        ),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const Text(
+                                            'Renewal & Status',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20,
+                                            ),
+                                          ),
+                                          SizedBox(height: 4.h),
+                                          Text(
+                                            'Track your renewal progress',
+                                            style: TextStyle(
+                                              color: Colors.white54,
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                       SizedBox(
-                                        width: 260,
+                                        width: 240,
                                         child: CustomTabBar(
                                           tabs: const [
                                             'This week',
@@ -121,13 +134,13 @@ class _RenewalAndStatusScreenState extends State<RenewalAndStatusScreen> {
                                             vertical: 0,
                                             horizontal: 0,
                                           ),
-                                          backgroundColor: Colors.transparent,
+                                          backgroundColor: Colors.white10,
                                           selectedColor: const Color(
                                             0xFF2ECC40,
                                           ),
-                                          unselectedTextColor: Colors.white70,
+                                          unselectedTextColor: Colors.white54,
                                           selectedTextColor: Colors.white,
-                                          height: 36,
+                                          height: 38,
                                           borderRadius: 20,
                                         ),
                                       ),
@@ -135,6 +148,11 @@ class _RenewalAndStatusScreenState extends State<RenewalAndStatusScreen> {
                                   );
                                 },
                               ),
+                        ),
+                        Divider(
+                          color: Colors.white10,
+                          height: 1,
+                          thickness: 1,
                         ),
                         // Ensure the table area gets a finite height.
                         LayoutBuilder(
@@ -162,7 +180,9 @@ class _RenewalAndStatusScreenState extends State<RenewalAndStatusScreen> {
                                   }
                                   if (state is RenewalAndStatusLoading) {
                                     return const Center(
-                                      child: CircularProgressIndicator(),
+                                      child: CircularProgressIndicator(
+                                        valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF2ECC40)),
+                                      ),
                                     );
                                   }
 
@@ -174,10 +194,10 @@ class _RenewalAndStatusScreenState extends State<RenewalAndStatusScreen> {
                                         children: [
                                           Icon(
                                             Icons.error_outline,
-                                            size: 48,
+                                            size: 56,
                                             color: Colors.red[400],
                                           ),
-                                          const SizedBox(height: 8),
+                                          const SizedBox(height: 16),
                                           Padding(
                                             padding: EdgeInsets.symmetric(
                                               horizontal: 24.w,
@@ -187,17 +207,30 @@ class _RenewalAndStatusScreenState extends State<RenewalAndStatusScreen> {
                                               textAlign: TextAlign.center,
                                               style: const TextStyle(
                                                 color: Colors.white70,
+                                                fontSize: 15,
                                               ),
                                             ),
                                           ),
-                                          const SizedBox(height: 12),
-                                          ElevatedButton(
+                                          const SizedBox(height: 20),
+                                          ElevatedButton.icon(
                                             onPressed: () => context
                                                 .read<
                                                   RenewalAndStatusCubit
                                                 >()
                                                 .load(),
-                                            child: const Text('Retry'),
+                                            icon: const Icon(Icons.refresh),
+                                            label: const Text('Retry'),
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: const Color(0xFF2ECC40),
+                                              foregroundColor: Colors.black,
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 24.w,
+                                                vertical: 12.h,
+                                              ),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(8),
+                                              ),
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -213,25 +246,46 @@ class _RenewalAndStatusScreenState extends State<RenewalAndStatusScreen> {
                                         children: [
                                           Icon(
                                             Icons.inbox_outlined,
-                                            size: 48,
+                                            size: 56,
                                             color: Colors.white24,
                                           ),
-                                          const SizedBox(height: 8),
+                                          const SizedBox(height: 16),
                                           const Text(
                                             'No renewals found',
                                             style: TextStyle(
                                               color: Colors.white70,
-                                              fontSize: 16,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w500,
                                             ),
                                           ),
-                                          const SizedBox(height: 12),
-                                          ElevatedButton(
+                                          const SizedBox(height: 8),
+                                          Text(
+                                            'There are no renewals matching the selected time period',
+                                            style: TextStyle(
+                                              color: Colors.white54,
+                                              fontSize: 13,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 20),
+                                          ElevatedButton.icon(
                                             onPressed: () => context
                                                 .read<
                                                   RenewalAndStatusCubit
                                                 >()
                                                 .load(),
-                                            child: const Text('Refresh'),
+                                            icon: const Icon(Icons.refresh),
+                                            label: const Text('Refresh'),
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: const Color(0xFF2ECC40),
+                                              foregroundColor: Colors.black,
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 24.w,
+                                                vertical: 12.h,
+                                              ),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(8),
+                                              ),
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -247,9 +301,11 @@ class _RenewalAndStatusScreenState extends State<RenewalAndStatusScreen> {
                                         dataRowColor: WidgetStateProperty.all(
                                           Colors.transparent,
                                         ),
-                                        dividerThickness: 0.5,
-                                        columnSpacing: 32.w,
-                                        horizontalMargin: 0,
+                                        dataRowHeight: 64.h,
+                                        dividerThickness: 1,
+                                        columnSpacing: 40.w,
+                                        horizontalMargin: 24.w,
+                                        headingRowHeight: 56.h,
                                         columns: const [
                                           DataColumn(
                                             label: _TableHeader('Renewals'),
@@ -260,7 +316,9 @@ class _RenewalAndStatusScreenState extends State<RenewalAndStatusScreen> {
                                             ),
                                           ),
                                           DataColumn(
-                                            label: _TableHeader('Status'),
+                                            label: Center(
+                                              child: _TableHeader('Status'),
+                                            ),
                                           ),
                                           DataColumn(
                                             label: _TableHeader(
@@ -283,8 +341,10 @@ class _RenewalAndStatusScreenState extends State<RenewalAndStatusScreen> {
                                                     ),
                                                   ),
                                                   DataCell(
-                                                    _StatusPill(
-                                                      row['status'] ?? '',
+                                                    Center(
+                                                      child: _StatusPill(
+                                                        row['status'] ?? '',
+                                                      ),
                                                     ),
                                                   ),
                                                   DataCell(
@@ -356,31 +416,55 @@ class _StatusPill extends StatelessWidget {
     switch (renewalStatus) {
       case RenewalStatus.complete:
         // Green (Repaired)
-        return const Color(0xFF6EFF8E);
+        return const Color(0xFF2ECC40).withOpacity(0.2);
       case RenewalStatus.applied:
         // Blue (Applied)
-        return const Color(0xFF6EEBFF);
+        return const Color(0xFF6EEBFF).withOpacity(0.2);
       case RenewalStatus.rejected:
         // Red (Rejected)
-        return const Color(0xFFFF6B6B);
+        return const Color(0xFFFF6B6B).withOpacity(0.2);
       case RenewalStatus.inProgress:
       default:
         // Blue-gray (On Process)
+        return const Color(0xFF7A8FFF).withOpacity(0.2);
+    }
+  }
+
+  Color get borderColor {
+    switch (renewalStatus) {
+      case RenewalStatus.complete:
+        return const Color(0xFF2ECC40);
+      case RenewalStatus.applied:
+        return const Color(0xFF6EEBFF);
+      case RenewalStatus.rejected:
+        return const Color(0xFFFF6B6B);
+      case RenewalStatus.inProgress:
+      default:
         return const Color(0xFF7A8FFF);
     }
   }
 
-  Color get textColor => Colors.black;
+  Color get textColor {
+    switch (renewalStatus) {
+      case RenewalStatus.complete:
+        return const Color(0xFF2ECC40);
+      case RenewalStatus.applied:
+        return const Color(0xFF6EEBFF);
+      case RenewalStatus.rejected:
+        return const Color(0xFFFF6B6B);
+      case RenewalStatus.inProgress:
+      default:
+        return const Color(0xFF7A8FFF);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: BoxConstraints(minWidth: 80.w),
-      padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 16.w),
-      margin: EdgeInsets.symmetric(vertical: 6.h, horizontal: 8.w),
+      padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.w),
       decoration: BoxDecoration(
         color: bgColor,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(6),
       ),
       alignment: Alignment.center,
       child: Text(
@@ -388,7 +472,7 @@ class _StatusPill extends StatelessWidget {
         style: TextStyle(
           color: textColor,
           fontWeight: FontWeight.w600,
-          fontSize: 14,
+          fontSize: 11,
           letterSpacing: 0.2,
         ),
         textAlign: TextAlign.center,
@@ -397,19 +481,22 @@ class _StatusPill extends StatelessWidget {
   }
 }
 
+
+
 class _TableHeader extends StatelessWidget {
   final String text;
   const _TableHeader(this.text);
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 10.h),
+      padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 2.w),
       child: Text(
         text,
         style: const TextStyle(
           color: Colors.white,
-          fontWeight: FontWeight.w600,
-          fontSize: 15,
+          fontWeight: FontWeight.w700,
+          fontSize: 14,
+          letterSpacing: 0.5,
         ),
       ),
     );
@@ -418,14 +505,20 @@ class _TableHeader extends StatelessWidget {
 
 class _TableCell extends StatelessWidget {
   final String text;
+  
   const _TableCell(this.text);
+  
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 2.w),
+      padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 2.w),
       child: Text(
         text,
-        style: const TextStyle(color: Colors.white70, fontSize: 14),
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 13,
+          fontWeight: FontWeight.w400,
+        ),
       ),
     );
   }
