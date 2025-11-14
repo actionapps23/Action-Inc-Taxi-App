@@ -18,6 +18,23 @@ class SelectionScreen extends StatefulWidget {
 class _SelectionScreenState extends State<SelectionScreen> {
   int selectedIndex = 0;
 
+  final taxiNoController = TextEditingController();
+  final regNoController = TextEditingController();
+  final driverNameController = TextEditingController();
+
+  bool get isCarDetails => selectedIndex == 0;
+
+  bool get canProceed {
+    if (isCarDetails) {
+      return taxiNoController.text.trim().isNotEmpty &&
+          regNoController.text.trim().isNotEmpty &&
+          driverNameController.text.trim().isNotEmpty;
+    } else {
+      return taxiNoController.text.trim().isNotEmpty ||
+          regNoController.text.trim().isNotEmpty;
+    }
+  }
+
   final List<Map<String, dynamic>> featureCards = [
     {
       'title': "Car Details",
@@ -48,6 +65,14 @@ class _SelectionScreenState extends State<SelectionScreen> {
       'icon': AppAssets.renewalStatus,
     },
   ];
+
+  @override
+  void dispose() {
+    taxiNoController.dispose();
+    regNoController.dispose();
+    driverNameController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -121,37 +146,53 @@ class _SelectionScreenState extends State<SelectionScreen> {
                               children: [
                                 SizedBox(height: 18.h),
                                 AppTextFormField(
+                                  controller: taxiNoController,
                                   hintText: 'Enter Taxi No.',
                                   labelOnTop: true,
+                                  onChanged: (_) => setState(() {}),
                                 ),
-                                SizedBox(height: 12.h),
-                                SizedBox(height: 12.h),
-                                AppTextFormField(
-                                  hintText: 'Taxi Registration No.',
-                                  labelOnTop: true,
-                                ),
-                                SizedBox(height: 12.h),
-                                SizedBox(height: 12.h),
-                                AppTextFormField(
-                                  hintText: 'Driver Name',
-                                  labelOnTop: true,
-                                ),
+                                if (isCarDetails) ...[
+                                  SizedBox(height: 12.h),
+                                  AppTextFormField(
+                                    controller: regNoController,
+                                    hintText: 'Taxi Registration No.',
+                                    labelOnTop: true,
+                                    onChanged: (_) => setState(() {}),
+                                  ),
+                                  SizedBox(height: 12.h),
+                                  AppTextFormField(
+                                    controller: driverNameController,
+                                    hintText: 'Driver Name',
+                                    labelOnTop: true,
+                                    onChanged: (_) => setState(() {}),
+                                  ),
+                                ] else ...[
+                                  SizedBox(height: 12.h),
+                                  AppTextFormField(
+                                    controller: regNoController,
+                                    hintText: 'Taxi Registration No.',
+                                    labelOnTop: true,
+                                    onChanged: (_) => setState(() {}),
+                                  ),
+                                ],
                                 SizedBox(height: 24.h),
                                 AppButton(
                                   text: 'Enter',
-                                  onPressed: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (_) => CarDetailScreen(),
-                                      ),
-                                    );
-                                  },
-                                  backgroundColor: Colors.green,
+                                  onPressed: canProceed
+                                      ? () {
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (_) => CarDetailScreen(),
+                                            ),
+                                          );
+                                        }
+                                      : () {},
+                                  backgroundColor: canProceed ? Colors.green : Colors.grey,
                                   textColor: Colors.white,
                                   width: 90.w,
                                   height: 36.h,
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.green,
+                                    backgroundColor: canProceed ? Colors.green : Colors.grey,
                                     foregroundColor: Colors.white,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8),
