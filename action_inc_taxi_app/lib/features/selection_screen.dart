@@ -7,6 +7,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:action_inc_taxi_app/core/theme/app_assets.dart';
 import 'package:action_inc_taxi_app/core/widgets/feature_selection_card.dart';
 import 'package:action_inc_taxi_app/core/widgets/buttons/app_button.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:action_inc_taxi_app/cubit/selection/selection_cubit.dart';
 
 class SelectionScreen extends StatefulWidget {
   const SelectionScreen({super.key});
@@ -76,6 +78,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final selectionCubit = context.read<SelectionCubit>();
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -149,7 +152,10 @@ class _SelectionScreenState extends State<SelectionScreen> {
                                   controller: taxiNoController,
                                   hintText: 'Enter Taxi No.',
                                   labelOnTop: true,
-                                  onChanged: (_) => setState(() {}),
+                                  onChanged: (val) {
+                                    setState(() {});
+                                    selectionCubit.setTaxiNo(val);
+                                  },
                                 ),
                                 if (isCarDetails) ...[
                                   SizedBox(height: 12.h),
@@ -157,14 +163,20 @@ class _SelectionScreenState extends State<SelectionScreen> {
                                     controller: regNoController,
                                     hintText: 'Taxi Registration No.',
                                     labelOnTop: true,
-                                    onChanged: (_) => setState(() {}),
+                                    onChanged: (val) {
+                                      setState(() {});
+                                      selectionCubit.setRegNo(val);
+                                    },
                                   ),
                                   SizedBox(height: 12.h),
                                   AppTextFormField(
                                     controller: driverNameController,
                                     hintText: 'Driver Name',
                                     labelOnTop: true,
-                                    onChanged: (_) => setState(() {}),
+                                    onChanged: (val) {
+                                      setState(() {});
+                                      selectionCubit.setDriverName(val);
+                                    },
                                   ),
                                 ] else ...[
                                   SizedBox(height: 12.h),
@@ -172,7 +184,10 @@ class _SelectionScreenState extends State<SelectionScreen> {
                                     controller: regNoController,
                                     hintText: 'Taxi Registration No.',
                                     labelOnTop: true,
-                                    onChanged: (_) => setState(() {}),
+                                    onChanged: (val) {
+                                      setState(() {});
+                                      selectionCubit.setRegNo(val);
+                                    },
                                   ),
                                 ],
                                 SizedBox(height: 24.h),
@@ -180,6 +195,11 @@ class _SelectionScreenState extends State<SelectionScreen> {
                                   text: 'Enter',
                                   onPressed: canProceed
                                       ? () {
+                                          selectionCubit.setAll(
+                                            taxiNo: taxiNoController.text,
+                                            regNo: regNoController.text,
+                                            driverName: driverNameController.text,
+                                          );
                                           Navigator.of(context).push(
                                             MaterialPageRoute(
                                               builder: (_) => CarDetailScreen(),

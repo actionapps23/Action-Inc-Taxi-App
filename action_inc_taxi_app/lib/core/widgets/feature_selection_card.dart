@@ -6,6 +6,7 @@ class FeatureSelectionCard extends StatelessWidget {
   final String cardTitle;
   final String iconPath;
   final VoidCallback onTap;
+
   final Color? backgroundColor;
 
   const FeatureSelectionCard({

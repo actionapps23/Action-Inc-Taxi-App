@@ -5,6 +5,7 @@ class CarInfo {
   final String? fleetNo;
   final String? driverId;
   final int createdAtUtc;
+  final bool onRoad;
 
   CarInfo({
     required this.id,
@@ -13,6 +14,7 @@ class CarInfo {
     this.fleetNo,
     this.driverId,
     required this.createdAtUtc,
+    this.onRoad = false,
   });
 
   Map<String, dynamic> toMap() => {
@@ -22,6 +24,7 @@ class CarInfo {
     'fleetNo': fleetNo,
     'driverId': driverId,
     'createdAtUtc': createdAtUtc,
+    'onRoad': onRoad,
   };
 
   factory CarInfo.fromMap(Map<String, dynamic> m) => CarInfo(
@@ -33,5 +36,6 @@ class CarInfo {
     createdAtUtc:
         (m['createdAtUtc'] as int?) ??
         DateTime.now().toUtc().millisecondsSinceEpoch,
+    onRoad: (m['onRoad'] as bool?) ?? false,
   );
 }

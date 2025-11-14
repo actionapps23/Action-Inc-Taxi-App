@@ -69,13 +69,18 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                                       return CustomTabBar(
                                         tabs: const [
                                           'Rental Information',
-                                          // 'Car Plan',
                                           'Renewal Date',
                                         ],
                                         selectedIndex: selectedIndex,
-                                        onTabSelected: (index) => context
-                                            .read<CarDetailCubit>()
-                                            .selectTab(index),
+                                        onTabSelected: (index) {
+                                          // Block tab switching - only allow programmatic navigation
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            const SnackBar(
+                                              content: Text('Please complete the current section first.'),
+                                              duration: Duration(seconds: 2),
+                                            ),
+                                          );
+                                        },
                                       );
                                     },
                                   ),
@@ -92,10 +97,9 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                                   : 0;
                               if (selectedIndex == 0) {
                                 return DailyRentCollectionInfoScreen(
-                                  taxiNo: 'ABC-123',
                                 );
                               }
-                              return RenewalDataTable(taxiNo: 'ABC-123');
+                              return RenewalDataTable();
                             },
                           ),
                         ],

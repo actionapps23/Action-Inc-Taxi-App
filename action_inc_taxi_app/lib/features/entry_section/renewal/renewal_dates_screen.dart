@@ -1,6 +1,7 @@
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
 import 'package:action_inc_taxi_app/core/widgets/buttons/app_button.dart';
 import 'package:action_inc_taxi_app/core/widgets/buttons/app_outline_button.dart';
+import 'package:action_inc_taxi_app/features/entry_section/renewal/renewal_and_status_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:action_inc_taxi_app/core/widgets/form/app_text_form_field.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,15 +11,14 @@ import 'package:action_inc_taxi_app/cubit/renewal/renewal_cubit.dart';
 import 'package:action_inc_taxi_app/core/models/renewal.dart';
 import 'package:action_inc_taxi_app/core/models/renewal_type_data.dart';
 import 'package:action_inc_taxi_app/core/models/enums.dart';
+import 'package:action_inc_taxi_app/cubit/selection/selection_cubit.dart';
 
 class RenewalDataTable extends StatefulWidget {
-  final String taxiNo;
   final TextEditingController? contractStartController;
   final TextEditingController? contractEndController;
 
   const RenewalDataTable({
     super.key,
-    required this.taxiNo,
     this.contractStartController,
     this.contractEndController,
   });
@@ -31,22 +31,24 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
   late final RenewalCubit _cubit = RenewalCubit(DbService());
   final Map<String, TextEditingController> _feesControllers = {};
   final Map<String, TextEditingController> _dateControllers = {};
+  late String _taxiNo;
 
   @override
   void initState() {
     super.initState();
+    _taxiNo = context.read<SelectionCubit>().state.taxiNo;
     widget.contractStartController?.addListener(_onContractChanged);
     widget.contractEndController?.addListener(_onContractChanged);
     _init();
   }
 
   void _init() async {
-    await _cubit.loadByTaxi(widget.taxiNo);
+    await _cubit.loadByTaxi(_taxiNo);
     final cur = _cubit.state;
     if (cur is RenewalError) {
       final todayUtc = DateTime.now().toUtc().millisecondsSinceEpoch;
       final renewal = Renewal(
-        taxiNo: widget.taxiNo,
+        taxiNo: _taxiNo,
         sealing: RenewalTypeData(
           dateUtc: todayUtc,
           periodMonths: 6,
@@ -98,7 +100,7 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
     final endUtc = endText.isEmpty ? null : _parseDateToUtcMs(endText);
     if (startUtc != null) {
       _cubit.generateFromContract(
-        taxiNo: widget.taxiNo,
+        taxiNo: _taxiNo,
         contractStartUtc: startUtc,
         contractEndUtc: endUtc,
         periodMonths: 6,
@@ -242,7 +244,7 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
                   _cubit.updateStatus(key, status);
                 },
               );
-            }).toList(),
+            }),
             SizedBox(height: 24.h),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -256,7 +258,6 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
                 AppButton(
                   text: 'Submit Now',
                   onPressed: () async {
-                    // validate all fields required
                     final current = _cubit.state;
                     if (current is! RenewalLoaded) return;
                     for (final key in renewalFields.keys) {
@@ -276,10 +277,9 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
                     );
                     // Navigate to renewal_n_status screen after successful save
                     if (mounted) {
-                      Navigator.pushReplacementNamed(
-                        context,
-                        '/renewal_n_status',
-                      );
+                     Navigator.push(context, MaterialPageRoute(
+                        builder: (_) => RenewalAndStatusScreen(),
+                      ));
                     }
                   },
                   backgroundColor: Colors.green,

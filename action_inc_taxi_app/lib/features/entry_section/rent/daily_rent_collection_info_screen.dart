@@ -1,11 +1,5 @@
-// ignore_for_file: unused_import
-
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
-import 'package:action_inc_taxi_app/core/widgets/buttons/app_outline_button.dart';
-import 'package:action_inc_taxi_app/core/widgets/common/tab_button.dart';
-import 'package:action_inc_taxi_app/core/widgets/tabbar/tabbar.dart';
 import 'package:action_inc_taxi_app/cubit/car_detail_cubit.dart';
-import 'package:action_inc_taxi_app/features/entry_section/renewal/renewal_dates_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,11 +11,10 @@ import 'package:intl/intl.dart';
 import 'package:action_inc_taxi_app/core/widgets/buttons/app_button.dart';
 import 'package:action_inc_taxi_app/core/widgets/form/app_text_form_field.dart';
 import 'package:action_inc_taxi_app/core/widgets/form/app_dropdown.dart';
-import 'package:action_inc_taxi_app/core/widgets/navbar/navbar.dart';
+import 'package:action_inc_taxi_app/cubit/selection/selection_cubit.dart';
 
 class DailyRentCollectionInfoScreen extends StatefulWidget {
-  final String taxiNo;
-  const DailyRentCollectionInfoScreen({super.key, required this.taxiNo});
+  const DailyRentCollectionInfoScreen({super.key});
 
   @override
   State<DailyRentCollectionInfoScreen> createState() =>
@@ -165,7 +158,7 @@ class _DailyRentCollectionInfoScreenState
     final rent = Rent(
       taxiNo: taxiNoController.text.isNotEmpty
           ? taxiNoController.text
-          : widget.taxiNo,
+          : '',
       dateUtc: dateUtc,
       contractStartUtc: contractStartUtc,
       contractEndUtc: contractEndUtc,
@@ -380,20 +373,27 @@ class _DailyRentCollectionInfoScreenState
   @override
   void initState() {
     super.initState();
-    taxiNoController.text = widget.taxiNo;
-    _cubit.initWithTaxiNo(widget.taxiNo);
-    // default date values: today for date fields, contract end = 2 years from today
-    final today = DateTime.now();
-    contractStartController.text = _formatDate(today);
-    final twoYears = DateTime(today.year + 2, today.month, today.day);
-    contractEndController.text = _formatDate(twoYears);
-    paymentDateController.text = _formatDate(today);
-    firstDriverDobController.text = _formatDate(today);
-    secondDriverDobController.text = _formatDate(today);
-    // update draft with defaults
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => _updateDraftFromControllers(),
-    );
+    // Delay to ensure context is available
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final selectionState = context.read<SelectionCubit>().state;
+      setState(() {
+        taxiNoController.text = selectionState.taxiNo;
+        firstDriverNameController.text = selectionState.driverName;
+      });
+      _cubit.initWithTaxiNo(selectionState.taxiNo);
+      // default date values: today for date fields, contract end = 2 years from today
+      final today = DateTime.now();
+      contractStartController.text = _formatDate(today);
+      final twoYears = DateTime(today.year + 2, today.month, today.day);
+      contractEndController.text = _formatDate(twoYears);
+      paymentDateController.text = _formatDate(today);
+      firstDriverDobController.text = _formatDate(today);
+      secondDriverDobController.text = _formatDate(today);
+      // update draft with defaults
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => _updateDraftFromControllers(),
+      );
+    });
   }
 
   @override
@@ -478,8 +478,8 @@ class _DailyRentCollectionInfoScreenState
                                         controller: firstDriverNameController,
                                         labelText: 'First Driver Name',
                                         hintText: 'Enter Driver Name',
-                                        errorText:
-                                            fieldErrors['firstDriverName'],
+                                        isReadOnly: true,
+                                        errorText: fieldErrors['firstDriverName'],
                                       ),
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
