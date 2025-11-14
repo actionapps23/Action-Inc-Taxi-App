@@ -7,8 +7,8 @@ class RenewalInitial extends RenewalState {}
 class RenewalLoading extends RenewalState {}
 
 class RenewalLoaded extends RenewalState {
-  final List<Renewal> renewals;
-  RenewalLoaded({required this.renewals});
+  final Renewal renewal;
+  RenewalLoaded({required this.renewal});
 }
 
 class RenewalSaving extends RenewalState {}

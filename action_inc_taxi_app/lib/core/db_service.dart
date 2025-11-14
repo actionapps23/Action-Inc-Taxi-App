@@ -140,32 +140,17 @@ class DbService {
     }
   }
 
-  Future<void> saveRenewals(List<Renewal> list) async {
-    final batch = _firestore.batch();
-    final col = _firestore.collection(renewalsCollection);
-    for (final r in list) {
-      if (r.id != null && r.id!.isNotEmpty) {
-        final ref = col.doc(r.id);
-        final map = r.toMap()..['id'] = r.id;
-        batch.set(ref, map);
-      } else {
-        final ref = col.doc();
-        final map = r.toMap()..['id'] = ref.id;
-        batch.set(ref, map);
-      }
-    }
-    await batch.commit();
-  }
 
-  Future<List<Renewal>> getRenewalsByTaxi(String taxiNo) async {
+  Future<Renewal?> getRenewalByTaxi(String taxiNo) async {
     try {
       final q = await _firestore
           .collection(renewalsCollection)
           .where('taxiNo', isEqualTo: taxiNo)
+          .limit(1)
           .get();
-      return q.docs
-          .map((d) => Renewal.fromMap(d.data()..['id'] = d.id))
-          .toList();
+      if (q.docs.isEmpty) return null;
+      final data = q.docs.first.data()..['id'] = q.docs.first.id;
+      return Renewal.fromMap(data);
     } catch (e) {
       rethrow;
     }

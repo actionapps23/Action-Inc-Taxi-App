@@ -42,7 +42,7 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
   void _init() async {
     await _cubit.loadByTaxi(widget.taxiNo);
     final cur = _cubit.state;
-    if (cur is RenewalLoaded && cur.renewals.isEmpty) {
+    if (cur is RenewalError) {
       final todayUtc = DateTime.now().toUtc().millisecondsSinceEpoch;
       final renewal = Renewal(
         taxiNo: widget.taxiNo,
@@ -54,7 +54,7 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
         lto: RenewalTypeData(dateUtc: todayUtc, periodMonths: 12, feesCents: 7500 ),
         createdAtUtc: DateTime.now().toUtc().millisecondsSinceEpoch,
       );
-      _cubit.setDrafts([renewal]);
+      _cubit.setDraft(renewal);
     }
     _onContractChanged();
   }
@@ -117,7 +117,7 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
       bloc: _cubit,
       builder: (context, state) {
         if (state is! RenewalLoaded) {
-          // Show loading indicator while renewals are loading
+          // Show loading indicator while renewal is loading
           return Center(
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 48),
@@ -125,9 +125,7 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
             ),
           );
         }
-        final renewals = state.renewals;
-        if (renewals.isEmpty) return SizedBox();
-        final renewal = renewals.first;
+        final renewal = state.renewal;
 
         // Map of field keys to display names
         const fieldDisplayNames = {
@@ -192,13 +190,16 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
                 dateController: _dateControllers[key]!,
                 feesController: _feesControllers[key]!,
                 onFeesChanged: (s) {
-                  // TODO: update cubit for this field
+                  final cents = int.tryParse(s.replaceAll(',', ''));
+                  if (cents != null) {
+                    _cubit.updateFees(key, cents * 100);
+                  }
                 },
                 onDateChanged: (utcMs) {
-                  // TODO: update cubit for this field
+                  _cubit.updateDate(key, utcMs);
                 },
                 onPeriodChanged: (period) {
-                  // TODO: update cubit for this field
+                  _cubit.updatePeriod(key, period);
                 },
               );
             }).toList(),
@@ -229,7 +230,7 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
                         return;
                       }
                     }
-                    await _cubit.saveAllDrafts();
+                    await _cubit.saveDraft();
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Renewals saved.')),
                     );
