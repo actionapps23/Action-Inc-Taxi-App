@@ -8,8 +8,46 @@ import 'package:action_inc_taxi_app/core/theme/app_assets.dart';
 import 'package:action_inc_taxi_app/core/widgets/feature_selection_card.dart';
 import 'package:action_inc_taxi_app/core/widgets/buttons/app_button.dart';
 
-class SelectionScreen extends StatelessWidget {
+class SelectionScreen extends StatefulWidget {
   const SelectionScreen({super.key});
+
+  @override
+  State<SelectionScreen> createState() => _SelectionScreenState();
+}
+
+class _SelectionScreenState extends State<SelectionScreen> {
+  int selectedIndex = 0;
+
+  final List<Map<String, dynamic>> featureCards = [
+    {
+      'title': "Car Details",
+      'icon': AppAssets.carDetailsIcon,
+    },
+    {
+      'title': "Maintenance",
+      'icon': AppAssets.maintenance,
+    },
+    {
+      'title': "Inventory",
+      'icon': AppAssets.inventory,
+    },
+    {
+      'title': "Taxi Inspection",
+      'icon': AppAssets.taxiInspection,
+    },
+    {
+      'title': "Open Procedure",
+      'icon': AppAssets.openProcedure,
+    },
+    {
+      'title': "Close Procedure",
+      'icon': AppAssets.closeProcedure,
+    },
+    {
+      'title': "Renewal & Status",
+      'icon': AppAssets.renewalStatus,
+    },
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +56,7 @@ class SelectionScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            // Top App Bar
             Navbar(),
-            // Main content
             Expanded(
               child: SingleChildScrollView(
                 child: Center(
@@ -33,7 +69,6 @@ class SelectionScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Select Options and Add Notes
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -48,7 +83,6 @@ class SelectionScreen extends StatelessWidget {
                           ],
                         ),
                         SizedBox(height: 24.h),
-                        // Feature cards grid
                         GridView.count(
                           crossAxisCount: 4,
                           shrinkWrap: true,
@@ -56,46 +90,22 @@ class SelectionScreen extends StatelessWidget {
                           crossAxisSpacing: 16.w,
                           childAspectRatio: 2.5,
                           physics: NeverScrollableScrollPhysics(),
-                          children: [
-                            FeatureSelectionCard(
-                              cardTitle: "Car Details",
-                              iconPath: AppAssets.carDetailsIcon,
-                              onTap: () {},
-                            ),
-                            FeatureSelectionCard(
-                              cardTitle: "Maintenance",
-                              iconPath: AppAssets.maintenance,
-                              onTap: () {},
-                            ),
-                            FeatureSelectionCard(
-                              cardTitle: "Inventory",
-                              iconPath: AppAssets.inventory,
-                              onTap: () {},
-                            ),
-                            FeatureSelectionCard(
-                              cardTitle: "Taxi Inspection",
-                              iconPath: AppAssets.taxiInspection,
-                              onTap: () {},
-                            ),
-                            FeatureSelectionCard(
-                              cardTitle: "Open Procedure",
-                              iconPath: AppAssets.openProcedure,
-                              onTap: () {},
-                            ),
-                            FeatureSelectionCard(
-                              cardTitle: "Close Procedure",
-                              iconPath: AppAssets.closeProcedure,
-                              onTap: () {},
-                            ),
-                            FeatureSelectionCard(
-                              cardTitle: "Renewal & Status",
-                              iconPath: AppAssets.renewalStatus,
-                              onTap: () {},
-                            ),
-                          ],
+                          children: List.generate(featureCards.length, (i) {
+                            return FeatureSelectionCard(
+                              cardTitle: featureCards[i]['title'],
+                              iconPath: featureCards[i]['icon'],
+                              backgroundColor: selectedIndex == i
+                                  ? AppColors.primary
+                                  : null,
+                              onTap: () {
+                                setState(() {
+                                  selectedIndex = i;
+                                });
+                              },
+                            );
+                          }),
                         ),
                         SizedBox(height: 40.h),
-                        // Centered form
                         Center(
                           child: Container(
                             width: 180.w,
@@ -104,27 +114,23 @@ class SelectionScreen extends StatelessWidget {
                               horizontal: 18.w,
                             ),
                             decoration: BoxDecoration(
-                              // color: AppC,
                               borderRadius: BorderRadius.circular(18),
                               border: Border.all(color: Colors.white12),
                             ),
                             child: Column(
                               children: [
-                                // Text('Enter Taxi No.', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)),
                                 SizedBox(height: 18.h),
                                 AppTextFormField(
                                   hintText: 'Enter Taxi No.',
                                   labelOnTop: true,
                                 ),
                                 SizedBox(height: 12.h),
-                                // Text('or, Enter Taxi Registration No.', style: TextStyle(color: Colors.white70, fontSize: 14)),
                                 SizedBox(height: 12.h),
                                 AppTextFormField(
                                   hintText: 'Taxi Registration No.',
                                   labelOnTop: true,
                                 ),
                                 SizedBox(height: 12.h),
-                                // Text('or, Enter Driver Name', style: TextStyle(color: Colors.white70, fontSize: 14)),
                                 SizedBox(height: 12.h),
                                 AppTextFormField(
                                   hintText: 'Driver Name',

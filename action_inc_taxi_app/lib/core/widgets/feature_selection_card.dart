@@ -6,12 +6,14 @@ class FeatureSelectionCard extends StatelessWidget {
   final String cardTitle;
   final String iconPath;
   final VoidCallback onTap;
+  final Color? backgroundColor;
 
   const FeatureSelectionCard({
     super.key,
     required this.cardTitle,
     required this.iconPath,
     required this.onTap,
+    this.backgroundColor,
   });
 
   @override
@@ -25,7 +27,7 @@ class FeatureSelectionCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Card(
-        color: AppColors.cardBackground,
+        color: backgroundColor ?? AppColors.cardBackground,
         child: Center(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
