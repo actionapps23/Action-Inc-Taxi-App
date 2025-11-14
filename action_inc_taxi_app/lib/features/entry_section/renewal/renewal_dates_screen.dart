@@ -9,6 +9,7 @@ import 'package:action_inc_taxi_app/core/db_service.dart';
 import 'package:action_inc_taxi_app/cubit/renewal/renewal_cubit.dart';
 import 'package:action_inc_taxi_app/core/models/renewal.dart';
 import 'package:action_inc_taxi_app/core/models/renewal_type_data.dart';
+import 'package:action_inc_taxi_app/core/models/enums.dart';
 
 class RenewalDataTable extends StatefulWidget {
   final String taxiNo;
@@ -50,31 +51,37 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
           dateUtc: todayUtc,
           periodMonths: 6,
           feesCents: 2500,
+          status: RenewalStatus.complete,
         ),
         inspection: RenewalTypeData(
           dateUtc: todayUtc,
           periodMonths: 12,
           feesCents: 3000,
+          status: RenewalStatus.inProgress,
         ),
         ltefb: RenewalTypeData(
           dateUtc: todayUtc,
           periodMonths: 6,
           feesCents: 5000,
+          status: RenewalStatus.applied,
         ),
         registeration: RenewalTypeData(
           dateUtc: todayUtc,
           periodMonths: 24,
           feesCents: 10000,
+          status: RenewalStatus.inProgress,
         ),
         drivingLicense: RenewalTypeData(
           dateUtc: todayUtc,
           periodMonths: 12,
           feesCents: 0,
+          status: RenewalStatus.inProgress,
         ),
         lto: RenewalTypeData(
           dateUtc: todayUtc,
           periodMonths: 12,
           feesCents: 7500,
+          status: RenewalStatus.inProgress,
         ),
         createdAtUtc: DateTime.now().toUtc().millisecondsSinceEpoch,
       );
@@ -231,6 +238,9 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
                 onPeriodChanged: (period) {
                   _cubit.updatePeriod(key, period);
                 },
+                onStatusChanged: (status) {
+                  _cubit.updateStatus(key, status);
+                },
               );
             }).toList(),
             SizedBox(height: 24.h),
@@ -309,6 +319,7 @@ class _RenewalDataRowWidget extends StatelessWidget {
   final void Function(String) onFeesChanged;
   final void Function(int) onDateChanged;
   final void Function(int) onPeriodChanged;
+  final void Function(RenewalStatus) onStatusChanged;
 
   const _RenewalDataRowWidget({
     required this.fieldKey,
@@ -320,6 +331,7 @@ class _RenewalDataRowWidget extends StatelessWidget {
     required this.onFeesChanged,
     required this.onDateChanged,
     required this.onPeriodChanged,
+    required this.onStatusChanged,
   });
 
   @override
@@ -388,6 +400,23 @@ class _RenewalDataRowWidget extends StatelessWidget {
               labelText: 'Fees',
               controller: feesController,
               onChanged: onFeesChanged,
+            ),
+          ),
+          Expanded(
+            child: DropdownButton<RenewalStatus>(
+              value: data?.status ?? RenewalStatus.inProgress,
+              dropdownColor: AppColors.background,
+              items: RenewalStatus.values
+                  .map(
+                    (s) => DropdownMenuItem<RenewalStatus>(
+                      value: s,
+                      child: Text(s.name[0].toUpperCase() + s.name.substring(1)),
+                    ),
+                  )
+                  .toList(),
+              onChanged: (v) {
+                if (v != null) onStatusChanged(v);
+              },
             ),
           ),
         ],

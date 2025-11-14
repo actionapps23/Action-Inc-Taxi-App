@@ -1,5 +1,7 @@
 import 'package:action_inc_taxi_app/core/db_service.dart';
+import 'package:action_inc_taxi_app/core/models/enums.dart';
 import 'package:action_inc_taxi_app/core/models/renewal.dart';
+import 'package:action_inc_taxi_app/core/models/renewal_status.dart';
 import 'package:action_inc_taxi_app/core/models/renewal_type_data.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -32,12 +34,7 @@ class RenewalCubit extends Cubit<RenewalState> {
     int feesCents = 1000 * 100,
   }) {
     final ltoData = RenewalTypeData(
-      dateUtc:
-          contractEndUtc ??
-          _addMonths(
-            DateTime.fromMillisecondsSinceEpoch(contractStartUtc, isUtc: true),
-            periodMonths,
-          ).toUtc().millisecondsSinceEpoch,
+      dateUtc: contractEndUtc ?? _addMonths(DateTime.fromMillisecondsSinceEpoch(contractStartUtc, isUtc: true), periodMonths).toUtc().millisecondsSinceEpoch,
       periodMonths: periodMonths,
       feesCents: feesCents,
     );
@@ -81,33 +78,23 @@ class RenewalCubit extends Cubit<RenewalState> {
         newRenewal = old.copyWith(lto: updated);
         break;
       case 'sealing':
-        updated = (old.sealing ?? RenewalTypeData()).copyWith(
-          feesCents: feesCents,
-        );
+        updated = (old.sealing ?? RenewalTypeData()).copyWith(feesCents: feesCents);
         newRenewal = old.copyWith(sealing: updated);
         break;
       case 'inspection':
-        updated = (old.inspection ?? RenewalTypeData()).copyWith(
-          feesCents: feesCents,
-        );
+        updated = (old.inspection ?? RenewalTypeData()).copyWith(feesCents: feesCents);
         newRenewal = old.copyWith(inspection: updated);
         break;
       case 'ltefb':
-        updated = (old.ltefb ?? RenewalTypeData()).copyWith(
-          feesCents: feesCents,
-        );
+        updated = (old.ltefb ?? RenewalTypeData()).copyWith(feesCents: feesCents);
         newRenewal = old.copyWith(ltefb: updated);
         break;
       case 'registeration':
-        updated = (old.registeration ?? RenewalTypeData()).copyWith(
-          feesCents: feesCents,
-        );
+        updated = (old.registeration ?? RenewalTypeData()).copyWith(feesCents: feesCents);
         newRenewal = old.copyWith(registeration: updated);
         break;
       case 'drivingLicense':
-        updated = (old.drivingLicense ?? RenewalTypeData()).copyWith(
-          feesCents: feesCents,
-        );
+        updated = (old.drivingLicense ?? RenewalTypeData()).copyWith(feesCents: feesCents);
         newRenewal = old.copyWith(drivingLicense: updated);
         break;
       default:
@@ -133,9 +120,7 @@ class RenewalCubit extends Cubit<RenewalState> {
         newRenewal = old.copyWith(sealing: updated);
         break;
       case 'inspection':
-        updated = (old.inspection ?? RenewalTypeData()).copyWith(
-          dateUtc: dateUtc,
-        );
+        updated = (old.inspection ?? RenewalTypeData()).copyWith(dateUtc: dateUtc);
         newRenewal = old.copyWith(inspection: updated);
         break;
       case 'ltefb':
@@ -143,15 +128,11 @@ class RenewalCubit extends Cubit<RenewalState> {
         newRenewal = old.copyWith(ltefb: updated);
         break;
       case 'registeration':
-        updated = (old.registeration ?? RenewalTypeData()).copyWith(
-          dateUtc: dateUtc,
-        );
+        updated = (old.registeration ?? RenewalTypeData()).copyWith(dateUtc: dateUtc);
         newRenewal = old.copyWith(registeration: updated);
         break;
       case 'drivingLicense':
-        updated = (old.drivingLicense ?? RenewalTypeData()).copyWith(
-          dateUtc: dateUtc,
-        );
+        updated = (old.drivingLicense ?? RenewalTypeData()).copyWith(dateUtc: dateUtc);
         newRenewal = old.copyWith(drivingLicense: updated);
         break;
       default:
@@ -169,39 +150,27 @@ class RenewalCubit extends Cubit<RenewalState> {
     Renewal newRenewal;
     switch (fieldKey) {
       case 'lto':
-        updated = (old.lto ?? RenewalTypeData()).copyWith(
-          periodMonths: periodMonths,
-        );
+        updated = (old.lto ?? RenewalTypeData()).copyWith(periodMonths: periodMonths);
         newRenewal = old.copyWith(lto: updated);
         break;
       case 'sealing':
-        updated = (old.sealing ?? RenewalTypeData()).copyWith(
-          periodMonths: periodMonths,
-        );
+        updated = (old.sealing ?? RenewalTypeData()).copyWith(periodMonths: periodMonths);
         newRenewal = old.copyWith(sealing: updated);
         break;
       case 'inspection':
-        updated = (old.inspection ?? RenewalTypeData()).copyWith(
-          periodMonths: periodMonths,
-        );
+        updated = (old.inspection ?? RenewalTypeData()).copyWith(periodMonths: periodMonths);
         newRenewal = old.copyWith(inspection: updated);
         break;
       case 'ltefb':
-        updated = (old.ltefb ?? RenewalTypeData()).copyWith(
-          periodMonths: periodMonths,
-        );
+        updated = (old.ltefb ?? RenewalTypeData()).copyWith(periodMonths: periodMonths);
         newRenewal = old.copyWith(ltefb: updated);
         break;
       case 'registeration':
-        updated = (old.registeration ?? RenewalTypeData()).copyWith(
-          periodMonths: periodMonths,
-        );
+        updated = (old.registeration ?? RenewalTypeData()).copyWith(periodMonths: periodMonths);
         newRenewal = old.copyWith(registeration: updated);
         break;
       case 'drivingLicense':
-        updated = (old.drivingLicense ?? RenewalTypeData()).copyWith(
-          periodMonths: periodMonths,
-        );
+        updated = (old.drivingLicense ?? RenewalTypeData()).copyWith(periodMonths: periodMonths);
         newRenewal = old.copyWith(drivingLicense: updated);
         break;
       default:
@@ -218,5 +187,43 @@ class RenewalCubit extends Cubit<RenewalState> {
     final lastDayOfTarget = DateTime(y, m + 1, 0).day;
     final day = d <= lastDayOfTarget ? d : lastDayOfTarget;
     return DateTime.utc(y, m, day, from.hour, from.minute, from.second);
+  }
+  Future<void> updateStatus(String key , RenewalStatus status){
+    final current = state;
+    if (current is! RenewalLoaded) return Future.value();
+    final old = current.renewal;
+    RenewalTypeData? updated;
+    Renewal newRenewal;
+    switch (key) {
+      case 'lto':
+        updated = (old.lto ?? RenewalTypeData()).copyWith(status: status);
+        newRenewal = old.copyWith(lto: updated);
+        break;
+      case 'sealing':
+        updated = (old.sealing ?? RenewalTypeData()).copyWith(status: status);
+        newRenewal = old.copyWith(sealing: updated);
+        break;
+      case 'inspection':
+        updated = (old.inspection ?? RenewalTypeData()).copyWith(status: status);
+        newRenewal = old.copyWith(inspection: updated);
+        break;
+      case 'ltefb':
+        updated = (old.ltefb ?? RenewalTypeData()).copyWith(status: status);
+        newRenewal = old.copyWith(ltefb: updated);
+        break;
+      case 'registeration':
+        updated = (old.registeration ?? RenewalTypeData()).copyWith(status: status);
+        newRenewal = old.copyWith(registeration: updated);
+        break;
+      case 'drivingLicense':
+        updated = (old.drivingLicense ?? RenewalTypeData()).copyWith(status: status);
+        newRenewal = old.copyWith(drivingLicense: updated);
+        break;
+      default:
+        return Future.value();
+    }
+    emit(RenewalLoaded(renewal: newRenewal));
+    return Future.value();
+    
   }
 }

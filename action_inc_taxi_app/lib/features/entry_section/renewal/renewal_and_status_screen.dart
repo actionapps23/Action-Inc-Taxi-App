@@ -149,153 +149,156 @@ class _RenewalAndStatusScreenState extends State<RenewalAndStatusScreen> {
 
                             return ConstrainedBox(
                               constraints: BoxConstraints(maxHeight: maxHeight),
-                              child:
-                                  BlocBuilder<
-                                    RenewalAndStatusCubit,
-                                    RenewalAndStatusState
-                                  >(
-                                    builder: (context, state) {
-                                      List<Map<String, dynamic>> rows = [];
-                                      if (state is RenewalAndStatusLoaded) {
-                                        rows = state.filteredRows;
-                                      }
-                                      if (state is RenewalAndStatusLoading) {
-                                        return const Center(
-                                          child: CircularProgressIndicator(),
-                                        );
-                                      }
+                              child: BlocBuilder<
+                                RenewalAndStatusCubit,
+                                RenewalAndStatusState
+                              >(
+                                builder: (context, state) {
+                                  List<Map<String, dynamic>> rows = [];
+                                  if (state is RenewalAndStatusLoaded) {
+                                    rows = state.filteredRows;
+                                  }
+                                  if (state is RenewalAndStatusLoading) {
+                                    return const Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  }
 
-                                      // On failure show a friendly error block with retry.
-                                      if (state is RenewalAndStatusFailure) {
-                                        return Center(
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Icon(
-                                                Icons.error_outline,
-                                                size: 48,
-                                                color: Colors.red[400],
-                                              ),
-                                              const SizedBox(height: 8),
-                                              Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                  horizontal: 24.w,
-                                                ),
-                                                child: Text(
-                                                  'Failed to load renewals:\n${state.error}',
-                                                  textAlign: TextAlign.center,
-                                                  style: const TextStyle(
-                                                    color: Colors.white70,
-                                                  ),
-                                                ),
-                                              ),
-                                              const SizedBox(height: 12),
-                                              ElevatedButton(
-                                                onPressed: () => context
-                                                    .read<
-                                                      RenewalAndStatusCubit
-                                                    >()
-                                                    .load(),
-                                                child: const Text('Retry'),
-                                              ),
-                                            ],
+                                  // On failure show a friendly error block with retry.
+                                  if (state is RenewalAndStatusFailure) {
+                                    return Center(
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(
+                                            Icons.error_outline,
+                                            size: 48,
+                                            color: Colors.red[400],
                                           ),
-                                        );
-                                      }
+                                          const SizedBox(height: 8),
+                                          Padding(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 24.w,
+                                            ),
+                                            child: Text(
+                                              'Failed to load renewals:\n${state.error}',
+                                              textAlign: TextAlign.center,
+                                              style: const TextStyle(
+                                                color: Colors.white70,
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 12),
+                                          ElevatedButton(
+                                            onPressed: () => context
+                                                .read<
+                                                  RenewalAndStatusCubit
+                                                >()
+                                                .load(),
+                                            child: const Text('Retry'),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }
 
-                                      // When loaded but no rows, show an empty state with a retry option.
-                                      if (state is RenewalAndStatusLoaded &&
-                                          rows.isEmpty) {
-                                        return Center(
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Icon(
-                                                Icons.inbox_outlined,
-                                                size: 48,
-                                                color: Colors.white24,
-                                              ),
-                                              const SizedBox(height: 8),
-                                              const Text(
-                                                'No renewals found',
-                                                style: TextStyle(
-                                                  color: Colors.white70,
-                                                  fontSize: 16,
-                                                ),
-                                              ),
-                                              const SizedBox(height: 12),
-                                              ElevatedButton(
-                                                onPressed: () => context
-                                                    .read<
-                                                      RenewalAndStatusCubit
-                                                    >()
-                                                    .load(),
-                                                child: const Text('Refresh'),
-                                              ),
-                                            ],
+                                  // When loaded but no rows, show an empty state with a retry option.
+                                  if (state is RenewalAndStatusLoaded &&
+                                      rows.isEmpty) {
+                                    return Center(
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(
+                                            Icons.inbox_outlined,
+                                            size: 48,
+                                            color: Colors.white24,
                                           ),
-                                        );
-                                      }
+                                          const SizedBox(height: 8),
+                                          const Text(
+                                            'No renewals found',
+                                            style: TextStyle(
+                                              color: Colors.white70,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 12),
+                                          ElevatedButton(
+                                            onPressed: () => context
+                                                .read<
+                                                  RenewalAndStatusCubit
+                                                >()
+                                                .load(),
+                                            child: const Text('Refresh'),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }
 
-                                      return SingleChildScrollView(
-                                        scrollDirection: Axis.horizontal,
-                                        child: DataTable(
-                                          dataRowColor: WidgetStateProperty.all(
-                                            Colors.transparent,
-                                          ),
-                                          dividerThickness: 0.5,
-                                          columnSpacing: 32.w,
-                                          horizontalMargin: 0,
-                                          columns: const [
-                                            DataColumn(
-                                              label: _TableHeader('Renewals'),
-                                            ),
-                                            DataColumn(
-                                              label: _TableHeader(
-                                                'Taxi Number',
-                                              ),
-                                            ),
-                                            DataColumn(
-                                              label: _TableHeader('Status'),
-                                            ),
-                                            DataColumn(
-                                              label: _TableHeader(
-                                                'Required Date',
-                                              ),
-                                            ),
-                                          ],
-                                          rows: rows
-                                              .map(
-                                                (row) => DataRow(
-                                                  cells: [
-                                                    DataCell(
-                                                      _TableCell(
-                                                        row['renewal'] ?? '',
-                                                      ),
-                                                    ),
-                                                    DataCell(
-                                                      _TableCell(
-                                                        row['taxi'] ?? '',
-                                                      ),
-                                                    ),
-                                                    DataCell(
-                                                      _StatusPill(
-                                                        row['status'] ?? '',
-                                                      ),
-                                                    ),
-                                                    DataCell(
-                                                      _TableCell(
-                                                        row['date'] ?? '',
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              )
-                                              .toList(),
+                                  // Make the table vertically scrollable
+                                  return SingleChildScrollView(
+                                    scrollDirection: Axis.vertical,
+                                    child: SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: DataTable(
+                                        dataRowColor: WidgetStateProperty.all(
+                                          Colors.transparent,
                                         ),
-                                      );
-                                    },
-                                  ),
+                                        dividerThickness: 0.5,
+                                        columnSpacing: 32.w,
+                                        horizontalMargin: 0,
+                                        columns: const [
+                                          DataColumn(
+                                            label: _TableHeader('Renewals'),
+                                          ),
+                                          DataColumn(
+                                            label: _TableHeader(
+                                              'Taxi Number',
+                                            ),
+                                          ),
+                                          DataColumn(
+                                            label: _TableHeader('Status'),
+                                          ),
+                                          DataColumn(
+                                            label: _TableHeader(
+                                              'Required Date',
+                                            ),
+                                          ),
+                                        ],
+                                        rows: rows
+                                            .map(
+                                              (row) => DataRow(
+                                                cells: [
+                                                  DataCell(
+                                                    _TableCell(
+                                                      row['renewal'] ?? '',
+                                                    ),
+                                                  ),
+                                                  DataCell(
+                                                    _TableCell(
+                                                      row['taxi'] ?? '',
+                                                    ),
+                                                  ),
+                                                  DataCell(
+                                                    _StatusPill(
+                                                      row['status'] ?? '',
+                                                    ),
+                                                  ),
+                                                  DataCell(
+                                                    _TableCell(
+                                                      row['date'] ?? '',
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                            .toList(),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
                             );
                           },
                         ),
