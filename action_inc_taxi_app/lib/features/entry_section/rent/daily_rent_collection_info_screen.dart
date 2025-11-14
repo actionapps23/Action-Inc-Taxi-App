@@ -251,7 +251,8 @@ class _DailyRentCollectionInfoScreenState
       errors['firstDriverDob'] = 'Driver DOB is required.';
     }
     if (rentAmountController.text.trim().isEmpty || rentCents <= 0) {
-      errors['rentAmount'] = 'Rent amount is required and must be greater than 0.';
+      errors['rentAmount'] =
+          'Rent amount is required and must be greater than 0.';
     }
     if (maintenanceCents <= 0) {
       errors['maintenanceFees'] = 'Maintenance fees must be greater than 0.';
@@ -261,7 +262,8 @@ class _DailyRentCollectionInfoScreenState
     }
     // Payment validation
     if (paymentCashController.text.trim().isEmpty || paymentCashCents <= 0) {
-      errors['paymentCash'] = 'Payment in cash is required and must be greater than 0.';
+      errors['paymentCash'] =
+          'Payment in cash is required and must be greater than 0.';
     }
     if (paymentGCashCents < 0) {
       errors['paymentGCash'] = 'Payment in G-Cash must be 0 or greater.';
@@ -274,7 +276,8 @@ class _DailyRentCollectionInfoScreenState
     }
     // If GCash > 0, ref is required
     if (paymentGCashCents > 0 && gCashRefController.text.trim().isEmpty) {
-      errors['gCashRef'] = 'G-Cash Ref. No is required if G-Cash payment is entered.';
+      errors['gCashRef'] =
+          'G-Cash Ref. No is required if G-Cash payment is entered.';
     }
 
     _cubit.updateDraft(driver: driver, rent: rent, fieldErrors: errors);
@@ -1099,7 +1102,9 @@ class _DailyRentCollectionInfoScreenState
                             if (context.mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text('Please fill all required fields.'),
+                                  content: Text(
+                                    'Please fill all required fields.',
+                                  ),
                                   backgroundColor: Colors.red,
                                 ),
                               );

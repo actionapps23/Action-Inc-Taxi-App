@@ -134,7 +134,6 @@ class DbService {
     }
   }
 
-
   Future<Renewal?> getRenewalByTaxi(String taxiNo) async {
     try {
       final q = await _firestore

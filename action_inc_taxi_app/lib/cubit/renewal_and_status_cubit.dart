@@ -34,14 +34,19 @@ class RenewalAndStatusCubit extends Cubit<RenewalAndStatusState> {
         emit(RenewalAndStatusLoading());
         final filtered = _filterBy(current.allRows, index);
         final displayRows = _mapToDisplayRows(filtered);
-        emit(current.copyWith(filteredRows: displayRows, selectedFilter: index));
+        emit(
+          current.copyWith(filteredRows: displayRows, selectedFilter: index),
+        );
       } catch (e) {
         emit(RenewalAndStatusFailure(e.toString()));
       }
     }
   }
+
   // Map filtered rows to display rows for the DataTable
-  List<Map<String, dynamic>> _mapToDisplayRows(List<Map<String, dynamic>> filteredRows) {
+  List<Map<String, dynamic>> _mapToDisplayRows(
+    List<Map<String, dynamic>> filteredRows,
+  ) {
     const renewalKeys = [
       'lto',
       'sealing',
@@ -70,11 +75,17 @@ class RenewalAndStatusCubit extends Cubit<RenewalAndStatusState> {
             DateTime? d;
             try {
               if (dateRaw is int) {
-                d = DateTime.fromMillisecondsSinceEpoch(dateRaw, isUtc: true).toLocal();
+                d = DateTime.fromMillisecondsSinceEpoch(
+                  dateRaw,
+                  isUtc: true,
+                ).toLocal();
               } else if (dateRaw is String) {
                 final ms = int.tryParse(dateRaw);
                 if (ms != null) {
-                  d = DateTime.fromMillisecondsSinceEpoch(ms, isUtc: true).toLocal();
+                  d = DateTime.fromMillisecondsSinceEpoch(
+                    ms,
+                    isUtc: true,
+                  ).toLocal();
                 } else if (dateRaw.contains('/')) {
                   final parts = dateRaw.split('/');
                   if (parts.length >= 3) {
@@ -91,7 +102,8 @@ class RenewalAndStatusCubit extends Cubit<RenewalAndStatusState> {
               d = null;
             }
             if (d != null) {
-              dateStr = "${d.day.toString().padLeft(2, '0')}/${d.month.toString().padLeft(2, '0')}/${d.year}";
+              dateStr =
+                  "${d.day.toString().padLeft(2, '0')}/${d.month.toString().padLeft(2, '0')}/${d.year}";
             }
           }
           displayRows.add({
@@ -131,12 +143,18 @@ class RenewalAndStatusCubit extends Cubit<RenewalAndStatusState> {
           DateTime? d;
           try {
             if (dateRaw is int) {
-              d = DateTime.fromMillisecondsSinceEpoch(dateRaw, isUtc: true).toLocal();
+              d = DateTime.fromMillisecondsSinceEpoch(
+                dateRaw,
+                isUtc: true,
+              ).toLocal();
             } else if (dateRaw is String) {
               if (dateRaw.isEmpty) continue;
               final ms = int.tryParse(dateRaw);
               if (ms != null) {
-                d = DateTime.fromMillisecondsSinceEpoch(ms, isUtc: true).toLocal();
+                d = DateTime.fromMillisecondsSinceEpoch(
+                  ms,
+                  isUtc: true,
+                ).toLocal();
               } else if (dateRaw.contains('/')) {
                 final parts = dateRaw.split('/');
                 if (parts.length >= 3) {
@@ -161,10 +179,12 @@ class RenewalAndStatusCubit extends Cubit<RenewalAndStatusState> {
               final weekDay = today.weekday;
               final weekStart = today.subtract(Duration(days: weekDay - 1));
               final weekEnd = weekStart.add(const Duration(days: 6));
-              match = !dateOnly.isBefore(weekStart) && !dateOnly.isAfter(weekEnd);
+              match =
+                  !dateOnly.isBefore(weekStart) && !dateOnly.isAfter(weekEnd);
               break;
             case 1:
-              match = dateOnly.year == today.year && dateOnly.month == today.month;
+              match =
+                  dateOnly.year == today.year && dateOnly.month == today.month;
               break;
             case 2:
               match = dateOnly.year == today.year;

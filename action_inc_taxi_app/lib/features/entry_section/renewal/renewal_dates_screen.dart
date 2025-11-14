@@ -46,12 +46,36 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
       final todayUtc = DateTime.now().toUtc().millisecondsSinceEpoch;
       final renewal = Renewal(
         taxiNo: widget.taxiNo,
-        sealing: RenewalTypeData(dateUtc: todayUtc, periodMonths: 6, feesCents: 2500 ),
-        inspection: RenewalTypeData(dateUtc: todayUtc, periodMonths: 12, feesCents: 3000 ),
-        ltefb: RenewalTypeData(dateUtc: todayUtc, periodMonths: 6, feesCents: 5000 ),
-        registeration: RenewalTypeData(dateUtc: todayUtc, periodMonths: 24, feesCents: 10000 ),
-        drivingLicense: RenewalTypeData(dateUtc: todayUtc, periodMonths: 12, feesCents: 0),
-        lto: RenewalTypeData(dateUtc: todayUtc, periodMonths: 12, feesCents: 7500 ),
+        sealing: RenewalTypeData(
+          dateUtc: todayUtc,
+          periodMonths: 6,
+          feesCents: 2500,
+        ),
+        inspection: RenewalTypeData(
+          dateUtc: todayUtc,
+          periodMonths: 12,
+          feesCents: 3000,
+        ),
+        ltefb: RenewalTypeData(
+          dateUtc: todayUtc,
+          periodMonths: 6,
+          feesCents: 5000,
+        ),
+        registeration: RenewalTypeData(
+          dateUtc: todayUtc,
+          periodMonths: 24,
+          feesCents: 10000,
+        ),
+        drivingLicense: RenewalTypeData(
+          dateUtc: todayUtc,
+          periodMonths: 12,
+          feesCents: 0,
+        ),
+        lto: RenewalTypeData(
+          dateUtc: todayUtc,
+          periodMonths: 12,
+          feesCents: 7500,
+        ),
         createdAtUtc: DateTime.now().toUtc().millisecondsSinceEpoch,
       );
       _cubit.setDraft(renewal);
@@ -71,7 +95,7 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
         contractStartUtc: startUtc,
         contractEndUtc: endUtc,
         periodMonths: 6,
-        feesCents: 1000 ,
+        feesCents: 1000,
       );
     }
   }
@@ -152,14 +176,20 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
           _feesControllers.putIfAbsent(
             key,
             () => TextEditingController(
-              text: data?.feesCents != null ? (data!.feesCents! / 100).toString() : '',
+              text: data?.feesCents != null
+                  ? (data!.feesCents! / 100).toString()
+                  : '',
             ),
           );
           _dateControllers.putIfAbsent(key, () {
             if (data?.dateUtc != null) {
-              final d = DateTime.fromMillisecondsSinceEpoch(data!.dateUtc!, isUtc: true).toLocal();
+              final d = DateTime.fromMillisecondsSinceEpoch(
+                data!.dateUtc!,
+                isUtc: true,
+              ).toLocal();
               return TextEditingController(
-                text: '${d.day.toString().padLeft(2, '0')}/${d.month.toString().padLeft(2, '0')}/${d.year}',
+                text:
+                    '${d.day.toString().padLeft(2, '0')}/${d.month.toString().padLeft(2, '0')}/${d.year}',
               );
             } else {
               return TextEditingController(text: '');
@@ -236,7 +266,10 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
                     );
                     // Navigate to renewal_n_status screen after successful save
                     if (mounted) {
-                      Navigator.pushReplacementNamed(context, '/renewal_n_status');
+                      Navigator.pushReplacementNamed(
+                        context,
+                        '/renewal_n_status',
+                      );
                     }
                   },
                   backgroundColor: Colors.green,
@@ -265,7 +298,6 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
     );
   }
 }
-
 
 class _RenewalDataRowWidget extends StatelessWidget {
   final String fieldKey;
@@ -304,7 +336,10 @@ class _RenewalDataRowWidget extends StatelessWidget {
               controller: dateController,
               onTap: () async {
                 final initial = data?.dateUtc != null
-                    ? DateTime.fromMillisecondsSinceEpoch(data!.dateUtc!, isUtc: true).toLocal()
+                    ? DateTime.fromMillisecondsSinceEpoch(
+                        data!.dateUtc!,
+                        isUtc: true,
+                      ).toLocal()
                     : DateTime.now();
                 final picked = await showDatePicker(
                   context: context,

@@ -71,7 +71,6 @@ class LoginScreen extends HookWidget {
                             height: 48.h,
                             fit: BoxFit.contain,
                           ),
-                        
                         ],
                       ),
                       SizedBox(height: 36.h),

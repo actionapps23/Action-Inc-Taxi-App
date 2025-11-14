@@ -48,7 +48,8 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     'Car Details',
@@ -61,7 +62,8 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                                   // Tabs
                                   BlocBuilder<CarDetailCubit, CarDetailState>(
                                     builder: (context, state) {
-                                      final selectedIndex = state is CarDetailLoaded
+                                      final selectedIndex =
+                                          state is CarDetailLoaded
                                           ? state.selectedIndex
                                           : 0;
                                       return CustomTabBar(
@@ -71,8 +73,9 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                                           'Renewal Date',
                                         ],
                                         selectedIndex: selectedIndex,
-                                        onTabSelected: (index) =>
-                                            context.read<CarDetailCubit>().selectTab(index),
+                                        onTabSelected: (index) => context
+                                            .read<CarDetailCubit>()
+                                            .selectTab(index),
                                       );
                                     },
                                   ),
@@ -88,7 +91,9 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                                   ? state.selectedIndex
                                   : 0;
                               if (selectedIndex == 0) {
-                                return DailyRentCollectionInfoScreen(taxiNo: 'ABC-123');
+                                return DailyRentCollectionInfoScreen(
+                                  taxiNo: 'ABC-123',
+                                );
                               }
                               return RenewalDataTable(taxiNo: 'ABC-123');
                             },

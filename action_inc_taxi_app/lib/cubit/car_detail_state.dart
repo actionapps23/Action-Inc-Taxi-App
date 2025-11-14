@@ -15,9 +15,7 @@ class CarDetailLoaded extends CarDetailState {
   const CarDetailLoaded({required this.selectedIndex});
 
   CarDetailLoaded copyWith({int? selectedIndex}) {
-    return CarDetailLoaded(
-      selectedIndex: selectedIndex ?? this.selectedIndex,
-    );
+    return CarDetailLoaded(selectedIndex: selectedIndex ?? this.selectedIndex);
   }
 
   @override
