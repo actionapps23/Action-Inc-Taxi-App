@@ -124,17 +124,11 @@ class DbService {
   Future<String> saveRenewal(Renewal r) async {
     try {
       final col = _firestore.collection(renewalsCollection);
-      if (r.id != null && r.id!.isNotEmpty) {
-        final id = r.id!;
-        final map = r.toMap()..['id'] = id;
-        await col.doc(id).set(map);
-        return id;
-      } else {
-        final ref = col.doc();
-        final map = r.toMap()..['id'] = ref.id;
-        await ref.set(map);
-        return ref.id;
-      }
+      // Always create a new document, ignore r.id
+      final ref = col.doc();
+      final map = r.toMap()..['id'] = ref.id;
+      await ref.set(map);
+      return ref.id;
     } catch (e) {
       rethrow;
     }
