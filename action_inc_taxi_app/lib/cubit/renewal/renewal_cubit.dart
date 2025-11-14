@@ -24,7 +24,6 @@ class RenewalCubit extends Cubit<RenewalState> {
     }
   }
 
-  /// Generate a renewal from contract info (single renewal)
   void generateFromContract({
     required String taxiNo,
     required int contractStartUtc,

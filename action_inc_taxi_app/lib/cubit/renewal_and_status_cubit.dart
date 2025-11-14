@@ -124,7 +124,6 @@ class RenewalAndStatusCubit extends Cubit<RenewalAndStatusState> {
   ) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
-    // List of renewal type keys to check
     const renewalKeys = [
       'lto',
       'sealing',
@@ -134,48 +133,17 @@ class RenewalAndStatusCubit extends Cubit<RenewalAndStatusState> {
       'drivingLicense',
     ];
     return rows.where((r) {
-      // For each renewal type, check if its dateUtc matches the filter
-      bool matchesAny = false;
       for (final key in renewalKeys) {
         final renewal = r[key];
-        if (renewal is Map<String, dynamic> && renewal['dateUtc'] != null) {
-          final dateRaw = renewal['dateUtc'];
-          DateTime? d;
-          try {
-            if (dateRaw is int) {
-              d = DateTime.fromMillisecondsSinceEpoch(
-                dateRaw,
-                isUtc: true,
-              ).toLocal();
-            } else if (dateRaw is String) {
-              if (dateRaw.isEmpty) continue;
-              final ms = int.tryParse(dateRaw);
-              if (ms != null) {
-                d = DateTime.fromMillisecondsSinceEpoch(
-                  ms,
-                  isUtc: true,
-                ).toLocal();
-              } else if (dateRaw.contains('/')) {
-                final parts = dateRaw.split('/');
-                if (parts.length >= 3) {
-                  final day = int.tryParse(parts[0]) ?? 1;
-                  final month = int.tryParse(parts[1]) ?? 1;
-                  final year = int.tryParse(parts[2]) ?? now.year;
-                  d = DateTime(year, month, day);
-                }
-              } else {
-                d = DateTime.tryParse(dateRaw);
-              }
-            }
-          } catch (_) {
-            d = null;
-          }
-          if (d == null) continue;
+        if (renewal is Map<String, dynamic> && renewal['dateUtc'] is int) {
+          final d = DateTime.fromMillisecondsSinceEpoch(
+            renewal['dateUtc'],
+            isUtc: true,
+          ).toLocal();
           final dateOnly = DateTime(d.year, d.month, d.day);
           bool match = false;
           switch (index) {
             case 0:
-              // This week: Monday to Sunday
               final weekDay = today.weekday;
               final weekStart = today.subtract(Duration(days: weekDay - 1));
               final weekEnd = weekStart.add(const Duration(days: 6));
@@ -192,13 +160,10 @@ class RenewalAndStatusCubit extends Cubit<RenewalAndStatusState> {
             default:
               match = true;
           }
-          if (match) {
-            matchesAny = true;
-            break;
-          }
+          if (match) return true;
         }
       }
-      return matchesAny;
+      return false;
     }).toList();
   }
 }

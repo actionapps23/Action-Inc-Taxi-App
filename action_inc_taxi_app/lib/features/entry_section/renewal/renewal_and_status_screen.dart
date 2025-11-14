@@ -1,3 +1,4 @@
+import 'package:action_inc_taxi_app/core/models/enums.dart';
 import 'package:action_inc_taxi_app/core/db_service.dart';
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:action_inc_taxi_app/core/widgets/navbar/navbar.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/snackbar.dart';
+
 import 'package:action_inc_taxi_app/core/widgets/tabbar/tabbar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:action_inc_taxi_app/cubit/renewal_and_status_cubit.dart';
@@ -320,39 +322,74 @@ class _RenewalAndStatusScreenState extends State<RenewalAndStatusScreen> {
   }
 }
 
+
 class _StatusPill extends StatelessWidget {
   final String status;
   const _StatusPill(this.status);
-  Color get bgColor {
-    switch (status.toLowerCase()) {
-      case 'repaired':
-        return const Color(0xFF7CF88F);
-      case 'applied':
-        return const Color(0xFF7FD8F8);
-      case 'on process':
-        return const Color(0xFFFF8C6B);
+
+  RenewalStatus? get renewalStatus {
+    try {
+      return RenewalStatus.values.firstWhere(
+        (e) => e.name.toLowerCase() == status.toLowerCase(),
+        orElse: () => RenewalStatus.inProgress,
+      );
+    } catch (_) {
+      return null;
+    }
+  }
+
+  String get label {
+    switch (renewalStatus) {
+      case RenewalStatus.complete:
+        return 'Repaired';
+      case RenewalStatus.applied:
+        return 'Applied';
+      case RenewalStatus.rejected:
+        return 'Rejected';
+      case RenewalStatus.inProgress:
       default:
-        return Colors.grey;
+        return 'On Process';
+    }
+  }
+
+  Color get bgColor {
+    switch (renewalStatus) {
+      case RenewalStatus.complete:
+        // Green (Repaired)
+        return const Color(0xFF6EFF8E);
+      case RenewalStatus.applied:
+        // Blue (Applied)
+        return const Color(0xFF6EEBFF);
+      case RenewalStatus.rejected:
+        // Red (Rejected)
+        return const Color(0xFFFF6B6B);
+      case RenewalStatus.inProgress:
+      default:
+        // Blue-gray (On Process)
+        return const Color(0xFF7A8FFF);
     }
   }
 
   Color get textColor => Colors.black;
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 40.w,
+      constraints: BoxConstraints(minWidth: 80.w),
+      padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 16.w),
       margin: EdgeInsets.symmetric(vertical: 6.h, horizontal: 8.w),
       decoration: BoxDecoration(
         color: bgColor,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(24),
       ),
       alignment: Alignment.center,
       child: Text(
-        status,
+        label,
         style: TextStyle(
           color: textColor,
           fontWeight: FontWeight.w600,
-          fontSize: 13,
+          fontSize: 14,
+          letterSpacing: 0.2,
         ),
         textAlign: TextAlign.center,
       ),
