@@ -291,4 +291,8 @@ class RenewalCubit extends Cubit<RenewalState> {
     emit(RenewalLoaded(renewal: newRenewal));
     return Future.value();
   }
+
+  void reset() {
+    emit(RenewalInitial());
+  }
 }

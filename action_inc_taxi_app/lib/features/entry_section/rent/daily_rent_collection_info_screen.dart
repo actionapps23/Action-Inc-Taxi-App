@@ -332,26 +332,80 @@ class _DailyRentCollectionInfoScreenState
   @override
   void initState() {
     super.initState();
-    // Delay to ensure context is available
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final selectionState = context.read<SelectionCubit>().state;
-      setState(() {
+      final cubitState = _cubit.state;
+      if (cubitState is DailyRentLoaded) {
+        // Pre-fill from cubit state if available
+        final carInfo = cubitState.carInfo;
+        final driver = cubitState.driver;
+        final rent = cubitState.rent;
+        if (carInfo != null) {
+          taxiNoController.text = carInfo.taxiNo;
+          numberPlateController.text = carInfo.plateNumber ?? '';
+          fleetNoController.text = carInfo.fleetNo ?? '';
+          carStatusOnRoad = carInfo.onRoad;
+        } else {
+          taxiNoController.text = selectionState.taxiNo;
+        }
+        if (driver != null) {
+          firstDriverNameController.text = driver.firstDriverName;
+          firstDriverCnicController.text = driver.firstDriverCnic;
+          firstDriverDobController.text = driver.firstDriverDobUtc != null
+              ? _formatDate(DateTime.fromMillisecondsSinceEpoch(driver.firstDriverDobUtc!, isUtc: true))
+              : '';
+          secondDriverNameController.text = driver.secondDriverName ?? '';
+          secondDriverCnicController.text = driver.secondDriverCnic ?? '';
+          secondDriverDobController.text = driver.secondDriverDobUtc != null
+              ? _formatDate(DateTime.fromMillisecondsSinceEpoch(driver.secondDriverDobUtc!, isUtc: true))
+              : '';
+        } else {
+          firstDriverNameController.text = selectionState.driverName;
+        }
+        if (rent != null) {
+          totalRentController.text = (rent.totalCents / 100).toString();
+          rentAmountController.text = (rent.rentAmountCents / 100).toString();
+          dueRentController.text = (rent.dueRentCents / 100).toString();
+          paymentCashController.text = (rent.paymentCashCents / 100).toString();
+          paymentGCashController.text = (rent.paymentGCashCents / 100).toString();
+          gCashRefController.text = rent.gCashRef ?? '';
+          maintenanceFeesController.text = (rent.maintenanceFeesCents / 100).toString();
+          carWashFeesController.text = (rent.carWashFeesCents / 100).toString();
+          contractStartController.text = rent.contractStartUtc != null
+              ? _formatDate(DateTime.fromMillisecondsSinceEpoch(rent.contractStartUtc!, isUtc: true))
+              : '';
+          contractEndController.text = rent.contractEndUtc != null
+              ? _formatDate(DateTime.fromMillisecondsSinceEpoch(rent.contractEndUtc!, isUtc: true))
+              : '';
+          contractMonthsController.text = rent.monthsCount.toString();
+          contractExtraDaysController.text = rent.extraDays.toString();
+            paymentDateController.text = _formatDate(DateTime.fromMillisecondsSinceEpoch(rent.createdAtUtc, isUtc: true));
+          publicHoliday = rent.isPublicHoliday;
+          birthday = rent.isBirthday;
+        } else {
+          // Set defaults if no rent
+          final today = DateTime.now();
+          contractStartController.text = _formatDate(today);
+          final twoYears = DateTime(today.year + 2, today.month, today.day);
+          contractEndController.text = _formatDate(twoYears);
+          paymentDateController.text = _formatDate(today);
+          firstDriverDobController.text = _formatDate(today);
+          secondDriverDobController.text = _formatDate(today);
+        }
+      } else {
+        // No cubit state, set defaults
         taxiNoController.text = selectionState.taxiNo;
         firstDriverNameController.text = selectionState.driverName;
-      });
-      _cubit.initWithTaxiNo(selectionState.taxiNo);
-      // default date values: today for date fields, contract end = 2 years from today
-      final today = DateTime.now();
-      contractStartController.text = _formatDate(today);
-      final twoYears = DateTime(today.year + 2, today.month, today.day);
-      contractEndController.text = _formatDate(twoYears);
-      paymentDateController.text = _formatDate(today);
-      firstDriverDobController.text = _formatDate(today);
-      secondDriverDobController.text = _formatDate(today);
-      // update draft with defaults
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) => _updateDraftFromControllers(),
-      );
+        final today = DateTime.now();
+        contractStartController.text = _formatDate(today);
+        final twoYears = DateTime(today.year + 2, today.month, today.day);
+        contractEndController.text = _formatDate(twoYears);
+        paymentDateController.text = _formatDate(today);
+        firstDriverDobController.text = _formatDate(today);
+        secondDriverDobController.text = _formatDate(today);
+      }
+      // update draft with loaded or default values
+      WidgetsBinding.instance.addPostFrameCallback((_) => _updateDraftFromControllers());
     });
   }
 

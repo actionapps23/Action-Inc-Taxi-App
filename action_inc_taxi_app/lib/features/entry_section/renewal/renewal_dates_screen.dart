@@ -302,6 +302,9 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
                     try {
                       await dailyRentCubit.saveCarDetailInfo();
                       await _cubit.saveRenewal();
+                      dailyRentCubit.reset();
+                      _cubit.reset();
+
                     } catch (e) {
                       SnackBarHelper.showErrorSnackBar(
                         context,
