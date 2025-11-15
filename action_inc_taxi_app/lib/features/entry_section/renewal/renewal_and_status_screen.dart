@@ -383,16 +383,19 @@ class _StatusPill extends StatelessWidget {
   final String status;
   const _StatusPill(this.status);
 
-  RenewalStatus? get renewalStatus {
+
+  RenewalStatus get renewalStatus {
     try {
       return RenewalStatus.values.firstWhere(
         (e) => e.name.toLowerCase() == status.toLowerCase(),
-        orElse: () => RenewalStatus.inProgress,
+        orElse: () => RenewalStatus.future,
       );
     } catch (_) {
-      return null;
+      return RenewalStatus.future;
     }
   }
+
+  bool get isFuture => renewalStatus == RenewalStatus.future;
 
   String get label {
     switch (renewalStatus) {
@@ -403,40 +406,24 @@ class _StatusPill extends StatelessWidget {
       case RenewalStatus.rejected:
         return 'Rejected';
       case RenewalStatus.inProgress:
-      default:
         return 'On Process';
+      case RenewalStatus.future:
+        return 'Future';
     }
   }
 
   Color get bgColor {
     switch (renewalStatus) {
       case RenewalStatus.complete:
-        // Green (Repaired)
         return const Color(0xFF2ECC40).withOpacity(0.2);
       case RenewalStatus.applied:
-        // Blue (Applied)
         return const Color(0xFF6EEBFF).withOpacity(0.2);
       case RenewalStatus.rejected:
-        // Red (Rejected)
         return const Color(0xFFFF6B6B).withOpacity(0.2);
       case RenewalStatus.inProgress:
-      default:
-        // Blue-gray (On Process)
         return const Color(0xFF7A8FFF).withOpacity(0.2);
-    }
-  }
-
-  Color get borderColor {
-    switch (renewalStatus) {
-      case RenewalStatus.complete:
-        return const Color(0xFF2ECC40);
-      case RenewalStatus.applied:
-        return const Color(0xFF6EEBFF);
-      case RenewalStatus.rejected:
-        return const Color(0xFFFF6B6B);
-      case RenewalStatus.inProgress:
-      default:
-        return const Color(0xFF7A8FFF);
+      case RenewalStatus.future:
+        return const Color(0xFFB2BABB).withOpacity(0.2);
     }
   }
 
@@ -449,8 +436,9 @@ class _StatusPill extends StatelessWidget {
       case RenewalStatus.rejected:
         return const Color(0xFFFF6B6B);
       case RenewalStatus.inProgress:
-      default:
         return const Color(0xFF7A8FFF);
+      case RenewalStatus.future:
+        return const Color(0xFFB2BABB);
     }
   }
 
@@ -458,7 +446,9 @@ class _StatusPill extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 14.w),
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+      ),
       alignment: Alignment.center,
       child: Text(
         label,

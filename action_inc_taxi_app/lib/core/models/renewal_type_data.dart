@@ -10,7 +10,7 @@ class RenewalTypeData {
     this.dateUtc,
     this.periodMonths,
     this.feesCents,
-    this.status = RenewalStatus.inProgress,
+    this.status = RenewalStatus.future,
   });
 
   Map<String, dynamic> toMap() => {
@@ -27,9 +27,9 @@ class RenewalTypeData {
     status: m['status'] != null
         ? RenewalStatus.values.firstWhere(
             (e) => e.name == m['status'],
-            orElse: () => RenewalStatus.inProgress,
+            orElse: () => RenewalStatus.future,
           )
-        : RenewalStatus.inProgress,
+        : RenewalStatus.future,
   );
 
   RenewalTypeData copyWith({

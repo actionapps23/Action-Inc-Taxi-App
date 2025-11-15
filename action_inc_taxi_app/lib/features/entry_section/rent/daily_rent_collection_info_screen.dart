@@ -235,8 +235,10 @@ class _DailyRentCollectionInfoScreenState
     } else if (publicHoliday) {
       total = (rent.totalCents / 2).round();
       due = total - paymentCashCents - paymentGCashCents;
-      if (due < 0) due = 0;
+    } else {
+      due = total - paymentCashCents - paymentGCashCents;
     }
+    if (due < 0) due = 0;
     totalRentController.text = (total / 100).toString();
     dueRentController.text = (due / 100).toString();
     // update months display if contract dates provided

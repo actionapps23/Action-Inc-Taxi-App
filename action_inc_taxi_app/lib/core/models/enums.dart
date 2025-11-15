@@ -1,1 +1,1 @@
-enum RenewalStatus { inProgress, complete, applied, rejected }
+enum RenewalStatus { future, inProgress, complete, applied, rejected }
