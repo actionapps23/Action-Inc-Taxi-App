@@ -107,13 +107,9 @@ class _DailyRentCollectionInfoScreenState
 
     // Business logic for birthday/public holiday
     int computedRentCents = rentCents;
-    if (birthday) {
-      computedRentCents = 0;
-      return;
-    } else if (publicHoliday) {
-      computedRentCents = (rentCents / 2).round();
-      rentAmountController.text = (computedRentCents / 100).toString();
-    } else if (!publicHoliday &&
+    // No side effect on rentAmountController for birthday/publicHoliday
+    // Only total/due are affected at the end
+    if (!publicHoliday &&
         _originalRent != null &&
         _originalMaintenance != null &&
         _originalCarWash != null) {
@@ -121,7 +117,6 @@ class _DailyRentCollectionInfoScreenState
       rentAmountController.text = (_originalRent!).toString();
       maintenanceFeesController.text = (_originalMaintenance!).toString();
       carWashFeesController.text = (_originalCarWash!).toString();
-      // Convert original values (assumed double) to cents (int)
       computedRentCents = ((_originalRent ?? 0) * 100).round();
     }
 
@@ -234,13 +229,13 @@ class _DailyRentCollectionInfoScreenState
     // update computed fields in UI
     int total = rent.totalCents;
     int due = rent.dueRentCents;
-    // Override for birthday/public holiday
     if (birthday) {
       total = 0;
       due = 0;
     } else if (publicHoliday) {
-      total = (total / 2).round();
-      due = (due / 2).round();
+      total = (rent.totalCents / 2).round();
+      due = total - paymentCashCents - paymentGCashCents;
+      if (due < 0) due = 0;
     }
     totalRentController.text = (total / 100).toString();
     dueRentController.text = (due / 100).toString();
@@ -656,14 +651,7 @@ class _DailyRentCollectionInfoScreenState
                         value: publicHoliday,
                         onChanged: (v) => setState(() {
                           publicHoliday = v ?? false;
-                          if (publicHoliday) {
-                            // apply half-rent rule: take current rent and halve it
-                            final cents = _centsFromController(
-                              rentAmountController,
-                            );
-                            final half = (cents / 2).round();
-                            rentAmountController.text = (half / 100).toString();
-                          }
+                          // Do not modify rentAmountController for public holiday
                           _updateDraftFromControllers();
                         }),
                         activeColor: Colors.greenAccent,
@@ -775,14 +763,7 @@ class _DailyRentCollectionInfoScreenState
                                             // Do not change rentAmountController, just skip further logic
                                             return;
                                           }
-                                          if (publicHoliday) {
-                                            final cents = _centsFromController(
-                                              TextEditingController(text: s),
-                                            );
-                                            final half = (cents / 2).round();
-                                            rentAmountController.text =
-                                                (half / 100).toString();
-                                          }
+                                          // Do not modify rentAmountController for public holiday
                                           _updateDraftFromControllers();
                                         },
                                         errorText: fieldErrors['rentAmount'],
