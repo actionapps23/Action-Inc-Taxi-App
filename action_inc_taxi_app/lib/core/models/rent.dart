@@ -1,8 +1,6 @@
 class Rent {
   final String? id;
   final String taxiNo;
-  final String? driverId;
-  final int dateUtc;
   final int? contractStartUtc;
   final int? contractEndUtc;
   final int monthsCount;
@@ -20,8 +18,6 @@ class Rent {
   Rent({
     this.id,
     required this.taxiNo,
-    this.driverId,
-    required this.dateUtc,
     this.contractStartUtc,
     this.contractEndUtc,
     this.monthsCount = 0,
@@ -45,8 +41,6 @@ class Rent {
   Map<String, dynamic> toMap() => {
     'id': id,
     'taxiNo': taxiNo,
-    'driverId': driverId,
-    'dateUtc': dateUtc,
     'contractStartUtc': contractStartUtc,
     'contractEndUtc': contractEndUtc,
     'monthsCount': monthsCount,
@@ -65,9 +59,6 @@ class Rent {
   factory Rent.fromMap(Map<String, dynamic> m) => Rent(
     id: m['id'] as String?,
     taxiNo: m['taxiNo'] as String,
-    driverId: m['driverId'] as String?,
-    dateUtc:
-        (m['dateUtc'] as int?) ?? DateTime.now().toUtc().millisecondsSinceEpoch,
     contractStartUtc: (m['contractStartUtc'] as int?),
     contractEndUtc: (m['contractEndUtc'] as int?),
     monthsCount: (m['monthsCount'] as int?) ?? 0,

@@ -46,28 +46,21 @@ class DailyRentCubit extends Cubit<DailyRentState> {
     }
   }
 
-  /// Persist current draft to DB (drafts collection) so returning to the screen restores values.
-  Future<void> saveDraft() async {
+  Future<void> saveCarDetailInfo() async {
     final current = state;
     if (current is! DailyRentLoaded) return;
     try {
-      final carMap = current.carInfo?.toMap();
-      final driverMap = current.driver?.toMap();
-      final rentMap = current.rent?.toMap();
-      final taxiNo = current.carInfo?.taxiNo ?? current.rent?.taxiNo ?? '';
-      if (taxiNo.isEmpty) return;
-      await dbService.saveDraftForTaxi(
-        taxiNo: taxiNo,
-        rent: rentMap,
-        driver: driverMap,
-        car: carMap,
+      await dbService.saveCarDetailInfo(
+        car: current.carInfo?.toMap(),
+        driver: current.driver?.toMap(),
+        rent: current.rent?.toMap(),
       );
+    
     } catch (_) {
-      // ignore save errors for drafts
     }
   }
 
-  void updateDraft({
+  void update({
     CarInfo? carInfo,
     Driver? driver,
     Rent? rent,
@@ -87,55 +80,6 @@ class DailyRentCubit extends Cubit<DailyRentState> {
     );
   }
 
-  Map<String, String> validateDraft(Rent r) {
-    return r.validate();
-  }
 
-  // Final save helpers (will be called after multi-step collection). Not invoked on Next per requirement.
-  Future<void> persistAll({
-    required CarInfo car,
-    Driver? driver,
-    required Rent rent,
-  }) async {
-    emit(DailyRentSaving());
-    try {
-      String driverId = driver?.id ?? '';
-      if (driver != null && driverId.isEmpty) {
-        driverId = await dbService.saveDriver(driver);
-      }
-      // ensure car has driverId
-      final carToSave = CarInfo(
-        id: car.id.isNotEmpty ? car.id : car.taxiNo,
-        taxiNo: car.taxiNo,
-        plateNumber: car.plateNumber,
-        fleetNo: car.fleetNo,
-        driverId: driverId.isNotEmpty ? driverId : car.driverId,
-        createdAtUtc: car.createdAtUtc,
-      );
-      await dbService.saveCar(carToSave);
-      final rentToSave = Rent(
-        id: rent.id,
-        taxiNo: rent.taxiNo,
-        driverId: driverId.isNotEmpty ? driverId : rent.driverId,
-        dateUtc: rent.dateUtc,
-        contractStartUtc: rent.contractStartUtc,
-        contractEndUtc: rent.contractEndUtc,
-        monthsCount: rent.monthsCount,
-        extraDays: rent.extraDays,
-        rentAmountCents: rent.rentAmountCents,
-        maintenanceFeesCents: rent.maintenanceFeesCents,
-        carWashFeesCents: rent.carWashFeesCents,
-        paymentCashCents: rent.paymentCashCents,
-        paymentGCashCents: rent.paymentGCashCents,
-        gCashRef: rent.gCashRef,
-        isPublicHoliday: rent.isPublicHoliday,
-        isBirthday: rent.isBirthday,
-        createdAtUtc: rent.createdAtUtc,
-      );
-      await dbService.saveRent(rentToSave);
-      emit(DailyRentSaved());
-    } catch (e) {
-      emit(DailyRentError(e.toString()));
-    }
-  }
+
 }

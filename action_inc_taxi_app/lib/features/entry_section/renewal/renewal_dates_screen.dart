@@ -1,7 +1,10 @@
+import 'package:action_inc_taxi_app/core/helper_functions.dart';
+import 'package:action_inc_taxi_app/core/models/renewal.dart' show Renewal;
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
 import 'package:action_inc_taxi_app/core/widgets/buttons/app_button.dart';
 import 'package:action_inc_taxi_app/core/widgets/buttons/app_outline_button.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/snackbar.dart';
+import 'package:action_inc_taxi_app/cubit/car_detail_cubit.dart';
 import 'package:action_inc_taxi_app/features/entry_section/renewal/renewal_and_status_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:action_inc_taxi_app/core/widgets/form/app_text_form_field.dart';
@@ -9,11 +12,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:action_inc_taxi_app/core/db_service.dart';
 import 'package:action_inc_taxi_app/cubit/renewal/renewal_cubit.dart';
-import 'package:action_inc_taxi_app/core/models/renewal.dart';
 import 'package:action_inc_taxi_app/core/models/renewal_type_data.dart';
-import 'package:action_inc_taxi_app/core/models/enums.dart';
-import 'package:action_inc_taxi_app/cubit/selection/selection_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/rent/daily_rent_cubit.dart';
+import 'package:uuid/uuid.dart';
 
 class RenewalDataTable extends StatefulWidget {
   const RenewalDataTable({super.key});
@@ -25,65 +26,10 @@ class RenewalDataTable extends StatefulWidget {
 class _RenewalDataTableState extends State<RenewalDataTable> {
   late final RenewalCubit _cubit = RenewalCubit(DbService());
   final Map<String, TextEditingController> _feesControllers = {};
-  late String _taxiNo;
+  Map<String, RenewalTypeData?> renewalFields = {};
 
-  @override
-  void initState() {
-    super.initState();
-    _taxiNo = context.read<SelectionCubit>().state.taxiNo;
-    _init();
-  }
-
-  void _init() async {
-    await _cubit.loadByTaxi(_taxiNo);
-    final cur = _cubit.state;
-    if (cur is RenewalError) {
-      final todayUtc = DateTime.now().toUtc().millisecondsSinceEpoch;
-      final renewal = Renewal(
-        taxiNo: _taxiNo,
-        sealing: RenewalTypeData(
-          dateUtc: todayUtc,
-          periodMonths: 6,
-          feesCents: 2500,
-          status: RenewalStatus.complete,
-        ),
-        inspection: RenewalTypeData(
-          dateUtc: todayUtc,
-          periodMonths: 12,
-          feesCents: 3000,
-          status: RenewalStatus.inProgress,
-        ),
-        ltefb: RenewalTypeData(
-          dateUtc: todayUtc,
-          periodMonths: 6,
-          feesCents: 5000,
-          status: RenewalStatus.applied,
-        ),
-        registeration: RenewalTypeData(
-          dateUtc: todayUtc,
-          periodMonths: 24,
-          feesCents: 10000,
-          status: RenewalStatus.inProgress,
-        ),
-        drivingLicense: RenewalTypeData(
-          dateUtc: todayUtc,
-          periodMonths: 12,
-          feesCents: 0,
-          status: RenewalStatus.inProgress,
-        ),
-        lto: RenewalTypeData(
-          dateUtc: todayUtc,
-          periodMonths: 12,
-          feesCents: 7500,
-          status: RenewalStatus.inProgress,
-        ),
-        createdAtUtc: DateTime.now().toUtc().millisecondsSinceEpoch,
-      );
-      _cubit.setDraft(renewal);
-    }
-  }
-
-  int? _getContractStartUtc() {
+  
+  int? getContractStartUtc() {
     try {
       final dailyRentCubit = context.read<DailyRentCubit>();
       if (dailyRentCubit.state is DailyRentLoaded) {
@@ -93,6 +39,71 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
     } catch (_) {}
     return null;
   }
+
+
+  @override
+  void initState() {
+  super.initState();
+  final contractStartUtc = getContractStartUtc();
+  final DateTime contractStart = contractStartUtc != null
+            ? DateTime.fromMillisecondsSinceEpoch(contractStartUtc, isUtc: true)
+            : DateTime.now().toUtc();
+  renewalFields = {
+          'sealing': RenewalTypeData(
+            dateUtc: HelperFunctions.addMonths(contractStart, 6).millisecondsSinceEpoch,
+            periodMonths: 6,
+            feesCents: 100
+          ),
+          'inspection': RenewalTypeData(
+            dateUtc: HelperFunctions.addMonths(contractStart, 12).millisecondsSinceEpoch,
+            periodMonths: 12,
+                        feesCents: 100
+
+          ),
+          'ltefb': RenewalTypeData(
+            dateUtc: HelperFunctions.addMonths(contractStart, 6).millisecondsSinceEpoch,
+            periodMonths: 6,
+                        feesCents: 100
+
+          ),
+          'registeration': RenewalTypeData(
+            dateUtc:  HelperFunctions.addMonths(contractStart, 24).millisecondsSinceEpoch,
+            periodMonths: 24,
+                        feesCents: 100
+
+          ),
+          'drivingLicense': RenewalTypeData(
+            dateUtc:  HelperFunctions.addMonths(contractStart, 12).millisecondsSinceEpoch,
+            periodMonths: 12,
+                        feesCents: 100
+
+          ),
+          'lto': RenewalTypeData(
+            dateUtc:  HelperFunctions.addMonths(contractStart, 12).millisecondsSinceEpoch,
+            periodMonths: 12,
+                        feesCents: 100
+
+          ),
+        };
+
+        _cubit.update(renewal: Renewal(
+          taxiNo: '',
+          createdAtUtc: HelperFunctions.currentUtcTimeMilliSeconds(),
+          contractStartUtc: contractStartUtc,
+          contractEndUtc: null,
+          sealing: renewalFields['sealing'],
+          inspection: renewalFields['inspection'],
+          ltefb: renewalFields['ltefb'],
+          registeration: renewalFields['registeration'],
+          drivingLicense: renewalFields['drivingLicense'],
+          lto: renewalFields['lto'],
+          id: Uuid().v4(),
+        ) );
+  
+
+  }
+
+
 
   @override
   void dispose() {
@@ -106,23 +117,10 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
   @override
   Widget build(BuildContext context) {
     final bool isWide = MediaQuery.of(context).size.width > 800;
-    final contractStartUtc = _getContractStartUtc();
 
     return BlocBuilder<RenewalCubit, RenewalState>(
       bloc: _cubit,
       builder: (context, state) {
-        if (state is! RenewalLoaded) {
-          // Show loading indicator while renewal is loading
-          return Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 48),
-              child: CircularProgressIndicator(),
-            ),
-          );
-        }
-        final renewal = state.renewal;
-
-        // Map of field keys to display names
         const fieldDisplayNames = {
           'sealing': 'Sealing',
           'inspection': 'Inspection',
@@ -132,27 +130,18 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
           'lto': 'LTO Renewal',
         };
 
-        // Map of field keys to RenewalTypeData
-        final Map<String, RenewalTypeData?> renewalFields = {
-          'sealing': renewal.sealing,
-          'inspection': renewal.inspection,
-          'ltefb': renewal.ltefb,
-          'registeration': renewal.registeration,
-          'drivingLicense': renewal.drivingLicense,
-          'lto': renewal.lto,
-        };
-
-        // Ensure controllers and update dates based on period
         renewalFields.forEach((key, data) {
           _feesControllers.putIfAbsent(
             key,
             () => TextEditingController(
               text: data?.feesCents != null
-                  ? (data!.feesCents! / 100).toString()
+                  ? (data!.feesCents!).toString()
                   : '',
             ),
           );
         });
+
+        
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -175,11 +164,11 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
                 data: data,
                 isWide: isWide,
                 feesController: _feesControllers[key]!,
-                contractStartUtc: contractStartUtc,
+                contractStartUtc: getContractStartUtc(),
                 onFeesChanged: (s) {
                   final cents = int.tryParse(s.replaceAll(',', ''));
                   if (cents != null) {
-                    _cubit.updateFees(key, cents * 100);
+                    _cubit.updateFees(key, cents);
                   }
                 },
                 onPeriodChanged: (period) {
@@ -193,15 +182,16 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
               children: [
                 AppOutlineButton(
                   label: 'Cancel',
-                  onPressed: () {},
+                  onPressed: () {
+                      context.read<CarDetailCubit>().selectTab(0);
+
+                  },
                   fontSize: 8,
                 ),
                 SizedBox(width: 8.w),
                 AppButton(
                   text: 'Submit Now',
                   onPressed: () async {
-                    final current = _cubit.state;
-                    if (current is! RenewalLoaded) return;
                     for (final key in renewalFields.keys) {
                       final feesText = _feesControllers[key]!.text.trim();
                       if (feesText.isEmpty) {
@@ -213,13 +203,24 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
                         return;
                       }
                     }
-                    await _cubit.saveDraft();
+                  final DailyRentCubit dailyRentCubit = context.read<DailyRentCubit>();
+                  try{
+                      await dailyRentCubit.saveCarDetailInfo();
+                    await _cubit.saveRenewal();
+                  }
+                  catch(e){
+                    SnackBarHelper.showErrorSnackBar(
+                      context,
+                      'Error saving data: $e',
+                      duration: Duration(seconds: 2)
+                    );
+                    return;
+                  }
                   SnackBarHelper.showSuccessSnackBar(
                       context,
                       'Renewal data saved successfully.',
                       duration: Duration(seconds: 2)
                     );
-                    // Navigate to renewal_n_status screen after successful save
                     if (mounted) {
                       Navigator.push(
                         context,
@@ -440,7 +441,6 @@ class _RenewalDataRowWidgetState extends State<_RenewalDataRowWidget> {
                                   ),
                                 ),
                               )
-                              .toList(),
                         ],
                         onChanged: (v) {
                           setState(() {

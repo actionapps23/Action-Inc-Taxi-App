@@ -86,16 +86,14 @@ class DbService {
 
   /// Save a draft for a taxi. Drafts are stored in `drafts` collection with doc id equal to taxiNo.
   /// The payload will contain optional 'rent' and 'driver' maps.
-  Future<void> saveDraftForTaxi({
-    required String taxiNo,
+  Future<void> saveCarDetailInfo({
     Map<String, dynamic>? rent,
     Map<String, dynamic>? driver,
     Map<String, dynamic>? car,
   }) async {
     try {
-      final ref = _firestore.collection(draftsCollection).doc(taxiNo);
+      final ref = _firestore.collection(carsCollection).doc(car?['taxiNo']);
       final payload = <String, dynamic>{
-        'taxiNo': taxiNo,
         'rent': rent,
         'driver': driver,
         'car': car,

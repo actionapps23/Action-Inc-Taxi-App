@@ -51,7 +51,7 @@ class RenewalCubit extends Cubit<RenewalState> {
     emit(RenewalLoaded(renewal: renewal));
   }
 
-  Future<void> saveDraft() async {
+  Future<void> saveRenewal() async {
     final current = state;
     if (current is! RenewalLoaded) return;
     emit(RenewalSaving());
@@ -209,6 +209,10 @@ class RenewalCubit extends Cubit<RenewalState> {
     final lastDayOfTarget = DateTime(y, m + 1, 0).day;
     final day = d <= lastDayOfTarget ? d : lastDayOfTarget;
     return DateTime.utc(y, m, day, from.hour, from.minute, from.second);
+  }
+  void update({required Renewal renewal}){
+    emit(RenewalLoaded(renewal: renewal));
+
   }
   Future<void> updateStatus(String key , RenewalStatus status){
     final current = state;
