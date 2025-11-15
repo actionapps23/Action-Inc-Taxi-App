@@ -5,7 +5,6 @@ import 'package:action_inc_taxi_app/cubit/car_detail_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:action_inc_taxi_app/core/db_service.dart';
 import 'package:action_inc_taxi_app/cubit/rent/daily_rent_cubit.dart';
 import 'package:action_inc_taxi_app/core/models/rent.dart';
 import 'package:action_inc_taxi_app/core/models/driver.dart';
@@ -61,7 +60,7 @@ class _DailyRentCollectionInfoScreenState
   double? _originalMaintenance;
   double? _originalCarWash;
 
-  late final DailyRentCubit _cubit = DailyRentCubit(DbService());
+  late final DailyRentCubit _cubit = context.read<DailyRentCubit>();
 
   int _centsFromController(TextEditingController c) {
     try {
@@ -111,12 +110,13 @@ class _DailyRentCollectionInfoScreenState
     if (birthday) {
       computedRentCents = 0;
       return;
-      // Do not change rentAmountController, just set due/total to 0 below
     } else if (publicHoliday) {
       computedRentCents = (rentCents / 2).round();
       rentAmountController.text = (computedRentCents / 100).toString();
-    }
-    else if (!publicHoliday && _originalRent != null && _originalMaintenance != null && _originalCarWash != null) {
+    } else if (!publicHoliday &&
+        _originalRent != null &&
+        _originalMaintenance != null &&
+        _originalCarWash != null) {
       // restore original values
       rentAmountController.text = (_originalRent!).toString();
       maintenanceFeesController.text = (_originalMaintenance!).toString();
@@ -126,9 +126,7 @@ class _DailyRentCollectionInfoScreenState
     }
 
     final rent = Rent(
-      taxiNo: taxiNoController.text.isNotEmpty
-          ? taxiNoController.text
-          : '',
+      taxiNo: taxiNoController.text.isNotEmpty ? taxiNoController.text : '',
       contractStartUtc: contractStartUtc,
       contractEndUtc: contractEndUtc,
       monthsCount: months,
@@ -179,14 +177,13 @@ class _DailyRentCollectionInfoScreenState
       dobUtc = null;
     }
 
-  
     // collect validation errors: rent.validate() + required CNIC
     final errors = <String, String>{};
     errors.addAll(rent.validate());
-    if (firstDriverCnicController.text.trim().isEmpty || firstDriverCnicController.text.trim() == '') {
+    if (firstDriverCnicController.text.trim().isEmpty ||
+        firstDriverCnicController.text.trim() == '') {
       errors['driverCnic'] = 'Driver CNIC is required.';
     }
-
 
     // Additional required-field checks
     if (taxiNoController.text.trim().isEmpty) {
@@ -264,7 +261,7 @@ class _DailyRentCollectionInfoScreenState
 
   @override
   void dispose() {
-    _cubit.close();
+    // _cubit.close();
     taxiNoController.dispose();
     numberPlateController.dispose();
     fleetNoController.dispose();
@@ -444,7 +441,8 @@ class _DailyRentCollectionInfoScreenState
                                         labelText: 'First Driver Name',
                                         hintText: 'Enter Driver Name',
                                         isReadOnly: true,
-                                        errorText: fieldErrors['firstDriverName'],
+                                        errorText:
+                                            fieldErrors['firstDriverName'],
                                       ),
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
@@ -1057,35 +1055,77 @@ class _DailyRentCollectionInfoScreenState
                         text: 'Next',
                         onPressed: () async {
                           _updateDraftFromControllers();
-                          final CarInfo carInfo = CarInfo(id: numberPlateController.text, taxiNo: taxiNoController.text, createdAtUtc: DateTime.now().toUtc().millisecondsSinceEpoch, fleetNo: fleetNoController.text, onRoad: carStatusOnRoad, plateNumber: numberPlateController.text, );
+                          final CarInfo carInfo = CarInfo(
+                            id: numberPlateController.text,
+                            taxiNo: taxiNoController.text,
+                            createdAtUtc: DateTime.now()
+                                .toUtc()
+                                .millisecondsSinceEpoch,
+                            fleetNo: fleetNoController.text,
+                            onRoad: carStatusOnRoad,
+                            plateNumber: numberPlateController.text,
+                          );
                           final Driver driver = Driver(
                             id: firstDriverCnicController.text,
                             firstDriverCnic: firstDriverCnicController.text,
                             firstDriverName: firstDriverNameController.text,
-                            firstDriverDobUtc: HelperFunctions.utcFromController(firstDriverDobController),
-                            createdAtUtc: HelperFunctions.currentUtcTimeMilliSeconds(),
-                          
-                          ); 
+                            firstDriverDobUtc:
+                                HelperFunctions.utcFromController(
+                                  firstDriverDobController,
+                                ),
+                            createdAtUtc:
+                                HelperFunctions.currentUtcTimeMilliSeconds(),
+                          );
                           final Rent rent = Rent(
-                            carWashFeesCents: double.tryParse(carWashFeesController.text)?.toInt() ?? 0,
-                            maintenanceFeesCents: double.tryParse(maintenanceFeesController.text)?.toInt() ?? 0,
+                            carWashFeesCents:
+                                double.tryParse(
+                                  carWashFeesController.text,
+                                )?.toInt() ??
+                                0,
+                            maintenanceFeesCents:
+                                double.tryParse(
+                                  maintenanceFeesController.text,
+                                )?.toInt() ??
+                                0,
                             taxiNo: taxiNoController.text,
-                            contractStartUtc: HelperFunctions.utcFromController(contractStartController),
-                            rentAmountCents: double.tryParse(rentAmountController.text)?.toInt() ?? 0,
-                            createdAtUtc: HelperFunctions.currentUtcTimeMilliSeconds(),
-                            paymentCashCents: double.tryParse(paymentCashController.text)?.toInt() ?? 0,
-                            paymentGCashCents: double.tryParse(paymentGCashController.text)?.toInt() ?? 0,
+                            contractStartUtc: HelperFunctions.utcFromController(
+                              contractStartController,
+                            ),
+                            rentAmountCents:
+                                double.tryParse(
+                                  rentAmountController.text,
+                                )?.toInt() ??
+                                0,
+                            createdAtUtc:
+                                HelperFunctions.currentUtcTimeMilliSeconds(),
+                            paymentCashCents:
+                                double.tryParse(
+                                  paymentCashController.text,
+                                )?.toInt() ??
+                                0,
+                            paymentGCashCents:
+                                double.tryParse(
+                                  paymentGCashController.text,
+                                )?.toInt() ??
+                                0,
                             gCashRef: gCashRefController.text,
-                            isBirthday: birthday, 
+                            isBirthday: birthday,
                             isPublicHoliday: publicHoliday,
                             monthsCount: Rent.computeMonthsCountFromTimestamps(
-                              HelperFunctions.utcFromController(contractStartController),
-                              HelperFunctions.utcFromController(contractEndController),
+                              HelperFunctions.utcFromController(
+                                contractStartController,
+                              ),
+                              HelperFunctions.utcFromController(
+                                contractEndController,
+                              ),
                             ),
-                            extraDays: int.tryParse(contractExtraDaysController.text) ?? 0,
-
+                            extraDays:
+                                int.tryParse(
+                                  contractExtraDaysController.text,
+                                ) ??
+                                0,
                           );
-                         
+
                           final currentState = _cubit.state;
                           Map<String, String> errors = {};
                           if (currentState is DailyRentLoaded) {
@@ -1109,8 +1149,7 @@ class _DailyRentCollectionInfoScreenState
                               carInfo: carInfo,
                               driver: driver,
                               rent: rent,
-                              fieldErrors: errors
-
+                              fieldErrors: errors,
                             );
                             context.read<CarDetailCubit>().selectTab(1);
                           }

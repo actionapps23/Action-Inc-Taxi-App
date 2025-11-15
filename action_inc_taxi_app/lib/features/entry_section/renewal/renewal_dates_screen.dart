@@ -5,6 +5,7 @@ import 'package:action_inc_taxi_app/core/widgets/buttons/app_button.dart';
 import 'package:action_inc_taxi_app/core/widgets/buttons/app_outline_button.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/snackbar.dart';
 import 'package:action_inc_taxi_app/cubit/car_detail_cubit.dart';
+import 'package:action_inc_taxi_app/cubit/selection/selection_cubit.dart';
 import 'package:action_inc_taxi_app/features/entry_section/renewal/renewal_and_status_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:action_inc_taxi_app/core/widgets/form/app_text_form_field.dart';
@@ -28,7 +29,6 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
   final Map<String, TextEditingController> _feesControllers = {};
   Map<String, RenewalTypeData?> renewalFields = {};
 
-  
   int? getContractStartUtc() {
     try {
       final dailyRentCubit = context.read<DailyRentCubit>();
@@ -40,54 +40,68 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
     return null;
   }
 
-
   @override
   void initState() {
-  super.initState();
-  final contractStartUtc = getContractStartUtc();
-  final DateTime contractStart = contractStartUtc != null
-            ? DateTime.fromMillisecondsSinceEpoch(contractStartUtc, isUtc: true)
-            : DateTime.now().toUtc();
-  renewalFields = {
-          'sealing': RenewalTypeData(
-            dateUtc: HelperFunctions.addMonths(contractStart, 6).millisecondsSinceEpoch,
-            periodMonths: 6,
-            feesCents: 100
-          ),
-          'inspection': RenewalTypeData(
-            dateUtc: HelperFunctions.addMonths(contractStart, 12).millisecondsSinceEpoch,
-            periodMonths: 12,
-                        feesCents: 100
-
-          ),
-          'ltefb': RenewalTypeData(
-            dateUtc: HelperFunctions.addMonths(contractStart, 6).millisecondsSinceEpoch,
-            periodMonths: 6,
-                        feesCents: 100
-
-          ),
-          'registeration': RenewalTypeData(
-            dateUtc:  HelperFunctions.addMonths(contractStart, 24).millisecondsSinceEpoch,
-            periodMonths: 24,
-                        feesCents: 100
-
-          ),
-          'drivingLicense': RenewalTypeData(
-            dateUtc:  HelperFunctions.addMonths(contractStart, 12).millisecondsSinceEpoch,
-            periodMonths: 12,
-                        feesCents: 100
-
-          ),
-          'lto': RenewalTypeData(
-            dateUtc:  HelperFunctions.addMonths(contractStart, 12).millisecondsSinceEpoch,
-            periodMonths: 12,
-                        feesCents: 100
-
-          ),
-        };
-
-        _cubit.update(renewal: Renewal(
-          taxiNo: '',
+    super.initState();
+    final contractStartUtc = getContractStartUtc();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final DateTime contractStart = contractStartUtc != null
+          ? DateTime.fromMillisecondsSinceEpoch(contractStartUtc, isUtc: true)
+          : DateTime.now().toUtc();
+      renewalFields = {
+        'sealing': RenewalTypeData(
+          dateUtc: HelperFunctions.addMonths(
+            contractStart,
+            1,
+          ).millisecondsSinceEpoch,
+          periodMonths: 1,
+          feesCents: 100,
+        ),
+        'inspection': RenewalTypeData(
+          dateUtc: HelperFunctions.addMonths(
+            contractStart,
+            12,
+          ).millisecondsSinceEpoch,
+          periodMonths: 12,
+          feesCents: 100,
+        ),
+        'ltefb': RenewalTypeData(
+          dateUtc: HelperFunctions.addMonths(
+            contractStart,
+            6,
+          ).millisecondsSinceEpoch,
+          periodMonths: 6,
+          feesCents: 100,
+        ),
+        'registeration': RenewalTypeData(
+          dateUtc: HelperFunctions.addMonths(
+            contractStart,
+            24,
+          ).millisecondsSinceEpoch,
+          periodMonths: 24,
+          feesCents: 100,
+        ),
+        'drivingLicense': RenewalTypeData(
+          dateUtc: HelperFunctions.addMonths(
+            contractStart,
+            12,
+          ).millisecondsSinceEpoch,
+          periodMonths: 12,
+          feesCents: 100,
+        ),
+        'lto': RenewalTypeData(
+          dateUtc: HelperFunctions.addMonths(
+            contractStart,
+            12,
+          ).millisecondsSinceEpoch,
+          periodMonths: 12,
+          feesCents: 100,
+        ),
+      };
+      final selectionCubit = context.read<SelectionCubit>();
+      _cubit.update(
+        renewal: Renewal(
+          taxiNo: selectionCubit.state.taxiNo,
           createdAtUtc: HelperFunctions.currentUtcTimeMilliSeconds(),
           contractStartUtc: contractStartUtc,
           contractEndUtc: null,
@@ -98,19 +112,17 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
           drivingLicense: renewalFields['drivingLicense'],
           lto: renewalFields['lto'],
           id: Uuid().v4(),
-        ) );
-  
-
+        ),
+      );
+    });
   }
-
-
 
   @override
   void dispose() {
     for (final c in _feesControllers.values) {
       c.dispose();
     }
-    _cubit.close();
+    // _cubit.close();
     super.dispose();
   }
 
@@ -141,8 +153,6 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
           );
         });
 
-        
-
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -172,6 +182,91 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
                   }
                 },
                 onPeriodChanged: (period) {
+                  if (key == 'lto') {
+                    final newLto = RenewalTypeData(
+                      dateUtc: HelperFunctions.addMonths(
+                        HelperFunctions.getDateTimeFromUtcMilliSeconds(
+                          getContractStartUtc()!,
+                        ),
+                        period ?? 0,
+                      ).millisecondsSinceEpoch,
+                      periodMonths: period,
+                      feesCents: data?.feesCents,
+                    );
+                    final newRenewal = (_cubit.state as RenewalLoaded).renewal
+                        .copyWith(lto: newLto);
+                    _cubit.update(renewal: newRenewal);
+                  } else if (key == 'sealing') {
+                    final newSealing = RenewalTypeData(
+                      dateUtc: HelperFunctions.addMonths(
+                        HelperFunctions.getDateTimeFromUtcMilliSeconds(
+                          getContractStartUtc()!,
+                        ),
+                        period ?? 0,
+                      ).millisecondsSinceEpoch,
+                      periodMonths: period,
+                      feesCents: data?.feesCents,
+                    );
+                    final newRenewal = (_cubit.state as RenewalLoaded).renewal
+                        .copyWith(sealing: newSealing);
+                    _cubit.update(renewal: newRenewal);
+                  } else if (key == 'inspection') {
+                    final newInspection = RenewalTypeData(
+                      dateUtc: HelperFunctions.addMonths(
+                        HelperFunctions.getDateTimeFromUtcMilliSeconds(
+                          getContractStartUtc()!,
+                        ),
+                        period ?? 0,
+                      ).millisecondsSinceEpoch,
+                      periodMonths: period,
+                      feesCents: data?.feesCents,
+                    );
+                    final newRenewal = (_cubit.state as RenewalLoaded).renewal
+                        .copyWith(inspection: newInspection);
+                    _cubit.update(renewal: newRenewal);
+                  } else if (key == 'ltefb') {
+                    final newLtefb = RenewalTypeData(
+                      dateUtc: HelperFunctions.addMonths(
+                        HelperFunctions.getDateTimeFromUtcMilliSeconds(
+                          getContractStartUtc()!,
+                        ),
+                        period ?? 0,
+                      ).millisecondsSinceEpoch,
+                      periodMonths: period,
+                      feesCents: data?.feesCents,
+                    );
+                    final newRenewal = (_cubit.state as RenewalLoaded).renewal
+                        .copyWith(ltefb: newLtefb);
+                    _cubit.update(renewal: newRenewal);
+                  } else if (key == 'registeration') {
+                    final newRegisteration = RenewalTypeData(
+                      dateUtc: HelperFunctions.addMonths(
+                        HelperFunctions.getDateTimeFromUtcMilliSeconds(
+                          getContractStartUtc()!,
+                        ),
+                        period ?? 0,
+                      ).millisecondsSinceEpoch,
+                      periodMonths: period,
+                      feesCents: data?.feesCents,
+                    );
+                    final newRenewal = (_cubit.state as RenewalLoaded).renewal
+                        .copyWith(registeration: newRegisteration);
+                    _cubit.update(renewal: newRenewal);
+                  } else if (key == 'drivingLicense') {
+                    final newDrivingLicense = RenewalTypeData(
+                      dateUtc: HelperFunctions.addMonths(
+                        HelperFunctions.getDateTimeFromUtcMilliSeconds(
+                          getContractStartUtc()!,
+                        ),
+                        period ?? 0,
+                      ).millisecondsSinceEpoch,
+                      periodMonths: period,
+                      feesCents: data?.feesCents,
+                    );
+                    final newRenewal = (_cubit.state as RenewalLoaded).renewal
+                        .copyWith(drivingLicense: newDrivingLicense);
+                    _cubit.update(renewal: newRenewal);
+                  }
                   _cubit.updatePeriod(key, period);
                 },
               );
@@ -183,8 +278,7 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
                 AppOutlineButton(
                   label: 'Cancel',
                   onPressed: () {
-                      context.read<CarDetailCubit>().selectTab(0);
-
+                    context.read<CarDetailCubit>().selectTab(0);
                   },
                   fontSize: 8,
                 ),
@@ -203,23 +297,23 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
                         return;
                       }
                     }
-                  final DailyRentCubit dailyRentCubit = context.read<DailyRentCubit>();
-                  try{
+                    final DailyRentCubit dailyRentCubit = context
+                        .read<DailyRentCubit>();
+                    try {
                       await dailyRentCubit.saveCarDetailInfo();
-                    await _cubit.saveRenewal();
-                  }
-                  catch(e){
-                    SnackBarHelper.showErrorSnackBar(
-                      context,
-                      'Error saving data: $e',
-                      duration: Duration(seconds: 2)
-                    );
-                    return;
-                  }
-                  SnackBarHelper.showSuccessSnackBar(
+                      await _cubit.saveRenewal();
+                    } catch (e) {
+                      SnackBarHelper.showErrorSnackBar(
+                        context,
+                        'Error saving data: $e',
+                        duration: Duration(seconds: 2),
+                      );
+                      return;
+                    }
+                    SnackBarHelper.showSuccessSnackBar(
                       context,
                       'Renewal data saved successfully.',
-                      duration: Duration(seconds: 2)
+                      duration: Duration(seconds: 2),
                     );
                     if (mounted) {
                       Navigator.push(
@@ -312,11 +406,10 @@ class _RenewalDataRowWidgetState extends State<_RenewalDataRowWidget> {
       dateController.text = '';
     } else {
       // Try to use contractStartUtc, fallback to now if not available
-      final baseUtc = widget.contractStartUtc ?? DateTime.now().toUtc().millisecondsSinceEpoch;
-      final renewalDate = _calculateRenewalDate(
-        baseUtc,
-        _selectedPeriod,
-      );
+      final baseUtc =
+          widget.contractStartUtc ??
+          DateTime.now().toUtc().millisecondsSinceEpoch;
+      final renewalDate = _calculateRenewalDate(baseUtc, _selectedPeriod);
       dateController.text = _formatDate(renewalDate);
     }
   }
@@ -413,7 +506,10 @@ class _RenewalDataRowWidgetState extends State<_RenewalDataRowWidget> {
                           DropdownMenuItem<int?>(
                             value: null,
                             child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
                               child: Text(
                                 'None',
                                 style: TextStyle(
@@ -424,23 +520,25 @@ class _RenewalDataRowWidgetState extends State<_RenewalDataRowWidget> {
                               ),
                             ),
                           ),
-                          ...[1, 3, 6, 7, 12, 24, 36]
-                              .map(
-                                (m) => DropdownMenuItem<int?>(
-                                  value: m,
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                    child: Text(
-                                      '$m month${m == 1 ? '' : 's'}',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 13,
-                                      ),
-                                    ),
+                          ...[1, 3, 6, 7, 12, 24, 36].map(
+                            (m) => DropdownMenuItem<int?>(
+                              value: m,
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 4,
+                                ),
+                                child: Text(
+                                  '$m month${m == 1 ? '' : 's'}',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 13,
                                   ),
                                 ),
-                              )
+                              ),
+                            ),
+                          ),
                         ],
                         onChanged: (v) {
                           setState(() {

@@ -11,11 +11,7 @@ class SelectionState extends Equatable {
     required this.driverName,
   });
 
-  SelectionState copyWith({
-    String? taxiNo,
-    String? regNo,
-    String? driverName,
-  }) {
+  SelectionState copyWith({String? taxiNo, String? regNo, String? driverName}) {
     return SelectionState(
       taxiNo: taxiNo ?? this.taxiNo,
       regNo: regNo ?? this.regNo,

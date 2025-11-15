@@ -37,7 +37,7 @@ class _RenewalAndStatusScreenState extends State<RenewalAndStatusScreen> {
 
   @override
   void dispose() {
-    _cubit.close();
+    // _cubit.close();
     super.dispose();
   }
 
@@ -92,7 +92,8 @@ class _RenewalAndStatusScreenState extends State<RenewalAndStatusScreen> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           const Text(
                                             'Renewal & Status',
@@ -149,11 +150,7 @@ class _RenewalAndStatusScreenState extends State<RenewalAndStatusScreen> {
                                 },
                               ),
                         ),
-                        Divider(
-                          color: Colors.white10,
-                          height: 1,
-                          thickness: 1,
-                        ),
+                        Divider(color: Colors.white10, height: 1, thickness: 1),
                         // Ensure the table area gets a finite height.
                         LayoutBuilder(
                           builder: (context, constraints) {
@@ -169,10 +166,7 @@ class _RenewalAndStatusScreenState extends State<RenewalAndStatusScreen> {
 
                             return ConstrainedBox(
                               constraints: BoxConstraints(maxHeight: maxHeight),
-                              child: BlocBuilder<
-                                RenewalAndStatusCubit,
-                                RenewalAndStatusState
-                              >(
+                              child: BlocBuilder<RenewalAndStatusCubit, RenewalAndStatusState>(
                                 builder: (context, state) {
                                   List<Map<String, dynamic>> rows = [];
                                   if (state is RenewalAndStatusLoaded) {
@@ -181,7 +175,10 @@ class _RenewalAndStatusScreenState extends State<RenewalAndStatusScreen> {
                                   if (state is RenewalAndStatusLoading) {
                                     return const Center(
                                       child: CircularProgressIndicator(
-                                        valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF2ECC40)),
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                              Color(0xFF2ECC40),
+                                            ),
                                       ),
                                     );
                                   }
@@ -214,21 +211,22 @@ class _RenewalAndStatusScreenState extends State<RenewalAndStatusScreen> {
                                           const SizedBox(height: 20),
                                           ElevatedButton.icon(
                                             onPressed: () => context
-                                                .read<
-                                                  RenewalAndStatusCubit
-                                                >()
+                                                .read<RenewalAndStatusCubit>()
                                                 .load(),
                                             icon: const Icon(Icons.refresh),
                                             label: const Text('Retry'),
                                             style: ElevatedButton.styleFrom(
-                                              backgroundColor: const Color(0xFF2ECC40),
+                                              backgroundColor: const Color(
+                                                0xFF2ECC40,
+                                              ),
                                               foregroundColor: Colors.black,
                                               padding: EdgeInsets.symmetric(
                                                 horizontal: 24.w,
                                                 vertical: 12.h,
                                               ),
                                               shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(8),
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
                                               ),
                                             ),
                                           ),
@@ -269,21 +267,22 @@ class _RenewalAndStatusScreenState extends State<RenewalAndStatusScreen> {
                                           const SizedBox(height: 20),
                                           ElevatedButton.icon(
                                             onPressed: () => context
-                                                .read<
-                                                  RenewalAndStatusCubit
-                                                >()
+                                                .read<RenewalAndStatusCubit>()
                                                 .load(),
                                             icon: const Icon(Icons.refresh),
                                             label: const Text('Refresh'),
                                             style: ElevatedButton.styleFrom(
-                                              backgroundColor: const Color(0xFF2ECC40),
+                                              backgroundColor: const Color(
+                                                0xFF2ECC40,
+                                              ),
                                               foregroundColor: Colors.black,
                                               padding: EdgeInsets.symmetric(
                                                 horizontal: 24.w,
                                                 vertical: 12.h,
                                               ),
                                               shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(8),
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
                                               ),
                                             ),
                                           ),
@@ -311,9 +310,7 @@ class _RenewalAndStatusScreenState extends State<RenewalAndStatusScreen> {
                                             label: _TableHeader('Renewals'),
                                           ),
                                           DataColumn(
-                                            label: _TableHeader(
-                                              'Taxi Number',
-                                            ),
+                                            label: _TableHeader('Taxi Number'),
                                           ),
                                           DataColumn(
                                             label: Center(
@@ -381,7 +378,6 @@ class _RenewalAndStatusScreenState extends State<RenewalAndStatusScreen> {
     );
   }
 }
-
 
 class _StatusPill extends StatelessWidget {
   final String status;
@@ -462,9 +458,7 @@ class _StatusPill extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 14.w),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-      ),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
       alignment: Alignment.center,
       child: Text(
         label,
@@ -479,8 +473,6 @@ class _StatusPill extends StatelessWidget {
     );
   }
 }
-
-
 
 class _TableHeader extends StatelessWidget {
   final String text;
@@ -504,9 +496,9 @@ class _TableHeader extends StatelessWidget {
 
 class _TableCell extends StatelessWidget {
   final String text;
-  
+
   const _TableCell(this.text);
-  
+
   @override
   Widget build(BuildContext context) {
     return Padding(

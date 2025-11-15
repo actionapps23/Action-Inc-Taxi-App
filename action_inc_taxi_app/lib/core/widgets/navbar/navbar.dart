@@ -2,12 +2,15 @@
 
 import 'package:action_inc_taxi_app/core/theme/app_assets.dart';
 import 'package:action_inc_taxi_app/core/widgets/navbar/navbar_buttton.dart';
+import 'package:action_inc_taxi_app/cubit/rent/daily_rent_cubit.dart';
+import 'package:action_inc_taxi_app/cubit/selection/selection_cubit.dart';
 import 'package:action_inc_taxi_app/features/entry_section/car_detail_main_screen.dart';
 import 'package:action_inc_taxi_app/features/auth/login_screen.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/snackbar.dart';
 import 'package:action_inc_taxi_app/features/entry_section/renewal/renewal_and_status_screen.dart';
 import 'package:action_inc_taxi_app/features/selection_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Navbar extends StatelessWidget {
@@ -36,10 +39,11 @@ class Navbar extends StatelessWidget {
           // Logo and title
           GestureDetector(
             onTap: () {
+              // emit intial satte for all cubits
+              context.read<SelectionCubit>().reset();
+              context.read<DailyRentCubit>().reset();
               Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (_) => const SelectionScreen(),
-                ),
+                MaterialPageRoute(builder: (_) => const SelectionScreen()),
               );
             },
             child: Row(

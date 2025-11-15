@@ -32,7 +32,12 @@ class RenewalTypeData {
         : RenewalStatus.inProgress,
   );
 
-  RenewalTypeData copyWith({int? dateUtc, int? periodMonths, int? feesCents, RenewalStatus? status}) {
+  RenewalTypeData copyWith({
+    int? dateUtc,
+    int? periodMonths,
+    int? feesCents,
+    RenewalStatus? status,
+  }) {
     return RenewalTypeData(
       dateUtc: dateUtc ?? this.dateUtc,
       periodMonths: periodMonths ?? this.periodMonths,

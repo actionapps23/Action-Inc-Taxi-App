@@ -32,7 +32,12 @@ class RenewalCubit extends Cubit<RenewalState> {
     int feesCents = 1000 * 100,
   }) {
     final ltoData = RenewalTypeData(
-      dateUtc: contractEndUtc ?? _addMonths(DateTime.fromMillisecondsSinceEpoch(contractStartUtc, isUtc: true), periodMonths).toUtc().millisecondsSinceEpoch,
+      dateUtc:
+          contractEndUtc ??
+          _addMonths(
+            DateTime.fromMillisecondsSinceEpoch(contractStartUtc, isUtc: true),
+            periodMonths,
+          ).toUtc().millisecondsSinceEpoch,
       periodMonths: periodMonths,
       feesCents: feesCents,
     );
@@ -76,23 +81,33 @@ class RenewalCubit extends Cubit<RenewalState> {
         newRenewal = old.copyWith(lto: updated);
         break;
       case 'sealing':
-        updated = (old.sealing ?? RenewalTypeData()).copyWith(feesCents: feesCents);
+        updated = (old.sealing ?? RenewalTypeData()).copyWith(
+          feesCents: feesCents,
+        );
         newRenewal = old.copyWith(sealing: updated);
         break;
       case 'inspection':
-        updated = (old.inspection ?? RenewalTypeData()).copyWith(feesCents: feesCents);
+        updated = (old.inspection ?? RenewalTypeData()).copyWith(
+          feesCents: feesCents,
+        );
         newRenewal = old.copyWith(inspection: updated);
         break;
       case 'ltefb':
-        updated = (old.ltefb ?? RenewalTypeData()).copyWith(feesCents: feesCents);
+        updated = (old.ltefb ?? RenewalTypeData()).copyWith(
+          feesCents: feesCents,
+        );
         newRenewal = old.copyWith(ltefb: updated);
         break;
       case 'registeration':
-        updated = (old.registeration ?? RenewalTypeData()).copyWith(feesCents: feesCents);
+        updated = (old.registeration ?? RenewalTypeData()).copyWith(
+          feesCents: feesCents,
+        );
         newRenewal = old.copyWith(registeration: updated);
         break;
       case 'drivingLicense':
-        updated = (old.drivingLicense ?? RenewalTypeData()).copyWith(feesCents: feesCents);
+        updated = (old.drivingLicense ?? RenewalTypeData()).copyWith(
+          feesCents: feesCents,
+        );
         newRenewal = old.copyWith(drivingLicense: updated);
         break;
       default:
@@ -118,7 +133,9 @@ class RenewalCubit extends Cubit<RenewalState> {
         newRenewal = old.copyWith(sealing: updated);
         break;
       case 'inspection':
-        updated = (old.inspection ?? RenewalTypeData()).copyWith(dateUtc: dateUtc);
+        updated = (old.inspection ?? RenewalTypeData()).copyWith(
+          dateUtc: dateUtc,
+        );
         newRenewal = old.copyWith(inspection: updated);
         break;
       case 'ltefb':
@@ -126,11 +143,15 @@ class RenewalCubit extends Cubit<RenewalState> {
         newRenewal = old.copyWith(ltefb: updated);
         break;
       case 'registeration':
-        updated = (old.registeration ?? RenewalTypeData()).copyWith(dateUtc: dateUtc);
+        updated = (old.registeration ?? RenewalTypeData()).copyWith(
+          dateUtc: dateUtc,
+        );
         newRenewal = old.copyWith(registeration: updated);
         break;
       case 'drivingLicense':
-        updated = (old.drivingLicense ?? RenewalTypeData()).copyWith(dateUtc: dateUtc);
+        updated = (old.drivingLicense ?? RenewalTypeData()).copyWith(
+          dateUtc: dateUtc,
+        );
         newRenewal = old.copyWith(drivingLicense: updated);
         break;
       default:
@@ -151,7 +172,9 @@ class RenewalCubit extends Cubit<RenewalState> {
         if (periodMonths == null) {
           newRenewal = old.copyWith(lto: null);
         } else {
-          updated = (old.lto ?? RenewalTypeData()).copyWith(periodMonths: periodMonths);
+          updated = (old.lto ?? RenewalTypeData()).copyWith(
+            periodMonths: periodMonths,
+          );
           newRenewal = old.copyWith(lto: updated);
         }
         break;
@@ -159,7 +182,9 @@ class RenewalCubit extends Cubit<RenewalState> {
         if (periodMonths == null) {
           newRenewal = old.copyWith(sealing: null);
         } else {
-          updated = (old.sealing ?? RenewalTypeData()).copyWith(periodMonths: periodMonths);
+          updated = (old.sealing ?? RenewalTypeData()).copyWith(
+            periodMonths: periodMonths,
+          );
           newRenewal = old.copyWith(sealing: updated);
         }
         break;
@@ -167,7 +192,9 @@ class RenewalCubit extends Cubit<RenewalState> {
         if (periodMonths == null) {
           newRenewal = old.copyWith(inspection: null);
         } else {
-          updated = (old.inspection ?? RenewalTypeData()).copyWith(periodMonths: periodMonths);
+          updated = (old.inspection ?? RenewalTypeData()).copyWith(
+            periodMonths: periodMonths,
+          );
           newRenewal = old.copyWith(inspection: updated);
         }
         break;
@@ -175,7 +202,9 @@ class RenewalCubit extends Cubit<RenewalState> {
         if (periodMonths == null) {
           newRenewal = old.copyWith(ltefb: null);
         } else {
-          updated = (old.ltefb ?? RenewalTypeData()).copyWith(periodMonths: periodMonths);
+          updated = (old.ltefb ?? RenewalTypeData()).copyWith(
+            periodMonths: periodMonths,
+          );
           newRenewal = old.copyWith(ltefb: updated);
         }
         break;
@@ -183,7 +212,9 @@ class RenewalCubit extends Cubit<RenewalState> {
         if (periodMonths == null) {
           newRenewal = old.copyWith(registeration: null);
         } else {
-          updated = (old.registeration ?? RenewalTypeData()).copyWith(periodMonths: periodMonths);
+          updated = (old.registeration ?? RenewalTypeData()).copyWith(
+            periodMonths: periodMonths,
+          );
           newRenewal = old.copyWith(registeration: updated);
         }
         break;
@@ -191,7 +222,9 @@ class RenewalCubit extends Cubit<RenewalState> {
         if (periodMonths == null) {
           newRenewal = old.copyWith(drivingLicense: null);
         } else {
-          updated = (old.drivingLicense ?? RenewalTypeData()).copyWith(periodMonths: periodMonths);
+          updated = (old.drivingLicense ?? RenewalTypeData()).copyWith(
+            periodMonths: periodMonths,
+          );
           newRenewal = old.copyWith(drivingLicense: updated);
         }
         break;
@@ -210,11 +243,12 @@ class RenewalCubit extends Cubit<RenewalState> {
     final day = d <= lastDayOfTarget ? d : lastDayOfTarget;
     return DateTime.utc(y, m, day, from.hour, from.minute, from.second);
   }
-  void update({required Renewal renewal}){
-    emit(RenewalLoaded(renewal: renewal));
 
+  void update({required Renewal renewal}) {
+    emit(RenewalLoaded(renewal: renewal));
   }
-  Future<void> updateStatus(String key , RenewalStatus status){
+
+  Future<void> updateStatus(String key, RenewalStatus status) {
     final current = state;
     if (current is! RenewalLoaded) return Future.value();
     final old = current.renewal;
@@ -230,7 +264,9 @@ class RenewalCubit extends Cubit<RenewalState> {
         newRenewal = old.copyWith(sealing: updated);
         break;
       case 'inspection':
-        updated = (old.inspection ?? RenewalTypeData()).copyWith(status: status);
+        updated = (old.inspection ?? RenewalTypeData()).copyWith(
+          status: status,
+        );
         newRenewal = old.copyWith(inspection: updated);
         break;
       case 'ltefb':
@@ -238,11 +274,15 @@ class RenewalCubit extends Cubit<RenewalState> {
         newRenewal = old.copyWith(ltefb: updated);
         break;
       case 'registeration':
-        updated = (old.registeration ?? RenewalTypeData()).copyWith(status: status);
+        updated = (old.registeration ?? RenewalTypeData()).copyWith(
+          status: status,
+        );
         newRenewal = old.copyWith(registeration: updated);
         break;
       case 'drivingLicense':
-        updated = (old.drivingLicense ?? RenewalTypeData()).copyWith(status: status);
+        updated = (old.drivingLicense ?? RenewalTypeData()).copyWith(
+          status: status,
+        );
         newRenewal = old.copyWith(drivingLicense: updated);
         break;
       default:
@@ -250,6 +290,5 @@ class RenewalCubit extends Cubit<RenewalState> {
     }
     emit(RenewalLoaded(renewal: newRenewal));
     return Future.value();
-    
   }
 }

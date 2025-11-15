@@ -47,14 +47,6 @@ class RenewalAndStatusCubit extends Cubit<RenewalAndStatusState> {
   List<Map<String, dynamic>> _mapToDisplayRows(
     List<Map<String, dynamic>> filteredRows,
   ) {
-    const renewalKeys = [
-      'lto',
-      'sealing',
-      'inspection',
-      'ltefb',
-      'registeration',
-      'drivingLicense',
-    ];
     const renewalLabels = {
       'lto': 'LTO',
       'sealing': 'Sealing',
@@ -65,54 +57,53 @@ class RenewalAndStatusCubit extends Cubit<RenewalAndStatusState> {
     };
     List<Map<String, dynamic>> displayRows = [];
     for (final row in filteredRows) {
-      for (final key in renewalKeys) {
-        final renewal = row[key];
-        if (renewal is Map<String, dynamic> && renewal['dateUtc'] != null) {
-          // Format date
-          String dateStr = '';
-          final dateRaw = renewal['dateUtc'];
-          if (dateRaw != null) {
-            DateTime? d;
-            try {
-              if (dateRaw is int) {
+      // If row is already a renewal row (flat), use its keys directly
+      final renewalType = row['renewalType'] ?? row['renewal'] ?? '';
+      if (row.containsKey('dateUtc')) {
+        // Format date
+        String dateStr = '';
+        final dateRaw = row['dateUtc'];
+        if (dateRaw != null) {
+          DateTime? d;
+          try {
+            if (dateRaw is int) {
+              d = DateTime.fromMillisecondsSinceEpoch(
+                dateRaw,
+                isUtc: true,
+              ).toLocal();
+            } else if (dateRaw is String) {
+              final ms = int.tryParse(dateRaw);
+              if (ms != null) {
                 d = DateTime.fromMillisecondsSinceEpoch(
-                  dateRaw,
+                  ms,
                   isUtc: true,
                 ).toLocal();
-              } else if (dateRaw is String) {
-                final ms = int.tryParse(dateRaw);
-                if (ms != null) {
-                  d = DateTime.fromMillisecondsSinceEpoch(
-                    ms,
-                    isUtc: true,
-                  ).toLocal();
-                } else if (dateRaw.contains('/')) {
-                  final parts = dateRaw.split('/');
-                  if (parts.length >= 3) {
-                    final day = int.tryParse(parts[0]) ?? 1;
-                    final month = int.tryParse(parts[1]) ?? 1;
-                    final year = int.tryParse(parts[2]) ?? DateTime.now().year;
-                    d = DateTime(year, month, day);
-                  }
-                } else {
-                  d = DateTime.tryParse(dateRaw);
+              } else if (dateRaw.contains('/')) {
+                final parts = dateRaw.split('/');
+                if (parts.length >= 3) {
+                  final day = int.tryParse(parts[0]) ?? 1;
+                  final month = int.tryParse(parts[1]) ?? 1;
+                  final year = int.tryParse(parts[2]) ?? DateTime.now().year;
+                  d = DateTime(year, month, day);
                 }
+              } else {
+                d = DateTime.tryParse(dateRaw);
               }
-            } catch (_) {
-              d = null;
             }
-            if (d != null) {
-              dateStr =
-                  "${d.day.toString().padLeft(2, '0')}/${d.month.toString().padLeft(2, '0')}/${d.year}";
-            }
+          } catch (_) {
+            d = null;
           }
-          displayRows.add({
-            'renewal': renewalLabels[key] ?? key,
-            'taxi': row['taxiNo'] ?? '',
-            'status': renewal['status'] ?? '',
-            'date': dateStr,
-          });
+          if (d != null) {
+            dateStr =
+                "${d.day.toString().padLeft(2, '0')}/${d.month.toString().padLeft(2, '0')}/${d.year}";
+          }
         }
+        displayRows.add({
+          'renewal': renewalLabels[renewalType] ?? renewalType,
+          'taxi': row['taxiNo'] ?? '',
+          'status': row['status'] ?? '',
+          'date': dateStr,
+        });
       }
     }
     return displayRows;
@@ -132,7 +123,8 @@ class RenewalAndStatusCubit extends Cubit<RenewalAndStatusState> {
       'registeration',
       'drivingLicense',
     ];
-    return rows.where((r) {
+    List<Map<String, dynamic>> result = [];
+    for (final r in rows) {
       for (final key in renewalKeys) {
         final renewal = r[key];
         if (renewal is Map<String, dynamic> && renewal['dateUtc'] is int) {
@@ -156,14 +148,17 @@ class RenewalAndStatusCubit extends Cubit<RenewalAndStatusState> {
               break;
             case 2:
               match = dateOnly.year == today.year;
+              print(match);
               break;
             default:
               match = true;
           }
-          if (match) return true;
+          if (match) {
+            result.add({'renewalType': key, 'taxiNo': r['taxiNo'], ...renewal});
+          }
         }
       }
-      return false;
-    }).toList();
+    }
+    return result;
   }
 }

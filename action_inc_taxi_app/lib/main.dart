@@ -1,3 +1,4 @@
+import 'package:action_inc_taxi_app/cubit/rent/daily_rent_cubit.dart';
 import 'package:action_inc_taxi_app/features/auth/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -5,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:action_inc_taxi_app/cubit/selection/selection_cubit.dart';
+import 'package:action_inc_taxi_app/core/db_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,8 +24,13 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-        return BlocProvider<SelectionCubit>(
-          create: (_) => SelectionCubit(),
+        return MultiBlocProvider(
+          providers: [
+            BlocProvider<SelectionCubit>(create: (_) => SelectionCubit()),
+            BlocProvider<DailyRentCubit>(
+              create: (_) => DailyRentCubit(DbService()),
+            ),
+          ],
           child: MaterialApp(
             title: 'Action Inc Taxi',
             debugShowCheckedModeBanner: false,
@@ -33,9 +40,7 @@ class MyApp extends StatelessWidget {
                 surface: Colors.black,
               ),
             ),
-            // Switch between LoginScreen() and CarDetailScreen() for testing
             home: LoginScreen(),
-            // home: CarDetailScreen()
           ),
         );
       },

@@ -38,34 +38,13 @@ class _SelectionScreenState extends State<SelectionScreen> {
   }
 
   final List<Map<String, dynamic>> featureCards = [
-    {
-      'title': "Car Details",
-      'icon': AppAssets.carDetailsIcon,
-    },
-    {
-      'title': "Maintenance",
-      'icon': AppAssets.maintenance,
-    },
-    {
-      'title': "Inventory",
-      'icon': AppAssets.inventory,
-    },
-    {
-      'title': "Taxi Inspection",
-      'icon': AppAssets.taxiInspection,
-    },
-    {
-      'title': "Open Procedure",
-      'icon': AppAssets.openProcedure,
-    },
-    {
-      'title': "Close Procedure",
-      'icon': AppAssets.closeProcedure,
-    },
-    {
-      'title': "Renewal & Status",
-      'icon': AppAssets.renewalStatus,
-    },
+    {'title': "Car Details", 'icon': AppAssets.carDetailsIcon},
+    {'title': "Maintenance", 'icon': AppAssets.maintenance},
+    {'title': "Inventory", 'icon': AppAssets.inventory},
+    {'title': "Taxi Inspection", 'icon': AppAssets.taxiInspection},
+    {'title': "Open Procedure", 'icon': AppAssets.openProcedure},
+    {'title': "Close Procedure", 'icon': AppAssets.closeProcedure},
+    {'title': "Renewal & Status", 'icon': AppAssets.renewalStatus},
   ];
 
   @override
@@ -198,7 +177,8 @@ class _SelectionScreenState extends State<SelectionScreen> {
                                           selectionCubit.setAll(
                                             taxiNo: taxiNoController.text,
                                             regNo: regNoController.text,
-                                            driverName: driverNameController.text,
+                                            driverName:
+                                                driverNameController.text,
                                           );
                                           Navigator.of(context).push(
                                             MaterialPageRoute(
@@ -207,12 +187,16 @@ class _SelectionScreenState extends State<SelectionScreen> {
                                           );
                                         }
                                       : () {},
-                                  backgroundColor: canProceed ? Colors.green : Colors.grey,
+                                  backgroundColor: canProceed
+                                      ? Colors.green
+                                      : Colors.grey,
                                   textColor: Colors.white,
                                   width: 90.w,
                                   height: 36.h,
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: canProceed ? Colors.green : Colors.grey,
+                                    backgroundColor: canProceed
+                                        ? Colors.green
+                                        : Colors.grey,
                                     foregroundColor: Colors.white,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8),

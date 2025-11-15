@@ -74,9 +74,13 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                                         selectedIndex: selectedIndex,
                                         onTabSelected: (index) {
                                           // Block tab switching - only allow programmatic navigation
-                                          ScaffoldMessenger.of(context).showSnackBar(
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
                                             const SnackBar(
-                                              content: Text('Please complete the current section first.'),
+                                              content: Text(
+                                                'Please complete the current section first.',
+                                              ),
                                               duration: Duration(seconds: 2),
                                             ),
                                           );
@@ -96,8 +100,7 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                                   ? state.selectedIndex
                                   : 0;
                               if (selectedIndex == 0) {
-                                return DailyRentCollectionInfoScreen(
-                                );
+                                return DailyRentCollectionInfoScreen();
                               }
                               return RenewalDataTable();
                             },

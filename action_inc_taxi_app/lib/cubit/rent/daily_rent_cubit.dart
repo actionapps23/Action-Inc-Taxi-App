@@ -55,9 +55,7 @@ class DailyRentCubit extends Cubit<DailyRentState> {
         driver: current.driver?.toMap(),
         rent: current.rent?.toMap(),
       );
-    
-    } catch (_) {
-    }
+    } catch (_) {}
   }
 
   void update({
@@ -80,6 +78,7 @@ class DailyRentCubit extends Cubit<DailyRentState> {
     );
   }
 
-
-
+  void reset() {
+    emit(DailyRentInitial());
+  }
 }
