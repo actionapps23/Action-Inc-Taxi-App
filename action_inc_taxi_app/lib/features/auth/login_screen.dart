@@ -79,7 +79,6 @@ class LoginScreen extends HookWidget {
                         labelOnTop: true,
                         controller: employIdController,
                         labelText: 'Enter Employ Id',
-                        keyboardType: TextInputType.number,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your employee ID';

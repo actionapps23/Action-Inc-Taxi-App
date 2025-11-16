@@ -4,7 +4,7 @@ import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
 import 'package:action_inc_taxi_app/core/widgets/buttons/app_button.dart';
 import 'package:action_inc_taxi_app/core/widgets/buttons/app_outline_button.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/snackbar.dart';
-import 'package:action_inc_taxi_app/cubit/car_detail_cubit.dart';
+import 'package:action_inc_taxi_app/cubit/car_details/car_detail_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/selection/selection_cubit.dart';
 import 'package:action_inc_taxi_app/features/entry_section/renewal/renewal_and_status_screen.dart';
 import 'package:flutter/material.dart';
@@ -304,7 +304,6 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
                       await _cubit.saveRenewal();
                       dailyRentCubit.reset();
                       _cubit.reset();
-
                     } catch (e) {
                       SnackBarHelper.showErrorSnackBar(
                         context,

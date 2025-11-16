@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class HelperFunctions {
+  // Time and Date related helpers
   static int utcFromController(TextEditingController controller) {
     final text = controller.text.trim();
     if (text.isEmpty) return 0;

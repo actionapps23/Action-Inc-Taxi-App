@@ -6,8 +6,8 @@ import 'package:action_inc_taxi_app/features/entry_section/rent/daily_rent_colle
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:action_inc_taxi_app/cubit/car_detail_cubit.dart';
-import 'package:action_inc_taxi_app/cubit/car_detail_state.dart';
+import 'package:action_inc_taxi_app/cubit/car_details/car_detail_cubit.dart';
+import 'package:action_inc_taxi_app/cubit/car_details/car_detail_state.dart';
 
 class CarDetailScreen extends StatefulWidget {
   const CarDetailScreen({super.key});

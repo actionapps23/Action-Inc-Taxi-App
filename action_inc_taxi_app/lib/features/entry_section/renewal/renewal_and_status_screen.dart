@@ -9,8 +9,8 @@ import 'package:action_inc_taxi_app/core/widgets/snackbar/snackbar.dart';
 
 import 'package:action_inc_taxi_app/core/widgets/tabbar/tabbar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:action_inc_taxi_app/cubit/renewal_and_status_cubit.dart';
-import 'package:action_inc_taxi_app/cubit/renewal_and_status_state.dart';
+import 'package:action_inc_taxi_app/cubit/renewal_and_status/renewal_and_status_cubit.dart';
+import 'package:action_inc_taxi_app/cubit/renewal_and_status/renewal_and_status_state.dart';
 
 class RenewalAndStatusScreen extends StatefulWidget {
   final Color? backgroundColor;
@@ -383,7 +383,6 @@ class _StatusPill extends StatelessWidget {
   final String status;
   const _StatusPill(this.status);
 
-
   RenewalStatus get renewalStatus {
     try {
       return RenewalStatus.values.firstWhere(
@@ -446,9 +445,7 @@ class _StatusPill extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 14.w),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-      ),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
       alignment: Alignment.center,
       child: Text(
         label,

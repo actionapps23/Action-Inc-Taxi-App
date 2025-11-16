@@ -1,7 +1,7 @@
 import 'package:action_inc_taxi_app/core/helper_functions.dart';
 import 'package:action_inc_taxi_app/core/models/car_info.dart';
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
-import 'package:action_inc_taxi_app/cubit/car_detail_cubit.dart';
+import 'package:action_inc_taxi_app/cubit/car_details/car_detail_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -352,12 +352,22 @@ class _DailyRentCollectionInfoScreenState
           firstDriverNameController.text = driver.firstDriverName;
           firstDriverCnicController.text = driver.firstDriverCnic;
           firstDriverDobController.text = driver.firstDriverDobUtc != null
-              ? _formatDate(DateTime.fromMillisecondsSinceEpoch(driver.firstDriverDobUtc!, isUtc: true))
+              ? _formatDate(
+                  DateTime.fromMillisecondsSinceEpoch(
+                    driver.firstDriverDobUtc!,
+                    isUtc: true,
+                  ),
+                )
               : '';
           secondDriverNameController.text = driver.secondDriverName ?? '';
           secondDriverCnicController.text = driver.secondDriverCnic ?? '';
           secondDriverDobController.text = driver.secondDriverDobUtc != null
-              ? _formatDate(DateTime.fromMillisecondsSinceEpoch(driver.secondDriverDobUtc!, isUtc: true))
+              ? _formatDate(
+                  DateTime.fromMillisecondsSinceEpoch(
+                    driver.secondDriverDobUtc!,
+                    isUtc: true,
+                  ),
+                )
               : '';
         } else {
           firstDriverNameController.text = selectionState.driverName;
@@ -367,19 +377,33 @@ class _DailyRentCollectionInfoScreenState
           rentAmountController.text = (rent.rentAmountCents / 100).toString();
           dueRentController.text = (rent.dueRentCents / 100).toString();
           paymentCashController.text = (rent.paymentCashCents / 100).toString();
-          paymentGCashController.text = (rent.paymentGCashCents / 100).toString();
+          paymentGCashController.text = (rent.paymentGCashCents / 100)
+              .toString();
           gCashRefController.text = rent.gCashRef ?? '';
-          maintenanceFeesController.text = (rent.maintenanceFeesCents / 100).toString();
+          maintenanceFeesController.text = (rent.maintenanceFeesCents / 100)
+              .toString();
           carWashFeesController.text = (rent.carWashFeesCents / 100).toString();
           contractStartController.text = rent.contractStartUtc != null
-              ? _formatDate(DateTime.fromMillisecondsSinceEpoch(rent.contractStartUtc!, isUtc: true))
+              ? _formatDate(
+                  DateTime.fromMillisecondsSinceEpoch(
+                    rent.contractStartUtc!,
+                    isUtc: true,
+                  ),
+                )
               : '';
           contractEndController.text = rent.contractEndUtc != null
-              ? _formatDate(DateTime.fromMillisecondsSinceEpoch(rent.contractEndUtc!, isUtc: true))
+              ? _formatDate(
+                  DateTime.fromMillisecondsSinceEpoch(
+                    rent.contractEndUtc!,
+                    isUtc: true,
+                  ),
+                )
               : '';
           contractMonthsController.text = rent.monthsCount.toString();
           contractExtraDaysController.text = rent.extraDays.toString();
-            paymentDateController.text = _formatDate(DateTime.fromMillisecondsSinceEpoch(rent.createdAtUtc, isUtc: true));
+          paymentDateController.text = _formatDate(
+            DateTime.fromMillisecondsSinceEpoch(rent.createdAtUtc, isUtc: true),
+          );
           publicHoliday = rent.isPublicHoliday;
           birthday = rent.isBirthday;
         } else {
@@ -405,7 +429,9 @@ class _DailyRentCollectionInfoScreenState
         secondDriverDobController.text = _formatDate(today);
       }
       // update draft with loaded or default values
-      WidgetsBinding.instance.addPostFrameCallback((_) => _updateDraftFromControllers());
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => _updateDraftFromControllers(),
+      );
     });
   }
 
