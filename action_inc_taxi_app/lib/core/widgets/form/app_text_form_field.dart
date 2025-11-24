@@ -111,19 +111,20 @@ class AppTextFormField extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           if (labelText != null)
-            Expanded(
-              flex: 2,
+            SizedBox(
+              width: 110,
               child: Padding(
                 padding: const EdgeInsets.only(right: 16.0),
                 child: Text(
                   labelText!,
                   style: labelStyle,
                   textAlign: textAlign ?? TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.visible,
                 ),
               ),
             ),
           Expanded(
-            flex: 3,
             child: TextFormField(
               onTap: onTap,
               readOnly: isReadOnly,
