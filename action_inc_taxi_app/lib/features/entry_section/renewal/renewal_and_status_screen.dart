@@ -1,4 +1,4 @@
-import 'package:action_inc_taxi_app/core/models/enums.dart';
+import 'package:action_inc_taxi_app/core/enums.dart';
 import 'package:action_inc_taxi_app/core/db_service.dart';
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';

@@ -1,5 +1,5 @@
 import 'package:action_inc_taxi_app/core/db_service.dart';
-import 'package:action_inc_taxi_app/core/models/enums.dart';
+import 'package:action_inc_taxi_app/core/enums.dart';
 import 'package:action_inc_taxi_app/core/models/renewal.dart';
 import 'package:action_inc_taxi_app/core/models/renewal_type_data.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -1,4 +1,4 @@
-import 'enums.dart';
+import 'package:action_inc_taxi_app/core/enums.dart';
 
 class RenewalTypeData {
   final int? dateUtc;

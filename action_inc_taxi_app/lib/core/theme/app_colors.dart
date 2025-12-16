@@ -38,24 +38,10 @@ class AppColors {
   static const Color border = Color(0xFFE0E0E0);
   static const Color divider = Color(0xFFEEEEEE);
 
-  // Brand Colors
-  //   static const Color primary = Color(0xFF4CAF50);  // Green color for 'inc'
-  //   static const Color secondary = Colors.white;      // White color for 'action'
-
-  //   // Background Colors
+  // Background Colors
   static const Color background = Color(0xFF0F110F);
   static const Color cardBackground = Color(0xFF1E1E1E);
-  //   static const Color inputBackground = Color(0xFF2C2C2C);
 
-  //   // Text Colors
-  //   static const Color textPrimary = Colors.white;
-  //   static const Color textSecondary = Color(0xFF9E9E9E);
-  //   static const Color textHint = Color(0xFF757575);
-
-  //   // Border Colors
-  //   static const Color border = Color(0xFF424242);
-
-  //   // Button Colors
   static const Color buttonPrimary = Color(0xFF4CAF50);
   static const Color buttonText = Colors.black;
 }

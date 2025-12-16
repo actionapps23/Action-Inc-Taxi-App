@@ -10,7 +10,7 @@ import 'package:action_inc_taxi_app/core/models/rent.dart';
 import 'package:action_inc_taxi_app/core/models/driver.dart';
 import 'package:intl/intl.dart';
 import 'package:action_inc_taxi_app/core/widgets/buttons/app_button.dart';
-import 'package:action_inc_taxi_app/core/widgets/form/app_text_form_field.dart';
+import 'package:action_inc_taxi_app/core/widgets/form/form_field.dart';
 import 'package:action_inc_taxi_app/core/widgets/form/app_dropdown.dart';
 import 'package:action_inc_taxi_app/cubit/selection/selection_cubit.dart';
 
