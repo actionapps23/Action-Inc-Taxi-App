@@ -26,4 +26,12 @@ class AppAssets {
 
   static const userAvatar = '${baseImagePath}user_avatar.png';
   static const logoPNG = '${baseImagePath}logo.png';
+  static const frontView = '${baseImagePath}front_view.png';
+  static const leftView = '${baseImagePath}left_view.png';
+  static const rightView = '${baseImagePath}right_view.png';
+  static const rearView = '${baseImagePath}rear_view.png';
+  static const topView = '${baseImagePath}top_view.png';
+  static const bottomView = '${baseImagePath}bottom_view.png';
+  static const interior = '${baseImagePath}interior.png';
+  static const mechanicalPart = '${baseImagePath}mechanical_part.png';
 }

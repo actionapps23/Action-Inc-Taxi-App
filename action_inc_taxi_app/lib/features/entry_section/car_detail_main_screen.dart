@@ -76,7 +76,9 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                                         selectedIndex: selectedIndex,
                                         onTabSelected: (index) {
                                           // Allow free switching between all tabs (0, 1, and 2)
-                                          context.read<CarDetailCubit>().selectTab(index);
+                                          context
+                                              .read<CarDetailCubit>()
+                                              .selectTab(index);
                                         },
                                       );
                                     },

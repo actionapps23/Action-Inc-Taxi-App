@@ -390,7 +390,9 @@ class _RenewalDataRowWidgetState extends State<_RenewalDataRowWidget> {
     super.initState();
     _selectedPeriod = widget.data?.periodMonths;
     dateController = TextEditingController();
-    periodController = TextEditingController(text: _getPeriodLabel(_selectedPeriod));
+    periodController = TextEditingController(
+      text: _getPeriodLabel(_selectedPeriod),
+    );
     // Schedule update after widget builds so contractStartUtc is ready
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _updateDateDisplay();
@@ -463,7 +465,11 @@ class _RenewalDataRowWidgetState extends State<_RenewalDataRowWidget> {
             flex: 3,
             child: AppTextFormField(
               labelText: widget.displayName,
-              suffix: Icon(Icons.calendar_today, size: 18, color: Colors.white54),
+              suffix: Icon(
+                Icons.calendar_today,
+                size: 18,
+                color: Colors.white54,
+              ),
               controller: dateController,
               isReadOnly: true,
               onTap: () async {
@@ -517,12 +523,18 @@ class _RenewalDataRowWidgetState extends State<_RenewalDataRowWidget> {
                     decoration: InputDecoration(
                       fillColor: AppColors.background,
                       filled: true,
-                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 16,
+                      ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(
                           AppConstants.inputBorderRadius,
                         ),
-                        borderSide: const BorderSide(color: AppColors.border, width: 1),
+                        borderSide: const BorderSide(
+                          color: AppColors.border,
+                          width: 1,
+                        ),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(
@@ -534,7 +546,10 @@ class _RenewalDataRowWidgetState extends State<_RenewalDataRowWidget> {
                         borderRadius: BorderRadius.circular(
                           AppConstants.inputBorderRadius,
                         ),
-                        borderSide: const BorderSide(color: AppColors.border, width: 1),
+                        borderSide: const BorderSide(
+                          color: AppColors.border,
+                          width: 1,
+                        ),
                       ),
                     ),
                     dropdownColor: Color(0xFF1a1a1a),
@@ -543,10 +558,7 @@ class _RenewalDataRowWidgetState extends State<_RenewalDataRowWidget> {
                       color: Colors.white54,
                       size: 20,
                     ),
-                    style: TextStyle(
-                      color: AppColors.textHint,
-                      fontSize: 14,
-                    ),
+                    style: TextStyle(color: AppColors.textHint, fontSize: 14),
                     items: [
                       DropdownMenuItem<int?>(
                         value: null,

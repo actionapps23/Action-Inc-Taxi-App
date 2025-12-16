@@ -62,10 +62,7 @@ class AppDropdown<T> extends StatelessWidget {
           if (labelText != null)
             Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
-              child: Text(
-                labelText!,
-                style: labelStyle,
-              ),
+              child: Text(labelText!, style: labelStyle),
             ),
           dropdown,
         ],
@@ -89,9 +86,7 @@ class AppDropdown<T> extends StatelessWidget {
                 ),
               ),
             ),
-          Expanded(
-            child: dropdown,
-          ),
+          Expanded(child: dropdown),
         ],
       );
     }

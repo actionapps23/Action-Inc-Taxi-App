@@ -1,7 +1,8 @@
 import 'package:action_inc_taxi_app/core/models/rent.dart';
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
 import 'package:action_inc_taxi_app/core/widgets/buttons/app_button.dart';
-import 'package:action_inc_taxi_app/core/widgets/form/app_text_form_field.dart';
+import 'package:action_inc_taxi_app/core/widgets/form/form_field.dart';
+import 'package:action_inc_taxi_app/features/entry_section/car_plan/action_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
@@ -26,13 +27,12 @@ class _CarPlanScreenState extends State<CarPlanScreen> {
   void initState() {
     super.initState();
     // Set default dates
-    final today = DateTime.now();
     startDateController.text = '15/02/2024';
     endDateController.text = '15/02/2024';
     monthsController.text = '03 Months';
     extraDaysController.text = '03';
     _updateMonthsCount();
-    
+
     // Add sample default history entries
     defaultHistory.addAll([
       DefaultHistoryEntry(
@@ -141,7 +141,10 @@ class _CarPlanScreenState extends State<CarPlanScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel', style: TextStyle(color: Colors.white70)),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(color: Colors.white70),
+            ),
           ),
           TextButton(
             onPressed: () {
@@ -258,7 +261,10 @@ class _CarPlanScreenState extends State<CarPlanScreen> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 12.w,
+                    vertical: 8.h,
+                  ),
                 ),
               ),
             ],
@@ -277,10 +283,7 @@ class _CarPlanScreenState extends State<CarPlanScreen> {
               child: Center(
                 child: Text(
                   'No default history entries yet',
-                  style: TextStyle(
-                    color: Colors.white54,
-                    fontSize: 14,
-                  ),
+                  style: TextStyle(color: Colors.white54, fontSize: 14),
                 ),
               ),
             )
@@ -328,14 +331,22 @@ class _CarPlanScreenState extends State<CarPlanScreen> {
                         Row(
                           children: [
                             IconButton(
-                              icon: Icon(Icons.edit, color: Colors.blue, size: 20),
+                              icon: Icon(
+                                Icons.edit,
+                                color: Colors.blue,
+                                size: 20,
+                              ),
                               onPressed: () => _editDefault(index),
                               padding: EdgeInsets.zero,
                               constraints: BoxConstraints(),
                             ),
                             SizedBox(width: 8.w),
                             IconButton(
-                              icon: Icon(Icons.delete, color: Colors.red, size: 20),
+                              icon: Icon(
+                                Icons.delete,
+                                color: Colors.red,
+                                size: 20,
+                              ),
                               onPressed: () => _deleteDefault(index),
                               padding: EdgeInsets.zero,
                               constraints: BoxConstraints(),
@@ -347,28 +358,19 @@ class _CarPlanScreenState extends State<CarPlanScreen> {
                     SizedBox(height: 8.h),
                     Text(
                       item.description,
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 14,
-                      ),
+                      style: TextStyle(color: Colors.white70, fontSize: 14),
                     ),
                     SizedBox(height: 8.h),
                     Text(
                       item.date,
-                      style: TextStyle(
-                        color: Colors.white54,
-                        fontSize: 12,
-                      ),
+                      style: TextStyle(color: Colors.white54, fontSize: 12),
                     ),
                     SizedBox(height: 8.h),
                     Row(
                       children: [
                         Text(
                           'Attachments: ',
-                          style: TextStyle(
-                            color: Colors.white70,
-                            fontSize: 12,
-                          ),
+                          style: TextStyle(color: Colors.white70, fontSize: 12),
                         ),
                         Icon(Icons.picture_as_pdf, color: Colors.red, size: 18),
                         SizedBox(width: 8.w),
@@ -383,51 +385,20 @@ class _CarPlanScreenState extends State<CarPlanScreen> {
           SizedBox(height: 32.h),
 
           // Action Buttons
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              AppButton(
-                text: 'Cancel',
-                onPressed: () => Navigator.pop(context),
-                backgroundColor: AppColors.cardBackground,
-                textColor: Colors.white,
-                width: 100.w,
-                height: 44.h,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.cardBackground,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    side: BorderSide(color: Colors.white12),
-                  ),
+          ActionButtons(
+            onSubmit: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Car Plan submitted successfully'),
+                  backgroundColor: Colors.green,
                 ),
-              ),
-              SizedBox(width: 16.w),
-              AppButton(
-                text: 'Submit Now',
-                onPressed: () {
-                  // Handle submit logic
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Car Plan submitted successfully'),
-                      backgroundColor: Colors.green,
-                    ),
-                  );
-                },
-                backgroundColor: AppColors.primary,
-                textColor: Colors.white,
-                width: 120.w,
-                height: 44.h,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-              ),
-            ],
+              );
+            },
+            onCancel: () {
+              Navigator.pop(context);
+            },
           ),
+
           SizedBox(height: 32.h),
         ],
       ),
@@ -457,10 +428,7 @@ class _AddDefaultDialog extends StatefulWidget {
   final DefaultHistoryEntry? initialEntry;
   final Function(DefaultHistoryEntry) onSave;
 
-  const _AddDefaultDialog({
-    this.initialEntry,
-    required this.onSave,
-  });
+  const _AddDefaultDialog({this.initialEntry, required this.onSave});
 
   @override
   State<_AddDefaultDialog> createState() => _AddDefaultDialogState();
@@ -482,7 +450,8 @@ class _AddDefaultDialogState extends State<_AddDefaultDialog> {
       dateController.text = widget.initialEntry!.date;
     } else {
       final today = DateTime.now();
-      dateController.text = '${today.day} ${_getMonthName(today.month)}, ${today.year}';
+      dateController.text =
+          '${today.day} ${_getMonthName(today.month)}, ${today.year}';
     }
   }
 
@@ -499,7 +468,7 @@ class _AddDefaultDialogState extends State<_AddDefaultDialog> {
       'Sep',
       'Oct',
       'Nov',
-      'Dec'
+      'Dec',
     ];
     return months[month - 1];
   }
@@ -513,7 +482,8 @@ class _AddDefaultDialogState extends State<_AddDefaultDialog> {
     );
     if (picked != null) {
       setState(() {
-        dateController.text = '${picked.day} ${_getMonthName(picked.month)}, ${picked.year}';
+        dateController.text =
+            '${picked.day} ${_getMonthName(picked.month)}, ${picked.year}';
       });
     }
   }
@@ -582,12 +552,18 @@ class _AddDefaultDialogState extends State<_AddDefaultDialog> {
                     style: TextStyle(color: AppColors.textHint, fontSize: 14),
                     decoration: InputDecoration(
                       hintText: 'Enter description',
-                      hintStyle: TextStyle(color: AppColors.textHint, fontSize: 14),
+                      hintStyle: TextStyle(
+                        color: AppColors.textHint,
+                        fontSize: 14,
+                      ),
                       fillColor: AppColors.background,
                       filled: true,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: AppColors.border, width: 1),
+                        borderSide: BorderSide(
+                          color: AppColors.border,
+                          width: 1,
+                        ),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
@@ -595,7 +571,10 @@ class _AddDefaultDialogState extends State<_AddDefaultDialog> {
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: AppColors.border, width: 1),
+                        borderSide: BorderSide(
+                          color: AppColors.border,
+                          width: 1,
+                        ),
                       ),
                     ),
                   ),
@@ -608,7 +587,11 @@ class _AddDefaultDialogState extends State<_AddDefaultDialog> {
                 hintText: 'Select date',
                 labelOnTop: true,
                 isReadOnly: true,
-                suffix: Icon(Icons.calendar_today, color: Colors.white54, size: 18),
+                suffix: Icon(
+                  Icons.calendar_today,
+                  color: Colors.white54,
+                  size: 18,
+                ),
                 onTap: _pickDate,
               ),
               SizedBox(height: 24.h),
@@ -617,7 +600,10 @@ class _AddDefaultDialogState extends State<_AddDefaultDialog> {
                 children: [
                   TextButton(
                     onPressed: () => Navigator.pop(context),
-                    child: Text('Cancel', style: TextStyle(color: Colors.white70)),
+                    child: Text(
+                      'Cancel',
+                      style: TextStyle(color: Colors.white70),
+                    ),
                   ),
                   SizedBox(width: 8.w),
                   AppButton(
@@ -634,12 +620,14 @@ class _AddDefaultDialogState extends State<_AddDefaultDialog> {
                         );
                         return;
                       }
-                      widget.onSave(DefaultHistoryEntry(
-                        name: nameController.text.trim(),
-                        role: roleController.text.trim(),
-                        description: descriptionController.text.trim(),
-                        date: dateController.text.trim(),
-                      ));
+                      widget.onSave(
+                        DefaultHistoryEntry(
+                          name: nameController.text.trim(),
+                          role: roleController.text.trim(),
+                          description: descriptionController.text.trim(),
+                          date: dateController.text.trim(),
+                        ),
+                      );
                       Navigator.pop(context);
                     },
                     backgroundColor: AppColors.primary,
@@ -656,4 +644,3 @@ class _AddDefaultDialogState extends State<_AddDefaultDialog> {
     );
   }
 }
-

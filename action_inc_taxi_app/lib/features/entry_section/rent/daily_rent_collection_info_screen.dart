@@ -149,11 +149,11 @@ class _DailyRentCollectionInfoScreenState
     //     } catch (_) {
     //       try {
     //         final df = DateFormat('dd/MM/yyyy');
-        
+
     //       } catch (_) {
     //         try {
     //           final df2 = DateFormat('dd MMM, yyyy');
-              
+
     //         } catch (_) {
     //         }
     //       }
@@ -363,7 +363,8 @@ class _DailyRentCollectionInfoScreenState
           firstDriverNameController.text = selectionState.driverName;
         }
         if (rent != null) {
-          totalRentController.text = '${(rent.totalCents / 100).toStringAsFixed(0)} P';
+          totalRentController.text =
+              '${(rent.totalCents / 100).toStringAsFixed(0)} P';
           rentAmountController.text = (rent.rentAmountCents / 100).toString();
           dueRentController.text = (rent.dueRentCents / 100).toString();
           paymentCashController.text = (rent.paymentCashCents / 100).toString();
@@ -575,7 +576,9 @@ class _DailyRentCollectionInfoScreenState
                                 SizedBox(width: 16.w),
                                 Column(
                                   children: [
-                                    SizedBox(height: 48.h), // Space for Taxi No row
+                                    SizedBox(
+                                      height: 48.h,
+                                    ), // Space for Taxi No row
                                     Checkbox(
                                       value: _firstDriverSelected,
                                       onChanged: (v) => setState(() {
@@ -848,7 +851,9 @@ class _DailyRentCollectionInfoScreenState
                                             value: '',
                                             child: Text(
                                               'Select Type',
-                                              style: TextStyle(color: Colors.white54),
+                                              style: TextStyle(
+                                                color: Colors.white54,
+                                              ),
                                             ),
                                           ),
                                         ],

@@ -1,5 +1,5 @@
 import 'package:action_inc_taxi_app/cubit/rent/daily_rent_cubit.dart';
-import 'package:action_inc_taxi_app/features/auth/login_screen.dart';
+import 'package:action_inc_taxi_app/features/entry_section/inspection/vehicle_view_selection_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
                 surface: Colors.black,
               ),
             ),
-            home: LoginScreen(),
+            home: VehicleViewSelectionScreen(),
           ),
         );
       },
