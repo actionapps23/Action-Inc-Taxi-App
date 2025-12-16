@@ -55,6 +55,8 @@ class _DailyRentCollectionInfoScreenState
   bool birthday = false;
   bool mainCheck = true;
   bool secondCheck = false;
+  bool _firstDriverSelected = true;
+  bool _secondDriverSelected = false;
 
   double? _originalRent;
   double? _originalMaintenance;
@@ -227,7 +229,7 @@ class _DailyRentCollectionInfoScreenState
       due = total - paymentCashCents - paymentGCashCents;
     }
     if (due < 0) due = 0;
-    totalRentController.text = (total / 100).toString();
+    totalRentController.text = '${(total / 100).toStringAsFixed(0)} P';
     dueRentController.text = (due / 100).toString();
     // update months display if contract dates provided
     try {
@@ -361,7 +363,7 @@ class _DailyRentCollectionInfoScreenState
           firstDriverNameController.text = selectionState.driverName;
         }
         if (rent != null) {
-          totalRentController.text = (rent.totalCents / 100).toString();
+          totalRentController.text = '${(rent.totalCents / 100).toStringAsFixed(0)} P';
           rentAmountController.text = (rent.rentAmountCents / 100).toString();
           dueRentController.text = (rent.dueRentCents / 100).toString();
           paymentCashController.text = (rent.paymentCashCents / 100).toString();
@@ -533,7 +535,7 @@ class _DailyRentCollectionInfoScreenState
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
                                         controller: firstDriverDobController,
-                                        labelText: 'First Driver DOB',
+                                        labelText: 'Date of Birth',
                                         hintText: 'DD MMM, YYYY',
                                         isReadOnly: true,
                                         onTap: () => _pickDateForController(
@@ -545,7 +547,7 @@ class _DailyRentCollectionInfoScreenState
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
                                         controller: secondDriverDobController,
-                                        labelText: 'Second Driver DOB',
+                                        labelText: 'Date of Birth',
                                         hintText: 'DD MMM, YYYY',
                                         isReadOnly: true,
                                         onTap: () => _pickDateForController(
@@ -567,28 +569,36 @@ class _DailyRentCollectionInfoScreenState
                                         hintText: 'Enter Fleet No',
                                         errorText: fieldErrors['fleetNo'],
                                       ),
-                                      SizedBox(height: 12.h),
-                                      AppTextFormField(
-                                        controller: firstDriverCnicController,
-                                        labelText: 'FirstDriver CNIC',
-                                        hintText: 'Enter Driver CNIC',
-                                        onChanged: (s) =>
-                                            _updateDraftFromControllers(),
-                                        errorText: fieldErrors['driverCnic'],
-                                      ),
-                                      SizedBox(height: 12.h),
-                                      AppTextFormField(
-                                        controller: secondDriverCnicController,
-                                        labelText: 'Second Driver CNIC',
-                                        hintText: 'Enter Driver CNIC',
-                                        onChanged: (s) =>
-                                            _updateDraftFromControllers(),
-                                        errorText: fieldErrors['driverCnic'],
-                                      ),
                                     ],
                                   ),
                                 ),
                                 SizedBox(width: 16.w),
+                                Column(
+                                  children: [
+                                    SizedBox(height: 48.h), // Space for Taxi No row
+                                    Checkbox(
+                                      value: _firstDriverSelected,
+                                      onChanged: (v) => setState(() {
+                                        _firstDriverSelected = v ?? false;
+                                        if (_firstDriverSelected) {
+                                          _secondDriverSelected = false;
+                                        }
+                                      }),
+                                      activeColor: Colors.greenAccent,
+                                    ),
+                                    SizedBox(height: 24.h),
+                                    Checkbox(
+                                      value: _secondDriverSelected,
+                                      onChanged: (v) => setState(() {
+                                        _secondDriverSelected = v ?? false;
+                                        if (_secondDriverSelected) {
+                                          _firstDriverSelected = false;
+                                        }
+                                      }),
+                                      activeColor: Colors.greenAccent,
+                                    ),
+                                  ],
+                                ),
                               ],
                             )
                           : Column(
@@ -658,19 +668,17 @@ class _DailyRentCollectionInfoScreenState
                                       ),
                                     ),
                                     SizedBox(width: 16.w),
-                                    SizedBox(width: 48.w),
-                                    SizedBox(width: 16.w),
-                                    SizedBox(width: 24.w),
+                                    Checkbox(
+                                      value: _firstDriverSelected,
+                                      onChanged: (v) => setState(() {
+                                        _firstDriverSelected = v ?? false;
+                                        if (_firstDriverSelected) {
+                                          _secondDriverSelected = false;
+                                        }
+                                      }),
+                                      activeColor: Colors.greenAccent,
+                                    ),
                                   ],
-                                ),
-                                SizedBox(height: 12.h),
-                                AppTextFormField(
-                                  controller: firstDriverCnicController,
-                                  labelText: 'Driver CNIC',
-                                  hintText: 'Enter Driver CNIC',
-                                  onChanged: (s) =>
-                                      _updateDraftFromControllers(),
-                                  errorText: fieldErrors['driverCnic'],
                                 ),
                                 SizedBox(height: 12.h),
                                 Row(
@@ -688,7 +696,7 @@ class _DailyRentCollectionInfoScreenState
                                     Expanded(
                                       child: AppTextFormField(
                                         controller: secondDriverDobController,
-                                        labelText: 'Second Driver DOB',
+                                        labelText: 'Date of Birth',
                                         hintText: 'DD MMM, YYYY',
                                         isReadOnly: true,
                                         onTap: () => _pickDateForController(
@@ -699,7 +707,16 @@ class _DailyRentCollectionInfoScreenState
                                       ),
                                     ),
                                     SizedBox(width: 16.w),
-                                    SizedBox(width: 48.w),
+                                    Checkbox(
+                                      value: _secondDriverSelected,
+                                      onChanged: (v) => setState(() {
+                                        _secondDriverSelected = v ?? false;
+                                        if (_secondDriverSelected) {
+                                          _firstDriverSelected = false;
+                                        }
+                                      }),
+                                      activeColor: Colors.greenAccent,
+                                    ),
                                     SizedBox(width: 16.w),
                                     Checkbox(
                                       value: secondCheck,
@@ -765,108 +782,79 @@ class _DailyRentCollectionInfoScreenState
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 // Contract fields moved here: start, end, extra days, months (computed)
-                                Expanded(
-                                  child: Column(
-                                    children: [
-                                      AppTextFormField(
-                                        controller: contractStartController,
-                                        labelText: 'Contract Start',
-                                        hintText: 'DD/MM/YYYY',
-                                        suffix: Icon(
-                                          Icons.calendar_today,
-                                          color: Colors.white54,
-                                          size: 18,
-                                        ),
-                                        isReadOnly: true,
-                                        onTap: () => _pickDateForController(
-                                          contractStartController,
-                                        ),
-                                        errorText: fieldErrors['contractStart'],
-                                      ),
-                                      SizedBox(height: 12.h),
-                                      AppTextFormField(
-                                        controller: contractEndController,
-                                        labelText: 'Contract End',
-                                        hintText: 'DD/MM/YYYY',
-                                        suffix: Icon(
-                                          Icons.calendar_today,
-                                          color: Colors.white54,
-                                          size: 18,
-                                        ),
-                                        isReadOnly: true,
-                                        onTap: () => _pickDateForController(
-                                          contractEndController,
-                                        ),
-                                        errorText: fieldErrors['contractEnd'],
-                                      ),
-                                      SizedBox(height: 12.h),
-                                      AppTextFormField(
-                                        controller: contractExtraDaysController,
-                                        labelText: 'Extra Days',
-                                        hintText: '0',
-                                        onChanged: (s) =>
-                                            _updateDraftFromControllers(),
-                                        errorText: fieldErrors['extraDays'],
-                                      ),
-                                      SizedBox(height: 12.h),
-                                      AppTextFormField(
-                                        controller: contractMonthsController,
-                                        labelText: 'No. of Months (auto)',
-                                        hintText: '0',
-                                        isReadOnly: true,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(width: 16.w),
+                                // Expanded(
+                                //   child: Column(
+                                //     children: [
+                                //       AppTextFormField(
+                                //         controller: contractStartController,
+                                //         labelText: 'Contract Start',
+                                //         hintText: 'DD/MM/YYYY',
+                                //         suffix: Icon(
+                                //           Icons.calendar_today,
+                                //           color: Colors.white54,
+                                //           size: 18,
+                                //         ),
+                                //         isReadOnly: true,
+                                //         onTap: () => _pickDateForController(
+                                //           contractStartController,
+                                //         ),
+                                //         errorText: fieldErrors['contractStart'],
+                                //       ),
+                                //       SizedBox(height: 12.h),
+                                //       AppTextFormField(
+                                //         controller: contractEndController,
+                                //         labelText: 'Contract End',
+                                //         hintText: 'DD/MM/YYYY',
+                                //         suffix: Icon(
+                                //           Icons.calendar_today,
+                                //           color: Colors.white54,
+                                //           size: 18,
+                                //         ),
+                                //         isReadOnly: true,
+                                //         onTap: () => _pickDateForController(
+                                //           contractEndController,
+                                //         ),
+                                //         errorText: fieldErrors['contractEnd'],
+                                //       ),
+                                //       SizedBox(height: 12.h),
+                                //       AppTextFormField(
+                                //         controller: contractExtraDaysController,
+                                //         labelText: 'Extra Days',
+                                //         hintText: '0',
+                                //         onChanged: (s) =>
+                                //             _updateDraftFromControllers(),
+                                //         errorText: fieldErrors['extraDays'],
+                                //       ),
+                                //       SizedBox(height: 12.h),
+                                //       AppTextFormField(
+                                //         controller: contractMonthsController,
+                                //         labelText: 'No. of Months (auto)',
+                                //         hintText: '0',
+                                //         isReadOnly: true,
+                                //       ),
+                                //     ],
+                                //   ),
+                                // ),
+                                // SizedBox(width: 16.w),
 
-                                // Fees column first: Rent, Maintenance, Car Wash
+                                // Left Column: Rent Type, Payment in Cash, Maintenance Fees, Payment Date
                                 Expanded(
                                   child: Column(
                                     children: [
-                                      AppTextFormField(
-                                        controller: rentAmountController,
-                                        labelText: 'Rent Amount',
-                                        hintText: 'Enter Amount',
-                                        onChanged: (s) {
-                                          if (birthday) {
-                                            // Do not change rentAmountController, just skip further logic
-                                            return;
-                                          }
-                                          // Do not modify rentAmountController for public holiday
-                                          _updateDraftFromControllers();
-                                        },
-                                        errorText: fieldErrors['rentAmount'],
+                                      AppDropdown<String>(
+                                        labelText: 'Rent Type',
+                                        items: [
+                                          const DropdownMenuItem(
+                                            value: '',
+                                            child: Text(
+                                              'Select Type',
+                                              style: TextStyle(color: Colors.white54),
+                                            ),
+                                          ),
+                                        ],
+                                        onChanged: (v) {},
                                       ),
                                       SizedBox(height: 12.h),
-                                      AppTextFormField(
-                                        controller: maintenanceFeesController,
-                                        labelText: 'Maintenance Fees',
-                                        hintText: 'Enter Amount',
-                                        onChanged: (s) =>
-                                            _updateDraftFromControllers(),
-                                        errorText:
-                                            fieldErrors['maintenanceFees'],
-                                        isReadOnly: true,
-                                      ),
-                                      SizedBox(height: 12.h),
-                                      AppTextFormField(
-                                        controller: carWashFeesController,
-                                        labelText: 'Car Wash Fees',
-                                        hintText: 'Enter Amount',
-                                        onChanged: (s) =>
-                                            _updateDraftFromControllers(),
-                                        errorText: fieldErrors['carWashFees'],
-                                        isReadOnly: true,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(width: 16.w),
-                                // Payments column: Cash, G-Cash, G-Cash Ref, Payment Date
-                                Expanded(
-                                  child: Column(
-                                    children: [
                                       AppTextFormField(
                                         controller: paymentCashController,
                                         labelText: 'Payment in Cash',
@@ -882,21 +870,14 @@ class _DailyRentCollectionInfoScreenState
                                       ),
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
-                                        controller: paymentGCashController,
-                                        labelText: 'Payment in G-Cash',
+                                        controller: maintenanceFeesController,
+                                        labelText: 'Maintenance Fees',
                                         hintText: 'Enter Amount',
                                         onChanged: (s) =>
                                             _updateDraftFromControllers(),
-                                        errorText: fieldErrors['paymentGCash'],
-                                      ),
-                                      SizedBox(height: 12.h),
-                                      AppTextFormField(
-                                        controller: gCashRefController,
-                                        labelText: 'G-Cash Ref. No',
-                                        hintText: 'Enter Ref',
-                                        onChanged: (s) =>
-                                            _updateDraftFromControllers(),
-                                        errorText: fieldErrors['gCashRef'],
+                                        errorText:
+                                            fieldErrors['maintenanceFees'],
+                                        isReadOnly: true,
                                       ),
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
@@ -918,24 +899,58 @@ class _DailyRentCollectionInfoScreenState
                                   ),
                                 ),
                                 SizedBox(width: 16.w),
-                                // Computed column: Total and Due
+                                // Middle Column: Total Rent Collected, Payment in G-Cash, Car Wash Fees
                                 Expanded(
                                   child: Column(
                                     children: [
                                       AppTextFormField(
                                         controller: totalRentController,
-                                        labelText: 'Total Rent (computed)',
-                                        hintText: 'Total',
+                                        labelText: 'Total Rent Collected',
+                                        hintText: '1000 P',
                                         isReadOnly: true,
                                       ),
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
+                                        controller: paymentGCashController,
+                                        labelText: 'Payment in G-Cash',
+                                        hintText: 'Enter Amount',
+                                        onChanged: (s) =>
+                                            _updateDraftFromControllers(),
+                                        errorText: fieldErrors['paymentGCash'],
+                                      ),
+                                      SizedBox(height: 12.h),
+                                      AppTextFormField(
+                                        controller: carWashFeesController,
+                                        labelText: 'Car Wash Fees',
+                                        hintText: 'Enter Amount',
+                                        onChanged: (s) =>
+                                            _updateDraftFromControllers(),
+                                        errorText: fieldErrors['carWashFees'],
+                                        isReadOnly: true,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(width: 16.w),
+                                // Right Column: Due Rent, G-Cash Ref. No
+                                Expanded(
+                                  child: Column(
+                                    children: [
+                                      AppTextFormField(
                                         controller: dueRentController,
-                                        labelText: 'Due Rent (computed)',
+                                        labelText: 'Due Rent',
                                         hintText: 'Due',
                                         isReadOnly: true,
                                       ),
                                       SizedBox(height: 12.h),
+                                      AppTextFormField(
+                                        controller: gCashRefController,
+                                        labelText: 'G-Cash Ref. No',
+                                        hintText: 'Enter Ref',
+                                        onChanged: (s) =>
+                                            _updateDraftFromControllers(),
+                                        errorText: fieldErrors['gCashRef'],
+                                      ),
                                     ],
                                   ),
                                 ),
