@@ -140,37 +140,25 @@ class _DailyRentCollectionInfoScreenState
     );
 
     // build driver draft if available
-    int? dobUtc;
-    try {
-      // try common formats
-      if (firstDriverCnicController.text.trim().isNotEmpty) {
-        try {
-          dobUtc = DateTime.parse(
-            firstDriverDobController.text,
-          ).toUtc().millisecondsSinceEpoch;
-        } catch (_) {
-          try {
-            final df = DateFormat('dd/MM/yyyy');
-            dobUtc = df
-                .parse(firstDriverDobController.text)
-                .toUtc()
-                .millisecondsSinceEpoch;
-          } catch (_) {
-            try {
-              final df2 = DateFormat('dd MMM, yyyy');
-              dobUtc = df2
-                  .parse(firstDriverDobController.text)
-                  .toUtc()
-                  .millisecondsSinceEpoch;
-            } catch (_) {
-              dobUtc = null;
-            }
-          }
-        }
-      }
-    } catch (_) {
-      dobUtc = null;
-    }
+    // try {
+    //   // try common formats
+    //   if (firstDriverCnicController.text.trim().isNotEmpty) {
+    //     try {
+    //     } catch (_) {
+    //       try {
+    //         final df = DateFormat('dd/MM/yyyy');
+        
+    //       } catch (_) {
+    //         try {
+    //           final df2 = DateFormat('dd MMM, yyyy');
+              
+    //         } catch (_) {
+    //         }
+    //       }
+    //     }
+    //   }
+    // } catch (_) {
+    // }
 
     // collect validation errors: rent.validate() + required CNIC
     final errors = <String, String>{};
