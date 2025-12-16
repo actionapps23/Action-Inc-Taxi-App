@@ -4,7 +4,11 @@ import 'package:flutter/material.dart';
 class ViewSelectionGrid extends StatefulWidget {
   final int selectedIndex;
   final ValueChanged<int> onTapIndex;
-  const ViewSelectionGrid({super.key, required this.selectedIndex, required this.onTapIndex});
+  const ViewSelectionGrid({
+    super.key,
+    required this.selectedIndex,
+    required this.onTapIndex,
+  });
 
   @override
   State<ViewSelectionGrid> createState() => _ViewSelectionGridState();
@@ -46,7 +50,9 @@ class _ViewSelectionGridState extends State<ViewSelectionGrid> {
               color: const Color(0xFF181917),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: isSelected ? Colors.green : Colors.white.withOpacity(0.15),
+                color: isSelected
+                    ? Colors.green
+                    : Colors.white.withOpacity(0.15),
                 width: 2,
               ),
             ),
@@ -55,7 +61,12 @@ class _ViewSelectionGridState extends State<ViewSelectionGrid> {
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset(asset, width: 120, height: 80, fit: BoxFit.contain),
+                  Image.asset(
+                    asset,
+                    width: 120,
+                    height: 80,
+                    fit: BoxFit.contain,
+                  ),
                   const SizedBox(height: 12),
                   Text(
                     label,

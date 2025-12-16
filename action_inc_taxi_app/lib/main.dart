@@ -31,7 +31,9 @@ class MyApp extends StatelessWidget {
             BlocProvider<DailyRentCubit>(
               create: (_) => DailyRentCubit(DbService()),
             ),
-            BlocProvider<VehicleInspectionPanelCubit>(create: (_) => VehicleInspectionPanelCubit()),
+            BlocProvider<VehicleInspectionPanelCubit>(
+              create: (_) => VehicleInspectionPanelCubit(),
+            ),
           ],
           child: MaterialApp(
             scrollBehavior: ScrollBehavior().copyWith(scrollbars: false),

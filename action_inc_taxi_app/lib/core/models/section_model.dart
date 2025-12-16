@@ -8,5 +8,9 @@ class FieldModel {
   final String fieldName;
   final String fieldKey;
   final bool isChecked;
-  const FieldModel({required this.fieldName, required this.fieldKey, this.isChecked = false});
+  const FieldModel({
+    required this.fieldName,
+    required this.fieldKey,
+    this.isChecked = false,
+  });
 }

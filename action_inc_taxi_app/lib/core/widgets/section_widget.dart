@@ -9,9 +9,12 @@ class SectionWidget extends StatelessWidget {
   const SectionWidget({super.key, required this.section});
   @override
   Widget build(BuildContext context) {
-     final VehicleInspectionPanelCubit vehicleInspectionPanelCubit =
-        context.read<VehicleInspectionPanelCubit>();
-    return BlocBuilder<VehicleInspectionPanelCubit, VehicleInspectionPanelState>(
+    final VehicleInspectionPanelCubit vehicleInspectionPanelCubit = context
+        .read<VehicleInspectionPanelCubit>();
+    return BlocBuilder<
+      VehicleInspectionPanelCubit,
+      VehicleInspectionPanelState
+    >(
       bloc: vehicleInspectionPanelCubit,
       builder: (context, state) {
         return Padding(
@@ -27,20 +30,25 @@ class SectionWidget extends StatelessWidget {
               ...section.fields.map(
                 (field) => Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        
+
                   children: [
                     Text(field.fieldName),
-        
-                    Checkbox(value: vehicleInspectionPanelCubit.isChecked(field.fieldKey), onChanged: (value) {
-                      vehicleInspectionPanelCubit.toggleField(field.fieldKey);
-                    }),
+
+                    Checkbox(
+                      value: vehicleInspectionPanelCubit.isChecked(
+                        field.fieldKey,
+                      ),
+                      onChanged: (value) {
+                        vehicleInspectionPanelCubit.toggleField(field.fieldKey);
+                      },
+                    ),
                   ],
                 ),
               ),
             ],
           ),
         );
-      }
+      },
     );
   }
 }

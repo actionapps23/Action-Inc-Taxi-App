@@ -45,12 +45,14 @@ class VehicleViewSelectionScreen extends StatelessWidget {
               ],
             ),
             SizedBox(height: 24),
-            Flexible(child: ViewSelectionGrid(
-              selectedIndex: selectedIndex,
-              onTapIndex: (index) {
-                selectedIndex = index;
-              },
-            )),
+            Flexible(
+              child: ViewSelectionGrid(
+                selectedIndex: selectedIndex,
+                onTapIndex: (index) {
+                  selectedIndex = index;
+                },
+              ),
+            ),
             SizedBox(height: 24),
             ActionButtons(
               onSubmit: () {
@@ -109,8 +111,6 @@ const List<List<SectionModel>> _viewSections = [
   VehicleChecklist.rightSideSections,
   VehicleChecklist.mechanicalSections,
   VehicleChecklist.interiorSections,
- 
-
 ];
 
 // ignore: non_constant_identifier_names

@@ -2,8 +2,7 @@ import 'package:action_inc_taxi_app/features/entry_section/vehicle_isnpection_st
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class VehicleInspectionPanelCubit extends Cubit<VehicleInspectionPanelState> {
-  VehicleInspectionPanelCubit()
-      : super(const VehicleInspectionPanelState());
+  VehicleInspectionPanelCubit() : super(const VehicleInspectionPanelState());
 
   void toggleField(String fieldKey) {
     final updatedMap = Map<String, bool>.from(state.checkedFields);
@@ -14,6 +13,7 @@ class VehicleInspectionPanelCubit extends Cubit<VehicleInspectionPanelState> {
   bool isChecked(String fieldKey) {
     return state.checkedFields[fieldKey] ?? false;
   }
+
   void resetAll() {
     emit(const VehicleInspectionPanelState());
   }
