@@ -21,6 +21,10 @@ class AppAssets {
   static const logout = '${baseIconPath}logout.svg';
   static const notifications = '${baseIconPath}notifications.svg';
   static const dashboard = '${baseIconPath}dashboard.svg';
+  static const cash = '${baseIconPath}cash.svg';
+  static const expenses = '${baseIconPath}expenses.svg';
+  static const gCash = '${baseIconPath}gcash.svg';
+
 
   // Images
 
