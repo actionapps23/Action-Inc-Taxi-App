@@ -27,10 +27,10 @@ class PieChart extends StatelessWidget {
     ];
     final total = fleets.fold<int>(0, (sum, f) => sum + (f["amount"] as int));
     final List<Color> pieColors = [
-      const Color(0xFF4FBD42),
-      const Color(0xFF7BE86A),
-      const Color(0xFFB2F7A1),
-      const Color(0xFF6DDC6B),
+      const Color(0xFF6290C3),
+      const Color(0xFF6290C3),
+      const Color(0xFF1A1B41),
+      const Color(0xFFBAFF29),
     ];
 
     return Container(

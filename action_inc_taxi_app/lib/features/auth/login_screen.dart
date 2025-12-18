@@ -78,7 +78,7 @@ class LoginScreen extends HookWidget {
                       AppTextFormField(
                         labelOnTop: true,
                         controller: employIdController,
-                        labelText: 'Enter Employ Id',
+                        labelText: 'Enter ID',
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your employee ID';

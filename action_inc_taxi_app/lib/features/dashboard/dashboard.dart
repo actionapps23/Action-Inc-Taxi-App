@@ -150,7 +150,7 @@ class Dashboard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: StatsOverviewCard(
-                        statsCardLabel: "Maintainence Cost",
+                        statsCardLabel: "Maintainence Fees Collected",
                         targetValue: dashboardModel.fleetIncomeTargetValue,
                         optimumTarget: dashboardModel.fleetIncomeOptimumTarget,
                         targetCollection:

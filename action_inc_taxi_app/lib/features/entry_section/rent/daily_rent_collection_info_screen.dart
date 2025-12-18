@@ -570,8 +570,8 @@ class _DailyRentCollectionInfoScreenState
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
                                         controller: firstDriverCnicController,
-                                        labelText: 'FirstDriver CNIC',
-                                        hintText: 'Enter Driver CNIC',
+                                        labelText: 'FirstDriver ID #',
+                                        hintText: 'Enter Driver ID #',
                                         onChanged: (s) =>
                                             _updateDraftFromControllers(),
                                         errorText: fieldErrors['driverCnic'],
@@ -579,8 +579,8 @@ class _DailyRentCollectionInfoScreenState
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
                                         controller: secondDriverCnicController,
-                                        labelText: 'Second Driver CNIC',
-                                        hintText: 'Enter Driver CNIC',
+                                        labelText: 'Second Driver ID #',
+                                        hintText: 'Enter Driver ID #',
                                         onChanged: (s) =>
                                             _updateDraftFromControllers(),
                                         errorText: fieldErrors['driverCnic'],
