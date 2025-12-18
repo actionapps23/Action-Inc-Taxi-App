@@ -9,40 +9,55 @@ class AppOutlineButton extends StatelessWidget {
   final Color borderColor;
   final Color textColor;
   final double fontSize;
+  final Widget? prefixIcon;
 
   const AppOutlineButton({
     super.key,
     required this.label,
     this.onPressed,
-    this.borderRadius = 12,
+    this.borderRadius = 32,
     this.padding,
     this.borderColor = Colors.white,
     this.textColor = Colors.white,
-    this.fontSize = 12,
+    this.fontSize = 18,
+    this.prefixIcon,
   });
 
   @override
   Widget build(BuildContext context) {
-    final double minWidth = 10.w;
-    final double effectiveFontSize = 5.sp;
+    final double effectiveFontSize = fontSize;
 
-    return ConstrainedBox(
-      constraints: BoxConstraints(minWidth: minWidth),
-      child: OutlinedButton(
-        onPressed: onPressed,
-        style: OutlinedButton.styleFrom(
-          side: BorderSide(color: borderColor, width: 2),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(borderRadius.r),
-          ),
-          foregroundColor: textColor,
-          backgroundColor: Colors.transparent,
+    return OutlinedButton(
+      onPressed: onPressed,
+      style: OutlinedButton.styleFrom(
+        side: BorderSide(color: borderColor, width: 2),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(borderRadius),
         ),
-        child: Center(
-          child: Text(
-            label,
-            style: TextStyle(color: textColor, fontSize: effectiveFontSize),
-          ),
+        foregroundColor: textColor,
+        backgroundColor: Colors.transparent,
+        padding: padding ?? const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
+      ),
+      child: Padding(
+      padding:  EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            if (prefixIcon != null) ...[
+              prefixIcon!,
+              const SizedBox(width: 10),
+            ],
+            Text(
+              label,
+              style: TextStyle(
+                color: textColor,
+                fontSize: effectiveFontSize,
+                fontWeight: FontWeight.w700,
+                fontFamily: 'Poppins',
+              ),
+            ),
+          ],
         ),
       ),
     );

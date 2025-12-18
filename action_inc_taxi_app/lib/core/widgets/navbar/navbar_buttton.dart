@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
 class NavButton extends StatelessWidget {
@@ -24,7 +25,7 @@ class NavButton extends StatelessWidget {
       style: TextStyle(
         color: selected ? Colors.white : Colors.white70,
         fontWeight: selected ? FontWeight.bold : FontWeight.normal,
-        fontSize: 15,
+        fontSize: 4.sp < 16 ? 12 : 4.sp,
       ),
     );
 
