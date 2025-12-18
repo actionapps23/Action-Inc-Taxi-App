@@ -1,0 +1,31 @@
+name: Deploy to GitHub Pages on Commit Message Trigger
+
+on:
+  push:
+    branches:
+      - main  # Replace with the default branch of your repo
+
+jobs:
+  deploy:
+    if: contains(github.event.head_commit.message, '--push')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter environment
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 'stable'
+
+      - name: Install Dependencies
+        run: flutter pub get
+
+      - name: Deploy to GitHub Pages
+        run: |
+          flutter pub global activate peanut
+          flutter pub global run peanut --release --extra-args "--base-href /Action-Inc-Taxi-App/"
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git push origin gh-pages
