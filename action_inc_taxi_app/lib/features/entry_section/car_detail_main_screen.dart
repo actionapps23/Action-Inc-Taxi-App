@@ -3,7 +3,6 @@ import 'package:action_inc_taxi_app/core/widgets/navbar/navbar.dart';
 import 'package:action_inc_taxi_app/features/entry_section/renewal/renewal_dates_screen.dart';
 import 'package:action_inc_taxi_app/core/widgets/tabbar/tabbar.dart';
 import 'package:action_inc_taxi_app/features/entry_section/rent/daily_rent_collection_info_screen.dart';
-import 'package:action_inc_taxi_app/features/entry_section/car_plan/car_plan_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -70,15 +69,21 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                                       return CustomTabBar(
                                         tabs: const [
                                           'Rental Information',
-                                          'Car Plan',
                                           'Renewal Date',
                                         ],
                                         selectedIndex: selectedIndex,
                                         onTabSelected: (index) {
-                                          // Allow free switching between all tabs (0, 1, and 2)
-                                          context
-                                              .read<CarDetailCubit>()
-                                              .selectTab(index);
+                                          // Block tab switching - only allow programmatic navigation
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            const SnackBar(
+                                              content: Text(
+                                                'Please complete the current section first.',
+                                              ),
+                                              duration: Duration(seconds: 2),
+                                            ),
+                                          );
                                         },
                                       );
                                     },
@@ -96,8 +101,6 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                                   : 0;
                               if (selectedIndex == 0) {
                                 return DailyRentCollectionInfoScreen();
-                              } else if (selectedIndex == 1) {
-                                return CarPlanScreen();
                               }
                               return RenewalDataTable();
                             },

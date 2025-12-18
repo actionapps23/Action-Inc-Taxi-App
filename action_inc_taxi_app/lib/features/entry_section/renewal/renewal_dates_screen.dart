@@ -17,8 +17,6 @@ import 'package:action_inc_taxi_app/core/models/renewal_type_data.dart';
 import 'package:action_inc_taxi_app/cubit/rent/daily_rent_cubit.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../../core/constants/app_constants.dart';
-
 class RenewalDataTable extends StatefulWidget {
   const RenewalDataTable({super.key});
 
@@ -383,16 +381,12 @@ class _RenewalDataRowWidget extends StatefulWidget {
 class _RenewalDataRowWidgetState extends State<_RenewalDataRowWidget> {
   late int? _selectedPeriod;
   late TextEditingController dateController;
-  late TextEditingController periodController;
 
   @override
   void initState() {
     super.initState();
     _selectedPeriod = widget.data?.periodMonths;
     dateController = TextEditingController();
-    periodController = TextEditingController(
-      text: _getPeriodLabel(_selectedPeriod),
-    );
     // Schedule update after widget builds so contractStartUtc is ready
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _updateDateDisplay();
@@ -444,13 +438,12 @@ class _RenewalDataRowWidgetState extends State<_RenewalDataRowWidget> {
 
   String _getPeriodLabel(int? period) {
     if (period == null) return 'None';
-    return 'After $period month${period == 1 ? '' : 's'}';
+    return '$period month${period == 1 ? '' : 's'}';
   }
 
   @override
   void dispose() {
     dateController.dispose();
-    periodController.dispose();
     super.dispose();
   }
 
@@ -462,129 +455,102 @@ class _RenewalDataRowWidgetState extends State<_RenewalDataRowWidget> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
-            flex: 3,
+            flex: 2,
             child: AppTextFormField(
               labelText: widget.displayName,
-              suffix: Icon(
-                Icons.calendar_today,
-                size: 18,
-                color: Colors.white54,
-              ),
+              suffix: Icon(Icons.calendar_today, size: 16, color: Colors.white),
               controller: dateController,
               isReadOnly: true,
-              onTap: () async {
-                final picked = await showDatePicker(
-                  context: context,
-                  initialDate: widget.data?.dateUtc != null
-                      ? DateTime.fromMillisecondsSinceEpoch(
-                          widget.data!.dateUtc!,
-                          isUtc: true,
-                        )
-                      : DateTime.now(),
-                  firstDate: DateTime(1900),
-                  lastDate: DateTime(2100),
-                );
-                if (picked != null) {
-                  setState(() {
-                    dateController.text = _formatDate(picked);
-                  });
-                }
-              },
+              enabled: false,
             ),
           ),
           SizedBox(width: 16),
           Expanded(
-            flex: 3,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+            flex: 2,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  width: 110,
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 16.0),
-                    child: Text(
-                      'Periodic Months',
-                      style: TextStyle(
-                        color: AppColors.textHint,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      ),
-                      textAlign: TextAlign.center,
-                      maxLines: 2,
-                      overflow: TextOverflow.visible,
-                    ),
-                  ),
+                Text(
+                  'Periodic',
+                  style: TextStyle(color: Colors.white70, fontSize: 12),
                 ),
-                Expanded(
-                  flex: 3,
-                  child: DropdownButtonFormField<int?>(
-                    value: _selectedPeriod,
-                    decoration: InputDecoration(
-                      fillColor: AppColors.background,
-                      filled: true,
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 16,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(
-                          AppConstants.inputBorderRadius,
-                        ),
-                        borderSide: const BorderSide(
-                          color: AppColors.border,
-                          width: 1,
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(
-                          AppConstants.inputBorderRadius,
-                        ),
-                        borderSide: const BorderSide(color: AppColors.primary),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(
-                          AppConstants.inputBorderRadius,
-                        ),
-                        borderSide: const BorderSide(
-                          color: AppColors.border,
-                          width: 1,
-                        ),
-                      ),
-                    ),
-                    dropdownColor: Color(0xFF1a1a1a),
-                    icon: Icon(
-                      Icons.arrow_drop_down,
-                      color: Colors.white54,
-                      size: 20,
-                    ),
-                    style: TextStyle(color: AppColors.textHint, fontSize: 14),
-                    items: [
-                      DropdownMenuItem<int?>(
-                        value: null,
+                SizedBox(height: 4),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.white30, width: 1.5),
+                    borderRadius: BorderRadius.circular(8),
+                    color: Colors.black26,
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
                         child: Text(
-                          'None',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      ...[1, 3, 6, 7, 12, 24, 36].map(
-                        (m) => DropdownMenuItem<int?>(
-                          value: m,
-                          child: Text(
-                            'After $m month${m == 1 ? '' : 's'}',
-                            style: TextStyle(color: Colors.white),
+                          _getPeriodLabel(_selectedPeriod),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 13,
                           ),
                         ),
                       ),
+                      DropdownButton<int?>(
+                        underline: SizedBox(),
+                        value: _selectedPeriod,
+                        dropdownColor: Color(0xFF1a1a1a),
+                        icon: Icon(
+                          Icons.arrow_drop_down_rounded,
+                          color: Colors.white70,
+                          size: 20,
+                        ),
+                        items: [
+                          DropdownMenuItem<int?>(
+                            value: null,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
+                              child: Text(
+                                'None',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ),
+                          ),
+                          ...[1, 3, 6, 7, 12, 24, 36].map(
+                            (m) => DropdownMenuItem<int?>(
+                              value: m,
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 4,
+                                ),
+                                child: Text(
+                                  '$m month${m == 1 ? '' : 's'}',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 13,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                        onChanged: (v) {
+                          setState(() {
+                            _selectedPeriod = v;
+                            _updateDateDisplay();
+                          });
+                          widget.onPeriodChanged(v);
+                        },
+                      ),
                     ],
-                    onChanged: (v) {
-                      setState(() {
-                        _selectedPeriod = v;
-                        periodController.text = _getPeriodLabel(v);
-                        _updateDateDisplay();
-                      });
-                      widget.onPeriodChanged(v);
-                    },
                   ),
                 ),
               ],
@@ -592,7 +558,7 @@ class _RenewalDataRowWidgetState extends State<_RenewalDataRowWidget> {
           ),
           SizedBox(width: 16),
           Expanded(
-            flex: 2,
+            flex: 1,
             child: AppTextFormField(
               labelText: 'Fees',
               controller: widget.feesController,
