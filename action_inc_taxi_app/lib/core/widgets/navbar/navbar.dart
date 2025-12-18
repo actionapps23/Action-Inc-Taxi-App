@@ -4,6 +4,7 @@ import 'package:action_inc_taxi_app/core/theme/app_assets.dart';
 import 'package:action_inc_taxi_app/core/widgets/navbar/navbar_buttton.dart';
 import 'package:action_inc_taxi_app/cubit/rent/daily_rent_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/selection/selection_cubit.dart';
+import 'package:action_inc_taxi_app/features/dashboard/dashboard.dart';
 import 'package:action_inc_taxi_app/features/entry_section/car_detail_main_screen.dart';
 import 'package:action_inc_taxi_app/features/auth/login_screen.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/snackbar.dart';
@@ -94,7 +95,7 @@ class Navbar extends StatelessWidget {
                     'Dashboard',
                     icon: AppAssets.dashboard,
                     onTap: () {
-                      SnackBarHelper.showInfoSnackBar(context, 'Dashboard');
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard()));
                     },
                   ),
                   SizedBox(width: 12.w),
