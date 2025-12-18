@@ -13,6 +13,7 @@ class SimpleStatCard extends StatelessWidget {
   final Color? valueColor;
   final double borderRadius;
   final EdgeInsetsGeometry? padding;
+  final String currencySymbol;
 
   const SimpleStatCard({
     super.key,
@@ -24,6 +25,7 @@ class SimpleStatCard extends StatelessWidget {
     this.valueColor,
     this.borderRadius = 16,
     this.padding,
+    this.currencySymbol = '₱',
   });
 
   @override
@@ -55,7 +57,7 @@ class SimpleStatCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            value.toString(),
+            '${value.toString()} $currencySymbol',
             style: TextStyle(
               color: valueColor ?? AppColors.scaffold,
               fontSize: 32,

@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:action_inc_taxi_app/core/theme/app_text_styles.dart';
+import 'package:action_inc_taxi_app/core/widgets/snackbar/spacing.dart';
 import 'package:action_inc_taxi_app/features/dashboard/widgets/percent_chnage_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
@@ -66,7 +67,7 @@ class SummaryCard extends StatelessWidget {
                 '$currencySymbol ${_formatNumber(amount)}',
                 style: AppTextStyles.bodySmall,
               ),
-              const SizedBox(width: 12),
+              Spacing.hSmall,
               PercentChangeIndicator(percentChange: percentChange),
             ],
           ),

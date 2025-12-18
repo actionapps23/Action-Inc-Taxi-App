@@ -41,7 +41,6 @@ class AppTextStyles {
   static TextStyle bodySmall = TextStyle(
     fontSize: 6.sp,
     fontWeight: FontWeight.w400,
-    letterSpacing: 0.4,
     color: AppColors.surface,
   );
 

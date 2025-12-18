@@ -2,6 +2,7 @@ import 'package:action_inc_taxi_app/core/models/dashboard_model.dart';
 import 'package:action_inc_taxi_app/core/theme/app_text_styles.dart';
 import 'package:action_inc_taxi_app/core/widgets/navbar/navbar.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/spacing.dart';
+import 'package:action_inc_taxi_app/features/dashboard/widgets/income_bar_chart.dart';
 import 'package:action_inc_taxi_app/features/dashboard/widgets/percent_chnage_indicator.dart';
 import 'package:action_inc_taxi_app/features/dashboard/widgets/pie_chart.dart';
 import 'package:action_inc_taxi_app/features/dashboard/widgets/stats_overview_card.dart';
@@ -23,66 +24,83 @@ class Dashboard extends StatelessWidget {
             child: Column(
               children: [
                 Navbar(),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Spacing.vLarge,
-                    Text("Total Banked today"),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
+                Padding(
+                  padding:  EdgeInsets.symmetric(horizontal: 0.w, vertical: 0.h),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Spacing.vLarge,
+                     Container(
+                       decoration: BoxDecoration(
+                    color: const Color(0xFF121212),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                       child: Padding(
+                         padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 12.h),
+                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("₱ 5,000.00", style: AppTextStyles.bodySmall),
-                            Spacing.hSmall,
-                            PercentChangeIndicator(percentChange: 12.5),
-                          ],
-                        ),
-                        // Text("Last day: ₱ 4,500.00", style: AppTextStyles.bodySmall),
-                      ],
-                    ),
-                    Spacing.vMedium,
-                    Text(
-                      "Last day Income ₱ 4,500.00",
-                      style: AppTextStyles.bodyExtraSmall,
-                    ),
-                    Spacing.vLarge,
-                    Row(
-                      children: [
-                        Expanded(
-                          child: SummaryCard(
-                            title: "Total Rent in Cash",
-                            amount: 40000,
-                            percentChange: 45,
-                            lastDayAmount: 30000,
-                            lastDayLabel: "lastDayLabel",
+                           Text("Total Banked today", style: AppTextStyles.bodySmall,),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text("₱ 5,000.00", style: AppTextStyles.bodySmall),
+                                  Spacing.hSmall,
+                                  PercentChangeIndicator(percentChange: 12.5),
+                                ],
+                              ),
+                              // Text("Last day: ₱ 4,500.00", style: AppTextStyles.bodySmall),
+                            ],
                           ),
-                        ),
-                        Spacing.hSmall,
-                        Expanded(
-                          child: SummaryCard(
-                            title: "Total Rent in Cash",
-                            amount: 40000,
-                            percentChange: 45,
-                            lastDayAmount: 30000,
-                            lastDayLabel: "lastDayLabel",
+                          Spacing.vExtraLarge,
+                          Text(
+                            "Last day Income ₱ 4,500.00",
+                            style: AppTextStyles.bodyExtraSmall,
                           ),
-                        ),
-                        Spacing.hSmall,
-                        Expanded(
-                          child: SummaryCard(
-                            title: "Total Rent in Cash",
-                            amount: 40000,
-                            percentChange: 45,
-                            lastDayAmount: 30000,
-                            lastDayLabel: "lastDayLabel",
+                         ],),
+                       ),
+                     ),
+                      Spacing.vLarge,
+                      Row(
+                        children: [
+                          Expanded(
+                            child: SummaryCard(
+                              title: "Total Rent in Cash",
+                              amount: 40000,
+                              percentChange: 45,
+                              lastDayAmount: 30000,
+                              lastDayLabel: "lastDayLabel",
+                            ),
                           ),
-                        ),
-                        Spacing.hSmall,
-                      ],
-                    ),
-                  ],
+                          Spacing.hSmall,
+                          Expanded(
+                            child: SummaryCard(
+                              title: "Total Rent in Cash",
+                              amount: 40000,
+                              percentChange: 45,
+                              lastDayAmount: 30000,
+                              lastDayLabel: "lastDayLabel",
+                            ),
+                          ),
+                          Spacing.hSmall,
+                          Expanded(
+                            child: SummaryCard(
+                              title: "Total Rent in Cash",
+                              amount: 40000,
+                              percentChange: 45,
+                              lastDayAmount: 30000,
+                              lastDayLabel: "lastDayLabel",
+                            ),
+                          ),
+                          Spacing.hSmall,
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
                 Spacing.vXXLarge,
                 Row(
@@ -90,7 +108,13 @@ class Dashboard extends StatelessWidget {
                   children: [
                     Expanded(child: PieChart()),
                     Spacing.hMedium,
-                    Expanded(child: Container()),
+                    Expanded(
+                      child: IncomeBarChart(
+                        values: [28000, 17000, 12000, 8000, 1000],
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+                        highlightedIndex: 3, // April
+                      ),
+                    ),
                   ],
                 ),
                 Spacing.vXXLarge,
@@ -110,7 +134,7 @@ class Dashboard extends StatelessWidget {
                     Spacing.hMedium,
                     Expanded(
                       child: StatsOverviewCard(
-                        statsCardLabel: "Expenses Saved",
+                        statsCardLabel: "Car Wash Income",
                         targetValue: dashboardModel.expensesSavedTargetValue,
                         optimumTarget:
                             dashboardModel.expensesSavedOptimumTarget,
@@ -126,12 +150,12 @@ class Dashboard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: StatsOverviewCard(
-                        statsCardLabel: "Fleet Income",
+                        statsCardLabel: "Maintainence Cost",
                         targetValue: dashboardModel.fleetIncomeTargetValue,
                         optimumTarget: dashboardModel.fleetIncomeOptimumTarget,
                         targetCollection:
                             dashboardModel.fleetIncomeTargetCollection,
-                        percentChange: 5.2,
+                        percentChange: -5.2,
                       ),
                     ),
                     Spacing.hMedium,
