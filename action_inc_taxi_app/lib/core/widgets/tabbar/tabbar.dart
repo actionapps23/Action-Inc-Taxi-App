@@ -1,5 +1,5 @@
+import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
-import '../../theme/app_colors.dart';
 
 class CustomTabBar extends StatelessWidget {
   final List<String> tabs;

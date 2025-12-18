@@ -1,4 +1,5 @@
 import 'package:action_inc_taxi_app/cubit/rent/daily_rent_cubit.dart';
+import 'package:action_inc_taxi_app/features/dashboard/dashboard.dart';
 import 'package:action_inc_taxi_app/features/entry_section/inspection/vehicle_view_selection_screen.dart';
 import 'package:action_inc_taxi_app/features/entry_section/vehicle_inspection_cubit.dart';
 import 'package:flutter/material.dart';
@@ -40,12 +41,13 @@ class MyApp extends StatelessWidget {
             title: 'Action Inc Taxi',
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
+              fontFamily: 'Lufga',
               colorScheme: ColorScheme.dark(
                 primary: Colors.green[400] ?? Colors.green,
                 surface: Colors.black,
               ),
             ),
-            home: VehicleViewSelectionScreen(),
+            home: Dashboard(),
           ),
         );
       },

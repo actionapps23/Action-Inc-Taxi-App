@@ -25,7 +25,6 @@ class AppAssets {
   static const expenses = '${baseIconPath}expenses.svg';
   static const gCash = '${baseIconPath}gcash.svg';
 
-
   // Images
 
   static const userAvatar = '${baseImagePath}user_avatar.png';
