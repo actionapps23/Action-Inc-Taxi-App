@@ -79,6 +79,14 @@ flutter:
     - assets/images/
     - assets/logo/
 
+  fonts:
+    - family: Lufga
+      fonts:
+        - asset: assets/fonts/LufgaRegular.ttf
+          weight: 400
+        - asset: assets/fonts/LufgaSemiBold.ttf
+          weight: 600
+
   
   
 

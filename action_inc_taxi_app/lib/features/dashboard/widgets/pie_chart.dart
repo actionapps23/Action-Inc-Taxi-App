@@ -15,9 +15,9 @@ class PieChart extends StatelessWidget {
     final double borderRadius = width * 0.05;
     final double pieSize = width * 0.1;
     final double legendDotSize = width * 0.03;
-    final double titleFontSize = width * 0.05;
-    final double labelFontSize = width * 0.038;
-    final double valueFontSize = width * 0.042;
+    // final double titleFontSize = width * 0.05;
+    // final double labelFontSize = width * 0.038;
+    // final double valueFontSize = width * 0.042;
 
     final fleets = [
       {"name": "Fleet 1", "amount": 7000},

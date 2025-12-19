@@ -39,6 +39,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
 
   final List<Map<String, dynamic>> featureCards = [
     {'title': "Car Details", 'icon': AppAssets.carDetailsIcon},
+    {'title': "Rent a Car", 'icon': AppAssets.carDetailsIcon},
     {'title': "Maintenance", 'icon': AppAssets.maintenance},
     {'title': "Inventory", 'icon': AppAssets.inventory},
     {'title': "Taxi Inspection", 'icon': AppAssets.taxiInspection},
@@ -174,17 +175,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
                                   text: 'Enter',
                                   onPressed: canProceed
                                       ? () {
-                                          selectionCubit.setAll(
-                                            taxiNo: taxiNoController.text,
-                                            regNo: regNoController.text,
-                                            driverName:
-                                                driverNameController.text,
-                                          );
-                                          Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (_) => CarDetailScreen(),
-                                            ),
-                                          );
+                                          selectionCubit.proceed(selectedIndex, context);
                                         }
                                       : () {},
                                   backgroundColor: canProceed

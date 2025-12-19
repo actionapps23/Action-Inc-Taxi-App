@@ -7,7 +7,7 @@ import 'package:action_inc_taxi_app/cubit/selection/selection_cubit.dart';
 import 'package:action_inc_taxi_app/features/dashboard/dashboard.dart';
 import 'package:action_inc_taxi_app/features/entry_section/car_detail_main_screen.dart';
 import 'package:action_inc_taxi_app/features/auth/login_screen.dart';
-import 'package:action_inc_taxi_app/core/widgets/snackbar/snackbar.dart';
+import 'package:action_inc_taxi_app/features/entry_section/inspection/vehicle_view_selection_screen.dart';
 import 'package:action_inc_taxi_app/features/entry_section/renewal/renewal_and_status_screen.dart';
 import 'package:action_inc_taxi_app/features/selection_screen.dart';
 import 'package:flutter/material.dart';
@@ -112,10 +112,14 @@ class Navbar extends StatelessWidget {
                   ),
                   SizedBox(width: 12.w),
                   NavButton(
-                    'Notification',
+                    'Taxi Inspection',
                     icon: AppAssets.notifications,
                     onTap: () {
-                      SnackBarHelper.showInfoSnackBar(context, 'Notifications');
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const VehicleViewSelectionScreen(),
+                        ),
+                      );
                     },
                   ),
                   SizedBox(width: 16.w),
