@@ -6,12 +6,8 @@ class CloseProcedureScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Close Procedure'),
-      ),
-      body: Center(
-        child: Text('Close Procedure Screen Content'),
-      ),
+      appBar: AppBar(title: Text('Close Procedure')),
+      body: Center(child: Text('Close Procedure Screen Content')),
     );
   }
 }

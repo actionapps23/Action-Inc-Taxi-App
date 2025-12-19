@@ -15,7 +15,8 @@ import 'package:action_inc_taxi_app/core/widgets/form/app_dropdown.dart';
 import 'package:action_inc_taxi_app/cubit/selection/selection_cubit.dart';
 
 class DailyRentCollectionInfoScreen extends StatefulWidget {
-  const DailyRentCollectionInfoScreen({super.key});
+  final bool fetchDetails;
+  const DailyRentCollectionInfoScreen({super.key, this.fetchDetails = false});
 
   @override
   State<DailyRentCollectionInfoScreen> createState() =>
@@ -138,27 +139,6 @@ class _DailyRentCollectionInfoScreenState
       isBirthday: birthday,
       createdAtUtc: DateTime.now().toUtc().millisecondsSinceEpoch,
     );
-
-    // build driver draft if available
-    // try {
-    //   // try common formats
-    //   if (firstDriverCnicController.text.trim().isNotEmpty) {
-    //     try {
-    //     } catch (_) {
-    //       try {
-    //         final df = DateFormat('dd/MM/yyyy');
-
-    //       } catch (_) {
-    //         try {
-    //           final df2 = DateFormat('dd MMM, yyyy');
-
-    //         } catch (_) {
-    //         }
-    //       }
-    //     }
-    //   }
-    // } catch (_) {
-    // }
 
     // collect validation errors: rent.validate() + required CNIC
     final errors = <String, String>{};
@@ -1096,132 +1076,130 @@ class _DailyRentCollectionInfoScreenState
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // AppOutlineButton(
-                      //   label: 'Cancel',
-                      //   onPressed: () {},
-                      //   fontSize: 8,
-                      // ),
-                      // SizedBox(width: 8.w),
-                      AppButton(
-                        text: 'Next',
-                        onPressed: () async {
-                          _updateDraftFromControllers();
-                          final CarInfo carInfo = CarInfo(
-                            id: numberPlateController.text,
-                            taxiNo: taxiNoController.text,
-                            createdAtUtc: DateTime.now()
-                                .toUtc()
-                                .millisecondsSinceEpoch,
-                            fleetNo: fleetNoController.text,
-                            onRoad: carStatusOnRoad,
-                            plateNumber: numberPlateController.text,
-                          );
-                          final Driver driver = Driver(
-                            id: firstDriverCnicController.text,
-                            firstDriverCnic: firstDriverCnicController.text,
-                            firstDriverName: firstDriverNameController.text,
-                            firstDriverDobUtc:
-                                HelperFunctions.utcFromController(
-                                  firstDriverDobController,
-                                ),
-                            createdAtUtc:
-                                HelperFunctions.currentUtcTimeMilliSeconds(),
-                          );
-                          final Rent rent = Rent(
-                            carWashFeesCents:
-                                double.tryParse(
-                                  carWashFeesController.text,
-                                )?.toInt() ??
-                                0,
-                            maintenanceFeesCents:
-                                double.tryParse(
-                                  maintenanceFeesController.text,
-                                )?.toInt() ??
-                                0,
-                            taxiNo: taxiNoController.text,
-                            contractStartUtc: HelperFunctions.utcFromController(
-                              contractStartController,
-                            ),
-                            rentAmountCents:
-                                double.tryParse(
-                                  rentAmountController.text,
-                                )?.toInt() ??
-                                0,
-                            createdAtUtc:
-                                HelperFunctions.currentUtcTimeMilliSeconds(),
-                            paymentCashCents:
-                                double.tryParse(
-                                  paymentCashController.text,
-                                )?.toInt() ??
-                                0,
-                            paymentGCashCents:
-                                double.tryParse(
-                                  paymentGCashController.text,
-                                )?.toInt() ??
-                                0,
-                            gCashRef: gCashRefController.text,
-                            isBirthday: birthday,
-                            isPublicHoliday: publicHoliday,
-                            monthsCount: Rent.computeMonthsCountFromTimestamps(
-                              HelperFunctions.utcFromController(
-                                contractStartController,
-                              ),
-                              HelperFunctions.utcFromController(
-                                contractEndController,
-                              ),
-                            ),
-                            extraDays:
-                                int.tryParse(
-                                  contractExtraDaysController.text,
-                                ) ??
-                                0,
-                          );
-
-                          final currentState = _cubit.state;
-                          Map<String, String> errors = {};
-                          if (currentState is DailyRentLoaded) {
-                            errors = currentState.fieldErrors;
-                          }
-                          if (errors.isNotEmpty) {
-                            if (context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    'Please fill all required fields.',
-                                  ),
-                                  backgroundColor: Colors.red,
-                                ),
-                              );
-                            }
-                            return;
-                          }
-                          if (context.mounted) {
-                            _cubit.update(
-                              carInfo: carInfo,
-                              driver: driver,
-                              rent: rent,
-                              fieldErrors: errors,
+                      if (!widget.fetchDetails) ...[
+                        AppButton(
+                          text: 'Next',
+                          onPressed: () async {
+                            _updateDraftFromControllers();
+                            final CarInfo carInfo = CarInfo(
+                              id: numberPlateController.text,
+                              taxiNo: taxiNoController.text,
+                              createdAtUtc: DateTime.now()
+                                  .toUtc()
+                                  .millisecondsSinceEpoch,
+                              fleetNo: fleetNoController.text,
+                              onRoad: carStatusOnRoad,
+                              plateNumber: numberPlateController.text,
                             );
-                            context.read<CarDetailCubit>().selectTab(1);
-                          }
-                        },
-                        backgroundColor: Colors.green,
-                        textColor: AppColors.buttonText,
-                        width: 40.w,
-                        height: 36.h,
-                        style: ElevatedButton.styleFrom(
+                            final Driver driver = Driver(
+                              id: firstDriverCnicController.text,
+                              firstDriverCnic: firstDriverCnicController.text,
+                              firstDriverName: firstDriverNameController.text,
+                              firstDriverDobUtc:
+                                  HelperFunctions.utcFromController(
+                                    firstDriverDobController,
+                                  ),
+                              createdAtUtc:
+                                  HelperFunctions.currentUtcTimeMilliSeconds(),
+                            );
+                            final Rent rent = Rent(
+                              carWashFeesCents:
+                                  double.tryParse(
+                                    carWashFeesController.text,
+                                  )?.toInt() ??
+                                  0,
+                              maintenanceFeesCents:
+                                  double.tryParse(
+                                    maintenanceFeesController.text,
+                                  )?.toInt() ??
+                                  0,
+                              taxiNo: taxiNoController.text,
+                              contractStartUtc:
+                                  HelperFunctions.utcFromController(
+                                    contractStartController,
+                                  ),
+                              rentAmountCents:
+                                  double.tryParse(
+                                    rentAmountController.text,
+                                  )?.toInt() ??
+                                  0,
+                              createdAtUtc:
+                                  HelperFunctions.currentUtcTimeMilliSeconds(),
+                              paymentCashCents:
+                                  double.tryParse(
+                                    paymentCashController.text,
+                                  )?.toInt() ??
+                                  0,
+                              paymentGCashCents:
+                                  double.tryParse(
+                                    paymentGCashController.text,
+                                  )?.toInt() ??
+                                  0,
+                              gCashRef: gCashRefController.text,
+                              isBirthday: birthday,
+                              isPublicHoliday: publicHoliday,
+                              monthsCount:
+                                  Rent.computeMonthsCountFromTimestamps(
+                                    HelperFunctions.utcFromController(
+                                      contractStartController,
+                                    ),
+                                    HelperFunctions.utcFromController(
+                                      contractEndController,
+                                    ),
+                                  ),
+                              extraDays:
+                                  int.tryParse(
+                                    contractExtraDaysController.text,
+                                  ) ??
+                                  0,
+                            );
+
+                            final currentState = _cubit.state;
+                            Map<String, String> errors = {};
+                            if (currentState is DailyRentLoaded) {
+                              errors = currentState.fieldErrors;
+                            }
+                            if (errors.isNotEmpty) {
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'Please fill all required fields.',
+                                    ),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                              }
+                              return;
+                            }
+                            if (context.mounted) {
+                              _cubit.update(
+                                carInfo: carInfo,
+                                driver: driver,
+                                rent: rent,
+                                fieldErrors: errors,
+                              );
+                              context.read<CarDetailCubit>().selectTab(1);
+                            }
+                          },
                           backgroundColor: Colors.green,
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                          textColor: AppColors.buttonText,
+                          width: 40.w,
+                          height: 36.h,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
+                            textStyle: const TextStyle(fontSize: 15),
                           ),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
-                          textStyle: const TextStyle(fontSize: 15),
                         ),
-                      ),
+                      ],
                     ],
                   ),
                   SizedBox(height: 32.h),

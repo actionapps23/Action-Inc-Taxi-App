@@ -1,9 +1,8 @@
 import 'package:action_inc_taxi_app/core/widgets/status_chip.dart';
 import 'package:flutter/material.dart';
-import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
 
 class InventoryTable extends StatelessWidget {
-  InventoryTable({super.key});
+  const InventoryTable({super.key});
 
   final List<Map<String, String>> items = const [
     {
@@ -43,17 +42,17 @@ class InventoryTable extends StatelessWidget {
     },
   ];
 
-  Color _statusColor(String type) {
-    switch (type) {
-      case 'in':
-        return AppColors.success;
-      case 'low':
-        return Colors.cyanAccent;
-      case 'out':
-      default:
-        return AppColors.error;
-    }
-  }
+  // Color _statusColor(String type) {
+  //   switch (type) {
+  //     case 'in':
+  //       return AppColors.success;
+  //     case 'low':
+  //       return Colors.cyanAccent;
+  //     case 'out':
+  //     default:
+  //       return AppColors.error;
+  //   }
+  // }
 
   Color _statusTextColor(String type) {
     switch (type) {
@@ -83,53 +82,88 @@ class InventoryTable extends StatelessWidget {
               children: const [
                 Expanded(
                   flex: 3,
-                  child: Text('Product Name', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500)),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: Text('Quantity', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500)),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: Text('Stock Status', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500)),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: Text('Required Quantity', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500)),
-                ),
-              ],
-            ),
-          ),
-          Divider(color: Colors.white12, height: 1),
-          ...items.map((item) => Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 3,
-                  child: Text(item['name']!, style: const TextStyle(color: Colors.white)),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: Text(item['qty']!, style: const TextStyle(color: Colors.white)),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: SizedBox(
-                    child: StatusChip(
-                      label: item['status']!,
-                      color: Colors.transparent,
-                      textColor: _statusTextColor(item['statusType']!),
+                  child: Text(
+                    'Product Name',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
                 Expanded(
                   flex: 2,
-                  child: Text(item['req']!, style: const TextStyle(color: Colors.white)),
+                  child: Text(
+                    'Quantity',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    'Stock Status',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    'Required Quantity',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                 ),
               ],
             ),
-          )),
+          ),
+          Divider(color: Colors.white12, height: 1),
+          ...items.map(
+            (item) => Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: Text(
+                      item['name']!,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Text(
+                      item['qty']!,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: SizedBox(
+                      child: StatusChip(
+                        label: item['status']!,
+                        color: Colors.transparent,
+                        textColor: _statusTextColor(item['statusType']!),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Text(
+                      item['req']!,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );

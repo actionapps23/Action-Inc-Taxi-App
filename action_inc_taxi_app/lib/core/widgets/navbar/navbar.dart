@@ -95,7 +95,10 @@ class Navbar extends StatelessWidget {
                     'Dashboard',
                     icon: AppAssets.dashboard,
                     onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard()));
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Dashboard()),
+                      );
                     },
                   ),
                   SizedBox(width: 12.w),

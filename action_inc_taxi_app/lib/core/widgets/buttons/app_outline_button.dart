@@ -36,18 +36,16 @@ class AppOutlineButton extends StatelessWidget {
         ),
         foregroundColor: textColor,
         backgroundColor: Colors.transparent,
-        padding: padding ?? const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
+        padding:
+            padding ?? const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
       ),
       child: Padding(
-      padding:  EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
+        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            if (prefixIcon != null) ...[
-              prefixIcon!,
-              const SizedBox(width: 10),
-            ],
+            if (prefixIcon != null) ...[prefixIcon!, const SizedBox(width: 10)],
             Text(
               label,
               style: TextStyle(

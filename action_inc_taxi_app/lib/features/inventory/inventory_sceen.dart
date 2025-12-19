@@ -7,7 +7,7 @@ import 'package:action_inc_taxi_app/features/inventory/inventory_table.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class InventorySceen extends StatelessWidget{
+class InventorySceen extends StatelessWidget {
   const InventorySceen({super.key});
   @override
   Widget build(BuildContext context) {
@@ -45,21 +45,33 @@ class InventorySceen extends StatelessWidget{
                           tabs: ["Engine", "Breaks", "Tires"],
                           selectedIndex: 0,
                           onTabSelected: (index) {},
-                          padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 4,
+                            vertical: 2,
+                          ),
                         ),
                         Row(
                           children: [
                             AppOutlineButton(
                               borderColor: AppColors.scaffold,
                               label: "Enter inventory History",
-                              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 8,
+                              ),
                             ),
                             SizedBox(width: 8),
                             AppOutlineButton(
-                              prefixIcon: Icon(Icons.history, color: AppColors.scaffold),
+                              prefixIcon: Icon(
+                                Icons.history,
+                                color: AppColors.scaffold,
+                              ),
                               borderColor: AppColors.scaffold,
                               label: "History",
-                              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 8,
+                              ),
                             ),
                           ],
                         ),
@@ -91,7 +103,10 @@ class InventorySceen extends StatelessWidget{
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: Text("Update List", style: TextStyle(fontWeight: FontWeight.w500)),
+                  child: Text(
+                    "Update List",
+                    style: TextStyle(fontWeight: FontWeight.w500),
+                  ),
                 ),
               ],
             ),
@@ -101,5 +116,4 @@ class InventorySceen extends StatelessWidget{
       ),
     );
   }
-
 }

@@ -37,10 +37,7 @@ class IncomeBarChart extends StatelessWidget {
         children: [
           Row(
             children: [
-              Text(
-                'Total Income',
-              
-              ),
+              Text('Total Income'),
               const Spacer(),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
@@ -67,10 +64,30 @@ class IncomeBarChart extends StatelessWidget {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('30K', style: AppTextStyles.bodyExtraSmall.copyWith(color: Colors.white)),
-                    Text('20K', style: AppTextStyles.bodyExtraSmall.copyWith(color: Colors.white)),
-                    Text('10K', style: AppTextStyles.bodyExtraSmall.copyWith(color: Colors.white)),
-                    Text('0', style: AppTextStyles.bodyExtraSmall.copyWith(color: Colors.white)),
+                    Text(
+                      '30K',
+                      style: AppTextStyles.bodyExtraSmall.copyWith(
+                        color: Colors.white,
+                      ),
+                    ),
+                    Text(
+                      '20K',
+                      style: AppTextStyles.bodyExtraSmall.copyWith(
+                        color: Colors.white,
+                      ),
+                    ),
+                    Text(
+                      '10K',
+                      style: AppTextStyles.bodyExtraSmall.copyWith(
+                        color: Colors.white,
+                      ),
+                    ),
+                    Text(
+                      '0',
+                      style: AppTextStyles.bodyExtraSmall.copyWith(
+                        color: Colors.white,
+                      ),
+                    ),
                   ],
                 ),
                 SizedBox(width: 12),
@@ -81,7 +98,9 @@ class IncomeBarChart extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: List.generate(values.length, (i) {
                         final isHighlighted = i == highlightedIndex;
-                        final barHeight = (values[i] / (maxValue == 0 ? 1 : maxValue)) * chartHeight;
+                        final barHeight =
+                            (values[i] / (maxValue == 0 ? 1 : maxValue)) *
+                            chartHeight;
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 12),
                           child: Column(
@@ -91,17 +110,21 @@ class IncomeBarChart extends StatelessWidget {
                               if (isHighlighted)
                                 Container(
                                   margin: const EdgeInsets.only(bottom: 8),
-                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 4,
+                                  ),
                                   decoration: BoxDecoration(
                                     color: AppColors.primary,
                                     borderRadius: BorderRadius.circular(16),
                                   ),
                                   child: Text(
                                     '$currencySymbol ${values[i]}',
-                                    style: AppTextStyles.bodyExtraSmall.copyWith(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                    style: AppTextStyles.bodyExtraSmall
+                                        .copyWith(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                   ),
                                 ),
                               AnimatedContainer(
@@ -109,13 +132,19 @@ class IncomeBarChart extends StatelessWidget {
                                 width: barWidth,
                                 height: barHeight,
                                 decoration: BoxDecoration(
-                                  color: isHighlighted ? AppColors.primary : Colors.white.withOpacity(0.15),
-                                  borderRadius: BorderRadius.circular(barWidth / 2),
+                                  color: isHighlighted
+                                      ? AppColors.primary
+                                      : Colors.white.withOpacity(0.15),
+                                  borderRadius: BorderRadius.circular(
+                                    barWidth / 2,
+                                  ),
                                 ),
                               ),
                               Text(
                                 labels[i],
-                                style: AppTextStyles.bodyExtraSmall.copyWith(color: Colors.white),
+                                style: AppTextStyles.bodyExtraSmall.copyWith(
+                                  color: Colors.white,
+                                ),
                               ),
                             ],
                           ),

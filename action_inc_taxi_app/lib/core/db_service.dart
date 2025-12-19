@@ -1,10 +1,10 @@
+import 'package:action_inc_taxi_app/core/models/car_detail_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'models/creds.dart';
 import 'models/car_info.dart';
 import 'models/driver.dart';
 import 'models/rent.dart';
 import 'models/renewal.dart';
-import 'package:uuid/uuid.dart';
 
 class DbService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -15,7 +15,6 @@ class DbService {
   final String rentsCollection = 'rents';
   final String renewalsCollection = 'renewals';
   final String draftsCollection = 'drafts';
-  final _uuid = Uuid();
 
   Future<Creds?> loginWithEmployeeId(
     String employeeId,
@@ -52,6 +51,7 @@ class DbService {
       rethrow;
     }
   }
+
   Future<CarInfo?> getTaxiByNoOrRegNo(String taxiNo, String regNo) async {
     try {
       final q = await _firestore
@@ -99,8 +99,6 @@ class DbService {
     }
   }
 
-  /// Save a draft for a taxi. Drafts are stored in `drafts` collection with doc id equal to taxiNo.
-  /// The payload will contain optional 'rent' and 'driver' maps.
   Future<void> saveCarDetailInfo({
     Map<String, dynamic>? rent,
     Map<String, dynamic>? driver,
@@ -120,7 +118,36 @@ class DbService {
     }
   }
 
-  /// Retrieve draft payload for a taxi if exists.
+  Future<CarDetailModel?> getCarDetailInfo(String taxiNo, String regNo) async {
+    try {
+      DocumentSnapshot<Map<String, dynamic>> doc;
+      if (taxiNo.isNotEmpty) {
+        doc = await _firestore.collection(carsCollection).doc(taxiNo).get();
+      } else if (regNo.isNotEmpty) {
+        final q = await _firestore
+            .collection(carsCollection)
+            .where('regNo', isEqualTo: regNo)
+            .limit(1)
+            .get();
+        if (q.docs.isEmpty) return null;
+        doc = q.docs.first;
+      } else {
+        return null;
+      }
+      if (!doc.exists) return null;
+      final data = doc.data();
+      final rentMap = data?['rent'] as Map<String, dynamic>?;
+      final driverMap = data?['driver'] as Map<String, dynamic>?;
+      final carMap = data?['car'] as Map<String, dynamic>?;
+      final rent = rentMap != null ? Rent.fromMap(rentMap) : null;
+      final driver = driverMap != null ? Driver.fromMap(driverMap) : null;
+      final carInfo = carMap != null ? CarInfo.fromMap(carMap) : null;
+      return CarDetailModel(carInfo: carInfo!, driver: driver!, rent: rent!);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<Map<String, dynamic>?> getDraftForTaxi(String taxiNo) async {
     try {
       final doc = await _firestore

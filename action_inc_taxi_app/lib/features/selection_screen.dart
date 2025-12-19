@@ -1,7 +1,6 @@
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
 import 'package:action_inc_taxi_app/core/widgets/navbar/navbar.dart';
 import 'package:action_inc_taxi_app/core/widgets/form/form_field.dart';
-import 'package:action_inc_taxi_app/features/entry_section/car_detail_main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:action_inc_taxi_app/core/theme/app_assets.dart';
@@ -38,8 +37,8 @@ class _SelectionScreenState extends State<SelectionScreen> {
   }
 
   final List<Map<String, dynamic>> featureCards = [
-    {'title': "Car Details", 'icon': AppAssets.carDetailsIcon},
     {'title': "Rent a Car", 'icon': AppAssets.carDetailsIcon},
+    {'title': "Car Details", 'icon': AppAssets.carDetailsIcon},
     {'title': "Maintenance", 'icon': AppAssets.maintenance},
     {'title': "Inventory", 'icon': AppAssets.inventory},
     {'title': "Taxi Inspection", 'icon': AppAssets.taxiInspection},
@@ -175,7 +174,10 @@ class _SelectionScreenState extends State<SelectionScreen> {
                                   text: 'Enter',
                                   onPressed: canProceed
                                       ? () {
-                                          selectionCubit.proceed(selectedIndex, context);
+                                          selectionCubit.proceed(
+                                            selectedIndex,
+                                            context,
+                                          );
                                         }
                                       : () {},
                                   backgroundColor: canProceed

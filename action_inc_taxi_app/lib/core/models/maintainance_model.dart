@@ -1,9 +1,9 @@
-class MaintainanceModel{
+class MaintainanceModel {
   final String title;
   final String description;
   final DateTime date;
   final String taxiId;
-  final String  fleetId;
+  final String fleetId;
   final String inspectedBy;
   final String assignedTo;
   final List<String> attachmentUrls;
@@ -18,6 +18,4 @@ class MaintainanceModel{
     required this.assignedTo,
     required this.attachmentUrls,
   });
-
-  
 }

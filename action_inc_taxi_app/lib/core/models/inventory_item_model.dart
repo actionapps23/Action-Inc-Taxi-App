@@ -1,6 +1,6 @@
 import 'package:action_inc_taxi_app/core/enums.dart';
 
-class InventoryItemModel{
+class InventoryItemModel {
   final String name;
   final int totalAvailable;
   final int totalNeeded;

@@ -5,7 +5,3 @@ class InventoryModel {
 
   InventoryModel({required this.sections});
 }
-
-
-
-

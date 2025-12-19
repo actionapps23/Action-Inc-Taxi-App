@@ -6,12 +6,8 @@ class OpenProcedureScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Open Procedure'),
-      ),
-      body: const Center(
-        child: Text('Open Procedure Screen'),
-      ),
+      appBar: AppBar(title: const Text('Open Procedure')),
+      body: const Center(child: Text('Open Procedure Screen')),
     );
   }
 }

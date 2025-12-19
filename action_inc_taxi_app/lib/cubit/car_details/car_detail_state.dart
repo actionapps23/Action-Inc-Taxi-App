@@ -1,23 +1,30 @@
-import 'package:equatable/equatable.dart';
+import 'package:action_inc_taxi_app/core/models/car_detail_model.dart';
 
-abstract class CarDetailState extends Equatable {
-  const CarDetailState();
-
-  @override
-  List<Object?> get props => [];
+abstract class CarDetailState {
+  final int selectedIndex;
+  const CarDetailState({this.selectedIndex = 0});
 }
 
 class CarDetailInitial extends CarDetailState {}
 
 class CarDetailLoaded extends CarDetailState {
-  final int selectedIndex;
+  final CarDetailModel? carDetailModel;
 
-  const CarDetailLoaded({required this.selectedIndex});
+  const CarDetailLoaded({this.carDetailModel, super.selectedIndex});
 
-  CarDetailLoaded copyWith({int? selectedIndex}) {
-    return CarDetailLoaded(selectedIndex: selectedIndex ?? this.selectedIndex);
+  CarDetailLoaded copyWith({
+    CarDetailModel? carDetailModel,
+    int? selectedIndex,
+  }) {
+    return CarDetailLoaded(
+      carDetailModel: carDetailModel ?? this.carDetailModel,
+      selectedIndex: selectedIndex ?? this.selectedIndex,
+    );
   }
+}
 
-  @override
-  List<Object?> get props => [selectedIndex];
+class CarDetailError extends CarDetailState {
+  final String message;
+
+  const CarDetailError(this.message);
 }

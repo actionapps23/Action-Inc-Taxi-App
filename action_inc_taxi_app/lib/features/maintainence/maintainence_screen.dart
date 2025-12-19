@@ -12,8 +12,10 @@ class MaintainenceScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final MaintainanceCubit maintainanceCubit = context.read<MaintainanceCubit>();
-    final List<MaintainanceModel> maintainanceItems = maintainanceCubit.state.maintainanceItems; 
+    final MaintainanceCubit maintainanceCubit = context
+        .read<MaintainanceCubit>();
+    final List<MaintainanceModel> maintainanceItems =
+        maintainanceCubit.state.maintainanceItems;
 
     return Scaffold(
       body: SafeArea(
@@ -25,7 +27,10 @@ class MaintainenceScreen extends StatelessWidget {
             Center(
               child: Text(
                 "Maintenance Request",
-                style: AppTextStyles.bodySmall.copyWith(fontSize: 24, fontWeight: FontWeight.bold),
+                style: AppTextStyles.bodySmall.copyWith(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             Spacing.vLarge,
@@ -37,7 +42,9 @@ class MaintainenceScreen extends StatelessWidget {
                   final maintainanceItem = maintainanceItems[index];
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 24.0),
-                    child: MaintainanceItemCard(maintainanceModel: maintainanceItem),
+                    child: MaintainanceItemCard(
+                      maintainanceModel: maintainanceItem,
+                    ),
                   );
                 },
               ),
@@ -73,12 +80,18 @@ class MaintainanceItemCard extends StatelessWidget {
                   children: [
                     Text(
                       maintainanceModel.title,
-                      style: AppTextStyles.bodySmall.copyWith(fontSize: 20, fontWeight: FontWeight.bold),
+                      style: AppTextStyles.bodySmall.copyWith(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     Spacing.vSmall,
                     Text(
                       "7 hours ago", // Placeholder for time, replace with actual logic if needed
-                      style: AppTextStyles.bodySmall.copyWith(fontSize: 12, color: Colors.grey),
+                      style: AppTextStyles.bodySmall.copyWith(
+                        fontSize: 12,
+                        color: Colors.grey,
+                      ),
                     ),
                   ],
                 ),
@@ -88,7 +101,10 @@ class MaintainanceItemCard extends StatelessWidget {
                 children: [
                   AppOutlineButton(label: "Edit", prefixIcon: Icon(Icons.edit)),
                   Spacing.vSmall,
-                  AppOutlineButton(label: "Solved", prefixIcon: Icon(Icons.done)),
+                  AppOutlineButton(
+                    label: "Solved",
+                    prefixIcon: Icon(Icons.done),
+                  ),
                 ],
               ),
             ],
@@ -99,41 +115,86 @@ class MaintainanceItemCard extends StatelessWidget {
             style: AppTextStyles.bodySmall.copyWith(fontSize: 14),
           ),
           Spacing.vSmall,
-          Text("Attachments", style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.bold)),
+          Text(
+            "Attachments",
+            style: AppTextStyles.bodySmall.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           Spacing.vSmall,
           Row(
-            children: maintainanceModel.attachmentUrls.map((attachmentUrl) => Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: Image.network(
-                attachmentUrl,
-                width: 50,
-                height: 50,
-                errorBuilder: (context, error, stackTrace) => Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: Colors.black12,
-                    borderRadius: BorderRadius.circular(8),
+            children: maintainanceModel.attachmentUrls
+                .map(
+                  (attachmentUrl) => Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: Image.network(
+                      attachmentUrl,
+                      width: 50,
+                      height: 50,
+                      errorBuilder: (context, error, stackTrace) => Container(
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.black12,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Icon(
+                          Icons.image,
+                          color: Colors.blueAccent,
+                          size: 32,
+                        ),
+                      ),
+                    ),
                   ),
-                  child: Icon(Icons.image, color: Colors.blueAccent, size: 32),
-                ),
-              ),
-            )).toList(),
+                )
+                .toList(),
           ),
           Spacing.vSmall,
           Row(
             children: [
-              Text("Taxi No. ", style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.bold)),
-              Text("${maintainanceModel.taxiId}", style: AppTextStyles.bodySmall),
+              Text(
+                "Taxi No. ",
+                style: AppTextStyles.bodySmall.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                "${maintainanceModel.taxiId}",
+                style: AppTextStyles.bodySmall,
+              ),
               Spacing.hLarge,
-              Text("Fleet No. ", style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.bold)),
-              Text("${maintainanceModel.fleetId}", style: AppTextStyles.bodySmall),
+              Text(
+                "Fleet No. ",
+                style: AppTextStyles.bodySmall.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                "${maintainanceModel.fleetId}",
+                style: AppTextStyles.bodySmall,
+              ),
               Spacing.hLarge,
-              Text("Inspected By: ", style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.bold)),
-              Text(maintainanceModel.inspectedBy, style: AppTextStyles.bodySmall),
+              Text(
+                "Inspected By: ",
+                style: AppTextStyles.bodySmall.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                maintainanceModel.inspectedBy,
+                style: AppTextStyles.bodySmall,
+              ),
               Spacing.hLarge,
-              Text("Assigned to: ", style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.bold)),
-              Text(maintainanceModel.assignedTo, style: AppTextStyles.bodySmall),
+              Text(
+                "Assigned to: ",
+                style: AppTextStyles.bodySmall.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                maintainanceModel.assignedTo,
+                style: AppTextStyles.bodySmall,
+              ),
             ],
           ),
         ],

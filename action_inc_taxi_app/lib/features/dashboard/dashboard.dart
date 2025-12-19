@@ -25,45 +25,58 @@ class Dashboard extends StatelessWidget {
               children: [
                 Navbar(),
                 Padding(
-                  padding:  EdgeInsets.symmetric(horizontal: 0.w, vertical: 0.h),
+                  padding: EdgeInsets.symmetric(horizontal: 0.w, vertical: 0.h),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Spacing.vLarge,
-                     Container(
-                       decoration: BoxDecoration(
-                    color: const Color(0xFF121212),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                       child: Padding(
-                         padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 12.h),
-                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                           Text("Total Banked today", style: AppTextStyles.bodySmall,),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            mainAxisSize: MainAxisSize.min,
+                      Container(
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF121212),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 8.w,
+                            vertical: 12.h,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              Text(
+                                "Total Banked today",
+                                style: AppTextStyles.bodySmall,
+                              ),
                               Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Text("₱ 5,000.00", style: AppTextStyles.bodySmall),
-                                  Spacing.hSmall,
-                                  PercentChangeIndicator(percentChange: 12.5),
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        "₱ 5,000.00",
+                                        style: AppTextStyles.bodySmall,
+                                      ),
+                                      Spacing.hSmall,
+                                      PercentChangeIndicator(
+                                        percentChange: 12.5,
+                                      ),
+                                    ],
+                                  ),
+                                  // Text("Last day: ₱ 4,500.00", style: AppTextStyles.bodySmall),
                                 ],
                               ),
-                              // Text("Last day: ₱ 4,500.00", style: AppTextStyles.bodySmall),
+                              Spacing.vExtraLarge,
+                              Text(
+                                "Last day Income ₱ 4,500.00",
+                                style: AppTextStyles.bodyExtraSmall,
+                              ),
                             ],
                           ),
-                          Spacing.vExtraLarge,
-                          Text(
-                            "Last day Income ₱ 4,500.00",
-                            style: AppTextStyles.bodyExtraSmall,
-                          ),
-                         ],),
-                       ),
-                     ),
+                        ),
+                      ),
                       Spacing.vLarge,
                       Row(
                         children: [
