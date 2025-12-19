@@ -13,6 +13,8 @@ class AppConstants {
   // messages
   static const String genericErrorMessage =
       'Something went wrong. Please try again later.';
+  static const String noCarFoundErrorMessage =
+      'No car found with the provided identifiers.';
 
   // Input Styling
   static const double inputBorderRadius = 8.0;

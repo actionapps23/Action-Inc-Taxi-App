@@ -10,7 +10,8 @@ import 'package:action_inc_taxi_app/cubit/car_details/car_detail_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/car_details/car_detail_state.dart';
 
 class CarDetailScreen extends StatefulWidget {
-  const CarDetailScreen({super.key});
+  final bool fetchDetails;
+  const CarDetailScreen({super.key, this.fetchDetails = false});
   @override
   State<CarDetailScreen> createState() => _CarDetailScreenState();
 }

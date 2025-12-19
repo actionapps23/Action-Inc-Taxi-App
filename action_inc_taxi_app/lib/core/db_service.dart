@@ -52,10 +52,25 @@ class DbService {
       rethrow;
     }
   }
+  Future<CarInfo?> getTaxiByNoOrRegNo(String taxiNo, String regNo) async {
+    try {
+      final q = await _firestore
+          .collection(carsCollection)
+          .where('taxiNo', isEqualTo: taxiNo)
+          .where('regNo', isEqualTo: regNo)
+          .limit(1)
+          .get();
+      if (q.docs.isEmpty) return null;
+      final m = q.docs.first.data();
+      return CarInfo.fromMap(m..['id'] = q.docs.first.id);
+    } catch (e) {
+      rethrow;
+    }
+  }
 
   Future<String> saveDriver(Driver d) async {
     try {
-      final id = d.id.isNotEmpty ? d.id : _uuid.v4();
+      final id = d.id;
       await _firestore.collection(driversCollection).doc(id).set(d.toMap());
       return id;
     } catch (e) {

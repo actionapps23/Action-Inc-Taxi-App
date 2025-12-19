@@ -42,7 +42,7 @@ class SelectionCubit extends Cubit<SelectionState> {
   void proceed(int selectedIndex, BuildContext context) {
     switch(selectedIndex){
       case 0:
-      Navigator.push(context, MaterialPageRoute(builder: (context) => CarDetailScreen()));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => CarDetailScreen(fetchDetails : true)));
       break;
       case 1:
       break;
