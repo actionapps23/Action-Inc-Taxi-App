@@ -52,22 +52,6 @@ class DbService {
     }
   }
 
-  Future<CarInfo?> getTaxiByNoOrRegNo(String taxiNo, String regNo) async {
-    try {
-      final q = await _firestore
-          .collection(carsCollection)
-          .where('taxiNo', isEqualTo: taxiNo)
-          .where('regNo', isEqualTo: regNo)
-          .limit(1)
-          .get();
-      if (q.docs.isEmpty) return null;
-      final m = q.docs.first.data();
-      return CarInfo.fromMap(m..['id'] = q.docs.first.id);
-    } catch (e) {
-      rethrow;
-    }
-  }
-
   Future<String> saveDriver(Driver d) async {
     try {
       final id = d.id;
@@ -118,7 +102,7 @@ class DbService {
     }
   }
 
-  Future<CarDetailModel?> getCarDetailInfo(String taxiNo, String regNo) async {
+  Future<CarDetailModel?> getTaxiDetailInfo(String taxiNo, String regNo) async {
     try {
       DocumentSnapshot<Map<String, dynamic>> doc;
       if (taxiNo.isNotEmpty) {

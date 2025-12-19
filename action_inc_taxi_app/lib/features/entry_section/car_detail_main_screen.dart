@@ -1,6 +1,8 @@
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
 import 'package:action_inc_taxi_app/core/widgets/navbar/navbar.dart';
 import 'package:action_inc_taxi_app/core/widgets/tabbar/tabbar.dart';
+import 'package:action_inc_taxi_app/cubit/car_details/car_detail_state.dart';
+import 'package:action_inc_taxi_app/cubit/selection/selection_cubit.dart';
 import 'package:action_inc_taxi_app/features/entry_section/renewal/renewal_dates_screen.dart';
 import 'package:action_inc_taxi_app/features/entry_section/rent/daily_rent_collection_info_screen.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +19,17 @@ class CarDetailScreen extends StatefulWidget {
 
 class _CarDetailScreenState extends State<CarDetailScreen> {
   @override
+  void initState() {
+    super.initState();
+    if(widget.fetchDetails){
+      final CarDetailCubit carDetailCubit = context.read<CarDetailCubit>();
+      final SelectionCubit selectionCubit = context.read<SelectionCubit>();
+      final String taxiNo = selectionCubit.state.taxiNo;
+      final String regNo = selectionCubit.state.regNo;
+      carDetailCubit.loadCarDetails(taxiNo, regNo);
+    }
+  }
+  @override
   Widget build(BuildContext context) {
     final CarDetailCubit carDetailCubit = context.read<CarDetailCubit>();
 
@@ -24,6 +37,33 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
     return BlocBuilder(
       bloc: carDetailCubit,
       builder: (context, state) {
+        if(state is CarDetailLoaded){
+          if(state.carDetailModel == null){
+            return Scaffold(
+              body: Center(
+                child: Text(
+                  'No details found for the selected car.',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            );
+          }
+          
+        }
+        else if (state is CarDetailError) {
+          return Center(
+            child: Text(
+              'Error loading car details: ${state.message}',
+              style: TextStyle(
+                color: Colors.red,
+                fontSize: 16,
+              ),
+            ),
+          );
+        }
         return SafeArea(
           child: Scaffold(
             backgroundColor: AppColors.background,

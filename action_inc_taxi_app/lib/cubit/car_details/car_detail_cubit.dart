@@ -4,22 +4,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'car_detail_state.dart';
 
 class CarDetailCubit extends Cubit<CarDetailState> {
-  CarDetailCubit({int initialIndex = 0}) : super(CarDetailLoaded());
+  CarDetailCubit({int initialIndex = 0}) : super(CarDetailInitial());
   final DbService dbService = DbService();
   void selectTab(int index) {
-    final current = state;
-    if (current is CarDetailLoaded) {
-      if (current.selectedIndex != index) {
-        emit(current.copyWith(selectedIndex: index));
-      }
-    } else {
-      emit(CarDetailLoaded());
+    if (index != state.selectedIndex) {
+      emit(state.copyWith(selectedIndex: index));
     }
   }
 
   void loadCarDetails(String taxiNo, String regNo) async {
     try {
-      final CarDetailModel? carDetail = await dbService.getCarDetailInfo(
+      final CarDetailModel? carDetail = await dbService.getTaxiDetailInfo(
         taxiNo,
         regNo,
       );
