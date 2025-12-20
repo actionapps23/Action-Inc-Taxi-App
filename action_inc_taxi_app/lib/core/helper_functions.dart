@@ -69,6 +69,7 @@ class HelperFunctions {
   static getDateTimeFromUtcMilliSeconds(int utcMs) {
     return DateTime.fromMillisecondsSinceEpoch(utcMs, isUtc: true);
   }
+
   static String generateDateKeyFromUtc(int utcMillis) {
     final dt = DateTime.fromMillisecondsSinceEpoch(utcMillis, isUtc: true);
     final year = dt.year.toString();
