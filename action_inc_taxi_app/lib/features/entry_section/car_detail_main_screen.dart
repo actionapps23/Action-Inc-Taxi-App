@@ -33,31 +33,55 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final CarDetailCubit carDetailCubit = context.read<CarDetailCubit>();
-
     int selectedIndex = carDetailCubit.state.selectedIndex;
-    return BlocBuilder(
+    return BlocBuilder<CarDetailCubit, CarDetailState>(
       bloc: carDetailCubit,
       builder: (context, state) {
-        if (state is CarDetailLoaded) {
-          if (state.carDetailModel == null) {
-            return Scaffold(
+        if (state is CarDetailNotFound) {
+          return SafeArea(
+            child: Scaffold(
+              backgroundColor: AppColors.background,
               body: Center(
-                child: Text(
-                  'No details found for the selected car.',
-                  style: TextStyle(color: Colors.white, fontSize: 16),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Navbar(),
+                    SizedBox(height: 32.h),
+                    const Icon(Icons.info_outline, color: Colors.white, size: 48),
+                    SizedBox(height: 16.h),
+                    const Text(
+                      'No car details found.',
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
+                  ],
                 ),
               ),
-            );
-          }
+            ),
+          );
         } else if (state is CarDetailError) {
-          return Center(
-            child: Text(
-              'Error loading car details: ${state.message}',
-              style: TextStyle(color: Colors.red, fontSize: 16),
+          return SafeArea(
+            child: Scaffold(
+              backgroundColor: AppColors.background,
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Navbar(),
+                    SizedBox(height: 32.h),
+                    const Icon(Icons.error_outline, color: Colors.red, size: 48),
+                    SizedBox(height: 16.h),
+                    Text(
+                      state.message,
+                      style: const TextStyle(color: Colors.red, fontSize: 18),
+                    ),
+                  ],
+                ),
+              ),
             ),
           );
         }
-        return SafeArea(
+       else if(state is CarDetailLoaded || !widget.fetchDetails) {
+         return SafeArea(
           child: Scaffold(
             backgroundColor: AppColors.background,
             body: SingleChildScrollView(
@@ -67,7 +91,6 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                   child: Column(
                     children: [
                       const Navbar(),
-
                       Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: 24.w,
@@ -77,15 +100,12 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Top Bar (reusable)
                             SizedBox(height: 32.h),
-                            // Section Title
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       'Car Details',
@@ -95,7 +115,6 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                                         fontSize: 22,
                                       ),
                                     ),
-                                    // Tabs
                                     if (!widget.fetchDetails) ...[
                                       CustomTabBar(
                                         tabs: [
@@ -115,8 +134,7 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                               DailyRentCollectionInfoScreen(
                                 fetchDetails: widget.fetchDetails,
                               ),
-                            ] else if (carDetailCubit.state.selectedIndex ==
-                                1) ...[
+                            ] else if (carDetailCubit.state.selectedIndex == 1) ...[
                               SizedBox(height: 24.h),
                               RenewalDataTable(),
                             ],
@@ -130,6 +148,8 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
             ),
           ),
         );
+       }
+        return const SizedBox.shrink();
       },
     );
   }

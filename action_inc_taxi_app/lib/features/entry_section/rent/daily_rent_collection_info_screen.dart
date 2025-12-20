@@ -305,38 +305,93 @@ class _DailyRentCollectionInfoScreenState
       _updateDraftFromControllers();
     }
   }
-
-  @override
-  void initState() {
-    super.initState();
-    final CarDetailCubit carDetailCubit = context.read<CarDetailCubit>();
-    final CarDetailState carDetailState = carDetailCubit.state;
     Rent? rent;
     Driver? driver;
     CarInfo? carInfo;
-    if (carDetailState is CarDetailLoaded &&
-        carDetailState.carDetailModel != null) {
+  @override
+  void initState() {
+    super.initState();
+    // Debug listener to track unexpected changes to this controller
+    firstDriverNameController.addListener(() {
+      final v = firstDriverNameController.text;
+      debugPrint('DEBUG firstDriverNameController -> "${v}"');
+      if (v.isEmpty) {
+        debugPrint('DEBUG firstDriverNameController emptied here:\n${StackTrace.current}');
+      }
+    });
+    final CarDetailCubit carDetailCubit = context.read<CarDetailCubit>();
+    final CarDetailState carDetailState = carDetailCubit.state;
+
+    if (widget.fetchDetails) {
       rent = carDetailState.carDetailModel!.rent;
       driver = carDetailState.carDetailModel!.driver;
       carInfo = carDetailState.carDetailModel!.carInfo;
+       
+      firstDriverCnicController.text = driver?.firstDriverCnic ?? '';
+      firstDriverDobController.text = HelperFunctions.formatDateFromUtcMillis(
+        driver?.firstDriverDobUtc,
+      );
+      firstDriverNameController.text = driver?.firstDriverName ?? '';
+      taxiNoController.text = carInfo?.taxiNo ?? '';
+      numberPlateController.text = carInfo?.plateNumber ?? '';
+      fleetNoController.text = carInfo?.fleetNo ?? '';
+      carStatusOnRoad = carInfo?.onRoad ?? true;
+
+      secondDriverCnicController.text = driver?.secondDriverCnic ?? '';
+      secondDriverDobController.text = HelperFunctions.formatDateFromUtcMillis(
+        driver?.secondDriverDobUtc,
+      );
+      secondDriverNameController.text = driver?.secondDriverName ?? '';
+      contractExtraDaysController .text = rent?.extraDays.toString() ?? '0';
+      contractStartController.text = HelperFunctions.formatDateFromUtcMillis(
+        rent?.contractStartUtc,
+      );
+      contractEndController.text = HelperFunctions.formatDateFromUtcMillis(
+        rent?.contractEndUtc,
+      );
+      contractMonthsController.text = rent?.monthsCount.toString() ?? '0';
+      paymentDateController.text = HelperFunctions.formatDateFromUtcMillis(
+        rent?.createdAtUtc,
+      );
+      gCashRefController.text = rent?.gCashRef ?? '';
+      rentAmountController.text =
+          ((rent?.rentAmountCents ?? 0)).toString();
+      dueRentController.text =
+          ((rent?.dueRentCents ?? 0)).toString();
+      totalRentController.text =
+          ((rent?.totalCents ?? 0)).toString();
+      paymentCashController.text =
+          ((rent?.paymentCashCents ?? 0)).toString();
+      paymentGCashController.text =
+          ((rent?.paymentGCashCents ?? 0)).toString();
+      gCashRefController.text = rent?.gCashRef ?? '';
+      maintenanceFeesController.text =
+          ((rent?.maintenanceFeesCents ?? 0)).toString();
+      carWashFeesController.text =
+          ((rent?.carWashFeesCents ?? 0)).toString();
+      publicHoliday = rent?.isPublicHoliday ?? false;
+      birthday = rent?.isBirthday ?? false;
+      
+
+      
+
     }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final selectionState = context.read<SelectionCubit>().state;
       final cubitState = _cubit.state;
       if (cubitState is DailyRentLoaded) {
-        // Pre-fill from cubit state if availasble
         final carInfo = cubitState.carInfo;
         final driver = cubitState.driver;
         final rent = cubitState.rent;
-        if (carInfo != null) {
+        if (carInfo != null && !widget.fetchDetails) {
           taxiNoController.text = carInfo.taxiNo;
           numberPlateController.text = carInfo.plateNumber ?? '';
           fleetNoController.text = carInfo.fleetNo ?? '';
           carStatusOnRoad = carInfo.onRoad;
-        } else {
+        } else if (!widget.fetchDetails) {
           taxiNoController.text = selectionState.taxiNo;
         }
-        if (driver != null) {
+        if (driver != null && !widget.fetchDetails) {
           firstDriverNameController.text = driver.firstDriverName;
           firstDriverCnicController.text = driver.firstDriverCnic;
           firstDriverDobController.text = driver.firstDriverDobUtc != null
@@ -357,10 +412,10 @@ class _DailyRentCollectionInfoScreenState
                   ),
                 )
               : '';
-        } else {
+        } else if (!widget.fetchDetails) {
           firstDriverNameController.text = selectionState.driverName;
         }
-        if (rent != null) {
+        if (rent != null && !widget.fetchDetails) {
           totalRentController.text = (rent.totalCents / 100).toString();
           rentAmountController.text = (rent.rentAmountCents / 100).toString();
           dueRentController.text = (rent.dueRentCents / 100).toString();
@@ -394,7 +449,7 @@ class _DailyRentCollectionInfoScreenState
           );
           publicHoliday = rent.isPublicHoliday;
           birthday = rent.isBirthday;
-        } else {
+        } else if (!widget.fetchDetails) {
           // Set defaults if no rent
           final today = DateTime.now();
           contractStartController.text = _formatDate(today);
@@ -404,10 +459,14 @@ class _DailyRentCollectionInfoScreenState
           firstDriverDobController.text = _formatDate(today);
           secondDriverDobController.text = _formatDate(today);
         }
-      } else {
-        // No cubit state, set defaults
-        taxiNoController.text = selectionState.taxiNo;
-        firstDriverNameController.text = selectionState.driverName;
+      } else if( !widget.fetchDetails) {
+        // No cubit state, set defaults but don't overwrite existing values
+        if (taxiNoController.text.trim().isEmpty) {
+          taxiNoController.text = selectionState.taxiNo;
+        }
+        if (firstDriverNameController.text.trim().isEmpty) {
+          firstDriverNameController.text = selectionState.driverName;
+        }
         final today = DateTime.now();
         contractStartController.text = _formatDate(today);
         final twoYears = DateTime(today.year + 2, today.month, today.day);
@@ -498,7 +557,7 @@ class _DailyRentCollectionInfoScreenState
                                         labelText: 'Taxi No',
                                         hintText: 'Enter Taxi No',
                                         isReadOnly: true,
-                                        errorText: fieldErrors['taxiNo'],
+                                        // errorText: fieldErrors['taxiNo'],
                                       ),
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
@@ -506,16 +565,16 @@ class _DailyRentCollectionInfoScreenState
                                         labelText: 'First Driver Name',
                                         hintText: 'Enter Driver Name',
                                         isReadOnly: true,
-                                        errorText:
-                                            fieldErrors['firstDriverName'],
+                                        // errorText:
+                                        //     fieldErrors['firstDriverName'],
                                       ),
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
                                         controller: secondDriverNameController,
                                         labelText: 'Second Driver',
                                         hintText: 'Enter Second Driver',
-                                        errorText:
-                                            fieldErrors['secondDriverName'],
+                                        // errorText:
+                                        //     fieldErrors['secondDriverName'],
                                       ),
                                     ],
                                   ),
@@ -528,7 +587,7 @@ class _DailyRentCollectionInfoScreenState
                                         controller: numberPlateController,
                                         labelText: 'Number Plate',
                                         hintText: 'Enter Number Plate',
-                                        errorText: fieldErrors['numberPlate'],
+                                        // errorText: fieldErrors['numberPlate'],
                                       ),
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
@@ -539,8 +598,8 @@ class _DailyRentCollectionInfoScreenState
                                         onTap: () => _pickDateForController(
                                           firstDriverDobController,
                                         ),
-                                        errorText:
-                                            fieldErrors['firstDriverDob'],
+                                        // errorText:
+                                            // fieldErrors['firstDriverDob'],
                                       ),
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
@@ -551,8 +610,8 @@ class _DailyRentCollectionInfoScreenState
                                         onTap: () => _pickDateForController(
                                           secondDriverDobController,
                                         ),
-                                        errorText:
-                                            fieldErrors['secondDriverDob'],
+                                        // errorText:
+                                        //     fieldErrors['secondDriverDob'],
                                       ),
                                     ],
                                   ),
@@ -565,7 +624,7 @@ class _DailyRentCollectionInfoScreenState
                                         controller: fleetNoController,
                                         labelText: 'Fleet No',
                                         hintText: 'Enter Fleet No',
-                                        errorText: fieldErrors['fleetNo'],
+                                        // errorText: fieldErrors['fleetNo'],
                                       ),
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
@@ -574,7 +633,7 @@ class _DailyRentCollectionInfoScreenState
                                         hintText: 'Enter Driver ID #',
                                         onChanged: (s) =>
                                             _updateDraftFromControllers(),
-                                        errorText: fieldErrors['driverCnic'],
+                                        // errorText: fieldErrors['driverCnic'],
                                       ),
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
@@ -583,7 +642,7 @@ class _DailyRentCollectionInfoScreenState
                                         hintText: 'Enter Driver ID #',
                                         onChanged: (s) =>
                                             _updateDraftFromControllers(),
-                                        errorText: fieldErrors['driverCnic'],
+                                        // errorText: fieldErrors['driverCnic'],
                                       ),
                                     ],
                                   ),
@@ -600,7 +659,7 @@ class _DailyRentCollectionInfoScreenState
                                         controller: taxiNoController,
                                         labelText: 'Taxi No',
                                         hintText: 'Enter Taxi No',
-                                        errorText: fieldErrors['taxiNo'],
+                                        // errorText: fieldErrors['taxiNo'],
                                       ),
                                     ),
                                     SizedBox(width: 16.w),
@@ -609,7 +668,7 @@ class _DailyRentCollectionInfoScreenState
                                         controller: numberPlateController,
                                         labelText: 'Number Plate',
                                         hintText: 'Enter Number Plate',
-                                        errorText: fieldErrors['numberPlate'],
+                                        // errorText: fieldErrors['numberPlate'],
                                       ),
                                     ),
                                     SizedBox(width: 16.w),
@@ -618,7 +677,7 @@ class _DailyRentCollectionInfoScreenState
                                         controller: fleetNoController,
                                         labelText: 'Fleet No',
                                         hintText: 'Enter Fleet No',
-                                        errorText: fieldErrors['fleetNo'],
+                                        // errorText: fieldErrors['fleetNo'],
                                       ),
                                     ),
                                     SizedBox(width: 16.w),
@@ -639,8 +698,8 @@ class _DailyRentCollectionInfoScreenState
                                         controller: firstDriverNameController,
                                         labelText: 'Driver Name',
                                         hintText: 'Enter Driver Name',
-                                        errorText:
-                                            fieldErrors['firstDriverName'],
+                                        // errorText:
+                                        //     fieldErrors['firstDriverName'],
                                       ),
                                     ),
                                     SizedBox(width: 16.w),
@@ -653,8 +712,8 @@ class _DailyRentCollectionInfoScreenState
                                         onTap: () => _pickDateForController(
                                           firstDriverDobController,
                                         ),
-                                        errorText:
-                                            fieldErrors['firstDriverDob'],
+                                        // errorText:
+                                        //     fieldErrors['firstDriverDob'],
                                       ),
                                     ),
                                     SizedBox(width: 16.w),
@@ -670,7 +729,7 @@ class _DailyRentCollectionInfoScreenState
                                   hintText: 'Enter Driver CNIC',
                                   onChanged: (s) =>
                                       _updateDraftFromControllers(),
-                                  errorText: fieldErrors['driverCnic'],
+                                  // errorText: fieldErrors['driverCnic'],
                                 ),
                                 SizedBox(height: 12.h),
                                 Row(
@@ -680,8 +739,8 @@ class _DailyRentCollectionInfoScreenState
                                         controller: secondDriverNameController,
                                         labelText: 'Second Driver',
                                         hintText: 'Enter Second Driver',
-                                        errorText:
-                                            fieldErrors['secondDriverName'],
+                                        // errorText:
+                                        //     fieldErrors['secondDriverName'],
                                       ),
                                     ),
                                     SizedBox(width: 16.w),
@@ -694,8 +753,8 @@ class _DailyRentCollectionInfoScreenState
                                         onTap: () => _pickDateForController(
                                           secondDriverDobController,
                                         ),
-                                        errorText:
-                                            fieldErrors['secondDriverDob'],
+                                        // errorText:
+                                        //     fieldErrors['secondDriverDob'],
                                       ),
                                     ),
                                     SizedBox(width: 16.w),
@@ -781,7 +840,7 @@ class _DailyRentCollectionInfoScreenState
                                         onTap: () => _pickDateForController(
                                           contractStartController,
                                         ),
-                                        errorText: fieldErrors['contractStart'],
+                                        // errorText: fieldErrors['contractStart'],
                                       ),
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
@@ -797,7 +856,7 @@ class _DailyRentCollectionInfoScreenState
                                         onTap: () => _pickDateForController(
                                           contractEndController,
                                         ),
-                                        errorText: fieldErrors['contractEnd'],
+                                        // errorText: fieldErrors['contractEnd'],
                                       ),
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
@@ -806,7 +865,7 @@ class _DailyRentCollectionInfoScreenState
                                         hintText: '0',
                                         onChanged: (s) =>
                                             _updateDraftFromControllers(),
-                                        errorText: fieldErrors['extraDays'],
+                                        // errorText: fieldErrors['extraDays'],
                                       ),
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
@@ -836,7 +895,7 @@ class _DailyRentCollectionInfoScreenState
                                           // Do not modify rentAmountController for public holiday
                                           _updateDraftFromControllers();
                                         },
-                                        errorText: fieldErrors['rentAmount'],
+                                        // errorText: fieldErrors['rentAmount'],
                                       ),
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
@@ -845,8 +904,8 @@ class _DailyRentCollectionInfoScreenState
                                         hintText: 'Enter Amount',
                                         onChanged: (s) =>
                                             _updateDraftFromControllers(),
-                                        errorText:
-                                            fieldErrors['maintenanceFees'],
+                                        // errorText:
+                                            // fieldErrors['maintenanceFees'],
                                         isReadOnly: true,
                                       ),
                                       SizedBox(height: 12.h),
@@ -856,7 +915,7 @@ class _DailyRentCollectionInfoScreenState
                                         hintText: 'Enter Amount',
                                         onChanged: (s) =>
                                             _updateDraftFromControllers(),
-                                        errorText: fieldErrors['carWashFees'],
+                                        // errorText: fieldErrors['carWashFees'],
                                         isReadOnly: true,
                                       ),
                                     ],
@@ -878,7 +937,7 @@ class _DailyRentCollectionInfoScreenState
                                         ),
                                         onChanged: (s) =>
                                             _updateDraftFromControllers(),
-                                        errorText: fieldErrors['paymentCash'],
+                                        // errorText: fieldErrors['paymentCash'],
                                       ),
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
@@ -887,7 +946,7 @@ class _DailyRentCollectionInfoScreenState
                                         hintText: 'Enter Amount',
                                         onChanged: (s) =>
                                             _updateDraftFromControllers(),
-                                        errorText: fieldErrors['paymentGCash'],
+                                        // errorText: fieldErrors['paymentGCash'],
                                       ),
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
@@ -896,7 +955,7 @@ class _DailyRentCollectionInfoScreenState
                                         hintText: 'Enter Ref',
                                         onChanged: (s) =>
                                             _updateDraftFromControllers(),
-                                        errorText: fieldErrors['gCashRef'],
+                                        // errorText: fieldErrors['gCashRef'],
                                       ),
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
@@ -912,7 +971,7 @@ class _DailyRentCollectionInfoScreenState
                                         onTap: () => _pickDateForController(
                                           paymentDateController,
                                         ),
-                                        errorText: fieldErrors['paymentDate'],
+                                        // errorText: fieldErrors['paymentDate'],
                                       ),
                                     ],
                                   ),
@@ -977,7 +1036,7 @@ class _DailyRentCollectionInfoScreenState
                                     }
                                     _updateDraftFromControllers();
                                   },
-                                  errorText: fieldErrors['rentAmount'],
+                                  // errorText: fieldErrors['rentAmount'],
                                 ),
                                 SizedBox(height: 12.h),
                                 Row(
@@ -989,8 +1048,8 @@ class _DailyRentCollectionInfoScreenState
                                         hintText: 'Enter Amount',
                                         onChanged: (s) =>
                                             _updateDraftFromControllers(),
-                                        errorText:
-                                            fieldErrors['maintenanceFees'],
+                                        // errorText:
+                                        //     fieldErrors['maintenanceFees'],
                                       ),
                                     ),
                                     SizedBox(width: 16.w),
@@ -1001,7 +1060,7 @@ class _DailyRentCollectionInfoScreenState
                                         hintText: 'Enter Amount',
                                         onChanged: (s) =>
                                             _updateDraftFromControllers(),
-                                        errorText: fieldErrors['carWashFees'],
+                                        // errorText: fieldErrors['carWashFees'],
                                       ),
                                     ),
                                   ],
@@ -1022,7 +1081,7 @@ class _DailyRentCollectionInfoScreenState
                                         ),
                                         onChanged: (s) =>
                                             _updateDraftFromControllers(),
-                                        errorText: fieldErrors['paymentCash'],
+                                        // errorText: fieldErrors['paymentCash'],
                                       ),
                                     ),
                                     SizedBox(width: 16.w),
@@ -1033,7 +1092,7 @@ class _DailyRentCollectionInfoScreenState
                                         hintText: 'Enter Amount',
                                         onChanged: (s) =>
                                             _updateDraftFromControllers(),
-                                        errorText: fieldErrors['paymentGCash'],
+                                        // errorText: fieldErrors['paymentGCash'],
                                       ),
                                     ),
                                     SizedBox(width: 16.w),
@@ -1044,7 +1103,7 @@ class _DailyRentCollectionInfoScreenState
                                         hintText: 'Enter Ref',
                                         onChanged: (s) =>
                                             _updateDraftFromControllers(),
-                                        errorText: fieldErrors['gCashRef'],
+                                        // errorText: fieldErrors['gCashRef'],
                                       ),
                                     ),
                                   ],
@@ -1067,7 +1126,7 @@ class _DailyRentCollectionInfoScreenState
                                         onTap: () => _pickDateForController(
                                           paymentDateController,
                                         ),
-                                        errorText: fieldErrors['paymentDate'],
+                                        // errorText: fieldErrors['paymentDate'],
                                       ),
                                     ),
                                     SizedBox(width: 16.w),
@@ -1119,6 +1178,12 @@ class _DailyRentCollectionInfoScreenState
                                   HelperFunctions.utcFromController(
                                     firstDriverDobController,
                                   ),
+                              secondDriverCnic: secondDriverCnicController.text,
+                              secondDriverName: secondDriverNameController.text,
+                              secondDriverDobUtc:
+                                  HelperFunctions.utcFromController(
+                                    secondDriverDobController,
+                                  ),
                               createdAtUtc:
                                   HelperFunctions.currentUtcTimeMilliSeconds(),
                             );
@@ -1141,6 +1206,10 @@ class _DailyRentCollectionInfoScreenState
                               contractStartUtc:
                                   HelperFunctions.utcFromController(
                                     contractStartController,
+                                  ),
+                              contractEndUtc: 
+                                  HelperFunctions.utcFromController(
+                                    contractEndController,
                                   ),
                               rentAmountCents:
                                   double.tryParse(

@@ -21,7 +21,7 @@ class CarDetailCubit extends Cubit<CarDetailState> {
       if (carDetail != null) {
         emit(CarDetailLoaded(carDetailModel: carDetail));
       } else {
-        emit(CarDetailLoaded());
+        emit(CarDetailNotFound());
       }
     } catch (e) {
       emit(CarDetailError(e.toString()));

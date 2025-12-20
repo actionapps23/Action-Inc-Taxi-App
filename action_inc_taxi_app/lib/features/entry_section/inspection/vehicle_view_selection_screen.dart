@@ -32,14 +32,14 @@ class VehicleViewSelectionScreen extends StatelessWidget {
                 Flexible(
                   child: AppTextFormField(
                     isReadOnly: true,
-                    initialValue: selectionCubit.state.taxiNo,
+                    // initialValue: selectionCubit.state.taxiNo,
                   ),
                 ),
                 SizedBox(width: 16),
                 Expanded(
                   child: AppTextFormField(
                     isReadOnly: true,
-                    initialValue: selectionCubit.state.regNo,
+                    // initialValue: selectionCubit.state.regNo,
                   ),
                 ),
               ],

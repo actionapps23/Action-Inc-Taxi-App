@@ -20,7 +20,6 @@ class AppTextFormField extends StatelessWidget {
   final TextAlign? textAlign;
   final bool isReadOnly;
   final void Function()? onTap;
-  final String? initialValue;
 
   const AppTextFormField({
     super.key,
@@ -38,7 +37,6 @@ class AppTextFormField extends StatelessWidget {
     this.suffix,
     this.textAlign,
     this.onTap,
-    this.initialValue,
     this.isReadOnly = false,
     this.labelOnTop = false,
   });
@@ -52,7 +50,6 @@ class AppTextFormField extends StatelessWidget {
     );
     const inputStyle = TextStyle(color: AppColors.textHint, fontSize: 14);
     const hintStyle = TextStyle(color: AppColors.textHint, fontSize: 14);
-
     if (labelOnTop) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -128,7 +125,6 @@ class AppTextFormField extends StatelessWidget {
             flex: 3,
             child: TextFormField(
               onTap: onTap,
-              initialValue: initialValue,
               readOnly: isReadOnly,
               controller: controller,
               obscureText: obscureText,

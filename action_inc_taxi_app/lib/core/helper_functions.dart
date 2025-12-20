@@ -77,4 +77,13 @@ class HelperFunctions {
     final day = dt.day.toString().padLeft(2, '0');
     return '$year-$month-$day'; // e.g., "2025-12-20"
   }
+  static String formatDateFromUtcMillis(int? utcMillis) {
+    if (utcMillis == null || utcMillis == 0) return '';
+    final dt = DateTime.fromMillisecondsSinceEpoch(utcMillis, isUtc: true);
+    final local = dt.toLocal();
+    final day = local.day.toString().padLeft(2, '0');
+    final month = local.month.toString().padLeft(2, '0');
+    final year = local.year.toString();
+    return '$day/$month/$year';
+  }
 }

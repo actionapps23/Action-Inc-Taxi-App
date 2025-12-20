@@ -51,3 +51,7 @@ class CarDetailError extends CarDetailState {
 
   const CarDetailError(this.message);
 }
+
+class CarDetailNotFound extends CarDetailState {
+  const CarDetailNotFound() : super();
+}
