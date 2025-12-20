@@ -21,7 +21,7 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
   @override
   void initState() {
     super.initState();
-    if(widget.fetchDetails){
+    if (widget.fetchDetails) {
       final CarDetailCubit carDetailCubit = context.read<CarDetailCubit>();
       final SelectionCubit selectionCubit = context.read<SelectionCubit>();
       final String taxiNo = selectionCubit.state.taxiNo;
@@ -29,6 +29,7 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
       carDetailCubit.loadCarDetails(taxiNo, regNo);
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final CarDetailCubit carDetailCubit = context.read<CarDetailCubit>();
@@ -37,30 +38,22 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
     return BlocBuilder(
       bloc: carDetailCubit,
       builder: (context, state) {
-        if(state is CarDetailLoaded){
-          if(state.carDetailModel == null){
+        if (state is CarDetailLoaded) {
+          if (state.carDetailModel == null) {
             return Scaffold(
               body: Center(
                 child: Text(
                   'No details found for the selected car.',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                  ),
+                  style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
               ),
             );
           }
-          
-        }
-        else if (state is CarDetailError) {
+        } else if (state is CarDetailError) {
           return Center(
             child: Text(
               'Error loading car details: ${state.message}',
-              style: TextStyle(
-                color: Colors.red,
-                fontSize: 16,
-              ),
+              style: TextStyle(color: Colors.red, fontSize: 16),
             ),
           );
         }

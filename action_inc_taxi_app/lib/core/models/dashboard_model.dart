@@ -1,9 +1,9 @@
 class DashboardModel {
-    final int fleet1Amt;
-    final int fleet2Amt;
-    final int fleet3Amt;
-    final int fleet4Amt;
-    final int totalFleetAmt;
+  final int fleet1Amt;
+  final int fleet2Amt;
+  final int fleet3Amt;
+  final int fleet4Amt;
+  final int totalFleetAmt;
   final int fleetIncomeTargetValue;
   final int fleetIncomeOptimumTarget;
   final int fleetIncomeTargetCollection;
@@ -48,13 +48,13 @@ class DashboardModel {
     this.lastDayGCashAmount = 0,
     this.lastDayCashAmount = 0,
     this.lastDayAmountPaid = 0,
-        this.fleet1Amt = 0,
-        this.fleet2Amt = 0,
-        this.fleet3Amt = 0,
-        this.fleet4Amt = 0,
-        this.totalFleetAmt = 0,
-x  });
-
+    this.fleet1Amt = 0,
+    this.fleet2Amt = 0,
+    this.fleet3Amt = 0,
+    this.fleet4Amt = 0,
+    this.totalFleetAmt = 0,
+    x,
+  });
 
   DashboardModel copyWith({
     int? fleetIncomeTargetValue,
@@ -102,7 +102,8 @@ x  });
       maintenanceCostOptimumTarget:
           maintenanceCostOptimumTarget ?? this.maintenanceCostOptimumTarget,
       maintenanceCostTargetCollection:
-          maintenanceCostTargetCollection ?? this.maintenanceCostTargetCollection,
+          maintenanceCostTargetCollection ??
+          this.maintenanceCostTargetCollection,
       expensesSavedTargetValue:
           expensesSavedTargetValue ?? this.expensesSavedTargetValue,
       expensesSavedOptimumTarget:

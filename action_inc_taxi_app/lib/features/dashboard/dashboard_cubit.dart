@@ -22,17 +22,16 @@ class DashboardCubit extends Cubit<DashboardState> {
   }
 
   Future<void> fetchFleetAmounts(String periodType) async {
-      final amounts = await dbService.getFleetAmountsByPeriod(periodType: periodType);
-      final updatedDashboard = state.dashboardModel.copyWith(
-        fleet1Amt: amounts['fleet1Amt'] ?? 0,
-        fleet2Amt: amounts['fleet2Amt'] ?? 0,
-        fleet3Amt: amounts['fleet3Amt'] ?? 0,
-        fleet4Amt: amounts['fleet4Amt'] ?? 0,
-        totalFleetAmt: amounts['totalAmt'] ?? 0,
-      );
-      emit(DashboardLoaded(updatedDashboard));
-    
+    final amounts = await dbService.getFleetAmountsByPeriod(
+      periodType: periodType,
+    );
+    final updatedDashboard = state.dashboardModel.copyWith(
+      fleet1Amt: amounts['fleet1Amt'] ?? 0,
+      fleet2Amt: amounts['fleet2Amt'] ?? 0,
+      fleet3Amt: amounts['fleet3Amt'] ?? 0,
+      fleet4Amt: amounts['fleet4Amt'] ?? 0,
+      totalFleetAmt: amounts['totalAmt'] ?? 0,
+    );
+    emit(DashboardLoaded(updatedDashboard));
   }
 }
-
-

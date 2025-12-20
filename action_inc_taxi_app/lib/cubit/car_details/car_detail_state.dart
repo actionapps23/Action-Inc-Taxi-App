@@ -1,4 +1,5 @@
 import 'package:action_inc_taxi_app/core/models/car_detail_model.dart';
+
 class CarDetailState {
   final int selectedIndex;
   final CarDetailModel? carDetailModel;

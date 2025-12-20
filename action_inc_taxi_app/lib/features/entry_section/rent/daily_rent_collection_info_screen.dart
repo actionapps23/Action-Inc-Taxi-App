@@ -106,7 +106,7 @@ class _DailyRentCollectionInfoScreenState
     );
     final extraDays =
         int.tryParse(contractExtraDaysController.text.trim()) ?? 0;
-    
+
     final int? paymentDateUtc = _parseDateToUtcMs(
       paymentDateController.text.trim(),
     );
@@ -309,12 +309,13 @@ class _DailyRentCollectionInfoScreenState
   @override
   void initState() {
     super.initState();
-    final CarDetailCubit  carDetailCubit = context.read<CarDetailCubit>();
+    final CarDetailCubit carDetailCubit = context.read<CarDetailCubit>();
     final CarDetailState carDetailState = carDetailCubit.state;
     Rent? rent;
     Driver? driver;
     CarInfo? carInfo;
-    if (carDetailState is CarDetailLoaded && carDetailState.carDetailModel != null) {
+    if (carDetailState is CarDetailLoaded &&
+        carDetailState.carDetailModel != null) {
       rent = carDetailState.carDetailModel!.rent;
       driver = carDetailState.carDetailModel!.driver;
       carInfo = carDetailState.carDetailModel!.carInfo;
@@ -1122,9 +1123,8 @@ class _DailyRentCollectionInfoScreenState
                                   HelperFunctions.currentUtcTimeMilliSeconds(),
                             );
                             final dateKey =
-                                HelperFunctions.generateDateKeyFromUtc(                                      DateTime.now()
-                                          .toUtc()
-                                          .millisecondsSinceEpoch,
+                                HelperFunctions.generateDateKeyFromUtc(
+                                  DateTime.now().toUtc().millisecondsSinceEpoch,
                                 );
                             final Rent rent = Rent(
                               carWashFeesCents:
@@ -1176,7 +1176,7 @@ class _DailyRentCollectionInfoScreenState
                                     contractExtraDaysController.text,
                                   ) ??
                                   0,
-                              dateKey: dateKey
+                              dateKey: dateKey,
                             );
 
                             final currentState = _cubit.state;

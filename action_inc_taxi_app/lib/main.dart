@@ -40,7 +40,6 @@ class MyApp extends StatelessWidget {
             BlocProvider<MaintainanceCubit>(create: (_) => MaintainanceCubit()),
             BlocProvider<DashboardCubit>(create: (_) => DashboardCubit()),
 
-
             BlocProvider<CarDetailCubit>(create: (_) => CarDetailCubit()),
           ],
           child: MaterialApp(
