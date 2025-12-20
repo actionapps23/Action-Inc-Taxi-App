@@ -8,6 +8,111 @@ import 'models/rent.dart';
 import 'models/renewal.dart';
 
 class DbService {
+  Future<Map<String, int>> getFleetAmountsByPeriod({
+    required String periodType,
+    DateTime? date,
+  }) async {
+    final now = date?.toUtc() ?? DateTime.now().toUtc();
+    final carQuery = await _firestore.collection(carInfoCollection).get();
+    final fleetTaxiNos = <String, List<String>>{};
+    for (var i = 1; i <= 4; i++) {
+      fleetTaxiNos[i.toString()] = [];
+    }
+    for (final doc in carQuery.docs) {
+      final data = doc.data();
+      final fleetNumber = (data['fleetNo']);
+      final taxiNo = data['taxiNo'] as String?;
+      if (fleetNumber != null && taxiNo != null && fleetTaxiNos.containsKey(fleetNumber)) {
+        fleetTaxiNos[fleetNumber]!.add(taxiNo);
+      }
+    }
+    final rentQuery = await _firestore.collection(rentsCollection).get();
+    final rents = rentQuery.docs.map((d) => Rent.fromMap(d.data())).toList();
+    String todayKey = HelperFunctions.generateDateKeyFromUtc(now.millisecondsSinceEpoch);
+    String monthKey = todayKey.substring(0, 7);
+    DateTime startOfWeek = now.subtract(Duration(days: now.weekday - 1));
+    DateTime endOfWeek = startOfWeek.add(Duration(days: 6));
+    int fleet1Amt = 0;
+    int fleet2Amt = 0;
+    int fleet3Amt = 0;
+    int fleet4Amt = 0;
+    for (final r in rents) {
+      if (periodType == 'daily') {
+        if (r.dateKey == todayKey) {
+          if (fleetTaxiNos[1]!.contains(r.taxiNo)) {
+            fleet1Amt += r.paymentCashCents + r.paymentGCashCents;
+          } else if (fleetTaxiNos[2]!.contains(r.taxiNo)) {
+            fleet2Amt += r.paymentCashCents + r.paymentGCashCents;
+          } else if (fleetTaxiNos[3]!.contains(r.taxiNo)) {
+            fleet3Amt += r.paymentCashCents + r.paymentGCashCents;
+          } else if (fleetTaxiNos[4]!.contains(r.taxiNo)) {
+            fleet4Amt += r.paymentCashCents + r.paymentGCashCents;
+          }
+        }
+      } else if (periodType == 'monthly') {
+        if (r.dateKey.startsWith(monthKey)) {
+          if (fleetTaxiNos['1']!.contains(r.taxiNo)) fleet1Amt += r.paymentCashCents + r.paymentGCashCents;
+          if (fleetTaxiNos['2']!.contains(r.taxiNo)) fleet2Amt += r.paymentCashCents + r.paymentGCashCents;
+          if (fleetTaxiNos['3']!.contains(r.taxiNo)) fleet3Amt += r.paymentCashCents + r.paymentGCashCents;
+          if (fleetTaxiNos['4']!.contains(r.taxiNo)) fleet4Amt += r.paymentCashCents + r.paymentGCashCents;
+        }
+      } else if (periodType == 'weekly') {
+        final rentDate = DateTime.parse(r.dateKey);
+        if (!rentDate.isBefore(startOfWeek) && !rentDate.isAfter(endOfWeek)) {
+          if (fleetTaxiNos['1']!.contains(r.taxiNo)) fleet1Amt += r.paymentCashCents + r.paymentGCashCents;
+          if (fleetTaxiNos['2']!.contains(r.taxiNo)) fleet2Amt += r.paymentCashCents + r.paymentGCashCents;
+          if (fleetTaxiNos['3']!.contains(r.taxiNo)) fleet3Amt += r.paymentCashCents + r.paymentGCashCents;
+          if (fleetTaxiNos['4']!.contains(r.taxiNo)) fleet4Amt += r.paymentCashCents + r.paymentGCashCents;
+        }
+      }
+    }
+    final totalAmt = fleet1Amt + fleet2Amt + fleet3Amt + fleet4Amt;
+    return {
+      'fleet1Amt': fleet1Amt,
+      'fleet2Amt': fleet2Amt,
+      'fleet3Amt': fleet3Amt,
+      'fleet4Amt': fleet4Amt,
+      'totalAmt': totalAmt,
+    };
+  }
+      Future<Map<int, Map<String, int>>> getTodaysAmountByFleet() async {
+        final now = DateTime.now().toUtc();
+        final dateKey = HelperFunctions.generateDateKeyFromUtc(now.millisecondsSinceEpoch);
+        final carQuery = await _firestore.collection(carInfoCollection).get();
+        final fleetTaxiNos = <int, List<String>>{};
+        for (var i = 1; i <= 4; i++) {
+          fleetTaxiNos[i] = [];
+        }
+        for (final doc in carQuery.docs) {
+          final data = doc.data();
+          final fleetNumber = (data['fleetNumber'] as int?);
+          final taxiNo = data['taxiNo'] as String?;
+          if (fleetNumber != null && taxiNo != null && fleetTaxiNos.containsKey(fleetNumber)) {
+            fleetTaxiNos[fleetNumber]!.add(taxiNo);
+          }
+        }
+        final rentQuery = await _firestore.collection(rentsCollection)
+            .where('dateKey', isEqualTo: dateKey)
+            .get();
+        final rents = rentQuery.docs.map((d) => Rent.fromMap(d.data())).toList();
+        final result = <int, Map<String, int>>{};
+        for (var i = 1; i <= 4; i++) {
+          int totalCash = 0;
+          int totalGCash = 0;
+          for (final r in rents) {
+            if (fleetTaxiNos[i]!.contains(r.taxiNo)) {
+              totalCash += r.paymentCashCents;
+              totalGCash += r.paymentGCashCents;
+            }
+          }
+          result[i] = {
+            'totalCash': totalCash,
+            'totalGCash': totalGCash,
+            'totalAmount': totalCash + totalGCash,
+          };
+        }
+        return result;
+      }
     Future<List<Rent>> fetchRentsByDateKey(String dateKey) async {
       final q = await _firestore.collection(rentsCollection)
           .where('dateKey', isEqualTo: dateKey)

@@ -1,3 +1,4 @@
+import 'package:action_inc_taxi_app/core/models/fleet_income_model.dart';
 import 'package:action_inc_taxi_app/core/theme/app_text_styles.dart';
 import 'package:action_inc_taxi_app/core/widgets/navbar/navbar.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/spacing.dart';
@@ -22,19 +23,22 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   @override
   void initState() {
+    final dashboardCubit = context.read<DashboardCubit>();
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<DashboardCubit>().fetchTodayBankedAmounts();
+      dashboardCubit.fetchTodayBankedAmounts();
+      dashboardCubit.fetchFleetAmounts('monthly');
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<DashboardCubit, DashboardState>(
+      bloc: context.read<DashboardCubit>(),
       builder: (context, state) {
         final dashboardModel = state.dashboardModel;
         return Scaffold(
-          body: SafeArea(
+          body: state is DashboardLoaded ?  SafeArea(
             child: SingleChildScrollView(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
@@ -135,7 +139,13 @@ class _DashboardState extends State<Dashboard> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(child: PieChart()),
+                        Expanded(child: PieChart(fleetIncome: FleetIncomeModel(
+                          fleet1Amt: dashboardModel.fleet1Amt,
+                          fleet2Amt: dashboardModel.fleet2Amt,
+                          fleet3Amt: dashboardModel.fleet3Amt,
+                          fleet4Amt: dashboardModel.fleet4Amt,
+                          totalFleetAmt: dashboardModel.totalFleetAmt,
+                        ),)),
                         Spacing.hMedium,
                         Expanded(
                           child: IncomeBarChart(
@@ -205,6 +215,10 @@ class _DashboardState extends State<Dashboard> {
                 ),
               ),
             ),
+          ) : state is DashboardError ? Center(
+            child: Text('Error: ${state.message}'),
+          ) : Center(
+            child: CircularProgressIndicator(),
           ));
       },
     );

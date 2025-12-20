@@ -1121,13 +1121,8 @@ class _DailyRentCollectionInfoScreenState
                               createdAtUtc:
                                   HelperFunctions.currentUtcTimeMilliSeconds(),
                             );
-                            final int? paymentDateUtc = _parseDateToUtcMs(
-                              paymentDateController.text.trim(),
-                            );
                             final dateKey =
-                                HelperFunctions.generateDateKeyFromUtc(
-                                  paymentDateUtc ??
-                                      DateTime.now()
+                                HelperFunctions.generateDateKeyFromUtc(                                      DateTime.now()
                                           .toUtc()
                                           .millisecondsSinceEpoch,
                                 );

@@ -1,3 +1,4 @@
+import 'package:action_inc_taxi_app/core/models/fleet_income_model.dart';
 import 'package:action_inc_taxi_app/core/theme/app_text_styles.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/spacing.dart';
 import 'package:action_inc_taxi_app/core/widgets/tabbar/tabbar.dart';
@@ -6,7 +7,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 
 class PieChart extends StatelessWidget {
-  const PieChart({super.key});
+  final FleetIncomeModel fleetIncome;
+  const PieChart({super.key, required this.fleetIncome});
 
   @override
   Widget build(BuildContext context) {
@@ -15,17 +17,14 @@ class PieChart extends StatelessWidget {
     final double borderRadius = width * 0.05;
     final double pieSize = width * 0.1;
     final double legendDotSize = width * 0.03;
-    // final double titleFontSize = width * 0.05;
-    // final double labelFontSize = width * 0.038;
-    // final double valueFontSize = width * 0.042;
 
     final fleets = [
-      {"name": "Fleet 1", "amount": 7000},
-      {"name": "Fleet 2", "amount": 1000},
-      {"name": "Fleet 3", "amount": 5000},
-      {"name": "Fleet 4", "amount": 4000},
+      {"name": "Fleet 1", "amount": fleetIncome.fleet1Amt},
+      {"name": "Fleet 2", "amount": fleetIncome.fleet2Amt},
+      {"name": "Fleet 3", "amount": fleetIncome.fleet3Amt},
+      {"name": "Fleet 4", "amount": fleetIncome.fleet4Amt},
     ];
-    final total = fleets.fold<int>(0, (sum, f) => sum + (f["amount"] as int));
+    final total = fleetIncome.totalFleetAmt;
     final List<Color> pieColors = [
       const Color(0xFF6290C3),
       const Color(0xFF6290C3),
@@ -53,7 +52,6 @@ class PieChart extends StatelessWidget {
               ),
             ],
           ),
-          // Pie chart
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -62,7 +60,12 @@ class PieChart extends StatelessWidget {
                 height: pieSize,
                 child: CustomPaint(
                   painter: _PieChartPainter(
-                    values: fleets.map((f) => f["amount"] as int).toList(),
+                    values: [
+                      fleetIncome.fleet1Amt,
+                      fleetIncome.fleet2Amt,
+                      fleetIncome.fleet3Amt,
+                      fleetIncome.fleet4Amt,
+                    ],
                     colors: pieColors,
                   ),
                 ),

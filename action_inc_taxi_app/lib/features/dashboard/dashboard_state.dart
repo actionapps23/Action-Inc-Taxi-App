@@ -1,20 +1,23 @@
 import 'package:action_inc_taxi_app/core/models/dashboard_model.dart';
 
-class DashboardState {
-  final bool loading;
+abstract class DashboardState {
   final DashboardModel dashboardModel;
-  DashboardState({
-    this.loading = false,
-    DashboardModel? dashboardModel,
-  }) : dashboardModel = dashboardModel ?? const DashboardModel();
+  const DashboardState(this.dashboardModel);
+}
 
-  DashboardState copyWith({
-    bool? loading,
-    DashboardModel? dashboardModel,
-  }) {
-    return DashboardState(
-      loading: loading ?? this.loading,
-      dashboardModel: dashboardModel ?? this.dashboardModel,
-    );
-  }
+class DashboardInitial extends DashboardState {
+  DashboardInitial() : super(const DashboardModel());
+}
+
+class DashboardLoading extends DashboardState {
+  DashboardLoading(super.dashboardModel);
+}
+
+class DashboardLoaded extends DashboardState {
+  DashboardLoaded(super.dashboardModel);
+}
+
+class DashboardError extends DashboardState {
+  final String message;
+  DashboardError(super.dashboardModel, this.message);
 }
