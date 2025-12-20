@@ -50,6 +50,9 @@ class DailyRentCubit extends Cubit<DailyRentState> {
     final current = state;
     if (current is! DailyRentLoaded) return;
     try {
+      await dbService.saveCar(current.carInfo!);
+      await dbService.saveDriver(current.driver!);
+      await dbService.saveRent(current.rent!);
       await dbService.saveCarDetailInfo(
         car: current.carInfo?.toMap(),
         driver: current.driver?.toMap(),

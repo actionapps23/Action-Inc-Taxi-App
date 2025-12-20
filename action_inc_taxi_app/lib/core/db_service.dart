@@ -10,7 +10,8 @@ class DbService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   final String credsCollection = 'creds';
-  final String carsCollection = 'cars';
+  final String carsCollection = 'car_details';
+  final String carInfoCollection = 'car_info';
   final String driversCollection = 'drivers';
   final String rentsCollection = 'rents';
   final String renewalsCollection = 'renewals';
@@ -64,11 +65,10 @@ class DbService {
 
   Future<String> saveCar(CarInfo c) async {
     try {
-      final id = c.id.isNotEmpty ? c.id : c.taxiNo;
+      final taxiNo = c.taxiNo;
       final map = c.toMap();
-      map['id'] = id;
-      await _firestore.collection(carsCollection).doc(id).set(map);
-      return id;
+      await _firestore.collection(carInfoCollection).doc(taxiNo).set(map);
+      return taxiNo;
     } catch (e) {
       rethrow;
     }
@@ -82,6 +82,7 @@ class DbService {
       rethrow;
     }
   }
+  
 
   Future<void> saveCarDetailInfo({
     Map<String, dynamic>? rent,

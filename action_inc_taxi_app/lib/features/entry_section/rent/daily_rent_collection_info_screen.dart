@@ -2,6 +2,7 @@ import 'package:action_inc_taxi_app/core/helper_functions.dart';
 import 'package:action_inc_taxi_app/core/models/car_info.dart';
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
 import 'package:action_inc_taxi_app/cubit/car_details/car_detail_cubit.dart';
+import 'package:action_inc_taxi_app/cubit/car_details/car_detail_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -105,6 +106,13 @@ class _DailyRentCollectionInfoScreenState
     );
     final extraDays =
         int.tryParse(contractExtraDaysController.text.trim()) ?? 0;
+    
+    final int? paymentDateUtc = _parseDateToUtcMs(
+      paymentDateController.text.trim(),
+    );
+    final monthYearKey = HelperFunctions.generateMonthYearKeyFromUtc(
+      paymentDateUtc ?? DateTime.now().toUtc().millisecondsSinceEpoch,
+    );
 
     // Business logic for birthday/public holiday
     int computedRentCents = rentCents;
@@ -138,6 +146,7 @@ class _DailyRentCollectionInfoScreenState
       isPublicHoliday: publicHoliday,
       isBirthday: birthday,
       createdAtUtc: DateTime.now().toUtc().millisecondsSinceEpoch,
+      monthYearKey: monthYearKey,
     );
 
     // collect validation errors: rent.validate() + required CNIC
@@ -300,11 +309,21 @@ class _DailyRentCollectionInfoScreenState
   @override
   void initState() {
     super.initState();
+    final CarDetailCubit  carDetailCubit = context.read<CarDetailCubit>();
+    final CarDetailState carDetailState = carDetailCubit.state;
+    Rent? rent;
+    Driver? driver;
+    CarInfo? carInfo;
+    if (carDetailState is CarDetailLoaded && carDetailState.carDetailModel != null) {
+      rent = carDetailState.carDetailModel!.rent;
+      driver = carDetailState.carDetailModel!.driver;
+      carInfo = carDetailState.carDetailModel!.carInfo;
+    }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final selectionState = context.read<SelectionCubit>().state;
       final cubitState = _cubit.state;
       if (cubitState is DailyRentLoaded) {
-        // Pre-fill from cubit state if available
+        // Pre-fill from cubit state if availasble
         final carInfo = cubitState.carInfo;
         final driver = cubitState.driver;
         final rent = cubitState.rent;
@@ -1102,6 +1121,16 @@ class _DailyRentCollectionInfoScreenState
                               createdAtUtc:
                                   HelperFunctions.currentUtcTimeMilliSeconds(),
                             );
+                            final int? paymentDateUtc = _parseDateToUtcMs(
+                              paymentDateController.text.trim(),
+                            );
+                            final monthYearKey =
+                                HelperFunctions.generateMonthYearKeyFromUtc(
+                                  paymentDateUtc ??
+                                      DateTime.now()
+                                          .toUtc()
+                                          .millisecondsSinceEpoch,
+                                );
                             final Rent rent = Rent(
                               carWashFeesCents:
                                   double.tryParse(
@@ -1152,6 +1181,7 @@ class _DailyRentCollectionInfoScreenState
                                     contractExtraDaysController.text,
                                   ) ??
                                   0,
+                              monthYearKey: monthYearKey
                             );
 
                             final currentState = _cubit.state;

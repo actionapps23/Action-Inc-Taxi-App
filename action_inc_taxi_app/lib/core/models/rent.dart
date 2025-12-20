@@ -14,6 +14,7 @@ class Rent {
   final bool isPublicHoliday;
   final bool isBirthday;
   final int createdAtUtc;
+  final String monthYearKey;
 
   Rent({
     this.id,
@@ -27,10 +28,11 @@ class Rent {
     required this.carWashFeesCents,
     required this.paymentCashCents,
     required this.paymentGCashCents,
+    required this.createdAtUtc,
+    required this.monthYearKey,
     this.gCashRef,
     this.isPublicHoliday = false,
     this.isBirthday = false,
-    required this.createdAtUtc,
   });
 
   int get totalCents =>
@@ -54,6 +56,7 @@ class Rent {
     'isPublicHoliday': isPublicHoliday,
     'isBirthday': isBirthday,
     'createdAtUtc': createdAtUtc,
+    'monthYearKey': monthYearKey,
   };
 
   factory Rent.fromMap(Map<String, dynamic> m) => Rent(
@@ -74,23 +77,27 @@ class Rent {
     createdAtUtc:
         (m['createdAtUtc'] as int?) ??
         DateTime.now().toUtc().millisecondsSinceEpoch,
+    monthYearKey: m['monthYearKey'] as String,
   );
 
   Map<String, String> validate() {
     final errors = <String, String>{};
     if (taxiNo.isEmpty) errors['taxiNo'] = 'Taxi number is required.';
     if (rentAmountCents < 0) errors['rentAmount'] = 'Rent must be >= 0.';
-    if (maintenanceFeesCents < 0)
+    if (maintenanceFeesCents < 0) {
       errors['maintenanceFees'] = 'Maintenance must be >= 0.';
+    }
     if (carWashFeesCents < 0) errors['carWashFees'] = 'Car wash must be >= 0.';
     if (paymentCashCents < 0) errors['paymentCash'] = 'Payment must be >= 0.';
     if (paymentGCashCents < 0) errors['paymentGCash'] = 'Payment must be >= 0.';
-    if (paymentCashCents + paymentGCashCents > totalCents)
+    if (paymentCashCents + paymentGCashCents > totalCents) {
       errors['payments'] = 'Collected amount cannot exceed total.';
+    }
     if (extraDays < 0) errors['extraDays'] = 'Extra days cannot be negative.';
     if (contractStartUtc != null && contractEndUtc != null) {
-      if (contractEndUtc! < contractStartUtc!)
+      if (contractEndUtc! < contractStartUtc!) {
         errors['contractDates'] = 'Contract end must be after start.';
+      }
     }
     return errors;
   }

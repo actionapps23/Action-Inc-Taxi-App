@@ -69,4 +69,10 @@ class HelperFunctions {
   static getDateTimeFromUtcMilliSeconds(int utcMs) {
     return DateTime.fromMillisecondsSinceEpoch(utcMs, isUtc: true);
   }
+  static String generateMonthYearKeyFromUtc(int utcMillis) {
+  final dt = DateTime.fromMillisecondsSinceEpoch(utcMillis, isUtc: true);
+  final year = dt.year.toString();
+  final month = dt.month.toString().padLeft(2, '0');
+  return '$year-$month'; // e.g., "2025-01"
+}
 }
