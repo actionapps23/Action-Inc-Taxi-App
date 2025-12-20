@@ -110,7 +110,7 @@ class _DailyRentCollectionInfoScreenState
     final int? paymentDateUtc = _parseDateToUtcMs(
       paymentDateController.text.trim(),
     );
-    final monthYearKey = HelperFunctions.generateMonthYearKeyFromUtc(
+    final dateKey = HelperFunctions.generateDateKeyFromUtc(
       paymentDateUtc ?? DateTime.now().toUtc().millisecondsSinceEpoch,
     );
 
@@ -146,7 +146,7 @@ class _DailyRentCollectionInfoScreenState
       isPublicHoliday: publicHoliday,
       isBirthday: birthday,
       createdAtUtc: DateTime.now().toUtc().millisecondsSinceEpoch,
-      monthYearKey: monthYearKey,
+      dateKey: dateKey,
     );
 
     // collect validation errors: rent.validate() + required CNIC
@@ -1124,8 +1124,8 @@ class _DailyRentCollectionInfoScreenState
                             final int? paymentDateUtc = _parseDateToUtcMs(
                               paymentDateController.text.trim(),
                             );
-                            final monthYearKey =
-                                HelperFunctions.generateMonthYearKeyFromUtc(
+                            final dateKey =
+                                HelperFunctions.generateDateKeyFromUtc(
                                   paymentDateUtc ??
                                       DateTime.now()
                                           .toUtc()
@@ -1181,7 +1181,7 @@ class _DailyRentCollectionInfoScreenState
                                     contractExtraDaysController.text,
                                   ) ??
                                   0,
-                              monthYearKey: monthYearKey
+                              dateKey: dateKey
                             );
 
                             final currentState = _cubit.state;

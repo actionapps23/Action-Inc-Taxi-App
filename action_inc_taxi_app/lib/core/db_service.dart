@@ -1,3 +1,4 @@
+import 'package:action_inc_taxi_app/core/helper_functions.dart';
 import 'package:action_inc_taxi_app/core/models/car_detail_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'models/creds.dart';
@@ -7,6 +8,29 @@ import 'models/rent.dart';
 import 'models/renewal.dart';
 
 class DbService {
+    Future<List<Rent>> fetchRentsByDateKey(String dateKey) async {
+      final q = await _firestore.collection(rentsCollection)
+          .where('dateKey', isEqualTo: dateKey)
+          .get();
+      return q.docs.map((d) => Rent.fromMap(d.data())).toList();
+    }
+
+    Future<Map<String, int>> getTodaysAmount() async {
+      final now = DateTime.now().toUtc();
+      final dateKey = HelperFunctions.generateDateKeyFromUtc(now.millisecondsSinceEpoch);
+      final rents = await fetchRentsByDateKey(dateKey);
+      int totalCash = 0;
+      int totalGCash = 0;
+      for (final r in rents) {
+        totalCash += r.paymentCashCents;
+        totalGCash += r.paymentGCashCents;
+      }
+      return {
+        'totalCash': totalCash,
+        'totalGCash': totalGCash,
+        'totalAmount': totalCash + totalGCash,
+      };
+    }
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   final String credsCollection = 'creds';

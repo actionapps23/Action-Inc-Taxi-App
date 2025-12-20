@@ -14,7 +14,7 @@ class Rent {
   final bool isPublicHoliday;
   final bool isBirthday;
   final int createdAtUtc;
-  final String monthYearKey;
+  final String dateKey;
 
   Rent({
     this.id,
@@ -29,7 +29,7 @@ class Rent {
     required this.paymentCashCents,
     required this.paymentGCashCents,
     required this.createdAtUtc,
-    required this.monthYearKey,
+    required this.dateKey,
     this.gCashRef,
     this.isPublicHoliday = false,
     this.isBirthday = false,
@@ -56,7 +56,7 @@ class Rent {
     'isPublicHoliday': isPublicHoliday,
     'isBirthday': isBirthday,
     'createdAtUtc': createdAtUtc,
-    'monthYearKey': monthYearKey,
+    'dateKey': dateKey,
   };
 
   factory Rent.fromMap(Map<String, dynamic> m) => Rent(
@@ -77,7 +77,7 @@ class Rent {
     createdAtUtc:
         (m['createdAtUtc'] as int?) ??
         DateTime.now().toUtc().millisecondsSinceEpoch,
-    monthYearKey: m['monthYearKey'] as String,
+    dateKey: m['dateKey'] as String,
   );
 
   Map<String, String> validate() {
