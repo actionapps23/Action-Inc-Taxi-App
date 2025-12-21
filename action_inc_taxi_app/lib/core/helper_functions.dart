@@ -1,3 +1,5 @@
+import 'package:action_inc_taxi_app/core/enums.dart';
+import 'package:action_inc_taxi_app/cubit/inventory/inventory_state.dart';
 import 'package:flutter/material.dart';
 
 class HelperFunctions {
@@ -77,6 +79,7 @@ class HelperFunctions {
     final day = dt.day.toString().padLeft(2, '0');
     return '$year-$month-$day'; // e.g., "2025-12-20"
   }
+
   static String formatDateFromUtcMillis(int? utcMillis) {
     if (utcMillis == null || utcMillis == 0) return '';
     final dt = DateTime.fromMillisecondsSinceEpoch(utcMillis, isUtc: true);
@@ -85,5 +88,31 @@ class HelperFunctions {
     final month = local.month.toString().padLeft(2, '0');
     final year = local.year.toString();
     return '$day/$month/$year';
+  }
+
+  static InventoryStatus inventoryStatusFromString(String status) {
+    switch (status) {
+      case "inStock":
+        return InventoryStatus.inStock;
+      case "lowStock":
+        return InventoryStatus.lowStock;
+      case "outOfStock":
+        return InventoryStatus.outOfStock;
+      default:
+        return InventoryStatus.ordered;
+    }
+  }
+
+  static String stringFromInventoryStatus(InventoryStatus status) {
+    switch (status) {
+      case InventoryStatus.inStock:
+        return "In Stock";
+      case InventoryStatus.lowStock:
+        return "Low Stock";
+      case InventoryStatus.outOfStock:
+        return "Out of Stock";
+      case InventoryStatus.ordered:
+        return "Ordered";
+    }
   }
 }

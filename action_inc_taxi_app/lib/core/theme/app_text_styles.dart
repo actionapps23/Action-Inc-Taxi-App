@@ -45,9 +45,9 @@ class AppTextStyles {
   );
 
   static TextStyle bodyExtraSmall = TextStyle(
-    fontSize: 4.sp,
-    fontWeight: FontWeight.w400,
+    fontSize: 3.sp,
     letterSpacing: 0.4,
+    fontFamily: 'Lufga',
     color: AppColors.surface,
   );
 

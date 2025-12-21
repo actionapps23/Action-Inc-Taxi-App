@@ -16,6 +16,14 @@ class AppConstants {
   static const String noCarFoundErrorMessage =
       'No car found with the provided identifiers.';
 
+  static const String inventoryLoadSuccessMessage =
+      'Inventory loaded successfully.';
+
+  static const String addFieldsToCategorySuccessMessage =
+      'Fields added to category successfully.';
+
+  static const addCategorySuccessMessage = 'Category added successfully.';
+
   // Input Styling
   static const double inputBorderRadius = 8.0;
   static const double buttonBorderRadius = 8.0;

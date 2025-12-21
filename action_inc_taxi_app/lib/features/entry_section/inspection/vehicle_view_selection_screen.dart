@@ -3,13 +3,11 @@
 import 'package:action_inc_taxi_app/core/models/section_model.dart';
 import 'package:action_inc_taxi_app/core/widgets/form/form_field.dart';
 import 'package:action_inc_taxi_app/core/widgets/navbar/navbar.dart';
-import 'package:action_inc_taxi_app/cubit/selection/selection_cubit.dart';
 import 'package:action_inc_taxi_app/features/entry_section/car_plan/action_buttons.dart';
 import 'package:action_inc_taxi_app/features/entry_section/inspection/view_selection_grid.dart';
 import 'package:action_inc_taxi_app/features/entry_section/vehicle_inspection_panel.dart';
 import 'package:action_inc_taxi_app/features/inspection/vehicle_checklist.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class VehicleViewSelectionScreen extends StatelessWidget {
@@ -18,7 +16,6 @@ class VehicleViewSelectionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int selectedIndex = 0;
-    final SelectionCubit selectionCubit = context.read<SelectionCubit>();
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
@@ -102,7 +99,7 @@ const List<String> _keys = [
   "interior",
 ];
 
-const List<List<SectionModel>> _viewSections = [
+const List<List<CategoryModel>> _viewSections = [
   VehicleChecklist.frontViewSections,
   VehicleChecklist.rearViewSections,
   VehicleChecklist.topViewSections,

@@ -37,7 +37,7 @@ class AppOutlineButton extends StatelessWidget {
         foregroundColor: textColor,
         backgroundColor: Colors.transparent,
         padding:
-            padding ?? const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
+            padding ?? EdgeInsets.symmetric(horizontal: 4.w, vertical: 8.h),
       ),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),

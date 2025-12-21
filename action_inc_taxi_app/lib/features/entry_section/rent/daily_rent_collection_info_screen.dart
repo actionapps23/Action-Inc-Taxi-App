@@ -305,9 +305,10 @@ class _DailyRentCollectionInfoScreenState
       _updateDraftFromControllers();
     }
   }
-    Rent? rent;
-    Driver? driver;
-    CarInfo? carInfo;
+
+  Rent? rent;
+  Driver? driver;
+  CarInfo? carInfo;
   @override
   void initState() {
     super.initState();
@@ -316,7 +317,9 @@ class _DailyRentCollectionInfoScreenState
       final v = firstDriverNameController.text;
       debugPrint('DEBUG firstDriverNameController -> "${v}"');
       if (v.isEmpty) {
-        debugPrint('DEBUG firstDriverNameController emptied here:\n${StackTrace.current}');
+        debugPrint(
+          'DEBUG firstDriverNameController emptied here:\n${StackTrace.current}',
+        );
       }
     });
     final CarDetailCubit carDetailCubit = context.read<CarDetailCubit>();
@@ -326,7 +329,7 @@ class _DailyRentCollectionInfoScreenState
       rent = carDetailState.carDetailModel!.rent;
       driver = carDetailState.carDetailModel!.driver;
       carInfo = carDetailState.carDetailModel!.carInfo;
-       
+
       firstDriverCnicController.text = driver?.firstDriverCnic ?? '';
       firstDriverDobController.text = HelperFunctions.formatDateFromUtcMillis(
         driver?.firstDriverDobUtc,
@@ -342,7 +345,7 @@ class _DailyRentCollectionInfoScreenState
         driver?.secondDriverDobUtc,
       );
       secondDriverNameController.text = driver?.secondDriverName ?? '';
-      contractExtraDaysController .text = rent?.extraDays.toString() ?? '0';
+      contractExtraDaysController.text = rent?.extraDays.toString() ?? '0';
       contractStartController.text = HelperFunctions.formatDateFromUtcMillis(
         rent?.contractStartUtc,
       );
@@ -354,27 +357,17 @@ class _DailyRentCollectionInfoScreenState
         rent?.createdAtUtc,
       );
       gCashRefController.text = rent?.gCashRef ?? '';
-      rentAmountController.text =
-          ((rent?.rentAmountCents ?? 0)).toString();
-      dueRentController.text =
-          ((rent?.dueRentCents ?? 0)).toString();
-      totalRentController.text =
-          ((rent?.totalCents ?? 0)).toString();
-      paymentCashController.text =
-          ((rent?.paymentCashCents ?? 0)).toString();
-      paymentGCashController.text =
-          ((rent?.paymentGCashCents ?? 0)).toString();
+      rentAmountController.text = ((rent?.rentAmountCents ?? 0)).toString();
+      dueRentController.text = ((rent?.dueRentCents ?? 0)).toString();
+      totalRentController.text = ((rent?.totalCents ?? 0)).toString();
+      paymentCashController.text = ((rent?.paymentCashCents ?? 0)).toString();
+      paymentGCashController.text = ((rent?.paymentGCashCents ?? 0)).toString();
       gCashRefController.text = rent?.gCashRef ?? '';
-      maintenanceFeesController.text =
-          ((rent?.maintenanceFeesCents ?? 0)).toString();
-      carWashFeesController.text =
-          ((rent?.carWashFeesCents ?? 0)).toString();
+      maintenanceFeesController.text = ((rent?.maintenanceFeesCents ?? 0))
+          .toString();
+      carWashFeesController.text = ((rent?.carWashFeesCents ?? 0)).toString();
       publicHoliday = rent?.isPublicHoliday ?? false;
       birthday = rent?.isBirthday ?? false;
-      
-
-      
-
     }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final selectionState = context.read<SelectionCubit>().state;
@@ -459,7 +452,7 @@ class _DailyRentCollectionInfoScreenState
           firstDriverDobController.text = _formatDate(today);
           secondDriverDobController.text = _formatDate(today);
         }
-      } else if( !widget.fetchDetails) {
+      } else if (!widget.fetchDetails) {
         // No cubit state, set defaults but don't overwrite existing values
         if (taxiNoController.text.trim().isEmpty) {
           taxiNoController.text = selectionState.taxiNo;
@@ -599,7 +592,7 @@ class _DailyRentCollectionInfoScreenState
                                           firstDriverDobController,
                                         ),
                                         // errorText:
-                                            // fieldErrors['firstDriverDob'],
+                                        // fieldErrors['firstDriverDob'],
                                       ),
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
@@ -905,7 +898,7 @@ class _DailyRentCollectionInfoScreenState
                                         onChanged: (s) =>
                                             _updateDraftFromControllers(),
                                         // errorText:
-                                            // fieldErrors['maintenanceFees'],
+                                        // fieldErrors['maintenanceFees'],
                                         isReadOnly: true,
                                       ),
                                       SizedBox(height: 12.h),
@@ -1207,10 +1200,9 @@ class _DailyRentCollectionInfoScreenState
                                   HelperFunctions.utcFromController(
                                     contractStartController,
                                   ),
-                              contractEndUtc: 
-                                  HelperFunctions.utcFromController(
-                                    contractEndController,
-                                  ),
+                              contractEndUtc: HelperFunctions.utcFromController(
+                                contractEndController,
+                              ),
                               rentAmountCents:
                                   double.tryParse(
                                     rentAmountController.text,

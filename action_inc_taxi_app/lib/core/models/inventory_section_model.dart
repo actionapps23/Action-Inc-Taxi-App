@@ -4,4 +4,13 @@ class InventorySectionModel {
   final String name;
   final List<InventoryItemModel> items;
   InventorySectionModel({required this.name, required this.items});
+
+  factory InventorySectionModel.fromJson(Map<String, dynamic> json) {
+    var itemsFromJson = json['items'] as List;
+    List<InventoryItemModel> itemList = itemsFromJson
+        .map((item) => InventoryItemModel.fromJson(item))
+        .toList();
+
+    return InventorySectionModel(name: json['name'], items: itemList);
+  }
 }

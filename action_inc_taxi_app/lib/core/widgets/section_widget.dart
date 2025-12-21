@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SectionWidget extends StatelessWidget {
-  final SectionModel section;
-  const SectionWidget({super.key, required this.section});
+  final CategoryModel category;
+  const SectionWidget({super.key, required this.category});
   @override
   Widget build(BuildContext context) {
     final VehicleInspectionPanelCubit vehicleInspectionPanelCubit = context
@@ -23,11 +23,11 @@ class SectionWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                section.sectionName,
+                category.categoryName,
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 8),
-              ...section.fields.map(
+              ...category.fields.map(
                 (field) => Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
 

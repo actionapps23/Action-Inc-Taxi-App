@@ -1,58 +1,11 @@
+import 'package:action_inc_taxi_app/core/helper_functions.dart';
+import 'package:action_inc_taxi_app/core/models/inventory_item_model.dart';
 import 'package:action_inc_taxi_app/core/widgets/status_chip.dart';
 import 'package:flutter/material.dart';
 
 class InventoryTable extends StatelessWidget {
-  const InventoryTable({super.key});
-
-  final List<Map<String, String>> items = const [
-    {
-      'name': 'Transmission Oil',
-      'qty': '47 Litre',
-      'status': 'In Stock',
-      'statusType': 'in',
-      'req': '0 Litre',
-    },
-    {
-      'name': 'Collant',
-      'qty': '47 Litre',
-      'status': 'Low Stock',
-      'statusType': 'low',
-      'req': '13 Litre',
-    },
-    {
-      'name': 'Mobil',
-      'qty': '0 Litre',
-      'status': 'Out of Stock',
-      'statusType': 'out',
-      'req': '100 Litre',
-    },
-    {
-      'name': 'Fuel',
-      'qty': '0 Litre',
-      'status': 'Out of Stock',
-      'statusType': 'out',
-      'req': '100 Litre',
-    },
-    {
-      'name': 'Break Pads',
-      'qty': '0 pcs',
-      'status': 'Out of Stock',
-      'statusType': 'out',
-      'req': '50 pcs',
-    },
-  ];
-
-  // Color _statusColor(String type) {
-  //   switch (type) {
-  //     case 'in':
-  //       return AppColors.success;
-  //     case 'low':
-  //       return Colors.cyanAccent;
-  //     case 'out':
-  //     default:
-  //       return AppColors.error;
-  //   }
-  // }
+  final List<InventoryItemModel> items;
+  const InventoryTable({super.key, required this.items});
 
   Color _statusTextColor(String type) {
     switch (type) {
@@ -132,14 +85,14 @@ class InventoryTable extends StatelessWidget {
                   Expanded(
                     flex: 3,
                     child: Text(
-                      item['name']!,
+                      item.name,
                       style: const TextStyle(color: Colors.white),
                     ),
                   ),
                   Expanded(
                     flex: 2,
                     child: Text(
-                      item['qty']!,
+                      item.totalAvailable.toString(),
                       style: const TextStyle(color: Colors.white),
                     ),
                   ),
@@ -147,16 +100,18 @@ class InventoryTable extends StatelessWidget {
                     flex: 2,
                     child: SizedBox(
                       child: StatusChip(
-                        label: item['status']!,
+                        label: HelperFunctions.stringFromInventoryStatus(
+                          item.stockStatus,
+                        ),
                         color: Colors.transparent,
-                        textColor: _statusTextColor(item['statusType']!),
+                        textColor: _statusTextColor(item.stockStatus.name),
                       ),
                     ),
                   ),
                   Expanded(
                     flex: 2,
                     child: Text(
-                      item['req']!,
+                      item.totalNeeded.toString(),
                       style: const TextStyle(color: Colors.white),
                     ),
                   ),

@@ -166,7 +166,7 @@ class _CarPlanScreenState extends State<CarPlanScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Car Plan Section
+          // Car Plan Category
           Text(
             'Car Plan',
             style: TextStyle(
@@ -236,7 +236,7 @@ class _CarPlanScreenState extends State<CarPlanScreen> {
           ),
           SizedBox(height: 32.h),
 
-          // Default History Section
+          // Default History Category
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

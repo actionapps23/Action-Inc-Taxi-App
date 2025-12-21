@@ -47,7 +47,11 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                   children: [
                     const Navbar(),
                     SizedBox(height: 32.h),
-                    const Icon(Icons.info_outline, color: Colors.white, size: 48),
+                    const Icon(
+                      Icons.info_outline,
+                      color: Colors.white,
+                      size: 48,
+                    ),
                     SizedBox(height: 16.h),
                     const Text(
                       'No car details found.',
@@ -68,7 +72,11 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                   children: [
                     const Navbar(),
                     SizedBox(height: 32.h),
-                    const Icon(Icons.error_outline, color: Colors.red, size: 48),
+                    const Icon(
+                      Icons.error_outline,
+                      color: Colors.red,
+                      size: 48,
+                    ),
                     SizedBox(height: 16.h),
                     Text(
                       state.message,
@@ -79,76 +87,77 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
               ),
             ),
           );
-        }
-       else if(state is CarDetailLoaded || !widget.fetchDetails) {
-         return SafeArea(
-          child: Scaffold(
-            backgroundColor: AppColors.background,
-            body: SingleChildScrollView(
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: 800.w),
-                  child: Column(
-                    children: [
-                      const Navbar(),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 24.w,
-                          vertical: 16.h,
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: 32.h),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Car Details',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                        fontSize: 22,
+        } else if (state is CarDetailLoaded || !widget.fetchDetails) {
+          return SafeArea(
+            child: Scaffold(
+              backgroundColor: AppColors.background,
+              body: SingleChildScrollView(
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: 800.w),
+                    child: Column(
+                      children: [
+                        const Navbar(),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 24.w,
+                            vertical: 16.h,
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 32.h),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Car Details',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                          fontSize: 22,
+                                        ),
                                       ),
-                                    ),
-                                    if (!widget.fetchDetails) ...[
-                                      CustomTabBar(
-                                        tabs: [
-                                          'Rental Information',
-                                          'Renewal Date',
-                                        ],
-                                        selectedIndex: selectedIndex,
-                                        onTabSelected: (int index) {},
-                                      ),
+                                      if (!widget.fetchDetails) ...[
+                                        CustomTabBar(
+                                          tabs: [
+                                            'Rental Information',
+                                            'Renewal Date',
+                                          ],
+                                          selectedIndex: selectedIndex,
+                                          onTabSelected: (int index) {},
+                                        ),
+                                      ],
                                     ],
-                                  ],
-                                ),
-                              ],
-                            ),
-                            if (carDetailCubit.state.selectedIndex == 0) ...[
-                              SizedBox(height: 24.h),
-                              DailyRentCollectionInfoScreen(
-                                fetchDetails: widget.fetchDetails,
+                                  ),
+                                ],
                               ),
-                            ] else if (carDetailCubit.state.selectedIndex == 1) ...[
-                              SizedBox(height: 24.h),
-                              RenewalDataTable(),
+                              if (carDetailCubit.state.selectedIndex == 0) ...[
+                                SizedBox(height: 24.h),
+                                DailyRentCollectionInfoScreen(
+                                  fetchDetails: widget.fetchDetails,
+                                ),
+                              ] else if (carDetailCubit.state.selectedIndex ==
+                                  1) ...[
+                                SizedBox(height: 24.h),
+                                RenewalDataTable(),
+                              ],
                             ],
-                          ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        );
-       }
+          );
+        }
         return const SizedBox.shrink();
       },
     );

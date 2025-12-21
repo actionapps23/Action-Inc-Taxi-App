@@ -8,7 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class VehicleInspectionPanel extends StatelessWidget {
   final String viewName;
-  final List<SectionModel> sections;
+  final List<CategoryModel> sections;
   final String mapKey;
   const VehicleInspectionPanel({
     super.key,
@@ -36,7 +36,7 @@ class VehicleInspectionPanel extends StatelessWidget {
               child: ListView.builder(
                 itemBuilder: (context, index) {
                   final section = sections[index];
-                  return SectionWidget(section: section);
+                  return SectionWidget(category: section);
                 },
                 itemCount: sections.length,
               ),

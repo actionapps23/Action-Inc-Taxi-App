@@ -2,9 +2,9 @@ import 'package:action_inc_taxi_app/core/models/section_model.dart';
 
 class VehicleChecklist {
   /// Front view
-  static const List<SectionModel> frontViewSections = [
-    SectionModel(
-      sectionName: 'Mirrors',
+  static const List<CategoryModel> frontViewSections = [
+    CategoryModel(
+      categoryName: 'Mirrors',
       fields: [
         FieldModel(
           fieldName: 'Left side mirror',
@@ -24,8 +24,8 @@ class VehicleChecklist {
         ),
       ],
     ),
-    SectionModel(
-      sectionName: 'Front lights',
+    CategoryModel(
+      categoryName: 'Front lights',
       fields: [
         FieldModel(
           fieldName: 'Headlights (low/high beam)',
@@ -45,8 +45,8 @@ class VehicleChecklist {
         ),
       ],
     ),
-    SectionModel(
-      sectionName: 'Windshield & wipers (front)',
+    CategoryModel(
+      categoryName: 'Windshield & wipers (front)',
       fields: [
         FieldModel(
           fieldName: 'Windshield glass condition',
@@ -62,8 +62,8 @@ class VehicleChecklist {
         ),
       ],
     ),
-    SectionModel(
-      sectionName: 'Front body & bumper',
+    CategoryModel(
+      categoryName: 'Front body & bumper',
       fields: [
         FieldModel(
           fieldName: 'Front bumper / grille damage',
@@ -79,8 +79,8 @@ class VehicleChecklist {
         ),
       ],
     ),
-    SectionModel(
-      sectionName: 'Front tyres & area',
+    CategoryModel(
+      categoryName: 'Front tyres & area',
       fields: [
         FieldModel(
           fieldName: 'Left front tyre tread / pressure',
@@ -99,9 +99,9 @@ class VehicleChecklist {
   ];
 
   /// Rear view
-  static const List<SectionModel> rearViewSections = [
-    SectionModel(
-      sectionName: 'Rear lights',
+  static const List<CategoryModel> rearViewSections = [
+    CategoryModel(
+      categoryName: 'Rear lights',
       fields: [
         FieldModel(fieldName: 'Tail lights', fieldKey: 'rear_light_tail'),
         FieldModel(fieldName: 'Brake lights', fieldKey: 'rear_light_brake'),
@@ -116,8 +116,8 @@ class VehicleChecklist {
         ),
       ],
     ),
-    SectionModel(
-      sectionName: 'Rear body & bumper',
+    CategoryModel(
+      categoryName: 'Rear body & bumper',
       fields: [
         FieldModel(
           fieldName: 'Rear bumper damage',
@@ -133,8 +133,8 @@ class VehicleChecklist {
         ),
       ],
     ),
-    SectionModel(
-      sectionName: 'Rear tyres & area',
+    CategoryModel(
+      categoryName: 'Rear tyres & area',
       fields: [
         FieldModel(
           fieldName: 'Left rear tyre tread / pressure',
@@ -153,9 +153,9 @@ class VehicleChecklist {
   ];
 
   /// Left side view
-  static const List<SectionModel> leftSideSections = [
-    SectionModel(
-      sectionName: 'Left doors & windows',
+  static const List<CategoryModel> leftSideSections = [
+    CategoryModel(
+      categoryName: 'Left doors & windows',
       fields: [
         FieldModel(
           fieldName: 'Front left door opens / closes',
@@ -179,8 +179,8 @@ class VehicleChecklist {
         ),
       ],
     ),
-    SectionModel(
-      sectionName: 'Left side mirror',
+    CategoryModel(
+      categoryName: 'Left side mirror',
       fields: [
         FieldModel(
           fieldName: 'Left mirror housing damage',
@@ -196,8 +196,8 @@ class VehicleChecklist {
         ),
       ],
     ),
-    SectionModel(
-      sectionName: 'Left body panels',
+    CategoryModel(
+      categoryName: 'Left body panels',
       fields: [
         FieldModel(
           fieldName: 'Left front fender condition',
@@ -213,8 +213,8 @@ class VehicleChecklist {
         ),
       ],
     ),
-    SectionModel(
-      sectionName: 'Left tyres & wheels',
+    CategoryModel(
+      categoryName: 'Left tyres & wheels',
       fields: [
         FieldModel(
           fieldName: 'Left front tyre tread / pressure',
@@ -234,8 +234,8 @@ class VehicleChecklist {
         ),
       ],
     ),
-    SectionModel(
-      sectionName: 'Left side extras',
+    CategoryModel(
+      categoryName: 'Left side extras',
       fields: [
         FieldModel(
           fieldName: 'Left side step / running board secure',
@@ -250,9 +250,9 @@ class VehicleChecklist {
   ];
 
   /// Right side view
-  static const List<SectionModel> rightSideSections = [
-    SectionModel(
-      sectionName: 'Right doors & windows',
+  static const List<CategoryModel> rightSideSections = [
+    CategoryModel(
+      categoryName: 'Right doors & windows',
       fields: [
         FieldModel(
           fieldName: 'Front right door opens / closes',
@@ -276,8 +276,8 @@ class VehicleChecklist {
         ),
       ],
     ),
-    SectionModel(
-      sectionName: 'Right side mirror',
+    CategoryModel(
+      categoryName: 'Right side mirror',
       fields: [
         FieldModel(
           fieldName: 'Right mirror housing damage',
@@ -293,8 +293,8 @@ class VehicleChecklist {
         ),
       ],
     ),
-    SectionModel(
-      sectionName: 'Right body panels',
+    CategoryModel(
+      categoryName: 'Right body panels',
       fields: [
         FieldModel(
           fieldName: 'Right front fender condition',
@@ -310,8 +310,8 @@ class VehicleChecklist {
         ),
       ],
     ),
-    SectionModel(
-      sectionName: 'Right tyres & wheels',
+    CategoryModel(
+      categoryName: 'Right tyres & wheels',
       fields: [
         FieldModel(
           fieldName: 'Right front tyre tread / pressure',
@@ -331,8 +331,8 @@ class VehicleChecklist {
         ),
       ],
     ),
-    SectionModel(
-      sectionName: 'Right side extras',
+    CategoryModel(
+      categoryName: 'Right side extras',
       fields: [
         FieldModel(
           fieldName: 'Right side step / running board secure',
@@ -347,9 +347,9 @@ class VehicleChecklist {
   ];
 
   /// Top / roof view
-  static const List<SectionModel> topViewSections = [
-    SectionModel(
-      sectionName: 'Roof & panels',
+  static const List<CategoryModel> topViewSections = [
+    CategoryModel(
+      categoryName: 'Roof & panels',
       fields: [
         FieldModel(
           fieldName: 'Roof panel dents / rust',
@@ -361,8 +361,8 @@ class VehicleChecklist {
         ),
       ],
     ),
-    SectionModel(
-      sectionName: 'Sunroof / moonroof',
+    CategoryModel(
+      categoryName: 'Sunroof / moonroof',
       fields: [
         FieldModel(
           fieldName: 'Sunroof glass condition',
@@ -381,9 +381,9 @@ class VehicleChecklist {
   ];
 
   /// Bottom / underbody view
-  static const List<SectionModel> bottomViewSections = [
-    SectionModel(
-      sectionName: 'Underbody structure',
+  static const List<CategoryModel> bottomViewSections = [
+    CategoryModel(
+      categoryName: 'Underbody structure',
       fields: [
         FieldModel(
           fieldName: 'Frame / sub-frame rust or damage',
@@ -395,8 +395,8 @@ class VehicleChecklist {
         ),
       ],
     ),
-    SectionModel(
-      sectionName: 'Suspension & steering (visible)',
+    CategoryModel(
+      categoryName: 'Suspension & steering (visible)',
       fields: [
         FieldModel(
           fieldName: 'Springs / shocks leaks or damage',
@@ -408,8 +408,8 @@ class VehicleChecklist {
         ),
       ],
     ),
-    SectionModel(
-      sectionName: 'Exhaust system',
+    CategoryModel(
+      categoryName: 'Exhaust system',
       fields: [
         FieldModel(
           fieldName: 'Pipes / muffler secure',
@@ -421,8 +421,8 @@ class VehicleChecklist {
         ),
       ],
     ),
-    SectionModel(
-      sectionName: 'Fluid leaks',
+    CategoryModel(
+      categoryName: 'Fluid leaks',
       fields: [
         FieldModel(
           fieldName: 'Engine oil leak signs',
@@ -438,9 +438,9 @@ class VehicleChecklist {
   ];
 
   /// Engine bay (top with bonnet open)
-  static const List<SectionModel> engineBaySections = [
-    SectionModel(
-      sectionName: 'Fluids',
+  static const List<CategoryModel> engineBaySections = [
+    CategoryModel(
+      categoryName: 'Fluids',
       fields: [
         FieldModel(fieldName: 'Engine oil level', fieldKey: 'engine_oil_level'),
         FieldModel(
@@ -457,8 +457,8 @@ class VehicleChecklist {
         ),
       ],
     ),
-    SectionModel(
-      sectionName: 'Battery & belts',
+    CategoryModel(
+      categoryName: 'Battery & belts',
       fields: [
         FieldModel(
           fieldName: 'Battery terminals clean / tight',
@@ -470,8 +470,8 @@ class VehicleChecklist {
         ),
       ],
     ),
-    SectionModel(
-      sectionName: 'General engine bay',
+    CategoryModel(
+      categoryName: 'General engine bay',
       fields: [
         FieldModel(
           fieldName: 'Loose wiring / hoses',
@@ -486,9 +486,9 @@ class VehicleChecklist {
   ];
 
   /// Interior view
-  static const List<SectionModel> interiorSections = [
-    SectionModel(
-      sectionName: 'Driver controls & safety',
+  static const List<CategoryModel> interiorSections = [
+    CategoryModel(
+      categoryName: 'Driver controls & safety',
       fields: [
         FieldModel(fieldName: 'Horn working', fieldKey: 'interior_horn'),
         FieldModel(
@@ -509,8 +509,8 @@ class VehicleChecklist {
         ),
       ],
     ),
-    SectionModel(
-      sectionName: 'Dashboard & instruments',
+    CategoryModel(
+      categoryName: 'Dashboard & instruments',
       fields: [
         FieldModel(
           fieldName: 'Warning lights off after start',
@@ -530,8 +530,8 @@ class VehicleChecklist {
         ),
       ],
     ),
-    SectionModel(
-      sectionName: 'Seats & seatbelts',
+    CategoryModel(
+      categoryName: 'Seats & seatbelts',
       fields: [
         FieldModel(
           fieldName: 'Driver seat adjustment & lock',
@@ -547,8 +547,8 @@ class VehicleChecklist {
         ),
       ],
     ),
-    SectionModel(
-      sectionName: 'Interior environment',
+    CategoryModel(
+      categoryName: 'Interior environment',
       fields: [
         FieldModel(
           fieldName: 'AC / heater operation',
@@ -564,8 +564,8 @@ class VehicleChecklist {
         ),
       ],
     ),
-    SectionModel(
-      sectionName: 'Interior locks & windows',
+    CategoryModel(
+      categoryName: 'Interior locks & windows',
       fields: [
         FieldModel(
           fieldName: 'Door locks from inside',
@@ -584,9 +584,9 @@ class VehicleChecklist {
   ];
 
   /// Mechanical sections
-  static const List<SectionModel> mechanicalSections = [
-    SectionModel(
-      sectionName: 'Engine',
+  static const List<CategoryModel> mechanicalSections = [
+    CategoryModel(
+      categoryName: 'Engine',
       fields: [
         FieldModel(
           fieldName: 'Engine starts easily',
@@ -610,8 +610,8 @@ class VehicleChecklist {
         ),
       ],
     ),
-    SectionModel(
-      sectionName: 'Gears & drive',
+    CategoryModel(
+      categoryName: 'Gears & drive',
       fields: [
         FieldModel(
           fieldName: 'Gear change is smooth',
@@ -627,8 +627,8 @@ class VehicleChecklist {
         ),
       ],
     ),
-    SectionModel(
-      sectionName: 'Brakes',
+    CategoryModel(
+      categoryName: 'Brakes',
       fields: [
         FieldModel(
           fieldName: 'Brake pedal works properly',
@@ -644,8 +644,8 @@ class VehicleChecklist {
         ),
       ],
     ),
-    SectionModel(
-      sectionName: 'Steering & suspension',
+    CategoryModel(
+      categoryName: 'Steering & suspension',
       fields: [
         FieldModel(
           fieldName: 'Steering moves easily',
@@ -661,8 +661,8 @@ class VehicleChecklist {
         ),
       ],
     ),
-    SectionModel(
-      sectionName: 'Exhaust & leaks',
+    CategoryModel(
+      categoryName: 'Exhaust & leaks',
       fields: [
         FieldModel(
           fieldName: 'Silencer / exhaust is tight, not hanging',

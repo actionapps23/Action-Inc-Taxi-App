@@ -1,89 +1,211 @@
+import 'package:action_inc_taxi_app/core/enums.dart';
+import 'package:action_inc_taxi_app/core/helper_functions.dart';
+import 'package:action_inc_taxi_app/core/models/inventory_item_model.dart';
+import 'package:action_inc_taxi_app/core/models/inventory_section_model.dart';
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
+import 'package:action_inc_taxi_app/core/theme/app_text_styles.dart';
 import 'package:action_inc_taxi_app/core/widgets/form/app_dropdown.dart';
 import 'package:action_inc_taxi_app/core/widgets/form/form_field.dart';
+import 'package:action_inc_taxi_app/core/widgets/inventory_field_widget.dart';
 import 'package:action_inc_taxi_app/core/widgets/status_chip.dart';
+import 'package:action_inc_taxi_app/core/widgets/snackbar/spacing.dart';
+import 'package:action_inc_taxi_app/cubit/inventory/inventory_cubit.dart';
+import 'package:action_inc_taxi_app/cubit/inventory/inventory_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class AddSectionPopup extends StatelessWidget {
-  const AddSectionPopup({super.key});
+class AddInventoryPopup extends StatefulWidget {
+  const AddInventoryPopup({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          Row(
-            children: [
-              Expanded(child: Text("Select Category to Add Section")),
-              Expanded(
-                flex: 2,
-                child: AppDropdown(
-                  items: [
-                    DropdownMenuItem(value: "engine", child: Text("Engine")),
-                    DropdownMenuItem(
-                      value: "interior",
-                      child: Text("Interior"),
-                    ),
-                    DropdownMenuItem(value: "tires", child: Text("Tires")),
-                  ],
-                ),
-              ),
-            ],
-          ),
+  State<AddInventoryPopup> createState() => _AddInventoryPopupState();
+}
 
-          Row(
-            children: [
-              Expanded(child: Text("Enter total we have")),
-              Expanded(
-                flex: 2,
-                child: AppTextFormField(hintText: "Total Available"),
+class _AddInventoryPopupState extends State<AddInventoryPopup> {
+  String _selectedCategory = "engine";
+  String _selectedStatus = "inStock";
+  final TextEditingController _fieldNameController = TextEditingController();
+  final TextEditingController _totalAvailableController =
+      TextEditingController();
+  final TextEditingController _totalNeededController = TextEditingController();
+  @override
+  Widget build(BuildContext context) {
+    final InventoryCubit inventoryCubit = context.read<InventoryCubit>();
+    return BlocBuilder<InventoryCubit, InventoryState>(
+      bloc: inventoryCubit,
+      builder: (context, state) {
+        return Center(
+          child: Material(
+            color: Colors.transparent,
+            child: Container(
+              width: 100.w,
+              padding: const EdgeInsets.all(32),
+              decoration: BoxDecoration(
+                color: AppColors.cardBackground,
+                borderRadius: BorderRadius.circular(16),
               ),
-            ],
-          ),
-          Row(
-            children: [
-              Expanded(child: Text("Enter total we needed")),
-              Expanded(
-                flex: 2,
-                child: AppTextFormField(hintText: "Total Needed"),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    icon: Icon(Icons.close, color: Colors.white),
+                  ),
+
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Spacing.vMedium,
+                      InventoryField(
+                        label: "Select Type",
+                        child: AppDropdown(
+                          value: "engine",
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedCategory = value!;
+                            });
+                          },
+                          items: [
+                            DropdownMenuItem(
+                              value: "engine",
+                              child: Text(
+                                "Engine",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                            DropdownMenuItem(
+                              value: "interior",
+                              child: Text(
+                                "Interior",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                            DropdownMenuItem(
+                              value: "tires",
+                              child: Text(
+                                "Tires",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Spacing.vLarge,
+                      InventoryField(
+                        label: "Enter field Name",
+                        child: AppTextFormField(
+                          hintText: "Engine Oil",
+                          controller: _fieldNameController,
+                        ),
+                      ),
+                      Spacing.vLarge,
+                      InventoryField(
+                        label: "Enter Total We have",
+                        child: AppTextFormField(
+                          hintText: "110 Litre",
+                          controller: _totalAvailableController,
+                        ),
+                      ),
+                      Spacing.vLarge,
+                      InventoryField(
+                        label: "Enter Total We need",
+                        child: AppTextFormField(
+                          hintText: "0 Litre",
+                          controller: _totalNeededController,
+                        ),
+                      ),
+                      Spacing.vLarge,
+                      InventoryField(
+                        label: "Change Status",
+                        child: AppDropdown(
+                          value: "inStock",
+                          onChanged: (value) {
+                            _selectedStatus = value!;
+                          },
+                          items: [
+                            DropdownMenuItem(
+                              value: "inStock",
+                              child: StatusChip(
+                                label: "In Stock",
+                                color: AppColors.primary,
+                              ),
+                            ),
+                            DropdownMenuItem(
+                              value: "outOfStock",
+                              child: StatusChip(
+                                label: "Out of Stock",
+                                color: AppColors.error,
+                              ),
+                            ),
+                            DropdownMenuItem(
+                              value: "ordered",
+                              child: StatusChip(
+                                label: "Ordered",
+                                color: AppColors.warning,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Spacing.vExtraLarge,
+                      SizedBox(
+                        width: double.infinity,
+                        height: 48,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          onPressed: () {
+                            InventorySectionModel
+                            inventorySectionModel = InventorySectionModel(
+                              name: _selectedCategory,
+                              items: [
+                                InventoryItemModel(
+                                  name: _fieldNameController.text,
+                                  totalAvailable: int.parse(
+                                    _totalAvailableController.text,
+                                  ),
+                                  totalNeeded: int.parse(
+                                    _totalNeededController.text,
+                                  ),
+                                  stockStatus:
+                                      HelperFunctions.inventoryStatusFromString(
+                                        _selectedStatus,
+                                      ),
+                                ),
+                              ],
+                            );
+                            inventoryCubit.addFiledsToCategory(
+                              inventorySectionModel,
+                            );
+                            Navigator.of(context).pop();
+                          },
+                          child: Text(
+                            state is InventoryAdding ? "Adding..." : "Add",
+                            style: AppTextStyles.button.copyWith(
+                              color: AppColors.buttonText,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-          Row(
-            children: [
-              Expanded(child: Text("Stock Status")),
-              Expanded(
-                flex: 2,
-                child: AppDropdown(
-                  items: [
-                    DropdownMenuItem(
-                      value: "in_stock",
-                      child: StatusChip(
-                        label: "In Stock",
-                        color: AppColors.primary,
-                      ),
-                    ),
-                    DropdownMenuItem(
-                      value: "out_of_stock",
-                      child: StatusChip(
-                        label: "Out of Stock",
-                        color: AppColors.error,
-                      ),
-                    ),
-                    DropdownMenuItem(
-                      value: "ordered",
-                      child: StatusChip(
-                        label: "Ordered",
-                        color: AppColors.warning,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
