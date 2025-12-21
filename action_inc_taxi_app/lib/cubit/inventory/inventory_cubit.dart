@@ -1,3 +1,4 @@
+import 'package:action_inc_taxi_app/core/models/inventory_item_model.dart';
 import 'package:action_inc_taxi_app/core/models/inventory_section_model.dart';
 import 'package:action_inc_taxi_app/cubit/inventory/inventory_state.dart';
 import 'package:action_inc_taxi_app/services/inventory_db_service.dart';
@@ -10,6 +11,24 @@ class InventoryCubit extends Cubit<InventoryState> {
     emit(InventoryLoading());
     final data = await InventoryDBService.fetchInventoryData();
     filterByCategory("engine", data);
+  }
+
+  Future<void> updateInventoryItem(
+    InventorySectionModel inventorySectionModel,
+    String
+    previousFieldName, // it is bcoz if field name change then we cant find the data in DB to update
+  ) async {
+    emit(InventoryUpdating());
+    try {
+      await InventoryDBService.updateInventoryItem(
+        inventorySectionModel,
+        previousFieldName,
+      );
+      ;
+      await loadInventory();
+    } catch (e) {
+      emit(InventoryError(message: e.toString()));
+    }
   }
 
   Future<void> addFiledsToCategory(

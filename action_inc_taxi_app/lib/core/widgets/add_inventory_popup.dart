@@ -1,4 +1,3 @@
-import 'package:action_inc_taxi_app/core/enums.dart';
 import 'package:action_inc_taxi_app/core/helper_functions.dart';
 import 'package:action_inc_taxi_app/core/models/inventory_item_model.dart';
 import 'package:action_inc_taxi_app/core/models/inventory_section_model.dart';
@@ -16,7 +15,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AddInventoryPopup extends StatefulWidget {
-  const AddInventoryPopup({super.key});
+  final InventoryItemModel? item;
+  bool isEditMode() => item != null;
+  const AddInventoryPopup({super.key, this.item});
 
   @override
   State<AddInventoryPopup> createState() => _AddInventoryPopupState();
@@ -29,6 +30,20 @@ class _AddInventoryPopupState extends State<AddInventoryPopup> {
   final TextEditingController _totalAvailableController =
       TextEditingController();
   final TextEditingController _totalNeededController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.isEditMode()) {
+      _fieldNameController.text = widget.item!.name;
+      _totalAvailableController.text = widget.item!.totalAvailable.toString();
+      _totalNeededController.text = widget.item!.totalNeeded.toString();
+      _selectedStatus = HelperFunctions.stringFromInventoryStatus(
+        widget.item!.stockStatus,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final InventoryCubit inventoryCubit = context.read<InventoryCubit>();
@@ -61,43 +76,47 @@ class _AddInventoryPopupState extends State<AddInventoryPopup> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Spacing.vMedium,
-                      InventoryField(
-                        label: "Select Type",
-                        child: AppDropdown(
-                          value: "engine",
-                          onChanged: (value) {
-                            setState(() {
-                              _selectedCategory = value!;
-                            });
-                          },
-                          items: [
-                            DropdownMenuItem(
-                              value: "engine",
-                              child: Text(
-                                "Engine",
-                                style: TextStyle(color: Colors.white),
+                      !widget.isEditMode()
+                          ? InventoryField(
+                              label: "Select Type",
+                              child: AppDropdown(
+                                value: "engine",
+                                onChanged: (value) {
+                                  setState(() {
+                                    _selectedCategory = value!;
+                                  });
+                                },
+                                items: [
+                                  DropdownMenuItem(
+                                    value: "engine",
+                                    child: Text(
+                                      "Engine",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: "interior",
+                                    child: Text(
+                                      "Interior",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: "tires",
+                                    child: Text(
+                                      "Tires",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                            DropdownMenuItem(
-                              value: "interior",
-                              child: Text(
-                                "Interior",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                            DropdownMenuItem(
-                              value: "tires",
-                              child: Text(
-                                "Tires",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                            )
+                          : SizedBox.shrink(),
                       Spacing.vLarge,
                       InventoryField(
-                        label: "Enter field Name",
+                        label: !widget.isEditMode()
+                            ? "Enter field Name"
+                            : "Update field Name",
                         child: AppTextFormField(
                           hintText: "Engine Oil",
                           controller: _fieldNameController,
@@ -105,7 +124,9 @@ class _AddInventoryPopupState extends State<AddInventoryPopup> {
                       ),
                       Spacing.vLarge,
                       InventoryField(
-                        label: "Enter Total We have",
+                        label: !widget.isEditMode()
+                            ? "Enter Total We have"
+                            : "Update Total We have",
                         child: AppTextFormField(
                           hintText: "110 Litre",
                           controller: _totalAvailableController,
@@ -113,7 +134,9 @@ class _AddInventoryPopupState extends State<AddInventoryPopup> {
                       ),
                       Spacing.vLarge,
                       InventoryField(
-                        label: "Enter Total We need",
+                        label: !widget.isEditMode()
+                            ? "Enter Total We need"
+                            : "Update Total We need",
                         child: AppTextFormField(
                           hintText: "0 Litre",
                           controller: _totalNeededController,
@@ -121,7 +144,9 @@ class _AddInventoryPopupState extends State<AddInventoryPopup> {
                       ),
                       Spacing.vLarge,
                       InventoryField(
-                        label: "Change Status",
+                        label: !widget.isEditMode()
+                            ? "Change Status"
+                            : "Update Status",
                         child: AppDropdown(
                           value: "inStock",
                           onChanged: (value) {
@@ -183,13 +208,24 @@ class _AddInventoryPopupState extends State<AddInventoryPopup> {
                                 ),
                               ],
                             );
-                            inventoryCubit.addFiledsToCategory(
-                              inventorySectionModel,
-                            );
+                            widget.isEditMode()
+                                ? inventoryCubit.updateInventoryItem(
+                                    inventorySectionModel,
+                                    widget.item!.name,
+                                  )
+                                : inventoryCubit.addFiledsToCategory(
+                                    inventorySectionModel,
+                                  );
                             Navigator.of(context).pop();
                           },
                           child: Text(
-                            state is InventoryAdding ? "Adding..." : "Add",
+                            state is InventoryAdding
+                                ? "Adding..."
+                                : state is InventoryUpdating
+                                ? "Updating..."
+                                : widget.isEditMode()
+                                ? "Update"
+                                : "Add",
                             style: AppTextStyles.button.copyWith(
                               color: AppColors.buttonText,
                               fontSize: 18,

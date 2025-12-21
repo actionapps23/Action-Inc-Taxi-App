@@ -44,7 +44,8 @@ class _InventorySceenState extends State<InventorySceen> {
               builder: (context, state) {
                 if (state is InventoryLoading ||
                     state is InventoryAdding ||
-                    state is InventoryInitial) {
+                    state is InventoryInitial ||
+                    state is InventoryUpdating) {
                   return SizedBox(
                     child: Center(child: CircularProgressIndicator()),
                   );
@@ -163,29 +164,6 @@ class _InventorySceenState extends State<InventorySceen> {
                   );
                 }
               },
-            ),
-            Spacing.vXXLarge,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                AppOutlineButton(label: "Back", borderColor: Colors.white),
-                SizedBox(width: 24),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: Colors.white,
-                    padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: Text(
-                    "Update List",
-                    style: TextStyle(fontWeight: FontWeight.w500),
-                  ),
-                ),
-              ],
             ),
             Spacing.vXXLarge,
           ],

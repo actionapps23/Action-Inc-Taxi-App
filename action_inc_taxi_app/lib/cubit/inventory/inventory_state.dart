@@ -22,6 +22,8 @@ class InventoryLoaded extends InventoryState {
 
 class InventoryAdding extends InventoryState {}
 
+class InventoryUpdating extends InventoryState {}
+
 class InventoryError extends InventoryState {
   final String message;
 

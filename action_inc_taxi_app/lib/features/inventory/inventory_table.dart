@@ -1,5 +1,6 @@
 import 'package:action_inc_taxi_app/core/helper_functions.dart';
 import 'package:action_inc_taxi_app/core/models/inventory_item_model.dart';
+import 'package:action_inc_taxi_app/core/widgets/add_inventory_popup.dart';
 import 'package:action_inc_taxi_app/core/widgets/status_chip.dart';
 import 'package:flutter/material.dart';
 
@@ -80,42 +81,50 @@ class InventoryTable extends StatelessWidget {
           ...items.map(
             (item) => Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: Text(
-                      item.name,
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Text(
-                      item.totalAvailable.toString(),
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: SizedBox(
-                      child: StatusChip(
-                        label: HelperFunctions.stringFromInventoryStatus(
-                          item.stockStatus,
-                        ),
-                        color: Colors.transparent,
-                        textColor: _statusTextColor(item.stockStatus.name),
+              child: InkWell(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AddInventoryPopup(item: item),
+                  );
+                },
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: Text(
+                        item.name,
+                        style: const TextStyle(color: Colors.white),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Text(
-                      item.totalNeeded.toString(),
-                      style: const TextStyle(color: Colors.white),
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        item.totalAvailable.toString(),
+                        style: const TextStyle(color: Colors.white),
+                      ),
                     ),
-                  ),
-                ],
+                    Expanded(
+                      flex: 2,
+                      child: SizedBox(
+                        child: StatusChip(
+                          label: HelperFunctions.stringFromInventoryStatus(
+                            item.stockStatus,
+                          ),
+                          color: Colors.transparent,
+                          textColor: _statusTextColor(item.stockStatus.name),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        item.totalNeeded.toString(),
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

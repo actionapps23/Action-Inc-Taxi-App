@@ -32,10 +32,6 @@ class InventoryDBService {
           .collection(inventoryCollection)
           .get();
 
-      debugPrint(
-        "Fetched ${sectionSnapshot.docs.length} sections from Firestore.",
-      );
-
       List<InventorySectionModel> sections = [];
 
       for (var doc in sectionSnapshot.docs) {
@@ -58,6 +54,47 @@ class InventoryDBService {
     } catch (e) {
       debugPrint("Error fetching inventory data: $e");
       throw Exception("Error fetching inventory data: $e");
+    }
+  }
+
+  static Future<void> updateInventoryItem(
+    InventorySectionModel inventorySectionModel,
+    String previousFieldName,
+  ) async {
+    try {
+      if (previousFieldName != inventorySectionModel.name) {
+        // If the category name has changed, we need to move the document
+        // Delete the old document
+        await _firebaseFirestore
+            .collection(inventoryCollection)
+            .doc(previousFieldName)
+            .collection(previousFieldName)
+            .doc(inventorySectionModel.items[0].name)
+            .delete();
+
+        // Create a new document with the updated category name
+        await _firebaseFirestore
+            .collection(inventoryCollection)
+            .doc(inventorySectionModel.name)
+            .set({"createdAt": FieldValue.serverTimestamp()});
+
+        await _firebaseFirestore
+            .collection(inventoryCollection)
+            .doc(inventorySectionModel.name)
+            .collection(inventorySectionModel.name)
+            .doc(inventorySectionModel.items[0].name)
+            .set(inventorySectionModel.items[0].toJson());
+        return;
+      }
+      await _firebaseFirestore
+          .collection(inventoryCollection)
+          .doc(previousFieldName)
+          .collection(previousFieldName)
+          .doc(inventorySectionModel.items[0].name)
+          .update(inventorySectionModel.items[0].toJson());
+    } catch (e) {
+      debugPrint("Error updating inventory item: $e");
+      throw Exception("Error updating inventory item: $e");
     }
   }
 }
