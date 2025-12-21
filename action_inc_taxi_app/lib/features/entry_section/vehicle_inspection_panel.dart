@@ -8,12 +8,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class VehicleInspectionPanel extends StatelessWidget {
   final String viewName;
-  final List<CategoryModel> sections;
+  final List<CategoryModel> categories;
   final String mapKey;
   const VehicleInspectionPanel({
     super.key,
     required this.viewName,
-    required this.sections,
+    required this.categories,
     required this.mapKey,
   });
 
@@ -35,10 +35,10 @@ class VehicleInspectionPanel extends StatelessWidget {
             Expanded(
               child: ListView.builder(
                 itemBuilder: (context, index) {
-                  final section = sections[index];
+                  final section = categories[index];
                   return SectionWidget(category: section);
                 },
-                itemCount: sections.length,
+                itemCount: categories.length,
               ),
             ),
             ActionButtons(

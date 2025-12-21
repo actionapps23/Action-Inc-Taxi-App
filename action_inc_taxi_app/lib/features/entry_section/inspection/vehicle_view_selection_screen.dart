@@ -58,7 +58,7 @@ class VehicleViewSelectionScreen extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) => VehicleInspectionPanel(
                       viewName: _viewName[selectedIndex],
-                      sections: _viewSections[selectedIndex],
+                      categories: _viewSections[selectedIndex],
                       mapKey: _keys[selectedIndex],
                     ),
                   ),

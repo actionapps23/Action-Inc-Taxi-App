@@ -49,6 +49,7 @@ dependencies:
   formz: ^0.7.0
   firebase_core: ^2.32.0
   uuid: ^4.5.2
+  file_picker: ^8.0.7
 
 
 

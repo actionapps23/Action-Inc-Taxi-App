@@ -1,4 +1,6 @@
+import 'package:action_inc_taxi_app/core/constants/app_constants.dart';
 import 'package:action_inc_taxi_app/core/models/section_model.dart';
+import 'package:action_inc_taxi_app/core/widgets/report_issue_popup.dart';
 import 'package:action_inc_taxi_app/features/entry_section/vehicle_inspection_cubit.dart';
 import 'package:action_inc_taxi_app/features/entry_section/vehicle_isnpection_state.dart';
 import 'package:flutter/material.dart';
@@ -34,13 +36,36 @@ class SectionWidget extends StatelessWidget {
                   children: [
                     Text(field.fieldName),
 
-                    Checkbox(
-                      value: vehicleInspectionPanelCubit.isChecked(
-                        field.fieldKey,
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.report),
+                            color: Colors.white,
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => ReportIssuePopup(
+                                  mechanics: AppConstants.mechanics,
+                                  onSubmit: (a, b, c) {},
+                                  key: Key("value"),
+                                ),
+                              );
+                            },
+                          ),
+                          Checkbox(
+                            value: vehicleInspectionPanelCubit.isChecked(
+                              field.fieldKey,
+                            ),
+                            onChanged: (value) {
+                              vehicleInspectionPanelCubit.toggleField(
+                                field.fieldKey,
+                              );
+                            },
+                          ),
+                        ],
                       ),
-                      onChanged: (value) {
-                        vehicleInspectionPanelCubit.toggleField(field.fieldKey);
-                      },
                     ),
                   ],
                 ),

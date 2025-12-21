@@ -13,6 +13,7 @@ class VehicleInspectionPanelCubit extends Cubit<VehicleInspectionPanelState> {
   bool isChecked(String fieldKey) {
     return state.checkedFields[fieldKey] ?? false;
   }
+  
 
   void resetAll() {
     emit(const VehicleInspectionPanelState());

@@ -1,4 +1,3 @@
-import 'package:action_inc_taxi_app/core/models/inventory_item_model.dart';
 import 'package:action_inc_taxi_app/core/models/inventory_section_model.dart';
 import 'package:action_inc_taxi_app/cubit/inventory/inventory_state.dart';
 import 'package:action_inc_taxi_app/services/inventory_db_service.dart';

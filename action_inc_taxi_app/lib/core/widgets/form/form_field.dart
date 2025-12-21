@@ -20,6 +20,7 @@ class AppTextFormField extends StatelessWidget {
   final TextAlign? textAlign;
   final bool isReadOnly;
   final void Function()? onTap;
+  final int maxLines;
 
   const AppTextFormField({
     super.key,
@@ -39,6 +40,8 @@ class AppTextFormField extends StatelessWidget {
     this.onTap,
     this.isReadOnly = false,
     this.labelOnTop = false,
+    this.maxLines = 1,
+
   });
 
   @override
@@ -64,6 +67,7 @@ class AppTextFormField extends StatelessWidget {
               ),
             ),
           TextFormField(
+            maxLines: maxLines,
             onTap: onTap,
             readOnly: isReadOnly,
             controller: controller,

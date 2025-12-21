@@ -23,6 +23,8 @@ class AppConstants {
       'Fields added to category successfully.';
 
   static const addCategorySuccessMessage = 'Category added successfully.';
+  static const String filePickerError = 'Failed to pick the file.';
+  static const String fillAllFieldsError = 'Please fill all the fields.';
 
   // Input Styling
   static const double inputBorderRadius = 8.0;
@@ -40,4 +42,11 @@ class AppConstants {
   static const double fontSizeTitle = 24.0;
   static const double fontSizeButton = 16.0;
   static const double fontSizeInput = 14.0;
+
+  static List<String> mechanics = [
+    'John Doe',
+    'Jane Smith',
+    'Mike Johnson',
+    'Emily Davis',
+  ];
 }
