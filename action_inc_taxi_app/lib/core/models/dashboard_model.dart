@@ -7,53 +7,59 @@ class DashboardModel {
   final int fleetIncomeTargetValue;
   final int fleetIncomeOptimumTarget;
   final int fleetIncomeTargetCollection;
+  final int fleetIncomePreviousPeriod;
+  final int totalMaintenanceFeesYesterday;
 
   final int washIncomeTargetValue;
   final int washIncomeOptimumTarget;
-  final int washIncomeTargetCollection;
+  final int totalCarWashFeesToday;
+  final int totalCarWashFeesYesterday;
   final int maintenanceCostTargetValue;
   final int maintenanceCostOptimumTarget;
-  final int maintenanceCostTargetCollection;
+  final int totalMaintenanceFeesToday;
   final int expensesSavedTargetValue;
   final int expensesSavedOptimumTarget;
   final int expensesSavedTargetCollection;
 
-  final int totalBankedAmount;
-  final int totalGCashAmount;
-  final int totalCashAmount;
-  final int totalAmountPaid;
-  final int lastDayBankedAmount;
-  final int lastDayGCashAmount;
-  final int lastDayCashAmount;
-  final int lastDayAmountPaid;
+  final int totalBankedAmountToday;
+  final int totalGCashAmountToday;
+  final int totalCashAmountToday;
+  final int totalAmountPaidToday;
+
+  final int totalBankedAmountYesterday;
+  final int totalGCashAmountYesterday;
+  final int totalCashAmountYesterday;
+  final int totalAmountYesterday;
 
   const DashboardModel({
-    this.fleetIncomeTargetValue = 3000,
-    this.fleetIncomeOptimumTarget = 2000,
+    this.fleetIncomeTargetValue = 0,
+    this.fleetIncomeOptimumTarget = 0,
     this.fleetIncomeTargetCollection = 1365,
-    this.washIncomeTargetValue = 3000,
-    this.washIncomeOptimumTarget = 2000,
-    this.washIncomeTargetCollection = 1365,
-    this.maintenanceCostTargetValue = 3000,
-    this.maintenanceCostOptimumTarget = 2000,
-    this.maintenanceCostTargetCollection = 1365,
+    this.washIncomeTargetValue = 0,
+    this.washIncomeOptimumTarget = 0,
+    this.totalCarWashFeesToday = 0,
+    this.totalCarWashFeesYesterday = 0,
+    this.maintenanceCostTargetValue = 0,
+    this.maintenanceCostOptimumTarget = 0,
+    this.totalMaintenanceFeesToday = 1365,
     this.expensesSavedTargetValue = 3000,
     this.expensesSavedOptimumTarget = 2000,
     this.expensesSavedTargetCollection = 1365,
-    this.totalBankedAmount = 0,
-    this.totalGCashAmount = 0,
-    this.totalCashAmount = 0,
-    this.totalAmountPaid = 0,
-    this.lastDayBankedAmount = 0,
-    this.lastDayGCashAmount = 0,
-    this.lastDayCashAmount = 0,
-    this.lastDayAmountPaid = 0,
+    this.totalBankedAmountToday = 0,
+    this.totalGCashAmountToday = 0,
+    this.totalCashAmountToday = 0,
+    this.totalAmountPaidToday = 0,
+    this.totalBankedAmountYesterday = 0,
+    this.totalGCashAmountYesterday = 0,
+    this.totalCashAmountYesterday = 0,
+    this.totalAmountYesterday = 0,
+    this.fleetIncomePreviousPeriod = 0,
     this.fleet1Amt = 0,
     this.fleet2Amt = 0,
     this.fleet3Amt = 0,
     this.fleet4Amt = 0,
     this.totalFleetAmt = 0,
-    x,
+    this.totalMaintenanceFeesYesterday = 0
   });
 
   DashboardModel copyWith({
@@ -62,27 +68,30 @@ class DashboardModel {
     int? fleetIncomeTargetCollection,
     int? washIncomeTargetValue,
     int? washIncomeOptimumTarget,
-    int? washIncomeTargetCollection,
+    int? totalCarWashFeesToday,
     int? maintenanceCostTargetValue,
     int? maintenanceCostOptimumTarget,
-    int? maintenanceCostTargetCollection,
+    int? totalMaintenanceFeesToday,
     int? expensesSavedTargetValue,
     int? expensesSavedOptimumTarget,
     int? expensesSavedTargetCollection,
-    int? totalBankedAmount,
-    int? totalGCashAmount,
-    int? totalCashAmount,
-    int? totalAmountPaid,
-    int? lastDayBankedAmount,
-    int? lastDayGCashAmount,
-    int? lastDayCashAmount,
-    int? lastDayAmountPaid,
+    int? totalBankedAmountToday,
+    int? totalGCashAmountToday,
+    int? totalCashAmountToday,
+    int? totalAmountPaidToday,
+    int? totalBankedAmountYesterday,
+    int? totalGCashAmountYesterday,
+    int? totalCashAmountYesterday,
+    int? totalAmountYesterday,
     int? fleet1Amt,
     int? fleet2Amt,
     int? fleet3Amt,
     int? fleet4Amt,
     int? totalFleetAmt,
+    int? fleetIncomePreviousPeriod,
     bool? fleetLoading,
+    int? totalMaintenanceFeesYesterday,
+    int? totalCarWashFeesYesterday,
   }) {
     return DashboardModel(
       fleetIncomeTargetValue:
@@ -95,34 +104,38 @@ class DashboardModel {
           washIncomeTargetValue ?? this.washIncomeTargetValue,
       washIncomeOptimumTarget:
           washIncomeOptimumTarget ?? this.washIncomeOptimumTarget,
-      washIncomeTargetCollection:
-          washIncomeTargetCollection ?? this.washIncomeTargetCollection,
+      totalCarWashFeesToday:
+          totalCarWashFeesToday ?? this.totalCarWashFeesToday,
       maintenanceCostTargetValue:
           maintenanceCostTargetValue ?? this.maintenanceCostTargetValue,
       maintenanceCostOptimumTarget:
           maintenanceCostOptimumTarget ?? this.maintenanceCostOptimumTarget,
-      maintenanceCostTargetCollection:
-          maintenanceCostTargetCollection ??
-          this.maintenanceCostTargetCollection,
+      totalMaintenanceFeesToday:
+          totalMaintenanceFeesToday ??
+          this.totalMaintenanceFeesToday,
       expensesSavedTargetValue:
           expensesSavedTargetValue ?? this.expensesSavedTargetValue,
       expensesSavedOptimumTarget:
           expensesSavedOptimumTarget ?? this.expensesSavedOptimumTarget,
       expensesSavedTargetCollection:
           expensesSavedTargetCollection ?? this.expensesSavedTargetCollection,
-      totalBankedAmount: totalBankedAmount ?? this.totalBankedAmount,
-      totalGCashAmount: totalGCashAmount ?? this.totalGCashAmount,
-      totalCashAmount: totalCashAmount ?? this.totalCashAmount,
-      totalAmountPaid: totalAmountPaid ?? this.totalAmountPaid,
-      lastDayBankedAmount: lastDayBankedAmount ?? this.lastDayBankedAmount,
-      lastDayGCashAmount: lastDayGCashAmount ?? this.lastDayGCashAmount,
-      lastDayCashAmount: lastDayCashAmount ?? this.lastDayCashAmount,
-      lastDayAmountPaid: lastDayAmountPaid ?? this.lastDayAmountPaid,
+      totalBankedAmountToday: totalBankedAmountToday ?? this.totalBankedAmountToday,
+      totalGCashAmountToday: totalGCashAmountToday ?? this.totalGCashAmountToday,
+      totalCashAmountToday: totalCashAmountToday ?? this.totalCashAmountToday,
+      totalAmountPaidToday: totalAmountPaidToday ?? this.totalAmountPaidToday,
+      totalBankedAmountYesterday: totalBankedAmountYesterday ?? this.totalBankedAmountYesterday,
+      totalGCashAmountYesterday: totalGCashAmountYesterday ?? this.totalGCashAmountYesterday,
+      totalCashAmountYesterday: totalCashAmountYesterday ?? this.totalCashAmountYesterday,
+      totalAmountYesterday: totalAmountYesterday ?? this.totalAmountYesterday,
       fleet1Amt: fleet1Amt ?? this.fleet1Amt,
       fleet2Amt: fleet2Amt ?? this.fleet2Amt,
       fleet3Amt: fleet3Amt ?? this.fleet3Amt,
       fleet4Amt: fleet4Amt ?? this.fleet4Amt,
       totalFleetAmt: totalFleetAmt ?? this.totalFleetAmt,
+      fleetIncomePreviousPeriod:
+          fleetIncomePreviousPeriod ?? this.fleetIncomePreviousPeriod,
+      totalMaintenanceFeesYesterday: totalMaintenanceFeesYesterday ?? this.totalMaintenanceFeesYesterday,
+      totalCarWashFeesYesterday: totalCarWashFeesYesterday ?? this.totalCarWashFeesYesterday,
     );
   }
 }

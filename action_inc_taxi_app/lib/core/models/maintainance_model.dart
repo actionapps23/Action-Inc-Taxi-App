@@ -7,10 +7,11 @@ class MaintainanceModel {
   final String fleetId;
   final String inspectedBy;
   final String? assignedTo;
-  final List<String> attachmentUrls;
+  final List<String>? attachmentUrls;
 
   MaintainanceModel({
     this.assignedTo,
+    this.attachmentUrls,
     required this.id,
     required this.title,
     required this.description,
@@ -18,8 +19,31 @@ class MaintainanceModel {
     required this.taxiId,
     required this.fleetId,
     required this.inspectedBy,
-    required this.attachmentUrls,
   });
+
+  MaintainanceModel copyWith({
+    String? id,
+    String? title,
+    String? description,
+    DateTime? date,
+    String? taxiId,
+    String? fleetId,
+    String? inspectedBy,
+    String? assignedTo,
+    List<String>? attachmentUrls,
+  }) {
+    return MaintainanceModel(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      date: date ?? this.date,
+      taxiId: taxiId ?? this.taxiId,
+      fleetId: fleetId ?? this.fleetId,
+      inspectedBy: inspectedBy ?? this.inspectedBy,
+      assignedTo: assignedTo ?? this.assignedTo,
+      attachmentUrls: attachmentUrls ?? this.attachmentUrls,
+    );
+  }
 
   Map<String, dynamic> toJson() {
     return {

@@ -2,8 +2,8 @@ import 'package:action_inc_taxi_app/cubit/car_details/car_detail_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/inventory/inventory_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/maintainance/maintainance_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/rent/daily_rent_cubit.dart';
+import 'package:action_inc_taxi_app/features/dashboard/dashboard.dart';
 import 'package:action_inc_taxi_app/features/dashboard/dashboard_cubit.dart';
-import 'package:action_inc_taxi_app/features/entry_section/inspection/vehicle_view_selection_screen.dart';
 import 'package:action_inc_taxi_app/features/entry_section/vehicle_inspection_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -75,7 +75,7 @@ class MyApp extends StatelessWidget {
                 surface: Colors.black,
               ),
             ),
-            home: VehicleViewSelectionScreen(),
+            home: Dashboard(),
             // home: MaintainenceScreen(),
           ),
         );

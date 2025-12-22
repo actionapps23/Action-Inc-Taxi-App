@@ -33,7 +33,6 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final CarDetailCubit carDetailCubit = context.read<CarDetailCubit>();
-    int selectedIndex = carDetailCubit.state.selectedIndex;
     return BlocBuilder<CarDetailCubit, CarDetailState>(
       bloc: carDetailCubit,
       builder: (context, state) {
@@ -129,7 +128,6 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                                             'Rental Information',
                                             'Renewal Date',
                                           ],
-                                          selectedIndex: selectedIndex,
                                           onTabSelected: (int index) {},
                                         ),
                                       ],

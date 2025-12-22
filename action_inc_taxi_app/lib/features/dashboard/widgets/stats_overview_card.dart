@@ -11,7 +11,10 @@ class StatsOverviewCard extends StatelessWidget {
   final int targetValue;
   final int optimumTarget;
   final int targetCollection;
+  final int? lastAmount;
   final double percentChange;
+  final Function(int) onTabSelected;
+
 
   const StatsOverviewCard({
     super.key,
@@ -20,6 +23,8 @@ class StatsOverviewCard extends StatelessWidget {
     required this.optimumTarget,
     required this.targetCollection,
     required this.percentChange,
+    required this.onTabSelected,
+    this.lastAmount,
   });
 
   @override
@@ -40,8 +45,7 @@ class StatsOverviewCard extends StatelessWidget {
                 CustomTabBar(
                   backgroundColor: AppColors.buttonText,
                   tabs: ["Daily", "Weekly", "Yearly"],
-                  selectedIndex: 0,
-                  onTabSelected: (index) {},
+                  onTabSelected: onTabSelected,
                 ),
               ],
             ),
@@ -64,6 +68,8 @@ class StatsOverviewCard extends StatelessWidget {
                     label: "Target collection",
                     value: targetCollection,
                     percentChange: percentChange,
+                    showLastStats: true,
+                    lastAmount: lastAmount,
                   ),
                 ),
               ],

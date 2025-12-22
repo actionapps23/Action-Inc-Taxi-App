@@ -1,3 +1,4 @@
+import 'package:action_inc_taxi_app/core/helper_functions.dart';
 import 'package:action_inc_taxi_app/core/models/fleet_income_model.dart';
 import 'package:action_inc_taxi_app/core/theme/app_text_styles.dart';
 import 'package:action_inc_taxi_app/core/widgets/navbar/navbar.dart';
@@ -27,14 +28,18 @@ class _DashboardState extends State<Dashboard> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       dashboardCubit.fetchTodayBankedAmounts();
-      dashboardCubit.fetchFleetAmounts('monthly');
+      dashboardCubit.fetchFleetAmounts('daily');
+      dashboardCubit.fetchMaintainanceCollectionAmount('daily');
+      dashboardCubit.fetchcarWashCollectionAmount('daily');
+
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final dashboardCubit = context.read<DashboardCubit>();
     return BlocBuilder<DashboardCubit, DashboardState>(
-      bloc: context.read<DashboardCubit>(),
+      bloc: dashboardCubit,
       builder: (context, state) {
         final dashboardModel = state.dashboardModel;
         return Scaffold(
@@ -85,13 +90,18 @@ class _DashboardState extends State<Dashboard> {
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
                                                 Text(
-                                                  "₱ ${dashboardModel.totalAmountPaid.toStringAsFixed(2)}",
+                                                  "₱ ${dashboardModel.totalAmountPaidToday.toStringAsFixed(2)}",
                                                   style:
                                                       AppTextStyles.bodySmall,
                                                 ),
                                                 Spacing.hSmall,
                                                 PercentChangeIndicator(
-                                                  percentChange: 12.5,
+                                                  percentChange: HelperFunctions
+                                                      .percentChange(
+                                                          dashboardModel
+                                                              .totalAmountYesterday,
+                                                          dashboardModel
+                                                              .totalAmountPaidToday),
                                                 ),
                                               ],
                                             ),
@@ -99,7 +109,7 @@ class _DashboardState extends State<Dashboard> {
                                         ),
                                         Spacing.vExtraLarge,
                                         Text(
-                                          "Last day Income ₱ 4,500.00",
+                                          "Last day Income ₱${dashboardModel.totalAmountYesterday}",
                                           style: AppTextStyles.bodyExtraSmall,
                                         ),
                                       ],
@@ -112,30 +122,27 @@ class _DashboardState extends State<Dashboard> {
                                     Expanded(
                                       child: SummaryCard(
                                         title: "Total Rent in Cash",
-                                        amount: dashboardModel.totalCashAmount,
-                                        percentChange: 45,
-                                        lastDayAmount: 30000,
-                                        lastDayLabel: "lastDayLabel",
+                                        amount: dashboardModel.totalCashAmountToday,
+                                        lastDayAmount: dashboardModel.totalCashAmountYesterday,
+                                        lastDayLabel: "Last Day Amount",
                                       ),
                                     ),
                                     Spacing.hSmall,
                                     Expanded(
                                       child: SummaryCard(
                                         title: "Total Rent in G-Cash",
-                                        amount: dashboardModel.totalGCashAmount,
-                                        percentChange: 45,
-                                        lastDayAmount: 30000,
-                                        lastDayLabel: "lastDayLabel",
+                                        amount: dashboardModel.totalGCashAmountToday,
+                                        lastDayAmount: dashboardModel.totalGCashAmountYesterday,
+                                        lastDayLabel: "Last Day Amount",
                                       ),
                                     ),
                                     Spacing.hSmall,
                                     Expanded(
                                       child: SummaryCard(
                                         title: "Total amount Paid",
-                                        amount: dashboardModel.totalAmountPaid,
-                                        percentChange: 45,
-                                        lastDayAmount: 30000,
-                                        lastDayLabel: "lastDayLabel",
+                                        amount: dashboardModel.totalAmountPaidToday,
+                                        lastDayAmount: dashboardModel.totalAmountYesterday,
+                                        lastDayLabel: "Last Day Amount",
                                       ),
                                     ),
                                     Spacing.hSmall,
@@ -180,8 +187,20 @@ class _DashboardState extends State<Dashboard> {
                                   optimumTarget:
                                       dashboardModel.fleetIncomeOptimumTarget,
                                   targetCollection: dashboardModel
-                                      .fleetIncomeTargetCollection,
-                                  percentChange: 5.2,
+                                      .totalFleetAmt,
+                                  percentChange: HelperFunctions.percentChange(
+                                      dashboardModel.fleetIncomePreviousPeriod,
+                                      dashboardModel.totalFleetAmt),
+                                  lastAmount: dashboardModel.fleetIncomePreviousPeriod,
+                                  onTabSelected: (value){
+                                    if(value == 0){
+                                      dashboardCubit.fetchFleetAmounts('daily');
+                                    } else if (value == 1){
+                                      dashboardCubit.fetchFleetAmounts('weekly');
+                                    } else if (value == 2){
+                                      dashboardCubit.fetchFleetAmounts('yearly');
+                                    }
+                                  },
                                 ),
                               ),
                               Spacing.hMedium,
@@ -189,12 +208,24 @@ class _DashboardState extends State<Dashboard> {
                                 child: StatsOverviewCard(
                                   statsCardLabel: "Car Wash Income",
                                   targetValue:
-                                      dashboardModel.expensesSavedTargetValue,
+                                      dashboardModel.washIncomeTargetValue,
                                   optimumTarget:
-                                      dashboardModel.expensesSavedOptimumTarget,
+                                      dashboardModel.washIncomeOptimumTarget,
                                   targetCollection: dashboardModel
-                                      .expensesSavedTargetCollection,
-                                  percentChange: 8.5,
+                                      .totalCarWashFeesToday,
+                                  percentChange: HelperFunctions.percentChange(
+                                      dashboardModel.totalCarWashFeesYesterday,
+                                      dashboardModel.totalCarWashFeesToday),
+                                  lastAmount: dashboardModel.totalCarWashFeesYesterday,
+                                  onTabSelected: (value){
+                                    if(value == 0){
+                                      dashboardCubit.fetchcarWashCollectionAmount('daily');
+                                    } else if (value == 1){
+                                      dashboardCubit.fetchcarWashCollectionAmount('weekly');
+                                    } else if (value == 2){
+                                      dashboardCubit.fetchcarWashCollectionAmount('yearly');
+                                    }
+                                  },
                                 ),
                               ),
                             ],
@@ -206,12 +237,24 @@ class _DashboardState extends State<Dashboard> {
                                 child: StatsOverviewCard(
                                   statsCardLabel: "Maintainence Fees Collected",
                                   targetValue:
-                                      dashboardModel.fleetIncomeTargetValue,
+                                      dashboardModel.maintenanceCostTargetValue,
                                   optimumTarget:
-                                      dashboardModel.fleetIncomeOptimumTarget,
+                                      dashboardModel.maintenanceCostOptimumTarget,
                                   targetCollection: dashboardModel
-                                      .fleetIncomeTargetCollection,
-                                  percentChange: -5.2,
+                                      .totalMaintenanceFeesToday,
+                                  percentChange: HelperFunctions.percentChange(
+                                      dashboardModel.totalMaintenanceFeesYesterday,
+                                      dashboardModel.totalMaintenanceFeesToday),
+                                  lastAmount: dashboardModel.totalMaintenanceFeesYesterday,
+                                  onTabSelected: (value){
+                                    if(value == 0){
+                                      dashboardCubit.fetchMaintainanceCollectionAmount('daily');
+                                    } else if (value == 1){
+                                      dashboardCubit.fetchMaintainanceCollectionAmount('weekly');
+                                    } else if (value == 2){
+                                      dashboardCubit.fetchMaintainanceCollectionAmount('yearly');
+                                    }
+                                  },
                                 ),
                               ),
                               Spacing.hMedium,
@@ -225,6 +268,7 @@ class _DashboardState extends State<Dashboard> {
                                   targetCollection: dashboardModel
                                       .expensesSavedTargetCollection,
                                   percentChange: 8.5,
+                                  onTabSelected: (value){},
                                 ),
                               ),
                             ],

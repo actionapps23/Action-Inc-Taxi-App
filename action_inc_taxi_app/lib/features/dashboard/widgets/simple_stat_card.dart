@@ -1,5 +1,6 @@
 // ignore_for_file: deprecated_member_use
 
+import 'package:action_inc_taxi_app/core/widgets/snackbar/spacing.dart';
 import 'package:action_inc_taxi_app/features/dashboard/widgets/percent_chnage_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
@@ -7,6 +8,7 @@ import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
 class SimpleStatCard extends StatelessWidget {
   final String label;
   final int value;
+  final int? lastAmount;
   final double? percentChange;
   final Color? backgroundColor;
   final Color? labelColor;
@@ -14,6 +16,7 @@ class SimpleStatCard extends StatelessWidget {
   final double borderRadius;
   final EdgeInsetsGeometry? padding;
   final String currencySymbol;
+  final bool showLastStats;
 
   const SimpleStatCard({
     super.key,
@@ -25,7 +28,9 @@ class SimpleStatCard extends StatelessWidget {
     this.valueColor,
     this.borderRadius = 16,
     this.padding,
+    this.lastAmount,
     this.currencySymbol = '₱',
+    this.showLastStats = false,
   });
 
   @override
@@ -56,13 +61,22 @@ class SimpleStatCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          Text(
-            '${value.toString()} $currencySymbol',
-            style: TextStyle(
-              color: valueColor ?? AppColors.scaffold,
-              fontSize: 32,
-              fontWeight: FontWeight.w500,
-            ),
+          Column(
+            children: [
+              Text(
+                '$currencySymbol $value',
+                style: TextStyle(
+                  color: valueColor ?? AppColors.scaffold,
+                  fontSize: 32,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Spacing.vStandard,
+               if (showLastStats && lastAmount != null) ...[
+                Spacing.vStandard,
+                Text("Last Income: $currencySymbol${lastAmount!}",)
+              ],
+            ],
           ),
         ],
       ),

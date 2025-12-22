@@ -10,6 +10,7 @@ import 'package:action_inc_taxi_app/core/widgets/snackbar/snackbar.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/spacing.dart';
 import 'package:action_inc_taxi_app/cubit/maintainance/maintainance_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/maintainance/maintainance_state.dart';
+import 'package:action_inc_taxi_app/services/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
@@ -233,7 +234,7 @@ class _ReportIssuePopupState extends State<ReportIssuePopup> {
                             child: AppButton(
                               onPressed: () {
                                 if (_issueController.text.isNotEmpty &&
-                                    _selectedMechanic != null) {
+                                    _selectedMechanic != null) {                                  
                                   final maintainanceRequest = MaintainanceModel(
                                     taxiId: '123',
                                     fleetId: 'fleet_001',
@@ -245,12 +246,10 @@ class _ReportIssuePopupState extends State<ReportIssuePopup> {
                                     description:
                                         "Assigned to mechanic: $_selectedMechanic",
                                     date: DateTime.now(),
-                                    attachmentUrls: _selectedFiles
-                                        .map((file) => file.name)
-                                        .toList(),
                                   );
+                                  
                                   maintainanceCubit.addMaintainanceRequest(
-                                    maintainanceRequest,
+                                    maintainanceRequest, _selectedFiles,
                                   );
                                   Navigator.of(context).pop();
                                 } else {

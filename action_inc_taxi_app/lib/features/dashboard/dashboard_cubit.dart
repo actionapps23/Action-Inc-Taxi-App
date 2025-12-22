@@ -9,11 +9,19 @@ class DashboardCubit extends Cubit<DashboardState> {
   Future<void> fetchTodayBankedAmounts() async {
     emit(DashboardLoading(state.dashboardModel));
     try {
-      final amounts = await dbService.getTodaysAmount();
+      final amounts = await dbService.getLastTwoDaysIncome();
       final dashboardModel = state.dashboardModel.copyWith(
-        totalAmountPaid: amounts['totalAmount'] ?? 0,
-        totalCashAmount: amounts['totalCash'] ?? 0,
-        totalGCashAmount: amounts['totalGCash'] ?? 0,
+        totalAmountPaidToday: amounts['totalAmountToday'] ?? 0,
+        totalCashAmountToday: amounts['totalCashToday'] ?? 0,
+        totalGCashAmountToday: amounts['totalGCashToday'] ?? 0,
+        totalBankedAmountToday: amounts['totalBankedToday'] ?? 0,
+
+        totalAmountYesterday: amounts['totalAmountYesterday'] ?? 0,
+        totalCashAmountYesterday: amounts['totalCashYesterday'] ?? 0,
+        totalGCashAmountYesterday: amounts['totalGCashYesterday'] ?? 0,
+        totalBankedAmountYesterday: amounts['totalBankedYesterday'] ?? 0,
+        
+    
       );
       emit(DashboardLoaded(dashboardModel));
     } catch (e) {
@@ -31,6 +39,35 @@ class DashboardCubit extends Cubit<DashboardState> {
       fleet3Amt: amounts['fleet3Amt'] ?? 0,
       fleet4Amt: amounts['fleet4Amt'] ?? 0,
       totalFleetAmt: amounts['totalAmt'] ?? 0,
+      fleetIncomePreviousPeriod : amounts['fleetIncomePreviousPeriod'] ?? 0,
+    );
+    emit(DashboardLoaded(updatedDashboard));
+  }
+
+  Future<void> fetchMaintainanceCollectionAmount(String periodType) async {
+    emit(DashboardLoading(state.dashboardModel));
+    final amounts = await dbService.getMaintainanceCollectionByPeriod(
+      periodType
+    );
+    final updatedDashboard = state.dashboardModel.copyWith(
+      totalMaintenanceFeesToday:
+          amounts['totalMaintenanceFeesToday'] ?? 0,
+      totalMaintenanceFeesYesterday:
+          amounts['totalMaintenanceFeesYesterday'] ?? 0,
+    );
+    emit(DashboardLoaded(updatedDashboard));
+  }
+
+  Future<void> fetchcarWashCollectionAmount(String periodType) async {
+    emit(DashboardLoading(state.dashboardModel));
+    final amounts = await dbService.getCarWashCollectionByPeriod(
+      periodType
+    );
+    final updatedDashboard = state.dashboardModel.copyWith(
+      totalCarWashFeesToday:
+          amounts['totalCarWashFeesToday'] ?? 0,
+      totalCarWashFeesYesterday:
+          amounts['totalCarWashFeesYesterday'] ?? 0,
     );
     emit(DashboardLoaded(updatedDashboard));
   }

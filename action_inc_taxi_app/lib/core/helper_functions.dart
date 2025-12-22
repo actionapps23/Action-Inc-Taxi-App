@@ -2,6 +2,12 @@ import 'package:action_inc_taxi_app/core/enums.dart';
 import 'package:flutter/material.dart';
 
 class HelperFunctions {
+  static double percentChange(num previous, num current) {
+      if (previous == 0) {
+        return 0;
+      }
+      return ((current - previous) / previous) * 100;
+    }
   // Time and Date related helpers
   static int utcFromController(TextEditingController controller) {
     final text = controller.text.trim();
@@ -112,6 +118,21 @@ class HelperFunctions {
         return "Out of Stock";
       case InventoryStatus.ordered:
         return "Ordered";
+    }
+  }
+  
+  static String timeDifferenceFromNow(DateTime past) {
+    final now = DateTime.now();
+    final difference = now.difference(past);
+
+    if (difference.inDays >= 1) {
+      return '${difference.inDays} day${difference.inDays > 1 ? 's' : ''} ago';
+    } else if (difference.inHours >= 1) {
+      return '${difference.inHours} hour${difference.inHours > 1 ? 's' : ''} ago';
+    } else if (difference.inMinutes >= 1) {
+      return '${difference.inMinutes} minute${difference.inMinutes > 1 ? 's' : ''} ago';
+    } else {
+      return 'Just now';
     }
   }
 }

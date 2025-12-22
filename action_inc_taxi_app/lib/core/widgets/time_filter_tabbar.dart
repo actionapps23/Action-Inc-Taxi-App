@@ -14,7 +14,6 @@ class TimeFilterTabBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomTabBar(
       tabs: const ['This week', 'Month', 'Year'],
-      selectedIndex: selectedIndex,
       onTabSelected: onTabSelected,
       padding: const EdgeInsets.all(6),
       height: 36,

@@ -1,5 +1,6 @@
 // ignore_for_file: deprecated_member_use
 
+import 'package:action_inc_taxi_app/core/helper_functions.dart';
 import 'package:action_inc_taxi_app/core/theme/app_text_styles.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/spacing.dart';
 import 'package:action_inc_taxi_app/features/dashboard/widgets/percent_chnage_indicator.dart';
@@ -9,7 +10,6 @@ import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
 class SummaryCard extends StatelessWidget {
   final String title;
   final int amount;
-  final double percentChange;
   final int lastDayAmount;
   final String lastDayLabel;
   final String currencySymbol;
@@ -19,7 +19,6 @@ class SummaryCard extends StatelessWidget {
     super.key,
     required this.title,
     required this.amount,
-    required this.percentChange,
     required this.lastDayAmount,
     required this.lastDayLabel,
     this.currencySymbol = '₱',
@@ -68,7 +67,7 @@ class SummaryCard extends StatelessWidget {
                 style: AppTextStyles.bodySmall,
               ),
               Spacing.hSmall,
-              PercentChangeIndicator(percentChange: percentChange),
+              PercentChangeIndicator(percentChange: HelperFunctions.percentChange(lastDayAmount, amount)),
             ],
           ),
           const SizedBox(height: 16),

@@ -3,6 +3,8 @@ import 'package:action_inc_taxi_app/core/theme/app_text_styles.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/spacing.dart';
 import 'package:action_inc_taxi_app/core/widgets/tabbar/tabbar.dart';
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
+import 'package:action_inc_taxi_app/features/dashboard/dashboard_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 
@@ -17,6 +19,8 @@ class PieChart extends StatelessWidget {
     final double borderRadius = width * 0.05;
     final double pieSize = width * 0.1;
     final double legendDotSize = width * 0.03;
+    String selectedTabKey = 'daily';
+    final DashboardCubit dashboardCubit = context.read<DashboardCubit>();
 
     final fleets = [
       {"name": "Fleet 1", "amount": fleetIncome.fleet1Amt},
@@ -47,8 +51,17 @@ class PieChart extends StatelessWidget {
               const Spacer(),
               CustomTabBar(
                 tabs: ["Daily Income", "Weekly", "Yearly"],
-                selectedIndex: 0,
-                onTabSelected: (index) {},
+                onTabSelected: (index) {
+                  if(index == 0) {
+                    selectedTabKey = 'daily';
+                  } else if(index == 1) {
+                    selectedTabKey = 'weekly';
+                  } else if(index == 2) {
+                    selectedTabKey = 'monthly';
+                  }
+                  dashboardCubit.fetchFleetAmounts(selectedTabKey);
+
+                },
               ),
             ],
           ),

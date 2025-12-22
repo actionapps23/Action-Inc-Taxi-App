@@ -35,25 +35,8 @@ class IncomeBarChart extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,
         children: [
-          Row(
-            children: [
-              Text('Total Income'),
-              const Spacer(),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.5),
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: Row(
-                  children: [
-                    _TabButton(label: 'Monthly', selected: true),
-                    _TabButton(label: 'Weekly'),
-                  ],
-                ),
-              ),
-            ],
-          ),
+          Text('Total Income'),
+          const Spacer(),
           SizedBox(height: 16),
           SizedBox(
             height: chartHeight + 40,

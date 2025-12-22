@@ -84,9 +84,6 @@ class _RenewalAndStatusScreenState extends State<RenewalAndStatusScreen> {
                                 RenewalAndStatusState
                               >(
                                 builder: (context, state) {
-                                  int selected = 0;
-                                  if (state is RenewalAndStatusLoaded)
-                                    selected = state.selectedFilter;
                                   return Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -121,7 +118,6 @@ class _RenewalAndStatusScreenState extends State<RenewalAndStatusScreen> {
                                             'Month',
                                             'Year',
                                           ],
-                                          selectedIndex: selected,
                                           onTabSelected:
                                               widget.onFilterChanged ??
                                               (i) {
