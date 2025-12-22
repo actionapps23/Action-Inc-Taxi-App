@@ -52,15 +52,14 @@ class PieChart extends StatelessWidget {
               CustomTabBar(
                 tabs: ["Daily Income", "Weekly", "Yearly"],
                 onTabSelected: (index) {
-                  if(index == 0) {
+                  if (index == 0) {
                     selectedTabKey = 'daily';
-                  } else if(index == 1) {
+                  } else if (index == 1) {
                     selectedTabKey = 'weekly';
-                  } else if(index == 2) {
+                  } else if (index == 2) {
                     selectedTabKey = 'monthly';
                   }
                   dashboardCubit.fetchFleetAmounts(selectedTabKey);
-
                 },
               ),
             ],

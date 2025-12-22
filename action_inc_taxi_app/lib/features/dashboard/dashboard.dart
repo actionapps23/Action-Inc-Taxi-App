@@ -31,7 +31,6 @@ class _DashboardState extends State<Dashboard> {
       dashboardCubit.fetchFleetAmounts('daily');
       dashboardCubit.fetchMaintainanceCollectionAmount('daily');
       dashboardCubit.fetchcarWashCollectionAmount('daily');
-
     });
   }
 
@@ -96,12 +95,13 @@ class _DashboardState extends State<Dashboard> {
                                                 ),
                                                 Spacing.hSmall,
                                                 PercentChangeIndicator(
-                                                  percentChange: HelperFunctions
-                                                      .percentChange(
-                                                          dashboardModel
-                                                              .totalAmountYesterday,
-                                                          dashboardModel
-                                                              .totalAmountPaidToday),
+                                                  percentChange:
+                                                      HelperFunctions.percentChange(
+                                                        dashboardModel
+                                                            .totalAmountYesterday,
+                                                        dashboardModel
+                                                            .totalAmountPaidToday,
+                                                      ),
                                                 ),
                                               ],
                                             ),
@@ -122,8 +122,10 @@ class _DashboardState extends State<Dashboard> {
                                     Expanded(
                                       child: SummaryCard(
                                         title: "Total Rent in Cash",
-                                        amount: dashboardModel.totalCashAmountToday,
-                                        lastDayAmount: dashboardModel.totalCashAmountYesterday,
+                                        amount:
+                                            dashboardModel.totalCashAmountToday,
+                                        lastDayAmount: dashboardModel
+                                            .totalCashAmountYesterday,
                                         lastDayLabel: "Last Day Amount",
                                       ),
                                     ),
@@ -131,8 +133,10 @@ class _DashboardState extends State<Dashboard> {
                                     Expanded(
                                       child: SummaryCard(
                                         title: "Total Rent in G-Cash",
-                                        amount: dashboardModel.totalGCashAmountToday,
-                                        lastDayAmount: dashboardModel.totalGCashAmountYesterday,
+                                        amount: dashboardModel
+                                            .totalGCashAmountToday,
+                                        lastDayAmount: dashboardModel
+                                            .totalGCashAmountYesterday,
                                         lastDayLabel: "Last Day Amount",
                                       ),
                                     ),
@@ -140,8 +144,10 @@ class _DashboardState extends State<Dashboard> {
                                     Expanded(
                                       child: SummaryCard(
                                         title: "Total amount Paid",
-                                        amount: dashboardModel.totalAmountPaidToday,
-                                        lastDayAmount: dashboardModel.totalAmountYesterday,
+                                        amount:
+                                            dashboardModel.totalAmountPaidToday,
+                                        lastDayAmount:
+                                            dashboardModel.totalAmountYesterday,
                                         lastDayLabel: "Last Day Amount",
                                       ),
                                     ),
@@ -186,19 +192,25 @@ class _DashboardState extends State<Dashboard> {
                                       dashboardModel.fleetIncomeTargetValue,
                                   optimumTarget:
                                       dashboardModel.fleetIncomeOptimumTarget,
-                                  targetCollection: dashboardModel
-                                      .totalFleetAmt,
+                                  targetCollection:
+                                      dashboardModel.totalFleetAmt,
                                   percentChange: HelperFunctions.percentChange(
+                                    dashboardModel.fleetIncomePreviousPeriod,
+                                    dashboardModel.totalFleetAmt,
+                                  ),
+                                  lastAmount:
                                       dashboardModel.fleetIncomePreviousPeriod,
-                                      dashboardModel.totalFleetAmt),
-                                  lastAmount: dashboardModel.fleetIncomePreviousPeriod,
-                                  onTabSelected: (value){
-                                    if(value == 0){
+                                  onTabSelected: (value) {
+                                    if (value == 0) {
                                       dashboardCubit.fetchFleetAmounts('daily');
-                                    } else if (value == 1){
-                                      dashboardCubit.fetchFleetAmounts('weekly');
-                                    } else if (value == 2){
-                                      dashboardCubit.fetchFleetAmounts('yearly');
+                                    } else if (value == 1) {
+                                      dashboardCubit.fetchFleetAmounts(
+                                        'weekly',
+                                      );
+                                    } else if (value == 2) {
+                                      dashboardCubit.fetchFleetAmounts(
+                                        'yearly',
+                                      );
                                     }
                                   },
                                 ),
@@ -211,19 +223,30 @@ class _DashboardState extends State<Dashboard> {
                                       dashboardModel.washIncomeTargetValue,
                                   optimumTarget:
                                       dashboardModel.washIncomeOptimumTarget,
-                                  targetCollection: dashboardModel
-                                      .totalCarWashFeesToday,
+                                  targetCollection:
+                                      dashboardModel.totalCarWashFeesToday,
                                   percentChange: HelperFunctions.percentChange(
+                                    dashboardModel.totalCarWashFeesYesterday,
+                                    dashboardModel.totalCarWashFeesToday,
+                                  ),
+                                  lastAmount:
                                       dashboardModel.totalCarWashFeesYesterday,
-                                      dashboardModel.totalCarWashFeesToday),
-                                  lastAmount: dashboardModel.totalCarWashFeesYesterday,
-                                  onTabSelected: (value){
-                                    if(value == 0){
-                                      dashboardCubit.fetchcarWashCollectionAmount('daily');
-                                    } else if (value == 1){
-                                      dashboardCubit.fetchcarWashCollectionAmount('weekly');
-                                    } else if (value == 2){
-                                      dashboardCubit.fetchcarWashCollectionAmount('yearly');
+                                  onTabSelected: (value) {
+                                    if (value == 0) {
+                                      dashboardCubit
+                                          .fetchcarWashCollectionAmount(
+                                            'daily',
+                                          );
+                                    } else if (value == 1) {
+                                      dashboardCubit
+                                          .fetchcarWashCollectionAmount(
+                                            'weekly',
+                                          );
+                                    } else if (value == 2) {
+                                      dashboardCubit
+                                          .fetchcarWashCollectionAmount(
+                                            'yearly',
+                                          );
                                     }
                                   },
                                 ),
@@ -238,21 +261,33 @@ class _DashboardState extends State<Dashboard> {
                                   statsCardLabel: "Maintainence Fees Collected",
                                   targetValue:
                                       dashboardModel.maintenanceCostTargetValue,
-                                  optimumTarget:
-                                      dashboardModel.maintenanceCostOptimumTarget,
-                                  targetCollection: dashboardModel
-                                      .totalMaintenanceFeesToday,
+                                  optimumTarget: dashboardModel
+                                      .maintenanceCostOptimumTarget,
+                                  targetCollection:
+                                      dashboardModel.totalMaintenanceFeesToday,
                                   percentChange: HelperFunctions.percentChange(
-                                      dashboardModel.totalMaintenanceFeesYesterday,
-                                      dashboardModel.totalMaintenanceFeesToday),
-                                  lastAmount: dashboardModel.totalMaintenanceFeesYesterday,
-                                  onTabSelected: (value){
-                                    if(value == 0){
-                                      dashboardCubit.fetchMaintainanceCollectionAmount('daily');
-                                    } else if (value == 1){
-                                      dashboardCubit.fetchMaintainanceCollectionAmount('weekly');
-                                    } else if (value == 2){
-                                      dashboardCubit.fetchMaintainanceCollectionAmount('yearly');
+                                    dashboardModel
+                                        .totalMaintenanceFeesYesterday,
+                                    dashboardModel.totalMaintenanceFeesToday,
+                                  ),
+                                  lastAmount: dashboardModel
+                                      .totalMaintenanceFeesYesterday,
+                                  onTabSelected: (value) {
+                                    if (value == 0) {
+                                      dashboardCubit
+                                          .fetchMaintainanceCollectionAmount(
+                                            'daily',
+                                          );
+                                    } else if (value == 1) {
+                                      dashboardCubit
+                                          .fetchMaintainanceCollectionAmount(
+                                            'weekly',
+                                          );
+                                    } else if (value == 2) {
+                                      dashboardCubit
+                                          .fetchMaintainanceCollectionAmount(
+                                            'yearly',
+                                          );
                                     }
                                   },
                                 ),
@@ -268,7 +303,7 @@ class _DashboardState extends State<Dashboard> {
                                   targetCollection: dashboardModel
                                       .expensesSavedTargetCollection,
                                   percentChange: 8.5,
-                                  onTabSelected: (value){},
+                                  onTabSelected: (value) {},
                                 ),
                               ),
                             ],

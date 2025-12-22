@@ -59,7 +59,7 @@ class DashboardModel {
     this.fleet3Amt = 0,
     this.fleet4Amt = 0,
     this.totalFleetAmt = 0,
-    this.totalMaintenanceFeesYesterday = 0
+    this.totalMaintenanceFeesYesterday = 0,
   });
 
   DashboardModel copyWith({
@@ -111,21 +111,25 @@ class DashboardModel {
       maintenanceCostOptimumTarget:
           maintenanceCostOptimumTarget ?? this.maintenanceCostOptimumTarget,
       totalMaintenanceFeesToday:
-          totalMaintenanceFeesToday ??
-          this.totalMaintenanceFeesToday,
+          totalMaintenanceFeesToday ?? this.totalMaintenanceFeesToday,
       expensesSavedTargetValue:
           expensesSavedTargetValue ?? this.expensesSavedTargetValue,
       expensesSavedOptimumTarget:
           expensesSavedOptimumTarget ?? this.expensesSavedOptimumTarget,
       expensesSavedTargetCollection:
           expensesSavedTargetCollection ?? this.expensesSavedTargetCollection,
-      totalBankedAmountToday: totalBankedAmountToday ?? this.totalBankedAmountToday,
-      totalGCashAmountToday: totalGCashAmountToday ?? this.totalGCashAmountToday,
+      totalBankedAmountToday:
+          totalBankedAmountToday ?? this.totalBankedAmountToday,
+      totalGCashAmountToday:
+          totalGCashAmountToday ?? this.totalGCashAmountToday,
       totalCashAmountToday: totalCashAmountToday ?? this.totalCashAmountToday,
       totalAmountPaidToday: totalAmountPaidToday ?? this.totalAmountPaidToday,
-      totalBankedAmountYesterday: totalBankedAmountYesterday ?? this.totalBankedAmountYesterday,
-      totalGCashAmountYesterday: totalGCashAmountYesterday ?? this.totalGCashAmountYesterday,
-      totalCashAmountYesterday: totalCashAmountYesterday ?? this.totalCashAmountYesterday,
+      totalBankedAmountYesterday:
+          totalBankedAmountYesterday ?? this.totalBankedAmountYesterday,
+      totalGCashAmountYesterday:
+          totalGCashAmountYesterday ?? this.totalGCashAmountYesterday,
+      totalCashAmountYesterday:
+          totalCashAmountYesterday ?? this.totalCashAmountYesterday,
       totalAmountYesterday: totalAmountYesterday ?? this.totalAmountYesterday,
       fleet1Amt: fleet1Amt ?? this.fleet1Amt,
       fleet2Amt: fleet2Amt ?? this.fleet2Amt,
@@ -134,8 +138,10 @@ class DashboardModel {
       totalFleetAmt: totalFleetAmt ?? this.totalFleetAmt,
       fleetIncomePreviousPeriod:
           fleetIncomePreviousPeriod ?? this.fleetIncomePreviousPeriod,
-      totalMaintenanceFeesYesterday: totalMaintenanceFeesYesterday ?? this.totalMaintenanceFeesYesterday,
-      totalCarWashFeesYesterday: totalCarWashFeesYesterday ?? this.totalCarWashFeesYesterday,
+      totalMaintenanceFeesYesterday:
+          totalMaintenanceFeesYesterday ?? this.totalMaintenanceFeesYesterday,
+      totalCarWashFeesYesterday:
+          totalCarWashFeesYesterday ?? this.totalCarWashFeesYesterday,
     );
   }
 }

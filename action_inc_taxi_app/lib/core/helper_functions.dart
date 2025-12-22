@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 
 class HelperFunctions {
   static double percentChange(num previous, num current) {
-      if (previous == 0) {
-        return 0;
-      }
-      return ((current - previous) / previous) * 100;
+    if (previous == 0) {
+      return 0;
     }
+    return ((current - previous) / previous) * 100;
+  }
+
   // Time and Date related helpers
   static int utcFromController(TextEditingController controller) {
     final text = controller.text.trim();
@@ -120,7 +121,7 @@ class HelperFunctions {
         return "Ordered";
     }
   }
-  
+
   static String timeDifferenceFromNow(DateTime past) {
     final now = DateTime.now();
     final difference = now.difference(past);

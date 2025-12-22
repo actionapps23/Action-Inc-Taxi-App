@@ -1,5 +1,6 @@
 import 'package:action_inc_taxi_app/core/helper_functions.dart';
 import 'package:action_inc_taxi_app/core/models/car_detail_model.dart';
+import 'package:action_inc_taxi_app/core/models/employeee_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'models/creds.dart';
 import 'models/car_info.dart';
@@ -37,9 +38,10 @@ class DbService {
       now.subtract(Duration(days: 1)).millisecondsSinceEpoch,
     );
     String monthKey = todayKey.substring(0, 7);
-    String lastMonthKey = todayKey.substring(0, 5) +
+    String lastMonthKey =
+        todayKey.substring(0, 5) +
         ((int.parse(todayKey.substring(5, 7)) - 1).toString().padLeft(2, '0'));
-    
+
     DateTime startOfWeek = now.subtract(Duration(days: now.weekday - 1));
     DateTime endOfWeek = startOfWeek.add(Duration(days: 6));
     int fleet1Amt = 0;
@@ -59,16 +61,15 @@ class DbService {
           } else if (fleetTaxiNos['4']!.contains(r.taxiNo)) {
             fleet4Amt += r.paymentCashCents + r.paymentGCashCents;
           }
-           if(r.dateKey == yesterdayKey) {
-          if (fleetTaxiNos['1']!.contains(r.taxiNo) || 
-              fleetTaxiNos['2']!.contains(r.taxiNo) ||
-              fleetTaxiNos['3']!.contains(r.taxiNo) ||
-              fleetTaxiNos['4']!.contains(r.taxiNo)) {
-            lastPeriodFleetAmt += r.paymentCashCents + r.paymentGCashCents;
+          if (r.dateKey == yesterdayKey) {
+            if (fleetTaxiNos['1']!.contains(r.taxiNo) ||
+                fleetTaxiNos['2']!.contains(r.taxiNo) ||
+                fleetTaxiNos['3']!.contains(r.taxiNo) ||
+                fleetTaxiNos['4']!.contains(r.taxiNo)) {
+              lastPeriodFleetAmt += r.paymentCashCents + r.paymentGCashCents;
+            }
           }
         }
-        }
-       
       } else if (periodType == 'monthly') {
         if (r.dateKey.startsWith(monthKey)) {
           if (fleetTaxiNos['1']!.contains(r.taxiNo)) {
@@ -85,7 +86,7 @@ class DbService {
           }
         }
         if (r.dateKey.startsWith(lastMonthKey)) {
-          if (fleetTaxiNos['1']!.contains(r.taxiNo) || 
+          if (fleetTaxiNos['1']!.contains(r.taxiNo) ||
               fleetTaxiNos['2']!.contains(r.taxiNo) ||
               fleetTaxiNos['3']!.contains(r.taxiNo) ||
               fleetTaxiNos['4']!.contains(r.taxiNo)) {
@@ -110,7 +111,7 @@ class DbService {
         }
         if (!rentDate.isBefore(startOfWeek.subtract(Duration(days: 7))) &&
             !rentDate.isAfter(endOfWeek.subtract(Duration(days: 7)))) {
-          if (fleetTaxiNos['1']!.contains(r.taxiNo) || 
+          if (fleetTaxiNos['1']!.contains(r.taxiNo) ||
               fleetTaxiNos['2']!.contains(r.taxiNo) ||
               fleetTaxiNos['3']!.contains(r.taxiNo) ||
               fleetTaxiNos['4']!.contains(r.taxiNo)) {
@@ -219,102 +220,101 @@ class DbService {
 
   // fetch teh maintaunce fees earned, by dateKey and also last day total maintainance fees
   Future<Map<String, int>> getMaintainanceCollectionByPeriod(
-      String periodType) async {
-      if (periodType != 'daily') {
-        final todayDateKey = HelperFunctions.generateDateKeyFromUtc(
-          DateTime.now().toUtc().millisecondsSinceEpoch,
-        );
-        final yesterdayDateKey = HelperFunctions.generateDateKeyFromUtc(
-          DateTime.now()
-              .toUtc()
-              .subtract(Duration(days: 1))
-              .millisecondsSinceEpoch,
-        );
-        final rentsTodayQuery = await _firestore
-            .collection(rentsCollection)
-            .where('dateKey', isEqualTo: todayDateKey)
-            .get();
-        final rentsYesterdayQuery = await _firestore
-            .collection(rentsCollection)
-            .where('dateKey', isEqualTo: yesterdayDateKey)
-            .get();
-        int totalMaintenanceFeesToday = 0;
-        int totalMaintenanceFeesYesterday = 0;
-        for (final doc in rentsTodayQuery.docs) {
-          final rent = Rent.fromMap(doc.data());
-          totalMaintenanceFeesToday += rent.maintenanceFeesCents;
-        }
-        for (final doc in rentsYesterdayQuery.docs) {
-          final rent = Rent.fromMap(doc.data());
-          totalMaintenanceFeesYesterday += rent.maintenanceFeesCents;
-        }
-        return {
-          'totalMaintenanceFeesToday': totalMaintenanceFeesToday,
-          'totalMaintenanceFeesYesterday': totalMaintenanceFeesYesterday,
-        };
+    String periodType,
+  ) async {
+    if (periodType != 'daily') {
+      final todayDateKey = HelperFunctions.generateDateKeyFromUtc(
+        DateTime.now().toUtc().millisecondsSinceEpoch,
+      );
+      final yesterdayDateKey = HelperFunctions.generateDateKeyFromUtc(
+        DateTime.now()
+            .toUtc()
+            .subtract(Duration(days: 1))
+            .millisecondsSinceEpoch,
+      );
+      final rentsTodayQuery = await _firestore
+          .collection(rentsCollection)
+          .where('dateKey', isEqualTo: todayDateKey)
+          .get();
+      final rentsYesterdayQuery = await _firestore
+          .collection(rentsCollection)
+          .where('dateKey', isEqualTo: yesterdayDateKey)
+          .get();
+      int totalMaintenanceFeesToday = 0;
+      int totalMaintenanceFeesYesterday = 0;
+      for (final doc in rentsTodayQuery.docs) {
+        final rent = Rent.fromMap(doc.data());
+        totalMaintenanceFeesToday += rent.maintenanceFeesCents;
       }
-      else if (periodType == "weekly"){
-        final now = DateTime.now().toUtc();
-        DateTime startOfWeek = now.subtract(Duration(days: now.weekday - 1));
-        DateTime endOfWeek = startOfWeek.add(Duration(days: 6));
-        DateTime startOfLastWeek = startOfWeek.subtract(Duration(days: 7));
-        DateTime endOfLastWeek = endOfWeek.subtract(Duration(days: 7));
-        final rentsThisWeekQuery = await _firestore.collection(rentsCollection).get();
-        int totalMaintenanceFeesThisWeek = 0;
-        int totalMaintenanceFeesLastWeek = 0;
-        for (final doc in rentsThisWeekQuery.docs) {
-          final rent = Rent.fromMap(doc.data());
-          final rentDate = DateTime.parse(rent.dateKey);
-          if (!rentDate.isBefore(startOfWeek) && !rentDate.isAfter(endOfWeek)) {
-            totalMaintenanceFeesThisWeek += rent.maintenanceFeesCents;
-          }
-          if (!rentDate.isBefore(startOfLastWeek) && !rentDate.isAfter(endOfLastWeek)) {
-            totalMaintenanceFeesLastWeek += rent.maintenanceFeesCents;
-          }
-        }
-        return {
-          'totalMaintenanceFeesToday': totalMaintenanceFeesThisWeek,
-          'totalMaintenanceFeesYesterday': totalMaintenanceFeesLastWeek,
-        };
-      }
-      else if (periodType == "monthly"){
-        final now = DateTime.now().toUtc();
-        String monthKey = HelperFunctions.generateDateKeyFromUtc(
-          now.millisecondsSinceEpoch,
-        ).substring(0, 7);
-        String lastMonthKey = HelperFunctions.generateDateKeyFromUtc(
-          now
-              .subtract(Duration(days: 30))
-              .millisecondsSinceEpoch,
-        ).substring(0, 7);
-        final rentsThisMonthQuery = await _firestore.collection(rentsCollection).get();
-        int totalMaintenanceFeesThisMonth = 0;
-        int totalMaintenanceFeesLastMonth = 0;
-        for (final doc in rentsThisMonthQuery.docs) {
-          final rent = Rent.fromMap(doc.data());
-          if (rent.dateKey.startsWith(monthKey)) {
-            totalMaintenanceFeesThisMonth += rent.maintenanceFeesCents;
-          }
-          if (rent.dateKey.startsWith(lastMonthKey)) {
-            totalMaintenanceFeesLastMonth += rent.maintenanceFeesCents;
-          }
-        }
-        return {
-          'totalMaintenanceFeesToday': totalMaintenanceFeesThisMonth,
-          'totalMaintenanceFeesYesterday': totalMaintenanceFeesLastMonth,
-        };
-      
+      for (final doc in rentsYesterdayQuery.docs) {
+        final rent = Rent.fromMap(doc.data());
+        totalMaintenanceFeesYesterday += rent.maintenanceFeesCents;
       }
       return {
-        'totalMaintenanceFeesToday': 0,
-        'totalMaintenanceFeesYesterday': 0,
+        'totalMaintenanceFeesToday': totalMaintenanceFeesToday,
+        'totalMaintenanceFeesYesterday': totalMaintenanceFeesYesterday,
       };
-   
+    } else if (periodType == "weekly") {
+      final now = DateTime.now().toUtc();
+      DateTime startOfWeek = now.subtract(Duration(days: now.weekday - 1));
+      DateTime endOfWeek = startOfWeek.add(Duration(days: 6));
+      DateTime startOfLastWeek = startOfWeek.subtract(Duration(days: 7));
+      DateTime endOfLastWeek = endOfWeek.subtract(Duration(days: 7));
+      final rentsThisWeekQuery = await _firestore
+          .collection(rentsCollection)
+          .get();
+      int totalMaintenanceFeesThisWeek = 0;
+      int totalMaintenanceFeesLastWeek = 0;
+      for (final doc in rentsThisWeekQuery.docs) {
+        final rent = Rent.fromMap(doc.data());
+        final rentDate = DateTime.parse(rent.dateKey);
+        if (!rentDate.isBefore(startOfWeek) && !rentDate.isAfter(endOfWeek)) {
+          totalMaintenanceFeesThisWeek += rent.maintenanceFeesCents;
+        }
+        if (!rentDate.isBefore(startOfLastWeek) &&
+            !rentDate.isAfter(endOfLastWeek)) {
+          totalMaintenanceFeesLastWeek += rent.maintenanceFeesCents;
+        }
+      }
+      return {
+        'totalMaintenanceFeesToday': totalMaintenanceFeesThisWeek,
+        'totalMaintenanceFeesYesterday': totalMaintenanceFeesLastWeek,
+      };
+    } else if (periodType == "monthly") {
+      final now = DateTime.now().toUtc();
+      String monthKey = HelperFunctions.generateDateKeyFromUtc(
+        now.millisecondsSinceEpoch,
+      ).substring(0, 7);
+      String lastMonthKey = HelperFunctions.generateDateKeyFromUtc(
+        now.subtract(Duration(days: 30)).millisecondsSinceEpoch,
+      ).substring(0, 7);
+      final rentsThisMonthQuery = await _firestore
+          .collection(rentsCollection)
+          .get();
+      int totalMaintenanceFeesThisMonth = 0;
+      int totalMaintenanceFeesLastMonth = 0;
+      for (final doc in rentsThisMonthQuery.docs) {
+        final rent = Rent.fromMap(doc.data());
+        if (rent.dateKey.startsWith(monthKey)) {
+          totalMaintenanceFeesThisMonth += rent.maintenanceFeesCents;
+        }
+        if (rent.dateKey.startsWith(lastMonthKey)) {
+          totalMaintenanceFeesLastMonth += rent.maintenanceFeesCents;
+        }
+      }
+      return {
+        'totalMaintenanceFeesToday': totalMaintenanceFeesThisMonth,
+        'totalMaintenanceFeesYesterday': totalMaintenanceFeesLastMonth,
+      };
+    }
+    return {'totalMaintenanceFeesToday': 0, 'totalMaintenanceFeesYesterday': 0};
   }
+
   Future<Map<String, int>> getCarWashCollectionByPeriod(
-      String periodType) async {
+    String periodType,
+  ) async {
     // Similar implementation as getMaintainanceCollectionByPeriod
-    if(periodType == 'daily') {
+    if (periodType == 'daily') {
       final todayDateKey = HelperFunctions.generateDateKeyFromUtc(
         DateTime.now().toUtc().millisecondsSinceEpoch,
       );
@@ -346,14 +346,15 @@ class DbService {
         'totalCarWashFeesToday': totalCarWashFeesToday,
         'totalCarWashFeesYesterday': totalCarWashFeesYesterday,
       };
-    }
-    else if (periodType == "weekly"){
+    } else if (periodType == "weekly") {
       final now = DateTime.now().toUtc();
       DateTime startOfWeek = now.subtract(Duration(days: now.weekday - 1));
       DateTime endOfWeek = startOfWeek.add(Duration(days: 6));
       DateTime startOfLastWeek = startOfWeek.subtract(Duration(days: 7));
       DateTime endOfLastWeek = endOfWeek.subtract(Duration(days: 7));
-      final rentsThisWeekQuery = await _firestore.collection(rentsCollection).get();
+      final rentsThisWeekQuery = await _firestore
+          .collection(rentsCollection)
+          .get();
       int totalCarWashFeesThisWeek = 0;
       int totalCarWashFeesLastWeek = 0;
       for (final doc in rentsThisWeekQuery.docs) {
@@ -362,7 +363,8 @@ class DbService {
         if (!rentDate.isBefore(startOfWeek) && !rentDate.isAfter(endOfWeek)) {
           totalCarWashFeesThisWeek += rent.carWashFeesCents;
         }
-        if (!rentDate.isBefore(startOfLastWeek) && !rentDate.isAfter(endOfLastWeek)) {
+        if (!rentDate.isBefore(startOfLastWeek) &&
+            !rentDate.isAfter(endOfLastWeek)) {
           totalCarWashFeesLastWeek += rent.carWashFeesCents;
         }
       }
@@ -370,19 +372,17 @@ class DbService {
         'totalCarWashFeesToday': totalCarWashFeesThisWeek,
         'totalCarWashFeesYesterday': totalCarWashFeesLastWeek,
       };
-    }
-    
-    else if (periodType == "monthly"){
+    } else if (periodType == "monthly") {
       final now = DateTime.now().toUtc();
       String monthKey = HelperFunctions.generateDateKeyFromUtc(
         now.millisecondsSinceEpoch,
       ).substring(0, 7);
       String lastMonthKey = HelperFunctions.generateDateKeyFromUtc(
-        now
-            .subtract(Duration(days: 30))
-            .millisecondsSinceEpoch,
+        now.subtract(Duration(days: 30)).millisecondsSinceEpoch,
       ).substring(0, 7);
-      final rentsThisMonthQuery = await _firestore.collection(rentsCollection).get();
+      final rentsThisMonthQuery = await _firestore
+          .collection(rentsCollection)
+          .get();
       int totalCarWashFeesThisMonth = 0;
       int totalCarWashFeesLastMonth = 0;
       for (final doc in rentsThisMonthQuery.docs) {
@@ -398,17 +398,13 @@ class DbService {
         'totalCarWashFeesToday': totalCarWashFeesThisMonth,
         'totalCarWashFeesYesterday': totalCarWashFeesLastMonth,
       };
-    
     }
-    return {
-      'totalCarWashFeesToday': 0,
-      'totalCarWashFeesYesterday': 0,
-    };
-
+    return {'totalCarWashFeesToday': 0, 'totalCarWashFeesYesterday': 0};
   }
+
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  final String credsCollection = 'creds';
+  final String employeeCollection = 'employees';
   final String carsCollection = 'car_details';
   final String carInfoCollection = 'car_info';
   final String driversCollection = 'drivers';
@@ -416,19 +412,19 @@ class DbService {
   final String renewalsCollection = 'renewals';
   final String draftsCollection = 'drafts';
 
-  Future<Creds?> loginWithEmployeeId(
+  Future<EmployeeModel?> loginWithEmployeeId(
     String employeeId,
     String hashPassword,
   ) async {
     try {
       final doc = await _firestore
-          .collection(credsCollection)
+          .collection(employeeCollection)
           .doc(employeeId)
           .get();
       if (!doc.exists) return null;
-      final creds = Creds.fromMap(doc.data()!);
-      if (creds.hashPassword == hashPassword) {
-        return creds;
+      final employeeModel = EmployeeModel.fromJson(doc.data()!);
+      if (employeeModel.password == hashPassword) {
+        return employeeModel;
       }
       return null;
     } catch (e) {

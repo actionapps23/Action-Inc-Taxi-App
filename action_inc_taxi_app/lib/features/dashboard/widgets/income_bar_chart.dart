@@ -35,8 +35,7 @@ class IncomeBarChart extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,
         children: [
-          Text('Total Income'),
-          const Spacer(),
+          Row(children: [Text('Total Income'), const Spacer()]),
           SizedBox(height: 16),
           SizedBox(
             height: chartHeight + 40,

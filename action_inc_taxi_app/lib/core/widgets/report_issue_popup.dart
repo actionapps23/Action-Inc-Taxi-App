@@ -234,7 +234,7 @@ class _ReportIssuePopupState extends State<ReportIssuePopup> {
                             child: AppButton(
                               onPressed: () {
                                 if (_issueController.text.isNotEmpty &&
-                                    _selectedMechanic != null) {                                  
+                                    _selectedMechanic != null) {
                                   final maintainanceRequest = MaintainanceModel(
                                     taxiId: '123',
                                     fleetId: 'fleet_001',
@@ -247,9 +247,10 @@ class _ReportIssuePopupState extends State<ReportIssuePopup> {
                                         "Assigned to mechanic: $_selectedMechanic",
                                     date: DateTime.now(),
                                   );
-                                  
+
                                   maintainanceCubit.addMaintainanceRequest(
-                                    maintainanceRequest, _selectedFiles,
+                                    maintainanceRequest,
+                                    _selectedFiles,
                                   );
                                   Navigator.of(context).pop();
                                 } else {

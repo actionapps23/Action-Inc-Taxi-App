@@ -29,7 +29,6 @@ class CustomTabBar extends StatefulWidget {
   State<CustomTabBar> createState() => _CustomTabBarState();
 }
 
-
 class _CustomTabBarState extends State<CustomTabBar> {
   int _selectedTab = 0;
   @override
@@ -44,7 +43,7 @@ class _CustomTabBarState extends State<CustomTabBar> {
         children: List.generate(widget.tabs.length, (index) {
           final bool isSelected = index == _selectedTab;
           return GestureDetector(
-            onTap: (){
+            onTap: () {
               widget.onTabSelected(index);
               // Set state to update selected index
               setState(() {
@@ -67,7 +66,9 @@ class _CustomTabBarState extends State<CustomTabBar> {
               child: Text(
                 widget.tabs[index],
                 style: TextStyle(
-                  color: isSelected ? widget.selectedTextColor : widget.unselectedTextColor,
+                  color: isSelected
+                      ? widget.selectedTextColor
+                      : widget.unselectedTextColor,
                   fontWeight: isSelected ? FontWeight.w400 : FontWeight.w200,
                   fontSize: 12,
                 ),

@@ -1,7 +1,10 @@
+import 'package:action_inc_taxi_app/cubit/auth/add_employee_cubit.dart';
+import 'package:action_inc_taxi_app/cubit/auth/login_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/car_details/car_detail_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/inventory/inventory_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/maintainance/maintainance_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/rent/daily_rent_cubit.dart';
+import 'package:action_inc_taxi_app/features/auth/login_screen.dart';
 import 'package:action_inc_taxi_app/features/dashboard/dashboard.dart';
 import 'package:action_inc_taxi_app/features/dashboard/dashboard_cubit.dart';
 import 'package:action_inc_taxi_app/features/entry_section/vehicle_inspection_cubit.dart';
@@ -43,6 +46,8 @@ class MyApp extends StatelessWidget {
 
             BlocProvider<CarDetailCubit>(create: (_) => CarDetailCubit()),
             BlocProvider<InventoryCubit>(create: (_) => InventoryCubit()),
+            BlocProvider<AddEmployeeCubit>(create: (_) => AddEmployeeCubit()),
+            BlocProvider<LoginCubit>(create: (_) => LoginCubit()),
           ],
           child: MaterialApp(
             scrollBehavior: ScrollBehavior().copyWith(scrollbars: false),
@@ -75,7 +80,7 @@ class MyApp extends StatelessWidget {
                 surface: Colors.black,
               ),
             ),
-            home: Dashboard(),
+            home: LoginScreen(),
             // home: MaintainenceScreen(),
           ),
         );

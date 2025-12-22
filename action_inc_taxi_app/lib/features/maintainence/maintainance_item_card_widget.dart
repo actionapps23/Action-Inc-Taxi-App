@@ -36,7 +36,9 @@ class MaintainanceItemCard extends StatelessWidget {
                     ),
                     Spacing.vSmall,
                     Text(
-                      HelperFunctions.timeDifferenceFromNow(maintainanceModel.date),
+                      HelperFunctions.timeDifferenceFromNow(
+                        maintainanceModel.date,
+                      ),
                       style: AppTextStyles.bodyExtraSmall,
                     ),
                   ],
@@ -87,22 +89,37 @@ class MaintainanceItemCard extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(12),
                                   child: Image.network(
                                     attachmentUrl,
-                                    width: 0.9.w * MediaQuery.of(context).size.width,
-                                    height: 0.7.h * MediaQuery.of(context).size.height,
+                                    width:
+                                        0.9.w *
+                                        MediaQuery.of(context).size.width,
+                                    height:
+                                        0.7.h *
+                                        MediaQuery.of(context).size.height,
                                     fit: BoxFit.contain,
-                                    errorBuilder: (context, error, stackTrace) => Container(
-                                      width: 0.9.w * MediaQuery.of(context).size.width,
-                                      height: 0.7.h * MediaQuery.of(context).size.height,
-                                      decoration: BoxDecoration(
-                                        color: Colors.black12,
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: Icon(
-                                        Icons.image,
-                                        color: Colors.blueAccent,
-                                        size: 64,
-                                      ),
-                                    ),
+                                    errorBuilder:
+                                        (context, error, stackTrace) =>
+                                            Container(
+                                              width:
+                                                  0.9.w *
+                                                  MediaQuery.of(
+                                                    context,
+                                                  ).size.width,
+                                              height:
+                                                  0.7.h *
+                                                  MediaQuery.of(
+                                                    context,
+                                                  ).size.height,
+                                              decoration: BoxDecoration(
+                                                color: Colors.black12,
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                              ),
+                                              child: Icon(
+                                                Icons.image,
+                                                color: Colors.blueAccent,
+                                                size: 64,
+                                              ),
+                                            ),
                                   ),
                                 ),
                               ),

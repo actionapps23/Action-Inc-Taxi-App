@@ -19,7 +19,10 @@ class MaintainanceCubit extends Cubit<MaintainanceState> {
     emit(MaintainanceLoaded(maintainanceItems: items));
   }
 
-  Future<void> addMaintainanceRequest(MaintainanceModel request, List<PlatformFile> files) async {
+  Future<void> addMaintainanceRequest(
+    MaintainanceModel request,
+    List<PlatformFile> files,
+  ) async {
     emit(MaintainanceLoading());
     try {
       List<String> attachmentUrls = await StorageService.uploadFiles(files);

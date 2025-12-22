@@ -20,8 +20,6 @@ class DashboardCubit extends Cubit<DashboardState> {
         totalCashAmountYesterday: amounts['totalCashYesterday'] ?? 0,
         totalGCashAmountYesterday: amounts['totalGCashYesterday'] ?? 0,
         totalBankedAmountYesterday: amounts['totalBankedYesterday'] ?? 0,
-        
-    
       );
       emit(DashboardLoaded(dashboardModel));
     } catch (e) {
@@ -39,7 +37,7 @@ class DashboardCubit extends Cubit<DashboardState> {
       fleet3Amt: amounts['fleet3Amt'] ?? 0,
       fleet4Amt: amounts['fleet4Amt'] ?? 0,
       totalFleetAmt: amounts['totalAmt'] ?? 0,
-      fleetIncomePreviousPeriod : amounts['fleetIncomePreviousPeriod'] ?? 0,
+      fleetIncomePreviousPeriod: amounts['fleetIncomePreviousPeriod'] ?? 0,
     );
     emit(DashboardLoaded(updatedDashboard));
   }
@@ -47,11 +45,10 @@ class DashboardCubit extends Cubit<DashboardState> {
   Future<void> fetchMaintainanceCollectionAmount(String periodType) async {
     emit(DashboardLoading(state.dashboardModel));
     final amounts = await dbService.getMaintainanceCollectionByPeriod(
-      periodType
+      periodType,
     );
     final updatedDashboard = state.dashboardModel.copyWith(
-      totalMaintenanceFeesToday:
-          amounts['totalMaintenanceFeesToday'] ?? 0,
+      totalMaintenanceFeesToday: amounts['totalMaintenanceFeesToday'] ?? 0,
       totalMaintenanceFeesYesterday:
           amounts['totalMaintenanceFeesYesterday'] ?? 0,
     );
@@ -60,14 +57,10 @@ class DashboardCubit extends Cubit<DashboardState> {
 
   Future<void> fetchcarWashCollectionAmount(String periodType) async {
     emit(DashboardLoading(state.dashboardModel));
-    final amounts = await dbService.getCarWashCollectionByPeriod(
-      periodType
-    );
+    final amounts = await dbService.getCarWashCollectionByPeriod(periodType);
     final updatedDashboard = state.dashboardModel.copyWith(
-      totalCarWashFeesToday:
-          amounts['totalCarWashFeesToday'] ?? 0,
-      totalCarWashFeesYesterday:
-          amounts['totalCarWashFeesYesterday'] ?? 0,
+      totalCarWashFeesToday: amounts['totalCarWashFeesToday'] ?? 0,
+      totalCarWashFeesYesterday: amounts['totalCarWashFeesYesterday'] ?? 0,
     );
     emit(DashboardLoaded(updatedDashboard));
   }

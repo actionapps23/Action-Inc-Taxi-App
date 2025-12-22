@@ -15,7 +15,6 @@ class StatsOverviewCard extends StatelessWidget {
   final double percentChange;
   final Function(int) onTabSelected;
 
-
   const StatsOverviewCard({
     super.key,
     required this.statsCardLabel,

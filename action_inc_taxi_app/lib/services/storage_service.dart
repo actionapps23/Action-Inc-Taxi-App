@@ -5,7 +5,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 class StorageService {
   static final FirebaseStorage _storage = FirebaseStorage.instance;
 
-  static Future<List<String>> uploadFiles(List<PlatformFile> files, {String folder = 'maintainance_attachments'}) async {
+  static Future<List<String>> uploadFiles(
+    List<PlatformFile> files, {
+    String folder = 'maintainance_attachments',
+  }) async {
     List<String> downloadUrls = [];
     for (final file in files) {
       try {

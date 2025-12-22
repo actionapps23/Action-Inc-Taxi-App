@@ -2,11 +2,12 @@
 
 import 'package:action_inc_taxi_app/core/theme/app_assets.dart';
 import 'package:action_inc_taxi_app/core/widgets/navbar/navbar_buttton.dart';
+import 'package:action_inc_taxi_app/cubit/auth/login_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/rent/daily_rent_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/selection/selection_cubit.dart';
+import 'package:action_inc_taxi_app/features/auth/add_employee_screen/add_employee_screen.dart';
 import 'package:action_inc_taxi_app/features/entry_section/car_detail_main_screen.dart';
 import 'package:action_inc_taxi_app/features/auth/login_screen.dart';
-import 'package:action_inc_taxi_app/features/entry_section/inspection/vehicle_view_selection_screen.dart';
 import 'package:action_inc_taxi_app/features/entry_section/renewal/renewal_and_status_screen.dart';
 import 'package:action_inc_taxi_app/features/maintainence/maintainence_screen.dart';
 import 'package:action_inc_taxi_app/features/selection_screen.dart';
@@ -19,6 +20,8 @@ class Navbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final LoginCubit loginCubit = context.read<LoginCubit>();
+    final LoginSuccess loginState = loginCubit.state as LoginSuccess;
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 12.h),
@@ -105,6 +108,20 @@ class Navbar extends StatelessWidget {
                   ),
                   SizedBox(width: 12.w),
                   NavButton(
+                    'Add Employee',
+                    icon: AppAssets.logout,
+                    onTap: () {
+                      // Simple logout: navigate back to login screen
+                      Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                          builder: (_) => const AddEmployeeScreen(),
+                        ),
+                        (route) => false,
+                      );
+                    },
+                  ),
+                  SizedBox(width: 12.w),
+                  NavButton(
                     'Log out',
                     icon: AppAssets.logout,
                     onTap: () {
@@ -115,20 +132,6 @@ class Navbar extends StatelessWidget {
                       );
                     },
                   ),
-                  SizedBox(width: 12.w),
-                  NavButton(
-                    'Taxi Inspection',
-                    icon: AppAssets.notifications,
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => const VehicleViewSelectionScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                  SizedBox(width: 16.w),
-                  // User avatar and name
                   Row(
                     children: [
                       CircleAvatar(
@@ -140,7 +143,7 @@ class Navbar extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'David Smith',
+                            loginState.user.name,
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -148,7 +151,7 @@ class Navbar extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            'Assistant',
+                            loginState.user.role,
                             style: TextStyle(
                               color: Colors.white70,
                               fontSize: 12,

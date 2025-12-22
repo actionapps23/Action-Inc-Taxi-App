@@ -67,7 +67,12 @@ class SummaryCard extends StatelessWidget {
                 style: AppTextStyles.bodySmall,
               ),
               Spacing.hSmall,
-              PercentChangeIndicator(percentChange: HelperFunctions.percentChange(lastDayAmount, amount)),
+              PercentChangeIndicator(
+                percentChange: HelperFunctions.percentChange(
+                  lastDayAmount,
+                  amount,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 16),

@@ -72,9 +72,9 @@ class SimpleStatCard extends StatelessWidget {
                 ),
               ),
               Spacing.vStandard,
-               if (showLastStats && lastAmount != null) ...[
+              if (showLastStats && lastAmount != null) ...[
                 Spacing.vStandard,
-                Text("Last Income: $currencySymbol${lastAmount!}",)
+                Text("Last Income: $currencySymbol${lastAmount!}"),
               ],
             ],
           ),
