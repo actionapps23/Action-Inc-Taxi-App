@@ -25,6 +25,11 @@ class AppConstants {
   static const addCategorySuccessMessage = 'Category added successfully.';
   static const String filePickerError = 'Failed to pick the file.';
   static const String fillAllFieldsError = 'Please fill all the fields.';
+  static const String maintainanceLoadError =
+      'Failed to load maintenance requests.';
+
+  static const String maintainanceEmptyMessage =
+      'No maintenance requests available.';
 
   // Input Styling
   static const double inputBorderRadius = 8.0;

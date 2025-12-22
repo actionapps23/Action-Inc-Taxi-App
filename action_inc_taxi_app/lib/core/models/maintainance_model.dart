@@ -1,4 +1,5 @@
 class MaintainanceModel {
+  final String id;
   final String title;
   final String description;
   final DateTime date;
@@ -10,6 +11,7 @@ class MaintainanceModel {
 
   MaintainanceModel({
     this.assignedTo,
+    required this.id,
     required this.title,
     required this.description,
     required this.date,
@@ -18,4 +20,32 @@ class MaintainanceModel {
     required this.inspectedBy,
     required this.attachmentUrls,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'description': description,
+      'date': date.toIso8601String(),
+      'taxiId': taxiId,
+      'fleetId': fleetId,
+      'inspectedBy': inspectedBy,
+      'assignedTo': assignedTo,
+      'attachmentUrls': attachmentUrls,
+    };
+  }
+
+  factory MaintainanceModel.fromJson(Map<String, dynamic> json) {
+    return MaintainanceModel(
+      id: json['id'],
+      title: json['title'],
+      description: json['description'],
+      date: DateTime.parse(json['date']),
+      taxiId: json['taxiId'],
+      fleetId: json['fleetId'],
+      inspectedBy: json['inspectedBy'],
+      assignedTo: json['assignedTo'],
+      attachmentUrls: List<String>.from(json['attachmentUrls'] ?? []),
+    );
+  }
 }

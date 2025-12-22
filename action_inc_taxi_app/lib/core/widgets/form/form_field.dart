@@ -41,7 +41,6 @@ class AppTextFormField extends StatelessWidget {
     this.isReadOnly = false,
     this.labelOnTop = false,
     this.maxLines = 1,
-
   });
 
   @override

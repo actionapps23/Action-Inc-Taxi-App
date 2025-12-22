@@ -1,4 +1,3 @@
-import 'package:action_inc_taxi_app/core/constants/app_constants.dart';
 import 'package:action_inc_taxi_app/core/models/section_model.dart';
 import 'package:action_inc_taxi_app/core/widgets/report_issue_popup.dart';
 import 'package:action_inc_taxi_app/features/entry_section/vehicle_inspection_cubit.dart';
@@ -46,11 +45,7 @@ class SectionWidget extends StatelessWidget {
                             onPressed: () {
                               showDialog(
                                 context: context,
-                                builder: (context) => ReportIssuePopup(
-                                  mechanics: AppConstants.mechanics,
-                                  onSubmit: (a, b, c) {},
-                                  key: Key("value"),
-                                ),
+                                builder: (context) => ReportIssuePopup(),
                               );
                             },
                           ),
