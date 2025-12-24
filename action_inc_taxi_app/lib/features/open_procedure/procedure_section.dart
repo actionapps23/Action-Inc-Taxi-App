@@ -1,21 +1,25 @@
+import 'package:flutter/material.dart';
+import 'package:action_inc_taxi_app/core/widgets/add_procedure_field_popup.dart';
 import 'package:action_inc_taxi_app/core/models/section_model.dart';
-import 'package:action_inc_taxi_app/features/entry_section/vehicle_inspection_cubit.dart';
-import 'package:action_inc_taxi_app/features/entry_section/vehicle_isnpection_state.dart';
+import 'package:action_inc_taxi_app/cubit/procedure/procedure_cubit.dart';
+import 'package:action_inc_taxi_app/cubit/procedure/procedure_state.dart';
+import 'package:action_inc_taxi_app/core/widgets/snackbar/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProcedureSection extends StatelessWidget {
   final CategoryModel category;
-  const ProcedureSection({super.key, required this.category});
+  final String checklistType;
+  const ProcedureSection({
+    super.key,
+    required this.category,
+    required this.checklistType,
+  });
   @override
   Widget build(BuildContext context) {
-    final VehicleInspectionPanelCubit vehicleInspectionPanelCubit = context
-        .read<VehicleInspectionPanelCubit>();
-    return BlocBuilder<
-      VehicleInspectionPanelCubit,
-      VehicleInspectionPanelState
-    >(
-      bloc: vehicleInspectionPanelCubit,
+    final ProcedureCubit procedureCubit = context.read<ProcedureCubit>();
+    return BlocBuilder<ProcedureCubit, ProcedureState>(
+      bloc: procedureCubit,
       builder: (context, state) {
         return Padding(
           padding: const EdgeInsets.all(8.0),
@@ -27,33 +31,99 @@ class ProcedureSection extends StatelessWidget {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 8),
-              ...category.fields.map(
-                (field) => Row(
+              ...category.fields.map((field) {
+                return Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
                   children: [
-                    Text(field.fieldName),
-
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Checkbox(
-                            value: vehicleInspectionPanelCubit.isChecked(
-                              field.fieldKey,
-                            ),
-                            onChanged: (value) {
-                              vehicleInspectionPanelCubit.toggleField(
+                    Expanded(child: Text(field.fieldName)),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Checkbox(
+                          value: field.isChecked,
+                          onChanged: (value) {
+                            if (state is ProcedureLoaded) {
+                              procedureCubit.toggleField(
                                 field.fieldKey,
+                                category.categoryName,
                               );
-                            },
-                          ),
-                        ],
-                      ),
+                            }
+                          },
+                        ),
+                        (state is ProcedureLoaded)
+                            ? PopupMenuButton<String>(
+                                icon: Icon(Icons.more_vert),
+                                onSelected: (value) async {
+                                  if (value == 'edit') {
+                                    final sections =
+                                        (procedureCubit.state
+                                            is ProcedureLoaded)
+                                        ? (procedureCubit.state
+                                                  as ProcedureLoaded)
+                                              .procedureModel!
+                                              .categories
+                                              .map((c) => c.categoryName)
+                                              .toList()
+                                        : [category.categoryName];
+
+                                    showDialog(
+                                      context: context,
+                                      builder: (ctx) => AddProcedureFieldPopup(
+                                        sections: sections,
+                                        procedureType: checklistType,
+                                        isEdit: true,
+                                        initialCategory: category.categoryName,
+                                        initialField: field,
+                                      ),
+                                    );
+                                  } else if (value == 'delete') {
+                                    final confirmed = await showDialog<bool>(
+                                      context: context,
+                                      builder: (ctx) => AlertDialog(
+                                        title: Text('Delete field'),
+                                        content: Text(
+                                          'Are you sure you want to delete this field?',
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.of(ctx).pop(false),
+                                            child: Text('Cancel'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.of(ctx).pop(true),
+                                            child: Text('Delete'),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                    if (confirmed == true) {
+                                      procedureCubit.deleteProcedureChecklist(
+                                        checklistType,
+                                        category.categoryName,
+                                        field.fieldKey,
+                                      );
+                                    }
+                                  }
+                                },
+                                itemBuilder: (ctx) => [
+                                  PopupMenuItem(
+                                    value: 'edit',
+                                    child: Text('Edit'),
+                                  ),
+                                  PopupMenuItem(
+                                    value: 'delete',
+                                    child: Text('Delete'),
+                                  ),
+                                ],
+                              )
+                            : SizedBox.shrink(),
+                      ],
                     ),
                   ],
-                ),
-              ),
+                );
+              }),
             ],
           ),
         );

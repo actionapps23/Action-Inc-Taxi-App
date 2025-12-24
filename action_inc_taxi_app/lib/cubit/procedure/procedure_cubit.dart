@@ -12,20 +12,141 @@ class ProcedureCubit extends Cubit<ProcedureState> {
     emit(ProcedureRecordSubmitting());
     try {
       await ProcedureService.submitProcedureRecord(procedure);
-      emit(ProcedureRecordSubmitted());
+      fetchProcedureRecord(procedure.procedureType, null);
     } catch (e) {
-      emit(ProcedureRecordSubmissionFailed(errorMessage: AppConstants.procedureRecordSubmissionError));
+      emit(
+        ProcedureRecordSubmissionFailed(
+          errorMessage: AppConstants.procedureRecordSubmissionError,
+        ),
+      );
     }
   }
 
-  Future<void> updateProcedureChecklist(String checklistType, CategoryModel category) async {
+  Future<void> deleteProcedureChecklist(
+    String checklistType,
+    String categoryName,
+    String fieldKey,
+  ) async {
+    emit(ProcedureChecklistUpdating());
+    try {
+      await ProcedureService.deleteProcedureChecklist(
+        checklistType,
+        categoryName,
+        fieldKey,
+      );
+      await fetchProcedureChecklist(checklistType);
+    } catch (e) {
+      emit(
+        ProcedureChecklistUpdateFailed(
+          errorMessage: AppConstants.procedureChecklistUpdateError,
+        ),
+      );
+    }
+  }
+
+  Future<void> fetchProcedureRecord(
+    String procedureType,
+    String? dateKey,
+  ) async {
+    emit(ProcedureLoading());
+    try {
+      final procedure = await ProcedureService.fetchProcedureRecord(
+        procedureType,
+        dateKey,
+      );
+      emit(ProcedureLoaded(procedureModel: procedure));
+    } catch (e) {
+      emit(ProcedureError(errorMessage: AppConstants.genericErrorMessage));
+    }
+  }
+
+  Future<void> updateProcedureChecklist(
+    String checklistType,
+    CategoryModel category,
+  ) async {
     emit(ProcedureChecklistUpdating());
     try {
       await ProcedureService.updateProcedureChecklist(checklistType, category);
-      emit(ProcedureChecklistUpdated());
+      await fetchProcedureChecklist(checklistType);
     } catch (e) {
-      emit(ProcedureChecklistUpdateFailed(errorMessage: AppConstants.procedureChecklistUpdateError));
+      emit(
+        ProcedureChecklistUpdateFailed(
+          errorMessage: AppConstants.procedureChecklistUpdateError,
+        ),
+      );
     }
   }
 
+  Future<void> isRecordSubmitted(String procedureType) async {
+    emit(ProcedureLoading());
+    try {
+      final procedure = await ProcedureService.fetchProcedureRecord(
+        procedureType,
+        null,
+      );
+      if (procedure != null) {
+        emit(ProcedureRecordAlreadySubmitted(procedureModel: procedure));
+        return;
+      }
+
+      final procedureChecklist = await fetchProcedureChecklist(procedureType);
+      emit(ProcedureLoaded(procedureModel: procedureChecklist));
+    } catch (e) {
+      emit(ProcedureError(errorMessage: AppConstants.genericErrorMessage));
+    }
+  }
+
+  Future<ProcedureModel> fetchProcedureChecklist(String checklistType) async {
+    emit(ProcedureLoading());
+    try {
+      final procedure = await ProcedureService.fetchProcedureChecklist(
+        checklistType,
+      );
+      emit(ProcedureLoaded(procedureModel: procedure));
+      return procedure;
+    } catch (e) {
+      emit(ProcedureError(errorMessage: AppConstants.procedureFetchError));
+      rethrow;
+    }
+  }
+
+  void toggleField(String fieldKey, String categoryName) {
+    final currentState = state as ProcedureLoaded;
+    final List<CategoryModel> updatedCategories =
+        currentState.procedureModel!.categories;
+    final categoryToBeUpdated = updatedCategories.firstWhere(
+      (category) => category.categoryName == categoryName,
+    );
+    final fieldToBeUpdated = categoryToBeUpdated.fields.firstWhere(
+      (field) => field.fieldKey == fieldKey,
+    );
+    bool isChecked = !fieldToBeUpdated.isChecked;
+    final updatedField = FieldModel(
+      fieldKey: fieldToBeUpdated.fieldKey,
+      fieldName: fieldToBeUpdated.fieldName,
+      isChecked: isChecked,
+    );
+    final updatedFields = categoryToBeUpdated.fields.map((field) {
+      if (field.fieldKey == fieldKey) {
+        return updatedField;
+      }
+      return field;
+    }).toList();
+
+    final updatedCategory = categoryToBeUpdated.copyWith(fields: updatedFields);
+    final updatedCategoriesFinal = updatedCategories.map((category) {
+      if (category.categoryName == categoryName) {
+        return updatedCategory;
+      }
+      return category;
+    }).toList();
+
+    emit(
+      ProcedureLoaded(
+        procedureModel: state.procedureModel!.copyWith(
+          categories: updatedCategoriesFinal,
+        ),
+      ),
+    );
+  }
 }

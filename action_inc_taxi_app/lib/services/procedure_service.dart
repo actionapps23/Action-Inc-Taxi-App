@@ -1,3 +1,4 @@
+import 'package:action_inc_taxi_app/core/helper_functions.dart';
 import 'package:action_inc_taxi_app/core/models/procedure_model.dart';
 import 'package:action_inc_taxi_app/core/models/section_model.dart';
 import 'package:action_inc_taxi_app/features/open_procedure/procedure_section.dart';
@@ -14,23 +15,83 @@ class ProcedureService {
   static Future<void> submitProcedureRecord(ProcedureModel procedure) async {
     await _firestore
         .collection(procedureRecords)
-        .doc(procedure.id)
+        .doc(procedure.procedureType)
+        .set({'updatedAt': FieldValue.serverTimestamp()});
+    final dateKey = HelperFunctions.generateDateKeyFromUtc(
+      DateTime.now().toUtc().millisecondsSinceEpoch,
+    );
+    await _firestore
+        .collection(procedureRecords)
+        .doc(procedure.procedureType)
+        .collection('records')
+        .doc(dateKey)
         .set(procedure.toJson());
+  }
+
+  static Future<ProcedureModel?> fetchProcedureRecord(
+    String procedureType,
+    String? dateKey,
+  ) async {
+    dateKey ??= HelperFunctions.generateDateKeyFromUtc(
+      DateTime.now().toUtc().millisecondsSinceEpoch,
+    );
+
+    DocumentSnapshot documentSnapshot = await _firestore
+        .collection(procedureRecords)
+        .doc(procedureType)
+        .collection('records')
+        .doc(dateKey)
+        .get();
+    if (documentSnapshot.exists) {
+      return ProcedureModel.fromJson(
+        documentSnapshot.data() as Map<String, dynamic>,
+      );
+    } else {
+      return null;
+    }
   }
 
   static Future<void> updateProcedureChecklist(
     String checklistType,
     CategoryModel category,
   ) async {
-    await _firestore
-        .collection(procedureCheckList)
-        .doc(checklistType)
-        .collection(category.categoryName)
-        .add(category.toJson());
+    for (FieldModel field in category.fields) {
+      await _firestore
+          .collection(procedureCheckList)
+          .doc(checklistType)
+          .collection(category.categoryName)
+          .doc(field.fieldKey)
+          .set(field.toJson());
+    }
 
     await _firestore.collection(procedureCheckList).doc(checklistType).set({
       'categories': FieldValue.arrayUnion([category.categoryName]),
     }, SetOptions(merge: true));
+  }
+
+  static Future<void> deleteProcedureChecklist(
+    String checklistType,
+    String categoryName,
+    String fieldKey,
+  ) async {
+    await _firestore
+        .collection(procedureCheckList)
+        .doc(checklistType)
+        .collection(categoryName)
+        .doc(fieldKey)
+        .delete();
+
+    QuerySnapshot categorySnapshot = await _firestore
+        .collection(procedureCheckList)
+        .doc(checklistType)
+        .collection(categoryName)
+        .get();
+
+    if (categorySnapshot.docs.isEmpty) {
+      await _firestore.collection(procedureCheckList).doc(checklistType).set({
+        'categories': FieldValue.arrayRemove([categoryName]),
+      }, SetOptions(merge: true));
+    }
   }
 
   static Future<ProcedureModel> fetchProcedureChecklist(
@@ -63,7 +124,10 @@ class ProcedureService {
         );
       }
 
-      return ProcedureModel(id: docSnapshot.id, categories: categories);
+      return ProcedureModel(
+        categories: categories,
+        procedureType: checklistType,
+      );
     } else {
       throw Exception('Checklist not found');
     }

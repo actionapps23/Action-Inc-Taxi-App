@@ -2,13 +2,21 @@ class CategoryModel {
   final String categoryName;
   final List<FieldModel> fields;
   const CategoryModel({required this.categoryName, required this.fields});
-  
+
+  CategoryModel copyWith({String? categoryName, List<FieldModel>? fields}) {
+    return CategoryModel(
+      categoryName: categoryName ?? this.categoryName,
+      fields: fields ?? this.fields,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'categoryName': categoryName,
       'fields': fields.map((field) => field.toJson()).toList(),
     };
   }
+
   CategoryModel.fromJson(Map<String, dynamic> json)
     : categoryName = json['categoryName'],
       fields = (json['fields'] as List<dynamic>)

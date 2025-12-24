@@ -1,4 +1,6 @@
 class AppConstants {
+  static const String openProcedure = 'open_procedure';
+  static const String closeProcedure = 'close_procedure';
   AppConstants._();
 
   // App Text
@@ -39,6 +41,10 @@ class AppConstants {
 
   static const String procedureRecordSubmissionError =
       'Failed to submit procedure record. Please try again.';
+
+  static const String procedureFetchError =
+      'Failed to fetch procedure checklist. Please try again.';
+
   // Input Styling
   static const double inputBorderRadius = 8.0;
   static const double buttonBorderRadius = 8.0;

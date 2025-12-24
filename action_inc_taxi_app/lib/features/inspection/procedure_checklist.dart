@@ -1,34 +1,59 @@
 import 'package:action_inc_taxi_app/core/models/section_model.dart';
 
 class ProcedureChecklists {
-
   static const List<CategoryModel> openProcedureChecklist = [
     CategoryModel(
       categoryName: 'Engine Compartment',
       fields: [
         FieldModel(fieldName: 'Check oil level', fieldKey: 'check_oil_level'),
-        FieldModel(fieldName: 'Check coolant level', fieldKey: 'check_coolant_level'),
-        FieldModel(fieldName: 'Inspect belts and hoses', fieldKey: 'inspect_belts_hoses'),
-        FieldModel(fieldName: 'Check battery condition', fieldKey: 'check_battery_condition'),
-       
+        FieldModel(
+          fieldName: 'Check coolant level',
+          fieldKey: 'check_coolant_level',
+        ),
+        FieldModel(
+          fieldName: 'Inspect belts and hoses',
+          fieldKey: 'inspect_belts_hoses',
+        ),
+        FieldModel(
+          fieldName: 'Check battery condition',
+          fieldKey: 'check_battery_condition',
+        ),
       ],
     ),
     CategoryModel(
       categoryName: 'Taxi Office',
       fields: [
         FieldModel(fieldName: 'Turn On lights', fieldKey: 'turn_on_lights'),
-        FieldModel(fieldName: 'Start computer systems', fieldKey: 'start_computer_systems'),
-        FieldModel(fieldName: 'Check communication devices', fieldKey: 'check_communication_devices'),
-        FieldModel(fieldName: 'Verify cash float', fieldKey: 'verify_cash_float'),
+        FieldModel(
+          fieldName: 'Start computer systems',
+          fieldKey: 'start_computer_systems',
+        ),
+        FieldModel(
+          fieldName: 'Check communication devices',
+          fieldKey: 'check_communication_devices',
+        ),
+        FieldModel(
+          fieldName: 'Verify cash float',
+          fieldKey: 'verify_cash_float',
+        ),
       ],
     ),
     CategoryModel(
       categoryName: 'Interior Inspection',
       fields: [
         FieldModel(fieldName: 'Check seat belts', fieldKey: 'check_seat_belts'),
-        FieldModel(fieldName: 'Inspect upholstery', fieldKey: 'inspect_upholstery'),
-        FieldModel(fieldName: 'Test air conditioning', fieldKey: 'test_air_conditioning'),
-        FieldModel(fieldName: 'Ensure cleanliness', fieldKey: 'ensure_cleanliness'),
+        FieldModel(
+          fieldName: 'Inspect upholstery',
+          fieldKey: 'inspect_upholstery',
+        ),
+        FieldModel(
+          fieldName: 'Test air conditioning',
+          fieldKey: 'test_air_conditioning',
+        ),
+        FieldModel(
+          fieldName: 'Ensure cleanliness',
+          fieldKey: 'ensure_cleanliness',
+        ),
       ],
     ),
   ];
@@ -59,7 +84,10 @@ class ProcedureChecklists {
     CategoryModel(
       categoryName: 'Parts Store',
       fields: [
-        FieldModel(fieldName: 'Collect everything', fieldKey: 'collect_everything'),
+        FieldModel(
+          fieldName: 'Collect everything',
+          fieldKey: 'collect_everything',
+        ),
       ],
     ),
   ];

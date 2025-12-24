@@ -8,6 +8,10 @@ class ProcedureState {
 
 class ProcedureInitial extends ProcedureState {}
 
+class ProcedureRecordAlreadySubmitted extends ProcedureState {
+  ProcedureRecordAlreadySubmitted({required super.procedureModel});
+}
+
 class ProcedureRecordSubmitting extends ProcedureState {
   ProcedureRecordSubmitting();
 }

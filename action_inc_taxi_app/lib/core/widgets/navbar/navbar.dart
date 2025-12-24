@@ -106,7 +106,7 @@ class Navbar extends StatelessWidget {
                       );
                     },
                   ),
-                  if(loginState.user.isAdmin)...[
+                  if (loginState.user.isAdmin) ...[
                     SizedBox(width: 12.w),
                     NavButton(
                       'Add Employee',
@@ -121,7 +121,7 @@ class Navbar extends StatelessWidget {
                       },
                     ),
                   ],
-                 
+
                   SizedBox(width: 12.w),
                   NavButton(
                     'Log out',

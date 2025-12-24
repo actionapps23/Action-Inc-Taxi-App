@@ -1,6 +1,7 @@
+import 'package:action_inc_taxi_app/core/constants/app_constants.dart';
 import 'package:action_inc_taxi_app/core/models/procedure_model.dart';
 import 'package:action_inc_taxi_app/core/theme/app_assets.dart';
-import 'package:action_inc_taxi_app/features/close_procedure/close_procedure_screen.dart';
+import 'package:action_inc_taxi_app/features/close_procedure/procedure_screen.dart';
 import 'package:action_inc_taxi_app/features/entry_section/car_detail_main_screen.dart';
 import 'package:action_inc_taxi_app/features/inspection/procedure_checklist.dart';
 import 'package:action_inc_taxi_app/features/inventory/inventory_sceen.dart';
@@ -70,24 +71,28 @@ class SelectionCubit extends Cubit<SelectionState> {
       case 4:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => OpenProcedureScreen(
-            procedureModel: ProcedureModel(categories: ProcedureChecklists.openProcedureChecklist),
-          )),
+          MaterialPageRoute(
+            builder: (context) =>
+                ProcedureScreen(procedureType: AppConstants.openProcedure),
+          ),
         );
         break;
       case 5:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => OpenProcedureScreen(
-                        procedureModel: ProcedureModel(categories: ProcedureChecklists.openProcedureChecklist),
-
-          )),
+          MaterialPageRoute(
+            builder: (context) =>
+                ProcedureScreen(procedureType: AppConstants.closeProcedure),
+          ),
         );
         break;
       case 6:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => CloseProcedureScreen()),
+          MaterialPageRoute(
+            builder: (context) =>
+                ProcedureScreen(procedureType: AppConstants.closeProcedure),
+          ),
         );
         break;
       default:
