@@ -30,10 +30,10 @@ class PieChart extends StatelessWidget {
     ];
     final total = fleetIncome.totalFleetAmt;
     final List<Color> pieColors = [
-      const Color(0xFF6290C3),
-      const Color(0xFF6290C3),
-      const Color(0xFF1A1B41),
-      const Color(0xFFBAFF29),
+      const Color(0xFF1e4620),
+      const Color(0xFF357b38),
+      const Color(0xFF449e48),
+      const Color(0xFF70bf73),
     ];
 
     return Container(

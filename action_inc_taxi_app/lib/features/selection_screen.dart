@@ -105,6 +105,11 @@ class _SelectionScreenState extends State<SelectionScreen> {
                                   ? AppColors.primary
                                   : null,
                               onTap: () {
+                                selectionCubit.proceed(
+                                  i,
+                                  context,
+                                  featureCards[i]['title'],
+                                );
                                 setState(() {
                                   selectedIndex = i;
                                 });
@@ -177,6 +182,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
                                           selectionCubit.proceed(
                                             selectedIndex,
                                             context,
+                                            null,
                                           );
                                         }
                                       : () {},

@@ -36,151 +36,153 @@ class AddEmployeeScreen extends HookWidget {
               final nextEmployeeId = snapshot.data ?? 'emp001';
               return Scaffold(
                 backgroundColor: AppColors.background,
-                body: Column(
-                  children: [
-                    Navbar(),
+                body: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Navbar(),
 
-                    Center(
-                      child: SingleChildScrollView(
-                        child: Container(
-                          width: 0.4.sw,
-                          margin: EdgeInsets.symmetric(
-                            horizontal: 16.w,
-                            vertical: 24.h,
-                          ),
-                          constraints: BoxConstraints(maxWidth: 400.w),
-                          padding: EdgeInsets.all(12.w),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(
-                              AppConstants.cardBorderRadius,
+                      Center(
+                        child: SingleChildScrollView(
+                          child: Container(
+                            width: 0.4.sw,
+                            margin: EdgeInsets.symmetric(
+                              horizontal: 16.w,
+                              vertical: 24.h,
                             ),
-                            border: Border.all(color: AppColors.border),
-                          ),
-                          child: Form(
-                            key: formKey.value,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Image.asset(
-                                      AppAssets.logoPNG,
-                                      width: 64.w,
-                                      height: 48.h,
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 36.h),
-                                // Employee ID (readonly)
-                                AppTextFormField(
-                                  labelOnTop: true,
-                                  controller: TextEditingController(
-                                    text: nextEmployeeId,
+                            constraints: BoxConstraints(maxWidth: 400.w),
+                            padding: EdgeInsets.all(12.w),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(
+                                AppConstants.cardBorderRadius,
+                              ),
+                              border: Border.all(color: AppColors.border),
+                            ),
+                            child: Form(
+                              key: formKey.value,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Image.asset(
+                                        AppAssets.logoPNG,
+                                        width: 64.w,
+                                        height: 48.h,
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ],
                                   ),
-                                  labelText: 'Employee ID',
-                                  isReadOnly: true,
-                                ),
-                                SizedBox(height: 24.h),
-                                // Name
-                                AppTextFormField(
-                                  labelOnTop: true,
-                                  controller: nameController,
-                                  labelText: 'Name',
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Please enter employee name';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                                SizedBox(height: 24.h),
-                                // Password
-                                AppTextFormField(
-                                  labelOnTop: true,
-                                  controller: passwordController,
-                                  labelText: 'Set Password',
-                                  obscureText: true,
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Please enter a password';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                                SizedBox(height: 24.h),
-                                // Role
-                                AppTextFormField(
-                                  labelOnTop: true,
-                                  controller: roleController,
-                                  labelText: 'Role',
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Please enter a role';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                                SizedBox(height: 16.h),
-                                Row(
-                                  children: [
-                                    Checkbox(
-                                      value: isAdmin.value,
-                                      onChanged: (val) =>
-                                          isAdmin.value = val ?? false,
+                                  SizedBox(height: 36.h),
+                                  // Employee ID (readonly)
+                                  AppTextFormField(
+                                    labelOnTop: true,
+                                    controller: TextEditingController(
+                                      text: nextEmployeeId,
                                     ),
-                                    Text('Grant admin privileges'),
-                                  ],
-                                ),
-                                SizedBox(height: 24.h),
-                                AppButton(
-                                  text: 'Add Employee',
-                                  onPressed: () async {
-                                    if (formKey.value.currentState
-                                            ?.validate() ??
-                                        false) {
-                                      final name = nameController.text.trim();
-                                      final password = passwordController.text
-                                          .trim();
-                                      final role = roleController.text.trim();
-                                      final hashPassword = sha256
-                                          .convert(utf8.encode(password))
-                                          .toString();
-                                      await cubit.addEmployee(
-                                        employeeId: nextEmployeeId,
-                                        name: name,
-                                        password: hashPassword,
-                                        role: role,
-                                        isAdmin: isAdmin.value,
-                                      );
-                                      if (context.mounted) {
-                                        SnackBarHelper.showSuccessSnackBar(
-                                          context,
-                                          'Employee added!',
-                                        );
-                                        Navigator.of(context).pop();
+                                    labelText: 'Employee ID',
+                                    isReadOnly: true,
+                                  ),
+                                  SizedBox(height: 24.h),
+                                  // Name
+                                  AppTextFormField(
+                                    labelOnTop: true,
+                                    controller: nameController,
+                                    labelText: 'Name',
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Please enter employee name';
                                       }
-                                    }
-                                  },
-                                  width: 60.w,
-                                  height: 44.h,
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: AppColors.buttonPrimary,
-                                    foregroundColor: AppColors.background,
+                                      return null;
+                                    },
                                   ),
-                                  textStyle: const TextStyle(
-                                    fontWeight: FontWeight.w700,
+                                  SizedBox(height: 24.h),
+                                  // Password
+                                  AppTextFormField(
+                                    labelOnTop: true,
+                                    controller: passwordController,
+                                    labelText: 'Set Password',
+                                    obscureText: true,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Please enter a password';
+                                      }
+                                      return null;
+                                    },
                                   ),
-                                ),
-                              ],
+                                  SizedBox(height: 24.h),
+                                  // Role
+                                  AppTextFormField(
+                                    labelOnTop: true,
+                                    controller: roleController,
+                                    labelText: 'Role',
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Please enter a role';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                  SizedBox(height: 16.h),
+                                  Row(
+                                    children: [
+                                      Checkbox(
+                                        value: isAdmin.value,
+                                        onChanged: (val) =>
+                                            isAdmin.value = val ?? false,
+                                      ),
+                                      Text('Grant admin privileges'),
+                                    ],
+                                  ),
+                                  SizedBox(height: 24.h),
+                                  AppButton(
+                                    text: 'Add Employee',
+                                    onPressed: () async {
+                                      if (formKey.value.currentState
+                                              ?.validate() ??
+                                          false) {
+                                        final name = nameController.text.trim();
+                                        final password = passwordController.text
+                                            .trim();
+                                        final role = roleController.text.trim();
+                                        final hashPassword = sha256
+                                            .convert(utf8.encode(password))
+                                            .toString();
+                                        await cubit.addEmployee(
+                                          employeeId: nextEmployeeId,
+                                          name: name,
+                                          password: hashPassword,
+                                          role: role,
+                                          isAdmin: isAdmin.value,
+                                        );
+                                        if (context.mounted) {
+                                          SnackBarHelper.showSuccessSnackBar(
+                                            context,
+                                            'Employee added!',
+                                          );
+                                          Navigator.of(context).pop();
+                                        }
+                                      }
+                                    },
+                                    width: 60.w,
+                                    height: 44.h,
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppColors.buttonPrimary,
+                                      foregroundColor: AppColors.background,
+                                    ),
+                                    textStyle: const TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             },

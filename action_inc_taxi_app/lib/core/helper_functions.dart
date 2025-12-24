@@ -1,3 +1,4 @@
+import 'package:action_inc_taxi_app/core/constants/app_constants.dart';
 import 'package:action_inc_taxi_app/core/enums.dart';
 import 'package:flutter/material.dart';
 
@@ -135,5 +136,10 @@ class HelperFunctions {
     } else {
       return 'Just now';
     }
+  }
+
+  static String monthIntToString(int month) {
+    if (month < 1 || month > 12) return '';
+    return AppConstants.monthNames[month - 1];
   }
 }

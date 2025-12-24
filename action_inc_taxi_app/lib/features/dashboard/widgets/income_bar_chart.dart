@@ -1,8 +1,10 @@
 import 'package:action_inc_taxi_app/core/theme/app_text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
+import 'package:action_inc_taxi_app/core/widgets/snackbar/spacing.dart';
 
-class IncomeBarChart extends StatelessWidget {
+class IncomeBarChart extends StatefulWidget {
   final List<int> values;
   final List<String> labels;
   final int highlightedIndex;
@@ -17,13 +19,51 @@ class IncomeBarChart extends StatelessWidget {
   });
 
   @override
+  _IncomeBarChartState createState() => _IncomeBarChartState();
+}
+
+class _IncomeBarChartState extends State<IncomeBarChart> {
+  late int _selectedIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    final maxIndex = (widget.values.isEmpty ? 0 : widget.values.length - 1);
+    _selectedIndex = widget.highlightedIndex.clamp(0, maxIndex);
+  }
+
+  @override
+  void didUpdateWidget(covariant IncomeBarChart oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.highlightedIndex != widget.highlightedIndex) {
+      final maxIndex = (widget.values.isEmpty ? 0 : widget.values.length - 1);
+      _selectedIndex = widget.highlightedIndex.clamp(0, maxIndex);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final double width = MediaQuery.of(context).size.width;
-    final double cardPadding = width * 0.04;
-    final double borderRadius = width * 0.05;
-    final double barWidth = width * 0.08;
-    final double chartHeight = 180.0;
-    final int maxValue = values.reduce((a, b) => a > b ? a : b);
+    final double cardPadding = 16.w;
+    final bubbleH = 28.h;
+    final double borderRadius = 12.r;
+    final double barWidth = 28.w;
+    final double chartHeight = 180.h;
+    final int maxValue = widget.values.isEmpty ? 0 : widget.values.reduce((a, b) => a > b ? a : b);
+
+    // dynamic Y-axis labels
+    const int ticks = 3; // creates ticks+1 labels (e.g. 3 -> 4 labels)
+    String _fmt(int v) {
+      if (v >= 1000) {
+        if (v % 1000 == 0) return '${v ~/ 1000}K';
+        return '${(v / 1000).toStringAsFixed(1)}K';
+      }
+      return v.toString();
+    }
+    final List<String> yLabels = List.generate(ticks + 1, (i) {
+      if (maxValue == 0) return '0';
+      final value = ((maxValue) * (ticks - i) / ticks).round();
+      return _fmt(value);
+    });
 
     return Container(
       padding: EdgeInsets.all(cardPadding),
@@ -36,99 +76,96 @@ class IncomeBarChart extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         children: [
           Row(children: [Text('Total Income'), const Spacer()]),
-          SizedBox(height: 16),
+          Spacing.vMedium,
           SizedBox(
-            height: chartHeight + 40,
+            height: (chartHeight + 40.h),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                // Y-axis labels
+                // Y-axis labels (generated from maxValue)
                 Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '30K',
-                      style: AppTextStyles.bodyExtraSmall.copyWith(
-                        color: Colors.white,
-                      ),
-                    ),
-                    Text(
-                      '20K',
-                      style: AppTextStyles.bodyExtraSmall.copyWith(
-                        color: Colors.white,
-                      ),
-                    ),
-                    Text(
-                      '10K',
-                      style: AppTextStyles.bodyExtraSmall.copyWith(
-                        color: Colors.white,
-                      ),
-                    ),
-                    Text(
-                      '0',
-                      style: AppTextStyles.bodyExtraSmall.copyWith(
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: yLabels
+                      .map(
+                        (t) => Text(
+                           '₱$t',
+                          style: AppTextStyles.bodyExtraSmall.copyWith(
+                            color: Colors.white,
+                          ),
+                        ),
+                      )
+                      .toList(),
                 ),
-                SizedBox(width: 12),
+                Spacing.hSize(12),
                 Expanded(
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
-                      children: List.generate(values.length, (i) {
-                        final isHighlighted = i == highlightedIndex;
-                        final barHeight =
-                            (values[i] / (maxValue == 0 ? 1 : maxValue)) *
-                            chartHeight;
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              if (isHighlighted)
-                                Container(
-                                  margin: const EdgeInsets.only(bottom: 8),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 4,
+                      children: List.generate(widget.values.length, (i) {
+                        final isHighlighted = i == _selectedIndex;
+                        final barHeight = (widget.values[i] / (maxValue == 0 ? 1 : maxValue)) * chartHeight;
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _selectedIndex = i;
+                            });
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 2.w),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                if(!isHighlighted)
+                                  SizedBox(height: bubbleH),
+
+                                if (isHighlighted)
+                                  Container(
+                                    margin: EdgeInsets.only(bottom: 8.h),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 12.w,
+                                      vertical: 4.h,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.primary,
+                                      borderRadius: BorderRadius.circular(12.r),
+                                    ),
+                                    child: Text(
+                                      '${widget.currencySymbol} ${widget.values[i]}',
+                                      style: AppTextStyles.bodyExtraSmall.copyWith(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
                                   ),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.primary,
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                  child: Text(
-                                    '$currencySymbol ${values[i]}',
-                                    style: AppTextStyles.bodyExtraSmall
-                                        .copyWith(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                Flexible(
+                                  child: AnimatedContainer(
+                                    duration: const Duration(milliseconds: 400),
+                                    width: barWidth,
+                                    height: barHeight,
+                                    decoration: BoxDecoration(
+                                      color: isHighlighted ? AppColors.primary : Colors.white.withOpacity(0.15),
+                                      borderRadius: BorderRadius.circular((barWidth / 4).r),
+                                    ),
                                   ),
                                 ),
-                              AnimatedContainer(
-                                duration: const Duration(milliseconds: 400),
-                                width: barWidth,
-                                height: barHeight,
-                                decoration: BoxDecoration(
-                                  color: isHighlighted
-                                      ? AppColors.primary
-                                      : Colors.white.withOpacity(0.15),
-                                  borderRadius: BorderRadius.circular(
-                                    barWidth / 2,
+                                Spacing.vSmall,
+                                ConstrainedBox(
+                                  constraints: BoxConstraints(maxWidth: barWidth + 8.w),
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      widget.labels[i],
+                                      style: AppTextStyles.bodyExtraSmall.copyWith(
+                                        color: Colors.white,
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Text(
-                                labels[i],
-                                style: AppTextStyles.bodyExtraSmall.copyWith(
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         );
                       }),
@@ -139,32 +176,6 @@ class IncomeBarChart extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _TabButton extends StatelessWidget {
-  final String label;
-  final bool selected;
-  const _TabButton({required this.label, this.selected = false});
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 2),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-      decoration: BoxDecoration(
-        color: selected ? AppColors.primary : Colors.transparent,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: selected ? Colors.white : Colors.white,
-          fontWeight: FontWeight.w500,
-          fontSize: 14,
-          fontFamily: 'Poppins',
-        ),
       ),
     );
   }

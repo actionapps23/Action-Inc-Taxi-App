@@ -1,3 +1,4 @@
+import 'package:action_inc_taxi_app/core/constants/app_constants.dart';
 import 'package:action_inc_taxi_app/core/helper_functions.dart';
 import 'package:action_inc_taxi_app/core/models/fleet_income_model.dart';
 import 'package:action_inc_taxi_app/core/theme/app_text_styles.dart';
@@ -31,6 +32,7 @@ class _DashboardState extends State<Dashboard> {
       dashboardCubit.fetchFleetAmounts('daily');
       dashboardCubit.fetchMaintainanceCollectionAmount('daily');
       dashboardCubit.fetchcarWashCollectionAmount('daily');
+      dashboardCubit.getFleetIncomeForYear();
     });
   }
 
@@ -175,9 +177,9 @@ class _DashboardState extends State<Dashboard> {
                               Spacing.hMedium,
                               Expanded(
                                 child: IncomeBarChart(
-                                  values: [28000, 17000, 12000, 8000, 1000],
-                                  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
-                                  highlightedIndex: 3, // April
+                                  values: dashboardModel.monthlyFleetIncomes,
+                                  labels: AppConstants.monthNames.sublist(0, dashboardModel.monthlyFleetIncomes.length),
+                                  highlightedIndex: 0, // April
                                 ),
                               ),
                             ],

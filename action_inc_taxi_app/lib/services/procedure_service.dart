@@ -1,7 +1,6 @@
 import 'package:action_inc_taxi_app/core/helper_functions.dart';
 import 'package:action_inc_taxi_app/core/models/procedure_model.dart';
 import 'package:action_inc_taxi_app/core/models/section_model.dart';
-import 'package:action_inc_taxi_app/features/open_procedure/procedure_section.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProcedureService {

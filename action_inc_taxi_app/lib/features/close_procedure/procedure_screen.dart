@@ -119,7 +119,7 @@ class _ProcedureScreenState extends State<ProcedureScreen> {
                         children: [
                           Expanded(
                             child: ListView(
-                              children: (state as ProcedureLoaded)
+                              children: (state)
                                   .procedureModel!
                                   .categories
                                   .map(

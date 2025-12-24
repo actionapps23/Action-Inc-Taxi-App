@@ -1,3 +1,4 @@
+import 'package:action_inc_taxi_app/core/theme/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -15,7 +16,7 @@ class AppOutlineButton extends StatelessWidget {
     super.key,
     required this.label,
     this.onPressed,
-    this.borderRadius = 32,
+    this.borderRadius = 16,
     this.padding,
     this.borderColor = Colors.white,
     this.textColor = Colors.white,
@@ -37,7 +38,7 @@ class AppOutlineButton extends StatelessWidget {
         foregroundColor: textColor,
         backgroundColor: Colors.transparent,
         padding:
-            padding ?? EdgeInsets.symmetric(horizontal: 4.w, vertical: 8.h),
+            padding ?? EdgeInsets.symmetric(horizontal: 2.w, vertical: 8.h),
       ),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
@@ -48,12 +49,7 @@ class AppOutlineButton extends StatelessWidget {
             if (prefixIcon != null) ...[prefixIcon!, const SizedBox(width: 10)],
             Text(
               label,
-              style: TextStyle(
-                color: textColor,
-                fontSize: effectiveFontSize,
-                fontWeight: FontWeight.w700,
-                fontFamily: 'Poppins',
-              ),
+              style: AppTextStyles.bodySmall
             ),
           ],
         ),

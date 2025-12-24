@@ -1,3 +1,4 @@
+import 'package:action_inc_taxi_app/core/constants/app_constants.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:action_inc_taxi_app/core/db_service.dart';
 import 'dashboard_state.dart';
@@ -63,5 +64,32 @@ class DashboardCubit extends Cubit<DashboardState> {
       totalCarWashFeesYesterday: amounts['totalCarWashFeesYesterday'] ?? 0,
     );
     emit(DashboardLoaded(updatedDashboard));
+  }
+
+  Future<void> getFleetIncomeForYear() async {
+    try {
+      emit(DashboardLoading(state.dashboardModel));
+
+      var amounts = await dbService.getFleetIncomeForYear();
+      final monthlyIncomes = <int>[];
+      final currentMonth = DateTime.now().month;
+
+      for (var i = 0; i < currentMonth; i++) {
+        final month = AppConstants.monthNames[i];
+        final monthData = amounts[month];
+        if (monthData != null && monthData['totalAmount'] != null) {
+          monthlyIncomes.add(monthData['totalAmount'] as int);
+        } else {
+          monthlyIncomes.add(0);
+        }
+      }
+      emit(
+        DashboardLoaded(
+          state.dashboardModel.copyWith(monthlyFleetIncomes: monthlyIncomes),
+        ),
+      );
+    } catch (e) {
+      emit(DashboardError(state.dashboardModel, e.toString()));
+    }
   }
 }

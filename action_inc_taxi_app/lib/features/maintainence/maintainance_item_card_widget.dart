@@ -1,23 +1,38 @@
 import 'package:action_inc_taxi_app/core/helper_functions.dart';
 import 'package:action_inc_taxi_app/core/models/maintainance_model.dart';
 import 'package:action_inc_taxi_app/core/theme/app_text_styles.dart';
+import 'package:action_inc_taxi_app/core/widgets/buttons/app_button.dart';
 import 'package:action_inc_taxi_app/core/widgets/buttons/app_outline_button.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/spacing.dart';
+import 'package:action_inc_taxi_app/cubit/auth/login_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class MaintainanceItemCard extends StatelessWidget {
+class MaintainanceItemCard extends StatefulWidget {
   final MaintainanceModel maintainanceModel;
   const MaintainanceItemCard({super.key, required this.maintainanceModel});
 
   @override
+  State<MaintainanceItemCard> createState() => _MaintainanceItemCardState();
+}
+
+class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
+  bool _isSolved = false;
+
+  @override
   Widget build(BuildContext context) {
+    final LoginCubit loginCubit = context.read<LoginCubit>();
+    final LoginSuccess loginState = loginCubit.state as LoginSuccess;
+    final bool isAdmin = loginState.user.isAdmin;
+
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF181917),
+        color: AppColors.cardBackground,
         borderRadius: BorderRadius.circular(16),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 28),
+      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -28,16 +43,32 @@ class MaintainanceItemCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      maintainanceModel.title,
-                      style: AppTextStyles.bodySmall.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            widget.maintainanceModel.title,
+                            style: AppTextStyles.bodySmall.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Chip(
+                          label: Text(_isSolved ? 'Solved' : 'Unsolved'),
+                          backgroundColor: _isSolved
+                              ? AppColors.success
+                              : AppColors.error,
+                          labelStyle: AppTextStyles.bodyExtraSmall.copyWith(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
                     ),
                     Spacing.vSmall,
                     Text(
                       HelperFunctions.timeDifferenceFromNow(
-                        maintainanceModel.date,
+                        widget.maintainanceModel.date,
                       ),
                       style: AppTextStyles.bodyExtraSmall,
                     ),
@@ -45,14 +76,31 @@ class MaintainanceItemCard extends StatelessWidget {
                 ),
               ),
               Spacing.hLarge,
-              Column(
+              Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  AppOutlineButton(label: "Edit", prefixIcon: Icon(Icons.edit)),
-                  Spacing.vSmall,
-                  AppOutlineButton(
-                    label: "Solved",
-                    prefixIcon: Icon(Icons.done),
+                  if (isAdmin)
+                    AppOutlineButton(
+                      label: "Edit",
+
+                      prefixIcon: Icon(Icons.edit),
+                      onPressed: () {
+                        // TODO: wire edit action
+                      },
+                    ),
+                  Spacing.hSmall,
+                  AppButton(
+                    width: 32.w,
+                    text: _isSolved ? 'Mark as Unsolved' : 'Mark as Solved',
+                    backgroundColor: _isSolved
+                        ? AppColors.error
+                        : AppColors.success,
+                    textColor: _isSolved ? Colors.white : AppColors.buttonText,
+                    onPressed: () {
+                      setState(() {
+                        _isSolved = !_isSolved;
+                      });
+                    },
                   ),
                 ],
               ),
@@ -60,7 +108,7 @@ class MaintainanceItemCard extends StatelessWidget {
           ),
           Spacing.vSmall,
           Text(
-            maintainanceModel.description,
+            widget.maintainanceModel.description,
             style: AppTextStyles.bodyExtraSmall,
           ),
           Spacing.vLarge,
@@ -72,7 +120,7 @@ class MaintainanceItemCard extends StatelessWidget {
           ),
           Spacing.vSmall,
           Row(
-            children: maintainanceModel.attachmentUrls!
+            children: widget.maintainanceModel.attachmentUrls!
                 .map(
                   (attachmentUrl) => Padding(
                     padding: const EdgeInsets.only(right: 12.0),
@@ -166,7 +214,7 @@ class MaintainanceItemCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    maintainanceModel.taxiId,
+                    widget.maintainanceModel.taxiId,
                     style: AppTextStyles.bodyExtraSmall,
                   ),
                 ],
@@ -181,7 +229,7 @@ class MaintainanceItemCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    maintainanceModel.fleetId,
+                    widget.maintainanceModel.fleetId,
                     style: AppTextStyles.bodyExtraSmall,
                   ),
                 ],
@@ -196,7 +244,7 @@ class MaintainanceItemCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    maintainanceModel.inspectedBy,
+                    widget.maintainanceModel.inspectedBy,
                     style: AppTextStyles.bodyExtraSmall,
                   ),
                 ],
@@ -211,7 +259,7 @@ class MaintainanceItemCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    maintainanceModel.assignedTo ?? "Not assigned",
+                    widget.maintainanceModel.assignedTo ?? "Not assigned",
                     style: AppTextStyles.bodyExtraSmall,
                   ),
                 ],

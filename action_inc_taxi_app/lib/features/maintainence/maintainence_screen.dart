@@ -67,7 +67,9 @@ class _MaintainenceScreenState extends State<MaintainenceScreen> {
                       return Center(
                         child: Text(
                           AppConstants.maintainanceLoadError,
-                          style: AppTextStyles.bodySmall,
+                          style: AppTextStyles.bodySmall.copyWith(
+                            color: Colors.red,
+                          ),
                         ),
                       );
                     }

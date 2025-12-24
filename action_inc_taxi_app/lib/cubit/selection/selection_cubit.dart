@@ -1,12 +1,11 @@
 import 'package:action_inc_taxi_app/core/constants/app_constants.dart';
-import 'package:action_inc_taxi_app/core/models/procedure_model.dart';
 import 'package:action_inc_taxi_app/core/theme/app_assets.dart';
 import 'package:action_inc_taxi_app/features/close_procedure/procedure_screen.dart';
 import 'package:action_inc_taxi_app/features/entry_section/car_detail_main_screen.dart';
-import 'package:action_inc_taxi_app/features/inspection/procedure_checklist.dart';
+import 'package:action_inc_taxi_app/features/entry_section/inspection/vehicle_view_selection_screen.dart';
+import 'package:action_inc_taxi_app/features/entry_section/renewal/renewal_and_status_screen.dart';
 import 'package:action_inc_taxi_app/features/inventory/inventory_sceen.dart';
 import 'package:action_inc_taxi_app/features/maintainence/maintainence_screen.dart';
-import 'package:action_inc_taxi_app/features/open_procedure/open_procedure_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'selection_state.dart';
@@ -40,7 +39,50 @@ class SelectionCubit extends Cubit<SelectionState> {
   ];
 
   //
-  void proceed(int selectedIndex, BuildContext context) {
+  void proceed(int selectedIndex, BuildContext context, String? id) {
+    if (id != null && id.isNotEmpty) {
+      if (id.toLowerCase() == "maintenance") {
+        {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => MaintainenceScreen()),
+          );
+        }
+      } else if (id.toLowerCase() == "inventory") {
+        {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => InventorySceen()),
+          );
+        }
+      } else if (id.toLowerCase() == "open procedure") {
+        {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  ProcedureScreen(procedureType: AppConstants.openProcedure),
+            ),
+          );
+        }
+      } else if (id.toLowerCase() == "close procedure") {
+        {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  ProcedureScreen(procedureType: AppConstants.closeProcedure),
+            ),
+          );
+        }
+      } else if (id.toLowerCase() == 'renewal & status') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => RenewalAndStatusScreen()),
+        );
+      }
+      return;
+    }
     switch (selectedIndex) {
       case 0:
         Navigator.push(
@@ -73,7 +115,7 @@ class SelectionCubit extends Cubit<SelectionState> {
           context,
           MaterialPageRoute(
             builder: (context) =>
-                ProcedureScreen(procedureType: AppConstants.openProcedure),
+                VehicleViewSelectionScreen(),
           ),
         );
         break;

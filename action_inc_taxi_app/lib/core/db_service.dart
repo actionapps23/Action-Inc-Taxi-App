@@ -2,7 +2,6 @@ import 'package:action_inc_taxi_app/core/helper_functions.dart';
 import 'package:action_inc_taxi_app/core/models/car_detail_model.dart';
 import 'package:action_inc_taxi_app/core/models/employeee_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'models/creds.dart';
 import 'models/car_info.dart';
 import 'models/driver.dart';
 import 'models/rent.dart';
@@ -21,11 +20,15 @@ class DbService {
     }
     for (final doc in carQuery.docs) {
       final data = doc.data();
-      final fleetNumber = (data['fleetNo']);
+      final fleetNumberRaw = data['fleetNo'];
+      String? fleetNumber;
+      if (fleetNumberRaw is String) {
+        fleetNumber = fleetNumberRaw;
+      } else if (fleetNumberRaw is int) {
+        fleetNumber = fleetNumberRaw.toString();
+      }
       final taxiNo = data['taxiNo'] as String?;
-      if (fleetNumber != null &&
-          taxiNo != null &&
-          fleetTaxiNos.containsKey(fleetNumber)) {
+      if (fleetNumber != null && taxiNo != null && fleetTaxiNos.containsKey(fleetNumber)) {
         fleetTaxiNos[fleetNumber]!.add(taxiNo);
       }
     }
@@ -143,11 +146,15 @@ class DbService {
     }
     for (final doc in carQuery.docs) {
       final data = doc.data();
-      final fleetNumber = (data['fleetNumber'] as int?);
+      final fleetNumberRaw = data['fleetNumber'];
+      int? fleetNumber;
+      if (fleetNumberRaw is int) {
+        fleetNumber = fleetNumberRaw;
+      } else if (fleetNumberRaw is String) {
+        fleetNumber = int.tryParse(fleetNumberRaw);
+      }
       final taxiNo = data['taxiNo'] as String?;
-      if (fleetNumber != null &&
-          taxiNo != null &&
-          fleetTaxiNos.containsKey(fleetNumber)) {
+      if (fleetNumber != null && taxiNo != null && fleetTaxiNos.containsKey(fleetNumber)) {
         fleetTaxiNos[fleetNumber]!.add(taxiNo);
       }
     }
@@ -182,6 +189,68 @@ class DbService {
         .get();
     return q.docs.map((d) => Rent.fromMap(d.data())).toList();
   }
+
+  Future<Map<String, Map<String, int>>> getFleetIncomeForYear() async {
+    final now = DateTime.now().toUtc();
+    final currentYear = now.year;
+    final carQuery = await _firestore.collection(carInfoCollection).get();
+    final fleetTaxiNos = <int, List<String>>{};
+    for (var i = 1; i <= 4; i++) {
+      fleetTaxiNos[i] = [];
+    }
+    for (final doc in carQuery.docs) {
+      final data = doc.data();
+      final fleetNumberRaw = data['fleetNo'];
+      int? fleetNumber;
+      if (fleetNumberRaw is int) {
+        fleetNumber = fleetNumberRaw;
+      } else if (fleetNumberRaw is String) {
+        fleetNumber = int.tryParse(fleetNumberRaw);
+      }
+      final taxiNo = data['taxiNo'] as String?;
+      if (fleetNumber != null && taxiNo != null && fleetTaxiNos.containsKey(fleetNumber)) {
+        fleetTaxiNos[fleetNumber]!.add(taxiNo);
+      }
+    }
+    final rentQuery = await _firestore.collection(rentsCollection).get();
+    final rents = rentQuery.docs.map((doc) => Rent.fromMap(doc.data())).toList();
+    final result = <String, Map<String, int>>{};
+    for (var month = 1; month <= now.month ; month++) {
+      final monthString = HelperFunctions.monthIntToString(month);
+      final monthKey = '$currentYear-${month.toString().padLeft(2, '0')}';
+      int fleet1Amt = 0;
+      int fleet2Amt = 0;
+      int fleet3Amt = 0;
+      int fleet4Amt = 0;
+      for (final r in rents) {
+        if (r.dateKey.startsWith(monthKey)) {
+          if (fleetTaxiNos[1]!.contains(r.taxiNo)) {
+            fleet1Amt += r.paymentCashCents + r.paymentGCashCents;
+          }
+          if (fleetTaxiNos[2]!.contains(r.taxiNo)) {
+            fleet2Amt += r.paymentCashCents + r.paymentGCashCents;
+          }
+          if (fleetTaxiNos[3]!.contains(r.taxiNo)) {
+            fleet3Amt += r.paymentCashCents + r.paymentGCashCents;
+          }
+          if (fleetTaxiNos[4]!.contains(r.taxiNo)) {
+            fleet4Amt += r.paymentCashCents + r.paymentGCashCents;
+          }
+        }
+      }
+      result[monthString] = {
+        'fleet1Amt': fleet1Amt,
+        'fleet2Amt': fleet2Amt,
+        'fleet3Amt': fleet3Amt,
+        'fleet4Amt': fleet4Amt,
+        'totalAmount': fleet1Amt + fleet2Amt + fleet3Amt + fleet4Amt,
+      };
+    }
+      return result;
+
+  
+  }
+
 
   Future<Map<String, int>> getLastTwoDaysIncome() async {
     final now = DateTime.now().toUtc();

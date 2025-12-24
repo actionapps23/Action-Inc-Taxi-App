@@ -9,6 +9,7 @@ class DashboardModel {
   final int fleetIncomeTargetCollection;
   final int fleetIncomePreviousPeriod;
   final int totalMaintenanceFeesYesterday;
+  final List<int> monthlyFleetIncomes;
 
   final int washIncomeTargetValue;
   final int washIncomeOptimumTarget;
@@ -60,6 +61,7 @@ class DashboardModel {
     this.fleet4Amt = 0,
     this.totalFleetAmt = 0,
     this.totalMaintenanceFeesYesterday = 0,
+    this.monthlyFleetIncomes = const [],
   });
 
   DashboardModel copyWith({
@@ -92,6 +94,7 @@ class DashboardModel {
     bool? fleetLoading,
     int? totalMaintenanceFeesYesterday,
     int? totalCarWashFeesYesterday,
+    List<int>? monthlyFleetIncomes,
   }) {
     return DashboardModel(
       fleetIncomeTargetValue:
@@ -142,6 +145,7 @@ class DashboardModel {
           totalMaintenanceFeesYesterday ?? this.totalMaintenanceFeesYesterday,
       totalCarWashFeesYesterday:
           totalCarWashFeesYesterday ?? this.totalCarWashFeesYesterday,
+      monthlyFleetIncomes: monthlyFleetIncomes ?? this.monthlyFleetIncomes,
     );
   }
 }

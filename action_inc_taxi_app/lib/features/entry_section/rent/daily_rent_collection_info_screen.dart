@@ -1,6 +1,7 @@
 import 'package:action_inc_taxi_app/core/helper_functions.dart';
 import 'package:action_inc_taxi_app/core/models/car_info.dart';
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
+import 'package:action_inc_taxi_app/core/widgets/snackbar/snackbar.dart';
 import 'package:action_inc_taxi_app/cubit/car_details/car_detail_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/car_details/car_detail_state.dart';
 import 'package:flutter/material.dart';
@@ -51,6 +52,81 @@ class _DailyRentCollectionInfoScreenState
   final contractEndController = TextEditingController();
   final contractMonthsController = TextEditingController(); // read-only
   final contractExtraDaysController = TextEditingController(text: '0');
+
+  // Field validators mapped by field key used in fieldErrors
+  late final Map<String, String? Function(String?)> _validators = {
+    'taxiNo': (v) =>
+        v == null || v.trim().isEmpty ? 'Taxi number is required.' : null,
+    'firstDriverName': (v) =>
+        v == null || v.trim().isEmpty ? 'Driver name is required.' : null,
+    'secondDriverName': (v) => null,
+    'numberPlate': (v) =>
+        v == null || v.trim().isEmpty ? 'Number plate is required.' : null,
+    'firstDriverDob': (v) =>
+        v == null || v.trim().isEmpty ? 'Driver DOB is required.' : null,
+    'secondDriverDob': (v) => null,
+    'fleetNo': (v) {
+      if (v == null || v.trim().isEmpty) return 'Fleet number is required.';
+      final val = v.trim();
+      if (!RegExp(r'^[1-4]$').hasMatch(val))
+        return 'Fleet number must be 1, 2, 3 or 4.';
+      return null;
+    },
+    'driverCnic': (v) =>
+        v == null || v.trim().isEmpty ? 'Driver CNIC is required.' : null,
+    'rentAmount': (v) {
+      final raw = (v ?? '').replaceAll(RegExp(r'[^0-9\.]'), '');
+      final d = double.tryParse(raw);
+      if (d == null || d <= 0) {
+        return 'Rent amount is required and must be greater than 0.';
+      }
+      return null;
+    },
+    'maintenanceFees': (v) {
+      final raw = (v ?? '').replaceAll(RegExp(r'[^0-9\.]'), '');
+      final d = double.tryParse(raw);
+      if (d == null || d <= 0) {
+        return 'Maintenance fees must be greater than 0.';
+      }
+      return null;
+    },
+    'carWashFees': (v) {
+      final raw = (v ?? '').replaceAll(RegExp(r'[^0-9\.]'), '');
+      final d = double.tryParse(raw);
+      if (d == null || d <= 0) return 'Car wash fees must be greater than 0.';
+      return null;
+    },
+    'paymentCash': (v) {
+      final raw = (v ?? '').replaceAll(RegExp(r'[^0-9\.]'), '');
+      final d = double.tryParse(raw);
+      if (d == null || d <= 0)
+        return 'Payment in cash is required and must be greater than 0.';
+      return null;
+    },
+    'paymentGCash': (v) {
+      final raw = (v ?? '').replaceAll(RegExp(r'[^0-9\.]'), '');
+      final d = double.tryParse(raw);
+      if (d == null || d < 0) return 'Payment in G-Cash must be 0 or greater.';
+      return null;
+    },
+    'paymentDate': (v) =>
+        v == null || v.trim().isEmpty ? 'Payment date is required.' : null,
+    'gCashRef': (v) {
+      final gcashRaw = paymentGCashController.text.replaceAll(
+        RegExp(r'[^0-9\.]'),
+        '',
+      );
+      final gcash = double.tryParse(gcashRaw) ?? 0.0;
+      if (gcash > 0 && (v == null || v.trim().isEmpty))
+        return 'G-Cash Ref. No is required if G-Cash payment is entered.';
+      return null;
+    },
+    'extraDays': (v) {
+      final n = int.tryParse((v ?? '').trim()) ?? 0;
+      if (n < 0) return 'Extra days must be 0 or greater.';
+      return null;
+    },
+  };
 
   bool carStatusOnRoad = true;
   bool publicHoliday = false;
@@ -230,6 +306,10 @@ class _DailyRentCollectionInfoScreenState
       }
       final months = Rent.computeMonthsCountFromTimestamps(startUtc, endUtc);
       contractMonthsController.text = months.toString();
+    } catch (_) {}
+    // update cubit with validation errors so UI can display them
+    try {
+      _cubit.update(fieldErrors: errors);
     } catch (_) {}
   }
 
@@ -550,7 +630,8 @@ class _DailyRentCollectionInfoScreenState
                                         labelText: 'Taxi No',
                                         hintText: 'Enter Taxi No',
                                         isReadOnly: true,
-                                        // errorText: fieldErrors['taxiNo'],
+                                        validator: _validators['taxiNo'],
+                                        errorText: fieldErrors['taxiNo'],
                                       ),
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
@@ -558,16 +639,21 @@ class _DailyRentCollectionInfoScreenState
                                         labelText: 'First Driver Name',
                                         hintText: 'Enter Driver Name',
                                         isReadOnly: true,
-                                        // errorText:
-                                        //     fieldErrors['firstDriverName'],
+                                        validator:
+                                            _validators['firstDriverName'],
+                                        errorText:
+                                            fieldErrors['firstDriverName'],
                                       ),
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
                                         controller: secondDriverNameController,
                                         labelText: 'Second Driver',
                                         hintText: 'Enter Second Driver',
-                                        // errorText:
-                                        //     fieldErrors['secondDriverName'],
+                                        isReadOnly: widget.fetchDetails,
+                                        validator:
+                                            _validators['secondDriverName'],
+                                        errorText:
+                                            fieldErrors['secondDriverName'],
                                       ),
                                     ],
                                   ),
@@ -580,7 +666,9 @@ class _DailyRentCollectionInfoScreenState
                                         controller: numberPlateController,
                                         labelText: 'Number Plate',
                                         hintText: 'Enter Number Plate',
-                                        // errorText: fieldErrors['numberPlate'],
+                                        isReadOnly: widget.fetchDetails,
+                                        validator: _validators['numberPlate'],
+                                        errorText: fieldErrors['numberPlate'],
                                       ),
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
@@ -588,11 +676,15 @@ class _DailyRentCollectionInfoScreenState
                                         labelText: 'First Driver DOB',
                                         hintText: 'DD MMM, YYYY',
                                         isReadOnly: true,
-                                        onTap: () => _pickDateForController(
-                                          firstDriverDobController,
-                                        ),
-                                        // errorText:
-                                        // fieldErrors['firstDriverDob'],
+                                        onTap: widget.fetchDetails
+                                            ? null
+                                            : () => _pickDateForController(
+                                                firstDriverDobController,
+                                              ),
+                                        validator:
+                                            _validators['firstDriverDob'],
+                                        errorText:
+                                            fieldErrors['firstDriverDob'],
                                       ),
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
@@ -600,11 +692,15 @@ class _DailyRentCollectionInfoScreenState
                                         labelText: 'Second Driver DOB',
                                         hintText: 'DD MMM, YYYY',
                                         isReadOnly: true,
-                                        onTap: () => _pickDateForController(
-                                          secondDriverDobController,
-                                        ),
-                                        // errorText:
-                                        //     fieldErrors['secondDriverDob'],
+                                        onTap: widget.fetchDetails
+                                            ? null
+                                            : () => _pickDateForController(
+                                                secondDriverDobController,
+                                              ),
+                                        validator:
+                                            _validators['secondDriverDob'],
+                                        errorText:
+                                            fieldErrors['secondDriverDob'],
                                       ),
                                     ],
                                   ),
@@ -617,25 +713,31 @@ class _DailyRentCollectionInfoScreenState
                                         controller: fleetNoController,
                                         labelText: 'Fleet No',
                                         hintText: 'Enter Fleet No',
-                                        // errorText: fieldErrors['fleetNo'],
+                                        isReadOnly: widget.fetchDetails,
+                                        validator: _validators['fleetNo'],
+                                        errorText: fieldErrors['fleetNo'],
                                       ),
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
                                         controller: firstDriverCnicController,
                                         labelText: 'FirstDriver ID #',
                                         hintText: 'Enter Driver ID #',
+                                        isReadOnly: widget.fetchDetails,
+                                        validator: _validators['driverCnic'],
                                         onChanged: (s) =>
                                             _updateDraftFromControllers(),
-                                        // errorText: fieldErrors['driverCnic'],
+                                        errorText: fieldErrors['driverCnic'],
                                       ),
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
                                         controller: secondDriverCnicController,
                                         labelText: 'Second Driver ID #',
                                         hintText: 'Enter Driver ID #',
+                                        isReadOnly: widget.fetchDetails,
+                                        validator: _validators['driverCnic'],
                                         onChanged: (s) =>
                                             _updateDraftFromControllers(),
-                                        // errorText: fieldErrors['driverCnic'],
+                                        errorText: fieldErrors['driverCnic'],
                                       ),
                                     ],
                                   ),
@@ -652,7 +754,9 @@ class _DailyRentCollectionInfoScreenState
                                         controller: taxiNoController,
                                         labelText: 'Taxi No',
                                         hintText: 'Enter Taxi No',
-                                        // errorText: fieldErrors['taxiNo'],
+                                        isReadOnly: widget.fetchDetails,
+                                        validator: _validators['taxiNo'],
+                                        errorText: fieldErrors['taxiNo'],
                                       ),
                                     ),
                                     SizedBox(width: 16.w),
@@ -661,7 +765,9 @@ class _DailyRentCollectionInfoScreenState
                                         controller: numberPlateController,
                                         labelText: 'Number Plate',
                                         hintText: 'Enter Number Plate',
-                                        // errorText: fieldErrors['numberPlate'],
+                                        isReadOnly: widget.fetchDetails,
+                                        validator: _validators['numberPlate'],
+                                        errorText: fieldErrors['numberPlate'],
                                       ),
                                     ),
                                     SizedBox(width: 16.w),
@@ -670,7 +776,9 @@ class _DailyRentCollectionInfoScreenState
                                         controller: fleetNoController,
                                         labelText: 'Fleet No',
                                         hintText: 'Enter Fleet No',
-                                        // errorText: fieldErrors['fleetNo'],
+                                        isReadOnly: widget.fetchDetails,
+                                        validator: _validators['fleetNo'],
+                                        errorText: fieldErrors['fleetNo'],
                                       ),
                                     ),
                                     SizedBox(width: 16.w),
@@ -691,8 +799,11 @@ class _DailyRentCollectionInfoScreenState
                                         controller: firstDriverNameController,
                                         labelText: 'Driver Name',
                                         hintText: 'Enter Driver Name',
-                                        // errorText:
-                                        //     fieldErrors['firstDriverName'],
+                                        isReadOnly: widget.fetchDetails,
+                                        validator:
+                                            _validators['firstDriverName'],
+                                        errorText:
+                                            fieldErrors['firstDriverName'],
                                       ),
                                     ),
                                     SizedBox(width: 16.w),
@@ -702,11 +813,15 @@ class _DailyRentCollectionInfoScreenState
                                         labelText: 'Date of Birth',
                                         hintText: 'DD MMM, YYYY',
                                         isReadOnly: true,
-                                        onTap: () => _pickDateForController(
-                                          firstDriverDobController,
-                                        ),
-                                        // errorText:
-                                        //     fieldErrors['firstDriverDob'],
+                                        onTap: widget.fetchDetails
+                                            ? null
+                                            : () => _pickDateForController(
+                                                firstDriverDobController,
+                                              ),
+                                        validator:
+                                            _validators['firstDriverDob'],
+                                        errorText:
+                                            fieldErrors['firstDriverDob'],
                                       ),
                                     ),
                                     SizedBox(width: 16.w),
@@ -720,9 +835,11 @@ class _DailyRentCollectionInfoScreenState
                                   controller: firstDriverCnicController,
                                   labelText: 'Driver CNIC',
                                   hintText: 'Enter Driver CNIC',
+                                  isReadOnly: widget.fetchDetails,
+                                  validator: _validators['driverCnic'],
                                   onChanged: (s) =>
                                       _updateDraftFromControllers(),
-                                  // errorText: fieldErrors['driverCnic'],
+                                  errorText: fieldErrors['driverCnic'],
                                 ),
                                 SizedBox(height: 12.h),
                                 Row(
@@ -732,8 +849,11 @@ class _DailyRentCollectionInfoScreenState
                                         controller: secondDriverNameController,
                                         labelText: 'Second Driver',
                                         hintText: 'Enter Second Driver',
-                                        // errorText:
-                                        //     fieldErrors['secondDriverName'],
+                                        isReadOnly: widget.fetchDetails,
+                                        validator:
+                                            _validators['secondDriverName'],
+                                        errorText:
+                                            fieldErrors['secondDriverName'],
                                       ),
                                     ),
                                     SizedBox(width: 16.w),
@@ -743,11 +863,15 @@ class _DailyRentCollectionInfoScreenState
                                         labelText: 'Second Driver DOB',
                                         hintText: 'DD MMM, YYYY',
                                         isReadOnly: true,
-                                        onTap: () => _pickDateForController(
-                                          secondDriverDobController,
-                                        ),
-                                        // errorText:
-                                        //     fieldErrors['secondDriverDob'],
+                                        onTap: widget.fetchDetails
+                                            ? null
+                                            : () => _pickDateForController(
+                                                secondDriverDobController,
+                                              ),
+                                        validator:
+                                            _validators['secondDriverDob'],
+                                        errorText:
+                                            fieldErrors['secondDriverDob'],
                                       ),
                                     ),
                                     SizedBox(width: 16.w),
@@ -830,10 +954,13 @@ class _DailyRentCollectionInfoScreenState
                                           size: 18,
                                         ),
                                         isReadOnly: true,
-                                        onTap: () => _pickDateForController(
-                                          contractStartController,
-                                        ),
-                                        // errorText: fieldErrors['contractStart'],
+                                        onTap: widget.fetchDetails
+                                            ? null
+                                            : () => _pickDateForController(
+                                                contractStartController,
+                                              ),
+                                        validator: _validators['paymentDate'],
+                                        errorText: fieldErrors['contractStart'],
                                       ),
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
@@ -846,19 +973,24 @@ class _DailyRentCollectionInfoScreenState
                                           size: 18,
                                         ),
                                         isReadOnly: true,
-                                        onTap: () => _pickDateForController(
-                                          contractEndController,
-                                        ),
-                                        // errorText: fieldErrors['contractEnd'],
+                                        onTap: widget.fetchDetails
+                                            ? null
+                                            : () => _pickDateForController(
+                                                contractEndController,
+                                              ),
+                                        validator: _validators['paymentDate'],
+                                        errorText: fieldErrors['contractEnd'],
                                       ),
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
                                         controller: contractExtraDaysController,
                                         labelText: 'Extra Days',
                                         hintText: '0',
+                                        isReadOnly: widget.fetchDetails,
                                         onChanged: (s) =>
                                             _updateDraftFromControllers(),
-                                        // errorText: fieldErrors['extraDays'],
+                                        validator: _validators['extraDays'],
+                                        errorText: fieldErrors['extraDays'],
                                       ),
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
@@ -880,6 +1012,7 @@ class _DailyRentCollectionInfoScreenState
                                         controller: rentAmountController,
                                         labelText: 'Rent Amount',
                                         hintText: 'Enter Amount',
+                                        isReadOnly: widget.fetchDetails,
                                         onChanged: (s) {
                                           if (birthday) {
                                             // Do not change rentAmountController, just skip further logic
@@ -888,7 +1021,8 @@ class _DailyRentCollectionInfoScreenState
                                           // Do not modify rentAmountController for public holiday
                                           _updateDraftFromControllers();
                                         },
-                                        // errorText: fieldErrors['rentAmount'],
+                                        validator: _validators['rentAmount'],
+                                        errorText: fieldErrors['rentAmount'],
                                       ),
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
@@ -897,8 +1031,10 @@ class _DailyRentCollectionInfoScreenState
                                         hintText: 'Enter Amount',
                                         onChanged: (s) =>
                                             _updateDraftFromControllers(),
-                                        // errorText:
-                                        // fieldErrors['maintenanceFees'],
+                                        validator:
+                                            _validators['maintenanceFees'],
+                                        errorText:
+                                            fieldErrors['maintenanceFees'],
                                         isReadOnly: true,
                                       ),
                                       SizedBox(height: 12.h),
@@ -908,7 +1044,8 @@ class _DailyRentCollectionInfoScreenState
                                         hintText: 'Enter Amount',
                                         onChanged: (s) =>
                                             _updateDraftFromControllers(),
-                                        // errorText: fieldErrors['carWashFees'],
+                                        validator: _validators['carWashFees'],
+                                        errorText: fieldErrors['carWashFees'],
                                         isReadOnly: true,
                                       ),
                                     ],
@@ -923,6 +1060,7 @@ class _DailyRentCollectionInfoScreenState
                                         controller: paymentCashController,
                                         labelText: 'Payment in Cash',
                                         hintText: 'Enter Amount',
+                                        isReadOnly: widget.fetchDetails,
                                         suffix: Icon(
                                           Icons.money,
                                           color: Colors.white54,
@@ -930,25 +1068,30 @@ class _DailyRentCollectionInfoScreenState
                                         ),
                                         onChanged: (s) =>
                                             _updateDraftFromControllers(),
-                                        // errorText: fieldErrors['paymentCash'],
+                                        validator: _validators['paymentCash'],
+                                        errorText: fieldErrors['paymentCash'],
                                       ),
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
                                         controller: paymentGCashController,
                                         labelText: 'Payment in G-Cash',
                                         hintText: 'Enter Amount',
+                                        isReadOnly: widget.fetchDetails,
                                         onChanged: (s) =>
                                             _updateDraftFromControllers(),
-                                        // errorText: fieldErrors['paymentGCash'],
+                                        validator: _validators['paymentGCash'],
+                                        errorText: fieldErrors['paymentGCash'],
                                       ),
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
                                         controller: gCashRefController,
                                         labelText: 'G-Cash Ref. No',
                                         hintText: 'Enter Ref',
+                                        isReadOnly: widget.fetchDetails,
                                         onChanged: (s) =>
                                             _updateDraftFromControllers(),
-                                        // errorText: fieldErrors['gCashRef'],
+                                        validator: _validators['gCashRef'],
+                                        errorText: fieldErrors['gCashRef'],
                                       ),
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
@@ -961,10 +1104,13 @@ class _DailyRentCollectionInfoScreenState
                                           size: 18,
                                         ),
                                         isReadOnly: true,
-                                        onTap: () => _pickDateForController(
-                                          paymentDateController,
-                                        ),
-                                        // errorText: fieldErrors['paymentDate'],
+                                        onTap: widget.fetchDetails
+                                            ? null
+                                            : () => _pickDateForController(
+                                                paymentDateController,
+                                              ),
+                                        validator: _validators['paymentDate'],
+                                        errorText: fieldErrors['paymentDate'],
                                       ),
                                     ],
                                   ),
@@ -1014,6 +1160,7 @@ class _DailyRentCollectionInfoScreenState
                                   controller: rentAmountController,
                                   labelText: 'Rent Amount',
                                   hintText: 'Enter Amount',
+                                  isReadOnly: widget.fetchDetails,
                                   onChanged: (s) {
                                     if (birthday) {
                                       rentAmountController.text = '0';
@@ -1029,7 +1176,7 @@ class _DailyRentCollectionInfoScreenState
                                     }
                                     _updateDraftFromControllers();
                                   },
-                                  // errorText: fieldErrors['rentAmount'],
+                                  errorText: fieldErrors['rentAmount'],
                                 ),
                                 SizedBox(height: 12.h),
                                 Row(
@@ -1039,10 +1186,11 @@ class _DailyRentCollectionInfoScreenState
                                         controller: maintenanceFeesController,
                                         labelText: 'Maintenance Fees',
                                         hintText: 'Enter Amount',
+                                        isReadOnly: widget.fetchDetails,
                                         onChanged: (s) =>
                                             _updateDraftFromControllers(),
-                                        // errorText:
-                                        //     fieldErrors['maintenanceFees'],
+                                        errorText:
+                                            fieldErrors['maintenanceFees'],
                                       ),
                                     ),
                                     SizedBox(width: 16.w),
@@ -1051,9 +1199,10 @@ class _DailyRentCollectionInfoScreenState
                                         controller: carWashFeesController,
                                         labelText: 'Car Wash Fees',
                                         hintText: 'Enter Amount',
+                                        isReadOnly: widget.fetchDetails,
                                         onChanged: (s) =>
                                             _updateDraftFromControllers(),
-                                        // errorText: fieldErrors['carWashFees'],
+                                        errorText: fieldErrors['carWashFees'],
                                       ),
                                     ),
                                   ],
@@ -1067,6 +1216,7 @@ class _DailyRentCollectionInfoScreenState
                                         controller: paymentCashController,
                                         labelText: 'Payment in Cash',
                                         hintText: 'Enter Amount',
+                                        isReadOnly: widget.fetchDetails,
                                         suffix: Icon(
                                           Icons.money,
                                           color: Colors.white54,
@@ -1074,7 +1224,7 @@ class _DailyRentCollectionInfoScreenState
                                         ),
                                         onChanged: (s) =>
                                             _updateDraftFromControllers(),
-                                        // errorText: fieldErrors['paymentCash'],
+                                        errorText: fieldErrors['paymentCash'],
                                       ),
                                     ),
                                     SizedBox(width: 16.w),
@@ -1083,9 +1233,10 @@ class _DailyRentCollectionInfoScreenState
                                         controller: paymentGCashController,
                                         labelText: 'Payment in G-Cash',
                                         hintText: 'Enter Amount',
+                                        isReadOnly: widget.fetchDetails,
                                         onChanged: (s) =>
                                             _updateDraftFromControllers(),
-                                        // errorText: fieldErrors['paymentGCash'],
+                                        errorText: fieldErrors['paymentGCash'],
                                       ),
                                     ),
                                     SizedBox(width: 16.w),
@@ -1094,9 +1245,10 @@ class _DailyRentCollectionInfoScreenState
                                         controller: gCashRefController,
                                         labelText: 'G-Cash Ref. No',
                                         hintText: 'Enter Ref',
+                                        isReadOnly: widget.fetchDetails,
                                         onChanged: (s) =>
                                             _updateDraftFromControllers(),
-                                        // errorText: fieldErrors['gCashRef'],
+                                        errorText: fieldErrors['gCashRef'],
                                       ),
                                     ),
                                   ],
@@ -1116,10 +1268,12 @@ class _DailyRentCollectionInfoScreenState
                                           size: 18,
                                         ),
                                         isReadOnly: true,
-                                        onTap: () => _pickDateForController(
-                                          paymentDateController,
-                                        ),
-                                        // errorText: fieldErrors['paymentDate'],
+                                        onTap: widget.fetchDetails
+                                            ? null
+                                            : () => _pickDateForController(
+                                                paymentDateController,
+                                              ),
+                                        errorText: fieldErrors['paymentDate'],
                                       ),
                                     ),
                                     SizedBox(width: 16.w),
@@ -1128,6 +1282,7 @@ class _DailyRentCollectionInfoScreenState
                                         controller: totalRentController,
                                         labelText: 'Total Rent (computed)',
                                         hintText: 'Total',
+                                        isReadOnly: widget.fetchDetails,
                                       ),
                                     ),
                                     SizedBox(width: 16.w),
@@ -1136,6 +1291,7 @@ class _DailyRentCollectionInfoScreenState
                                         controller: dueRentController,
                                         labelText: 'Due Rent (computed)',
                                         hintText: 'Due',
+                                        isReadOnly: widget.fetchDetails,
                                       ),
                                     ),
                                   ],
@@ -1246,14 +1402,12 @@ class _DailyRentCollectionInfoScreenState
                               errors = currentState.fieldErrors;
                             }
                             if (errors.isNotEmpty) {
+                              debugPrint(
+                                  'Errors in form: ${errors.toString()}');
                               if (context.mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      'Please fill all required fields.',
-                                    ),
-                                    backgroundColor: Colors.red,
-                                  ),
+                                SnackBarHelper.showErrorSnackBar(
+                                  context,
+                                  'Please fix the errors in the form.',
                                 );
                               }
                               return;

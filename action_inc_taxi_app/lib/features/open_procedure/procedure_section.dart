@@ -3,8 +3,6 @@ import 'package:action_inc_taxi_app/core/widgets/add_procedure_field_popup.dart'
 import 'package:action_inc_taxi_app/core/models/section_model.dart';
 import 'package:action_inc_taxi_app/cubit/procedure/procedure_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/procedure/procedure_state.dart';
-import 'package:action_inc_taxi_app/core/widgets/snackbar/snackbar.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProcedureSection extends StatelessWidget {
