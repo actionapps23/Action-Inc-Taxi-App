@@ -1,6 +1,7 @@
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:action_inc_taxi_app/core/constants/app_constants.dart';
+import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 
 class AppButton extends StatelessWidget {
   final String text;
@@ -55,7 +56,7 @@ class AppButton extends StatelessWidget {
               valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
             ),
           )
-        : Text(
+        : ResponsiveText(
             text,
             style:
                 textStyle ??

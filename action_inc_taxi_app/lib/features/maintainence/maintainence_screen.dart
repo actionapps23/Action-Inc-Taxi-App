@@ -2,6 +2,7 @@ import 'package:action_inc_taxi_app/core/constants/app_constants.dart';
 import 'package:action_inc_taxi_app/core/models/maintainance_model.dart';
 import 'package:action_inc_taxi_app/core/theme/app_text_styles.dart';
 import 'package:action_inc_taxi_app/core/widgets/navbar/navbar.dart';
+import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/spacing.dart';
 import 'package:action_inc_taxi_app/cubit/maintainance/maintainance_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/maintainance/maintainance_state.dart';
@@ -37,7 +38,7 @@ class _MaintainenceScreenState extends State<MaintainenceScreen> {
             Navbar(),
             Spacing.vLarge,
             Center(
-              child: Text(
+              child: ResponsiveText(
                 "Maintenance Request",
                 style: AppTextStyles.bodySmall.copyWith(
                   fontWeight: FontWeight.w600,
@@ -55,14 +56,14 @@ class _MaintainenceScreenState extends State<MaintainenceScreen> {
                       return Center(child: CircularProgressIndicator());
                     } else if (state is MaintainanceEmpty) {
                       return Center(
-                        child: Text(
+                        child: ResponsiveText(
                           AppConstants.maintainanceEmptyMessage,
                           style: AppTextStyles.bodySmall,
                         ),
                       );
                     } else if (state is MaintainanceError) {
                       return Center(
-                        child: Text(
+                        child: ResponsiveText(
                           AppConstants.maintainanceLoadError,
                           style: AppTextStyles.bodySmall.copyWith(
                             color: Colors.red,

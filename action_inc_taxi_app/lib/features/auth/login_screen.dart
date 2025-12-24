@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:action_inc_taxi_app/core/theme/app_assets.dart';
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
 import 'package:action_inc_taxi_app/features/selection_screen.dart';
@@ -119,7 +121,7 @@ class LoginScreen extends HookWidget {
                                 );
                               }
                             },
-                            width: 60.w,
+                            width: max(60.w, 80),
                             height: 44.h,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.buttonPrimary,

@@ -1,5 +1,6 @@
 import 'package:action_inc_taxi_app/core/models/section_model.dart';
 import 'package:action_inc_taxi_app/core/widgets/navbar/navbar.dart';
+import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:action_inc_taxi_app/core/widgets/section_widget.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/spacing.dart';
 import 'package:action_inc_taxi_app/features/entry_section/car_plan/action_buttons.dart';
@@ -27,7 +28,7 @@ class VehicleInspectionPanel extends StatelessWidget {
             Navbar(),
             Spacing.vMedium,
             Center(
-              child: Text(
+              child: ResponsiveText(
                 viewName,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),

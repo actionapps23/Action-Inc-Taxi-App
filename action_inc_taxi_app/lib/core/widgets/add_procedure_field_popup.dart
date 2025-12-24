@@ -1,6 +1,7 @@
 import 'package:action_inc_taxi_app/core/models/section_model.dart';
 import 'package:action_inc_taxi_app/core/widgets/form/app_dropdown.dart';
 import 'package:action_inc_taxi_app/core/widgets/form/form_field.dart';
+import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:action_inc_taxi_app/cubit/procedure/procedure_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -77,7 +78,7 @@ class _AddProcedureFieldPopupState extends State<AddProcedureFieldPopup> {
                 children: [
                   Expanded(
                     flex: 1,
-                    child: Text(
+                    child: ResponsiveText(
                       "Select Section",
                       style: AppTextStyles.bodyExtraSmall,
                     ),
@@ -91,7 +92,7 @@ class _AddProcedureFieldPopupState extends State<AddProcedureFieldPopup> {
                           .map(
                             (section) => DropdownMenuItem<String>(
                               value: section,
-                              child: Text(
+                              child: ResponsiveText(
                                 section,
                                 style: AppTextStyles.bodyExtraSmall,
                               ),
@@ -111,7 +112,7 @@ class _AddProcedureFieldPopupState extends State<AddProcedureFieldPopup> {
               Row(
                 children: [
                   Expanded(
-                    child: Text(
+                    child: ResponsiveText(
                       "Field Name",
                       style: AppTextStyles.bodyExtraSmall,
                     ),
@@ -156,7 +157,7 @@ class _AddProcedureFieldPopupState extends State<AddProcedureFieldPopup> {
                     );
                     Navigator.of(context).pop();
                   },
-                  child: Text(
+                  child: ResponsiveText(
                     "Add Field",
                     style: AppTextStyles.bodyExtraSmall.copyWith(
                       color: AppColors.buttonText,

@@ -1,4 +1,5 @@
 import 'package:action_inc_taxi_app/core/theme/app_text_styles.dart';
+import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
@@ -75,7 +76,7 @@ class _IncomeBarChartState extends State<IncomeBarChart> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,
         children: [
-          Row(children: [Text('Total Income'), const Spacer()]),
+          Row(children: [ResponsiveText('Total Income'), const Spacer()]),
           Spacing.vMedium,
           SizedBox(
             height: (chartHeight + 40.h),
@@ -88,7 +89,7 @@ class _IncomeBarChartState extends State<IncomeBarChart> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: yLabels
                       .map(
-                        (t) => Text(
+                        (t) => ResponsiveText(
                            '₱$t',
                           style: AppTextStyles.bodyExtraSmall.copyWith(
                             color: Colors.white,
@@ -132,7 +133,7 @@ class _IncomeBarChartState extends State<IncomeBarChart> {
                                       color: AppColors.primary,
                                       borderRadius: BorderRadius.circular(12.r),
                                     ),
-                                    child: Text(
+                                    child: ResponsiveText(
                                       '${widget.currencySymbol} ${widget.values[i]}',
                                       style: AppTextStyles.bodyExtraSmall.copyWith(
                                         color: Colors.black,
@@ -156,7 +157,7 @@ class _IncomeBarChartState extends State<IncomeBarChart> {
                                   constraints: BoxConstraints(maxWidth: barWidth + 8.w),
                                   child: FittedBox(
                                     fit: BoxFit.scaleDown,
-                                    child: Text(
+                                    child: ResponsiveText(
                                       widget.labels[i],
                                       style: AppTextStyles.bodyExtraSmall.copyWith(
                                         color: Colors.white,

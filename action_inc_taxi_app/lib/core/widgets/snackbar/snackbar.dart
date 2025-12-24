@@ -1,5 +1,6 @@
 import 'package:action_inc_taxi_app/core/constants/app_constants.dart';
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
+import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/spacing.dart';
 import 'package:flutter/material.dart';
 
@@ -81,7 +82,7 @@ class SnackBarHelper {
           children: <Widget>[
             icon,
             Spacing.hStandard,
-            Flexible(child: Text(text)),
+            Flexible(child: ResponsiveText(text)),
           ],
         ),
       );

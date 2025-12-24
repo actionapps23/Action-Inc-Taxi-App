@@ -2,6 +2,7 @@ import 'package:action_inc_taxi_app/core/models/rent.dart';
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
 import 'package:action_inc_taxi_app/core/widgets/buttons/app_button.dart';
 import 'package:action_inc_taxi_app/core/widgets/form/form_field.dart';
+import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:action_inc_taxi_app/features/entry_section/car_plan/action_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -130,18 +131,18 @@ class _CarPlanScreenState extends State<CarPlanScreen> {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: AppColors.cardBackground,
-        title: const Text(
+        title: const ResponsiveText(
           'Delete Default',
           style: TextStyle(color: Colors.white),
         ),
-        content: const Text(
+        content: const ResponsiveText(
           'Are you sure you want to delete this default entry?',
           style: TextStyle(color: Colors.white70),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text(
+            child: const ResponsiveText(
               'Cancel',
               style: TextStyle(color: Colors.white70),
             ),
@@ -153,7 +154,7 @@ class _CarPlanScreenState extends State<CarPlanScreen> {
               });
               Navigator.pop(context);
             },
-            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+            child: const ResponsiveText('Delete', style: TextStyle(color: Colors.red)),
           ),
         ],
       ),
@@ -167,7 +168,7 @@ class _CarPlanScreenState extends State<CarPlanScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Car Plan Category
-          Text(
+          ResponsiveText(
             'Car Plan',
             style: TextStyle(
               fontWeight: FontWeight.bold,
@@ -240,7 +241,7 @@ class _CarPlanScreenState extends State<CarPlanScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
+              ResponsiveText(
                 'Default History',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
@@ -281,7 +282,7 @@ class _CarPlanScreenState extends State<CarPlanScreen> {
                 border: Border.all(color: Colors.white12),
               ),
               child: Center(
-                child: Text(
+                child: ResponsiveText(
                   'No default history entries yet',
                   style: TextStyle(color: Colors.white54, fontSize: 14),
                 ),
@@ -309,7 +310,7 @@ class _CarPlanScreenState extends State<CarPlanScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
+                              ResponsiveText(
                                 item.name,
                                 style: TextStyle(
                                   color: Colors.white,
@@ -318,7 +319,7 @@ class _CarPlanScreenState extends State<CarPlanScreen> {
                                 ),
                               ),
                               SizedBox(height: 4.h),
-                              Text(
+                              ResponsiveText(
                                 item.role,
                                 style: TextStyle(
                                   color: Colors.white70,
@@ -356,19 +357,19 @@ class _CarPlanScreenState extends State<CarPlanScreen> {
                       ],
                     ),
                     SizedBox(height: 8.h),
-                    Text(
+                    ResponsiveText(
                       item.description,
                       style: TextStyle(color: Colors.white70, fontSize: 14),
                     ),
                     SizedBox(height: 8.h),
-                    Text(
+                    ResponsiveText(
                       item.date,
                       style: TextStyle(color: Colors.white54, fontSize: 12),
                     ),
                     SizedBox(height: 8.h),
                     Row(
                       children: [
-                        Text(
+                        ResponsiveText(
                           'Attachments: ',
                           style: TextStyle(color: Colors.white70, fontSize: 12),
                         ),
@@ -389,7 +390,7 @@ class _CarPlanScreenState extends State<CarPlanScreen> {
             onSubmit: () {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Car Plan submitted successfully'),
+                  content: ResponsiveText('Car Plan submitted successfully'),
                   backgroundColor: Colors.green,
                 ),
               );
@@ -509,7 +510,7 @@ class _AddDefaultDialogState extends State<_AddDefaultDialog> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
+              ResponsiveText(
                 widget.initialEntry == null ? 'Add Default' : 'Edit Default',
                 style: TextStyle(
                   color: Colors.white,
@@ -537,7 +538,7 @@ class _AddDefaultDialogState extends State<_AddDefaultDialog> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
-                    child: Text(
+                    child: ResponsiveText(
                       'Description',
                       style: TextStyle(
                         color: AppColors.textHint,
@@ -600,7 +601,7 @@ class _AddDefaultDialogState extends State<_AddDefaultDialog> {
                 children: [
                   TextButton(
                     onPressed: () => Navigator.pop(context),
-                    child: Text(
+                    child: ResponsiveText(
                       'Cancel',
                       style: TextStyle(color: Colors.white70),
                     ),
@@ -614,7 +615,7 @@ class _AddDefaultDialogState extends State<_AddDefaultDialog> {
                           descriptionController.text.trim().isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text('Please fill all fields'),
+                            content: ResponsiveText('Please fill all fields'),
                             backgroundColor: Colors.red,
                           ),
                         );

@@ -1,5 +1,6 @@
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
 import 'package:action_inc_taxi_app/core/widgets/navbar/navbar.dart';
+import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:action_inc_taxi_app/core/widgets/tabbar/tabbar.dart';
 import 'package:action_inc_taxi_app/cubit/car_details/car_detail_state.dart';
 import 'package:action_inc_taxi_app/cubit/selection/selection_cubit.dart';
@@ -52,7 +53,7 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                       size: 48,
                     ),
                     SizedBox(height: 16.h),
-                    const Text(
+                    const ResponsiveText(
                       'No car details found.',
                       style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
@@ -77,7 +78,7 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                       size: 48,
                     ),
                     SizedBox(height: 16.h),
-                    Text(
+                    ResponsiveText(
                       state.message,
                       style: const TextStyle(color: Colors.red, fontSize: 18),
                     ),
@@ -114,7 +115,7 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(
+                                      ResponsiveText(
                                         'Car Details',
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,

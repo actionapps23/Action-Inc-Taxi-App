@@ -3,6 +3,7 @@ import 'package:action_inc_taxi_app/core/models/maintainance_model.dart';
 import 'package:action_inc_taxi_app/core/theme/app_text_styles.dart';
 import 'package:action_inc_taxi_app/core/widgets/buttons/app_button.dart';
 import 'package:action_inc_taxi_app/core/widgets/buttons/app_outline_button.dart';
+import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/spacing.dart';
 import 'package:action_inc_taxi_app/cubit/auth/login_cubit.dart';
 import 'package:flutter/material.dart';
@@ -37,6 +38,7 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
@@ -46,7 +48,7 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
                     Row(
                       children: [
                         Expanded(
-                          child: Text(
+                          child: ResponsiveText(
                             widget.maintainanceModel.title,
                             style: AppTextStyles.bodySmall.copyWith(
                               fontWeight: FontWeight.w600,
@@ -54,19 +56,21 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
                           ),
                         ),
                         const SizedBox(width: 8),
-                        Chip(
-                          label: Text(_isSolved ? 'Solved' : 'Unsolved'),
-                          backgroundColor: _isSolved
-                              ? AppColors.success
-                              : AppColors.error,
-                          labelStyle: AppTextStyles.bodyExtraSmall.copyWith(
-                            color: Colors.white,
+                        Flexible(
+                          child: Chip(
+                            label: ResponsiveText(_isSolved ? 'Solved' : 'Unsolved', style: AppTextStyles.bodyExtraSmall,),
+                            backgroundColor: _isSolved
+                                ? AppColors.success
+                                : AppColors.error,
+                            labelStyle: AppTextStyles.bodyExtraSmall.copyWith(
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ],
                     ),
                     Spacing.vSmall,
-                    Text(
+                    ResponsiveText(
                       HelperFunctions.timeDifferenceFromNow(
                         widget.maintainanceModel.date,
                       ),
@@ -90,7 +94,7 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
                     ),
                   Spacing.hSmall,
                   AppButton(
-                    width: 32.w,
+                    width: 36.w,
                     text: _isSolved ? 'Mark as Unsolved' : 'Mark as Solved',
                     backgroundColor: _isSolved
                         ? AppColors.error
@@ -107,12 +111,12 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
             ],
           ),
           Spacing.vSmall,
-          Text(
+          ResponsiveText(
             widget.maintainanceModel.description,
             style: AppTextStyles.bodyExtraSmall,
           ),
           Spacing.vLarge,
-          Text(
+          ResponsiveText(
             "Attachments",
             style: AppTextStyles.bodyExtraSmall.copyWith(
               fontWeight: FontWeight.w600,
@@ -207,13 +211,13 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
+                  ResponsiveText(
                     "Taxi No. ",
                     style: AppTextStyles.bodyExtraSmall.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  Text(
+                  ResponsiveText(
                     widget.maintainanceModel.taxiId,
                     style: AppTextStyles.bodyExtraSmall,
                   ),
@@ -222,13 +226,13 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
+                  ResponsiveText(
                     "Fleet No. ",
                     style: AppTextStyles.bodyExtraSmall.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  Text(
+                  ResponsiveText(
                     widget.maintainanceModel.fleetId,
                     style: AppTextStyles.bodyExtraSmall,
                   ),
@@ -237,13 +241,13 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
+                  ResponsiveText(
                     "Inspected By: ",
                     style: AppTextStyles.bodyExtraSmall.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  Text(
+                  ResponsiveText(
                     widget.maintainanceModel.inspectedBy,
                     style: AppTextStyles.bodyExtraSmall,
                   ),
@@ -252,13 +256,13 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
+                  ResponsiveText(
                     "Assigned to: ",
                     style: AppTextStyles.bodyExtraSmall.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  Text(
+                  ResponsiveText(
                     widget.maintainanceModel.assignedTo ?? "Not assigned",
                     style: AppTextStyles.bodyExtraSmall,
                   ),

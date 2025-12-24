@@ -1,5 +1,6 @@
 import 'package:action_inc_taxi_app/core/models/fleet_income_model.dart';
 import 'package:action_inc_taxi_app/core/theme/app_text_styles.dart';
+import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/spacing.dart';
 import 'package:action_inc_taxi_app/core/widgets/tabbar/tabbar.dart';
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
@@ -47,20 +48,22 @@ class PieChart extends StatelessWidget {
         children: [
           Row(
             children: [
-              Text("Fleet Income", style: AppTextStyles.bodySmall),
+              ResponsiveText("Fleet Income", style: AppTextStyles.bodySmall),
               const Spacer(),
-              CustomTabBar(
-                tabs: ["Daily Income", "Weekly", "Yearly"],
-                onTabSelected: (index) {
-                  if (index == 0) {
-                    selectedTabKey = 'daily';
-                  } else if (index == 1) {
-                    selectedTabKey = 'weekly';
-                  } else if (index == 2) {
-                    selectedTabKey = 'monthly';
-                  }
-                  dashboardCubit.fetchFleetAmounts(selectedTabKey);
-                },
+              Flexible(
+                child: CustomTabBar(
+                  tabs: ["Daily", "Weekly", "Yearly"],
+                  onTabSelected: (index) {
+                    if (index == 0) {
+                      selectedTabKey = 'daily';
+                    } else if (index == 1) {
+                      selectedTabKey = 'weekly';
+                    } else if (index == 2) {
+                      selectedTabKey = 'monthly';
+                    }
+                    dashboardCubit.fetchFleetAmounts(selectedTabKey);
+                  },
+                ),
               ),
             ],
           ),
@@ -89,11 +92,14 @@ class PieChart extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        "Total Fleet Income",
-                        style: AppTextStyles.bodySmall,
+                      SizedBox(
+                        width: 20.w,
+                        child: ResponsiveText(
+                          "Total Fleet Income",
+                          style: AppTextStyles.bodySmall,
+                        ),
                       ),
-                      Text("₱ $total", style: AppTextStyles.bodySmall),
+                      ResponsiveText("₱ $total", style: AppTextStyles.bodySmall),
                     ],
                   ),
                   Spacing.vStandard,
@@ -114,13 +120,13 @@ class PieChart extends StatelessWidget {
                                 ),
                               ),
                               Spacing.hStandard,
-                              Text(
+                              ResponsiveText(
                                 fleets[i]["name"] as String,
                                 style: AppTextStyles.bodyExtraSmall,
                               ),
                             ],
                           ),
-                          Text(
+                          ResponsiveText(
                             "₱ ${fleets[i]["amount"]}",
                             style: AppTextStyles.bodyExtraSmall,
                           ),

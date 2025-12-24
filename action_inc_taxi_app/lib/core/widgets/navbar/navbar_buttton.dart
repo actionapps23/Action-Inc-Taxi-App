@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 
 class NavButton extends StatelessWidget {
   final String label;
@@ -20,7 +21,7 @@ class NavButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final text = Text(
+    final text = ResponsiveText(
       label,
       style: TextStyle(
         color: selected ? Colors.white : Colors.white70,

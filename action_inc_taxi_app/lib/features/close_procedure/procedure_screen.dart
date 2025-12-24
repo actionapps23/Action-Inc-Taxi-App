@@ -5,6 +5,7 @@ import 'package:action_inc_taxi_app/core/widgets/add_procedure_field_popup.dart'
 import 'package:action_inc_taxi_app/core/widgets/buttons/app_button.dart';
 import 'package:action_inc_taxi_app/core/widgets/buttons/app_outline_button.dart';
 import 'package:action_inc_taxi_app/core/widgets/navbar/navbar.dart';
+import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/snackbar.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/spacing.dart';
 import 'package:action_inc_taxi_app/cubit/procedure/procedure_cubit.dart';
@@ -46,7 +47,7 @@ class _ProcedureScreenState extends State<ProcedureScreen> {
             children: [
               Navbar(),
               Spacing.vLarge,
-              Text(
+              ResponsiveText(
                 widget.procedureType == AppConstants.closeProcedure
                     ? 'Close Procedure'
                     : 'Open Procedure',
@@ -91,7 +92,7 @@ class _ProcedureScreenState extends State<ProcedureScreen> {
                     }
                     if (state is ProcedureError) {
                       return Center(
-                        child: Text(
+                        child: ResponsiveText(
                           state.errorMessage!,
                           style: AppTextStyles.bodySmall.copyWith(
                             color: Colors.red,
@@ -101,7 +102,7 @@ class _ProcedureScreenState extends State<ProcedureScreen> {
                     }
                     if (state is ProcedureRecordSubmissionFailed) {
                       return Center(
-                        child: Text(
+                        child: ResponsiveText(
                           state.errorMessage!,
                           style: AppTextStyles.bodySmall.copyWith(
                             color: Colors.red,

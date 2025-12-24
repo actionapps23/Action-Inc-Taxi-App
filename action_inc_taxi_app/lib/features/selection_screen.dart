@@ -1,6 +1,8 @@
+import 'package:action_inc_taxi_app/core/helper_functions.dart';
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
 import 'package:action_inc_taxi_app/core/widgets/navbar/navbar.dart';
 import 'package:action_inc_taxi_app/core/widgets/form/form_field.dart';
+import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:action_inc_taxi_app/core/theme/app_assets.dart';
@@ -79,7 +81,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
+                            ResponsiveText(
                               'Select Options',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
@@ -95,7 +97,9 @@ class _SelectionScreenState extends State<SelectionScreen> {
                           shrinkWrap: true,
                           mainAxisSpacing: 16.h,
                           crossAxisSpacing: 16.w,
-                          childAspectRatio: 2.5,
+                          childAspectRatio: HelperFunctions.getChildAspectRatio(
+                          context
+                          ),
                           physics: NeverScrollableScrollPhysics(),
                           children: List.generate(featureCards.length, (i) {
                             return FeatureSelectionCard(

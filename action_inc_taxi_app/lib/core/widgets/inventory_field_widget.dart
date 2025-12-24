@@ -1,4 +1,5 @@
 import 'package:action_inc_taxi_app/core/theme/app_text_styles.dart';
+import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/spacing.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +15,7 @@ class InventoryField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Expanded(
-          child: Text(
+          child: ResponsiveText(
             label,
             style: AppTextStyles.bodyExtraSmall.copyWith(color: Colors.white),
             softWrap: true,

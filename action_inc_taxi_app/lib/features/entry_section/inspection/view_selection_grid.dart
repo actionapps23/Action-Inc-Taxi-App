@@ -1,5 +1,6 @@
 import 'package:action_inc_taxi_app/core/theme/app_assets.dart';
 import 'package:flutter/material.dart';
+import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 
 class ViewSelectionGrid extends StatefulWidget {
   final int selectedIndex;
@@ -68,7 +69,7 @@ class _ViewSelectionGridState extends State<ViewSelectionGrid> {
                     fit: BoxFit.contain,
                   ),
                   const SizedBox(height: 12),
-                  Text(
+                  ResponsiveText(
                     label,
                     style: const TextStyle(
                       color: Colors.white,

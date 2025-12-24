@@ -15,6 +15,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 
 class ReportIssuePopup extends StatefulWidget {
   const ReportIssuePopup({super.key});
@@ -54,7 +55,7 @@ class _ReportIssuePopupState extends State<ReportIssuePopup> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      ResponsiveText(
                         "Report Issues",
                         style: AppTextStyles.bodyExtraSmall.copyWith(
                           fontWeight: FontWeight.w600,
@@ -125,7 +126,7 @@ class _ReportIssuePopupState extends State<ReportIssuePopup> {
                                 }
                               }
                             },
-                            child: Text(
+                            child: ResponsiveText(
                               "Upload Pic / Files",
                               style: AppTextStyles.bodyExtraSmall.copyWith(
                                 color: AppColors.textHint,
@@ -157,7 +158,7 @@ class _ReportIssuePopupState extends State<ReportIssuePopup> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   Flexible(
-                                    child: Text(
+                                    child: ResponsiveText(
                                       file.name,
                                       style: AppTextStyles.bodyExtraSmall
                                           .copyWith(fontSize: 3.sp),
@@ -217,7 +218,7 @@ class _ReportIssuePopupState extends State<ReportIssuePopup> {
                               .map(
                                 (mechanic) => DropdownMenuItem(
                                   value: mechanic,
-                                  child: Text(
+                                  child: ResponsiveText(
                                     mechanic,
                                     style: AppTextStyles.bodyExtraSmall,
                                   ),

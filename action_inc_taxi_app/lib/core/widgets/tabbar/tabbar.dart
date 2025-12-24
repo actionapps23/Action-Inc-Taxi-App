@@ -1,5 +1,7 @@
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
+import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomTabBar extends StatefulWidget {
   final List<String> tabs;
@@ -34,48 +36,50 @@ class _CustomTabBarState extends State<CustomTabBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: widget.padding,
+      padding: EdgeInsets.all(2.w),
       decoration: BoxDecoration(
         color: widget.backgroundColor,
-        borderRadius: BorderRadius.circular(widget.borderRadius),
+        borderRadius: BorderRadius.circular(widget.borderRadius.w.clamp(6, 12)),
       ),
-      child: Row(
-        children: List.generate(widget.tabs.length, (index) {
-          final bool isSelected = index == _selectedTab;
-          return GestureDetector(
-            onTap: () {
-              widget.onTabSelected(index);
-              // Set state to update selected index
-              setState(() {
-                _selectedTab = index;
-              });
-            },
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              height: widget.height,
-              margin: EdgeInsets.only(
-                left: index == 0 ? 0 : 8,
-                right: index == widget.tabs.length - 1 ? 0 : 0,
-              ),
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-              decoration: BoxDecoration(
-                color: isSelected ? widget.selectedColor : Colors.transparent,
-                borderRadius: BorderRadius.circular(widget.borderRadius),
-              ),
-              alignment: Alignment.center,
-              child: Text(
-                widget.tabs[index],
-                style: TextStyle(
-                  color: isSelected
-                      ? widget.selectedTextColor
-                      : widget.unselectedTextColor,
-                  fontWeight: isSelected ? FontWeight.w400 : FontWeight.w200,
-                  fontSize: 12,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: List.generate(widget.tabs.length, (index) {
+            final bool isSelected = index == _selectedTab;
+            return GestureDetector(
+              onTap: () {
+                widget.onTabSelected(index);
+                setState(() {
+                  _selectedTab = index;
+                });
+              },
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                height: widget.height.h.clamp(22, 30),
+                margin: EdgeInsets.only(
+                  left: index == 0 ? 0 : 1.w,
+                  right: index == widget.tabs.length - 1 ? 0 : 0,
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0.5.h),
+                decoration: BoxDecoration(
+                  color: isSelected ? widget.selectedColor : Colors.transparent,
+                  borderRadius: BorderRadius.circular(widget.borderRadius.w.clamp(6, 12)),
+                ),
+                alignment: Alignment.center,
+                child: ResponsiveText(
+                  widget.tabs[index],
+                  style: TextStyle(
+                    color: isSelected
+                        ? widget.selectedTextColor
+                        : widget.unselectedTextColor,
+                    fontWeight: isSelected ? FontWeight.w400 : FontWeight.w200,
+                    fontSize: 7.sp.clamp(6, 10),
+                  ),
                 ),
               ),
-            ),
-          );
-        }),
+            );
+          }),
+        ),
       ),
     );
   }

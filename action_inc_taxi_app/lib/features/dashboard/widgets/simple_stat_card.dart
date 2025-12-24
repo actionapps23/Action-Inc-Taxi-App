@@ -1,5 +1,6 @@
 // ignore_for_file: deprecated_member_use
 
+import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/spacing.dart';
 import 'package:action_inc_taxi_app/features/dashboard/widgets/percent_chnage_indicator.dart';
 import 'package:flutter/material.dart';
@@ -49,10 +50,10 @@ class SimpleStatCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               if (percentChange != null)
-                PercentChangeIndicator(percentChange: percentChange!),
+                Flexible(child: PercentChangeIndicator(percentChange: percentChange!)),
             ],
           ),
-          Text(
+          ResponsiveText(
             label,
             style: TextStyle(
               color: labelColor ?? AppColors.scaffold.withOpacity(0.5),
@@ -63,7 +64,7 @@ class SimpleStatCard extends StatelessWidget {
           const SizedBox(height: 8),
           Column(
             children: [
-              Text(
+              ResponsiveText(
                 '$currencySymbol $value',
                 style: TextStyle(
                   color: valueColor ?? AppColors.scaffold,
@@ -74,7 +75,7 @@ class SimpleStatCard extends StatelessWidget {
               Spacing.vStandard,
               if (showLastStats && lastAmount != null) ...[
                 Spacing.vStandard,
-                Text("Last Income: $currencySymbol${lastAmount!}"),
+                ResponsiveText("Last Income: $currencySymbol${lastAmount!}"),
               ],
             ],
           ),

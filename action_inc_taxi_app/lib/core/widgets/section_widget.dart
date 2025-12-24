@@ -4,6 +4,7 @@ import 'package:action_inc_taxi_app/features/entry_section/vehicle_inspection_cu
 import 'package:action_inc_taxi_app/features/entry_section/vehicle_isnpection_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 
 class SectionWidget extends StatelessWidget {
   final CategoryModel category;
@@ -23,7 +24,7 @@ class SectionWidget extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              ResponsiveText(
                 category.categoryName,
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
@@ -33,7 +34,7 @@ class SectionWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
                   children: [
-                    Text(field.fieldName),
+                    ResponsiveText(field.fieldName),
 
                     Expanded(
                       child: Row(

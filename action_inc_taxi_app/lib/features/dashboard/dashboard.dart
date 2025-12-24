@@ -3,6 +3,7 @@ import 'package:action_inc_taxi_app/core/helper_functions.dart';
 import 'package:action_inc_taxi_app/core/models/fleet_income_model.dart';
 import 'package:action_inc_taxi_app/core/theme/app_text_styles.dart';
 import 'package:action_inc_taxi_app/core/widgets/navbar/navbar.dart';
+import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/spacing.dart';
 import 'package:action_inc_taxi_app/features/dashboard/dashboard_cubit.dart';
 import 'package:action_inc_taxi_app/features/dashboard/dashboard_state.dart';
@@ -78,7 +79,7 @@ class _DashboardState extends State<Dashboard> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(
+                                        ResponsiveText(
                                           "Total Banked today",
                                           style: AppTextStyles.bodySmall,
                                         ),
@@ -90,7 +91,7 @@ class _DashboardState extends State<Dashboard> {
                                             Row(
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
-                                                Text(
+                                                ResponsiveText(
                                                   "₱ ${dashboardModel.totalAmountPaidToday.toStringAsFixed(2)}",
                                                   style:
                                                       AppTextStyles.bodySmall,
@@ -110,7 +111,7 @@ class _DashboardState extends State<Dashboard> {
                                           ],
                                         ),
                                         Spacing.vExtraLarge,
-                                        Text(
+                                        ResponsiveText(
                                           "Last day Income ₱${dashboardModel.totalAmountYesterday}",
                                           style: AppTextStyles.bodyExtraSmall,
                                         ),
@@ -317,7 +318,7 @@ class _DashboardState extends State<Dashboard> {
                   ),
                 )
               : state is DashboardError
-              ? Center(child: Text('Error: ${state.message}'))
+              ? Center(child: ResponsiveText('Error: ${state.message}'))
               : Center(child: CircularProgressIndicator()),
         );
       },

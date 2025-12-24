@@ -3,6 +3,8 @@ import 'package:action_inc_taxi_app/core/models/inventory_item_model.dart';
 import 'package:action_inc_taxi_app/core/widgets/add_inventory_popup.dart';
 import 'package:action_inc_taxi_app/core/widgets/status_chip.dart';
 import 'package:flutter/material.dart';
+import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
+
 
 class InventoryTable extends StatelessWidget {
   final List<InventoryItemModel> items;
@@ -36,7 +38,7 @@ class InventoryTable extends StatelessWidget {
               children: const [
                 Expanded(
                   flex: 3,
-                  child: Text(
+                  child: ResponsiveText(
                     'Product Name',
                     style: TextStyle(
                       color: Colors.white,
@@ -46,7 +48,7 @@ class InventoryTable extends StatelessWidget {
                 ),
                 Expanded(
                   flex: 2,
-                  child: Text(
+                  child: ResponsiveText(
                     'Quantity',
                     style: TextStyle(
                       color: Colors.white,
@@ -56,7 +58,7 @@ class InventoryTable extends StatelessWidget {
                 ),
                 Expanded(
                   flex: 2,
-                  child: Text(
+                  child: ResponsiveText(
                     'Stock Status',
                     style: TextStyle(
                       color: Colors.white,
@@ -66,7 +68,7 @@ class InventoryTable extends StatelessWidget {
                 ),
                 Expanded(
                   flex: 2,
-                  child: Text(
+                  child: ResponsiveText(
                     'Required Quantity',
                     style: TextStyle(
                       color: Colors.white,
@@ -92,14 +94,14 @@ class InventoryTable extends StatelessWidget {
                   children: [
                     Expanded(
                       flex: 3,
-                      child: Text(
+                      child: ResponsiveText(
                         item.name,
                         style: const TextStyle(color: Colors.white),
                       ),
                     ),
                     Expanded(
                       flex: 2,
-                      child: Text(
+                      child: ResponsiveText(
                         item.totalAvailable.toString(),
                         style: const TextStyle(color: Colors.white),
                       ),
@@ -118,7 +120,7 @@ class InventoryTable extends StatelessWidget {
                     ),
                     Expanded(
                       flex: 2,
-                      child: Text(
+                      child: ResponsiveText(
                         item.totalNeeded.toString(),
                         style: const TextStyle(color: Colors.white),
                       ),

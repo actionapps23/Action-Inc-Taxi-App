@@ -11,6 +11,8 @@ import 'package:action_inc_taxi_app/features/inventory/inventory_table.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
+
 
 class InventorySceen extends StatefulWidget {
   const InventorySceen({super.key});
@@ -51,7 +53,7 @@ class _InventorySceenState extends State<InventorySceen> {
                   );
                 } else if (state is InventoryError) {
                   return Center(
-                    child: Text(
+                    child: ResponsiveText(
                       "Error loading inventory",
                       style: AppTextStyles.bodySmall.copyWith(
                         color: Colors.white,
@@ -74,7 +76,7 @@ class _InventorySceenState extends State<InventorySceen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(
+                              ResponsiveText(
                                 "Inventory",
                                 style: TextStyle(
                                   color: Colors.white,
@@ -93,28 +95,28 @@ class _InventorySceenState extends State<InventorySceen> {
                                       items: [
                                         DropdownMenuItem(
                                           value: "engine",
-                                          child: Text(
+                                          child: ResponsiveText(
                                             "Engine",
                                             style: AppTextStyles.bodyExtraSmall,
                                           ),
                                         ),
                                         DropdownMenuItem(
                                           value: "brakes",
-                                          child: Text(
+                                          child: ResponsiveText(
                                             "Brakes",
                                             style: AppTextStyles.bodyExtraSmall,
                                           ),
                                         ),
                                         DropdownMenuItem(
                                           value: "tires",
-                                          child: Text(
+                                          child: ResponsiveText(
                                             "Tires",
                                             style: AppTextStyles.bodyExtraSmall,
                                           ),
                                         ),
                                         DropdownMenuItem(
                                           value: "interior",
-                                          child: Text(
+                                          child: ResponsiveText(
                                             "Interior",
                                             style: AppTextStyles.bodyExtraSmall,
                                           ),

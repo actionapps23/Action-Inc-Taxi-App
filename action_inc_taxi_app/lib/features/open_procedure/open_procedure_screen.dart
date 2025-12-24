@@ -42,7 +42,7 @@
 //             children: [
 //               Navbar(),
 //               Spacing.vLarge,
-//               Text(
+//               ResponsiveText(
 //                 'Open Procedure',
 //                 style: AppTextStyles.bodySmall,
 //               ),
@@ -72,7 +72,7 @@
 //                   }
 //                   if(state is ProcedureError) {
 //                     return Center(
-//                       child: Text(
+//                       child: ResponsiveText(
 //                         state.errorMessage!,
 //                         style: AppTextStyles.bodySmall.copyWith(color: Colors.red),
 //                       ),
@@ -80,7 +80,7 @@
 //                   }
 //                   if(state is ProcedureRecordSubmissionFailed){
 //                     return Center(
-//                       child: Text(
+//                       child: ResponsiveText(
 //                         state.errorMessage!,
 //                         style: AppTextStyles.bodySmall.copyWith(color: Colors.red),
 //                       ),

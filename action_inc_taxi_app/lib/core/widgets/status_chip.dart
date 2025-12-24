@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 
 class StatusChip extends StatelessWidget {
   final String label;
@@ -19,7 +20,7 @@ class StatusChip extends StatelessWidget {
         color: color,
         borderRadius: BorderRadius.circular(16),
       ),
-      child: Text(
+      child: ResponsiveText(
         label,
         style: TextStyle(
           color: textColor,

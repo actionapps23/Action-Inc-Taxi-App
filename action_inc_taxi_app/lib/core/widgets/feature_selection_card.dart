@@ -1,6 +1,7 @@
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 
 class FeatureSelectionCard extends StatelessWidget {
   final String cardTitle;
@@ -38,7 +39,7 @@ class FeatureSelectionCard extends StatelessWidget {
               iconWidget,
               SizedBox(width: 8),
               Flexible(
-                child: Text(
+                child: ResponsiveText(
                   cardTitle,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(color: AppColors.scaffold),

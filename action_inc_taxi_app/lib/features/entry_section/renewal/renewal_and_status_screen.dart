@@ -3,6 +3,7 @@ import 'package:action_inc_taxi_app/core/db_service.dart';
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 
 import 'package:action_inc_taxi_app/core/widgets/navbar/navbar.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/snackbar.dart';
@@ -92,7 +93,7 @@ class _RenewalAndStatusScreenState extends State<RenewalAndStatusScreen> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          const Text(
+                                          const ResponsiveText(
                                             'Renewal & Status',
                                             style: TextStyle(
                                               color: Colors.white,
@@ -101,7 +102,7 @@ class _RenewalAndStatusScreenState extends State<RenewalAndStatusScreen> {
                                             ),
                                           ),
                                           SizedBox(height: 4.h),
-                                          Text(
+                                          ResponsiveText(
                                             'Track your renewal progress',
                                             style: TextStyle(
                                               color: Colors.white54,
@@ -110,8 +111,7 @@ class _RenewalAndStatusScreenState extends State<RenewalAndStatusScreen> {
                                           ),
                                         ],
                                       ),
-                                      SizedBox(
-                                        width: 240,
+                                      Flexible(
                                         child: CustomTabBar(
                                           tabs: const [
                                             'This week',
@@ -195,7 +195,7 @@ class _RenewalAndStatusScreenState extends State<RenewalAndStatusScreen> {
                                             padding: EdgeInsets.symmetric(
                                               horizontal: 24.w,
                                             ),
-                                            child: Text(
+                                            child: ResponsiveText(
                                               'Failed to load renewals:\n${state.error}',
                                               textAlign: TextAlign.center,
                                               style: const TextStyle(
@@ -210,7 +210,7 @@ class _RenewalAndStatusScreenState extends State<RenewalAndStatusScreen> {
                                                 .read<RenewalAndStatusCubit>()
                                                 .load(),
                                             icon: const Icon(Icons.refresh),
-                                            label: const Text('Retry'),
+                                            label: const ResponsiveText('Retry'),
                                             style: ElevatedButton.styleFrom(
                                               backgroundColor: const Color(
                                                 0xFF2ECC40,
@@ -244,7 +244,7 @@ class _RenewalAndStatusScreenState extends State<RenewalAndStatusScreen> {
                                             color: Colors.white24,
                                           ),
                                           const SizedBox(height: 16),
-                                          const Text(
+                                          const ResponsiveText(
                                             'No renewals found',
                                             style: TextStyle(
                                               color: Colors.white70,
@@ -253,7 +253,7 @@ class _RenewalAndStatusScreenState extends State<RenewalAndStatusScreen> {
                                             ),
                                           ),
                                           const SizedBox(height: 8),
-                                          Text(
+                                          ResponsiveText(
                                             'There are no renewals matching the selected time period',
                                             style: TextStyle(
                                               color: Colors.white54,
@@ -266,7 +266,7 @@ class _RenewalAndStatusScreenState extends State<RenewalAndStatusScreen> {
                                                 .read<RenewalAndStatusCubit>()
                                                 .load(),
                                             icon: const Icon(Icons.refresh),
-                                            label: const Text('Refresh'),
+                                            label: const ResponsiveText('Refresh'),
                                             style: ElevatedButton.styleFrom(
                                               backgroundColor: const Color(
                                                 0xFF2ECC40,
@@ -443,7 +443,7 @@ class _StatusPill extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 14.w),
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
       alignment: Alignment.center,
-      child: Text(
+      child: ResponsiveText(
         label,
         style: TextStyle(
           color: textColor,
@@ -464,7 +464,7 @@ class _TableHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 2.w),
-      child: Text(
+      child: ResponsiveText(
         text,
         style: const TextStyle(
           color: Colors.white,
@@ -486,7 +486,7 @@ class _TableCell extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 2.w),
-      child: Text(
+      child: ResponsiveText(
         text,
         style: TextStyle(
           color: Colors.white,

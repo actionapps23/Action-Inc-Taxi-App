@@ -1,5 +1,6 @@
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
 import 'package:action_inc_taxi_app/core/theme/app_text_styles.dart';
+import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/spacing.dart';
 import 'package:action_inc_taxi_app/core/widgets/tabbar/tabbar.dart';
 import 'package:action_inc_taxi_app/features/dashboard/widgets/simple_stat_card.dart';
@@ -40,11 +41,13 @@ class StatsOverviewCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(statsCardLabel, style: AppTextStyles.bodySmall),
-                CustomTabBar(
-                  backgroundColor: AppColors.buttonText,
-                  tabs: ["Daily", "Weekly", "Yearly"],
-                  onTabSelected: onTabSelected,
+                SizedBox(width: 80.w,child: ResponsiveText(statsCardLabel, style: AppTextStyles.bodySmall),),
+                Flexible(
+                  child: CustomTabBar(
+                    backgroundColor: AppColors.buttonText,
+                    tabs: ["Daily", "Weekly", "Yearly"],
+                    onTabSelected: onTabSelected,
+                  ),
                 ),
               ],
             ),

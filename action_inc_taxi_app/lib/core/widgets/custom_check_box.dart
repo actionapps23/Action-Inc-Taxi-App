@@ -1,4 +1,5 @@
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
+import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:flutter/material.dart';
 
 class CustomCheckBox extends StatefulWidget {
@@ -17,7 +18,7 @@ class _CustomCheckBoxState extends State<CustomCheckBox> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(widget.label),
+        ResponsiveText(widget.label),
         Checkbox(
           value: value,
           onChanged: (value) {

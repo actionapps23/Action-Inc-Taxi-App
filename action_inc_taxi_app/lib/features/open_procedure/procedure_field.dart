@@ -10,7 +10,7 @@
 //       itemBuilder: (context, index) {
 //         return Row(
 //          children: [
-//           Text(fields[index].toString()),
+//           ResponsiveText(fields[index].toString()),
 //           CustomCheckBox(label: fields[index].toString()),
 //          ],
 //         );

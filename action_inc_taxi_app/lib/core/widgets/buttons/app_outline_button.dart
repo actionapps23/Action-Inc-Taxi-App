@@ -1,4 +1,5 @@
 import 'package:action_inc_taxi_app/core/theme/app_text_styles.dart';
+import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -47,7 +48,7 @@ class AppOutlineButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             if (prefixIcon != null) ...[prefixIcon!, const SizedBox(width: 10)],
-            Text(
+            ResponsiveText(
               label,
               style: AppTextStyles.bodySmall
             ),

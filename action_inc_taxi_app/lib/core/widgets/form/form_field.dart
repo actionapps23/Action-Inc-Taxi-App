@@ -1,4 +1,5 @@
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
+import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:action_inc_taxi_app/core/constants/app_constants.dart';
@@ -59,7 +60,7 @@ class AppTextFormField extends StatelessWidget {
           if (labelText != null || hintText != null)
             Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
-              child: Text(
+              child: ResponsiveText(
                 labelText ?? hintText ?? '',
                 style: labelStyle,
                 textAlign: TextAlign.left,
@@ -117,7 +118,7 @@ class AppTextFormField extends StatelessWidget {
               flex: 2,
               child: Padding(
                 padding: const EdgeInsets.only(right: 16.0),
-                child: Text(
+                child: ResponsiveText(
                   labelText!,
                   style: labelStyle,
                   textAlign: textAlign ?? TextAlign.center,

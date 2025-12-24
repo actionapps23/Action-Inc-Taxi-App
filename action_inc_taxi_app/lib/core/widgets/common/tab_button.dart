@@ -1,3 +1,4 @@
+import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -18,7 +19,7 @@ class TabButton extends StatelessWidget {
           color: selected ? Colors.greenAccent : Colors.white24,
         ),
       ),
-      child: Text(
+      child: ResponsiveText(
         label,
         style: TextStyle(
           color: selected ? Colors.black : Colors.white,

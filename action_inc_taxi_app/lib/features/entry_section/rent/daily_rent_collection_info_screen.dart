@@ -1,6 +1,7 @@
 import 'package:action_inc_taxi_app/core/helper_functions.dart';
 import 'package:action_inc_taxi_app/core/models/car_info.dart';
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
+import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/snackbar.dart';
 import 'package:action_inc_taxi_app/cubit/car_details/car_detail_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/car_details/car_detail_state.dart';
@@ -573,7 +574,7 @@ class _DailyRentCollectionInfoScreenState
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      ResponsiveText(
                         'Car Info',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
@@ -584,7 +585,7 @@ class _DailyRentCollectionInfoScreenState
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          Text(
+                          ResponsiveText(
                             'Car Status:',
                             style: TextStyle(color: Colors.white),
                           ),
@@ -595,7 +596,7 @@ class _DailyRentCollectionInfoScreenState
                                 setState(() => carStatusOnRoad = !v!),
                             activeColor: Colors.greenAccent,
                           ),
-                          Text(
+                          ResponsiveText(
                             'Off Road',
                             style: TextStyle(color: Colors.white),
                           ),
@@ -606,7 +607,7 @@ class _DailyRentCollectionInfoScreenState
                                 setState(() => carStatusOnRoad = v ?? false),
                             activeColor: Colors.greenAccent,
                           ),
-                          Text(
+                          ResponsiveText(
                             'On Road',
                             style: TextStyle(color: Colors.white),
                           ),
@@ -902,9 +903,11 @@ class _DailyRentCollectionInfoScreenState
                         }),
                         activeColor: Colors.greenAccent,
                       ),
-                      Text(
-                        'Public Holiday(Half Rent)',
-                        style: TextStyle(color: Colors.white),
+                      Flexible(
+                        child: ResponsiveText(
+                          'Public Holiday(Half Rent)',
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                       SizedBox(width: 24.w),
                       Checkbox(
@@ -915,14 +918,16 @@ class _DailyRentCollectionInfoScreenState
                         }),
                         activeColor: Colors.greenAccent,
                       ),
-                      Text(
-                        'Birthday(Zero Rent)',
-                        style: TextStyle(color: Colors.white),
+                      Flexible(
+                        child: ResponsiveText(
+                          'Birthday(Zero Rent)',
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     ],
                   ),
                   SizedBox(height: 24.h),
-                  Text(
+                  ResponsiveText(
                     'Daily Rent Collection Info',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -1146,7 +1151,7 @@ class _DailyRentCollectionInfoScreenState
                                   items: [
                                     const DropdownMenuItem(
                                       value: '',
-                                      child: Text(
+                                      child: ResponsiveText(
                                         'Select Type',
                                         style: TextStyle(color: Colors.white54),
                                       ),

@@ -1,3 +1,4 @@
+import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:action_inc_taxi_app/core/widgets/add_procedure_field_popup.dart';
 import 'package:action_inc_taxi_app/core/models/section_model.dart';
@@ -24,7 +25,7 @@ class ProcedureSection extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              ResponsiveText(
                 category.categoryName,
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
@@ -33,7 +34,7 @@ class ProcedureSection extends StatelessWidget {
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Expanded(child: Text(field.fieldName)),
+                    Expanded(child: ResponsiveText(field.fieldName)),
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -78,20 +79,20 @@ class ProcedureSection extends StatelessWidget {
                                     final confirmed = await showDialog<bool>(
                                       context: context,
                                       builder: (ctx) => AlertDialog(
-                                        title: Text('Delete field'),
-                                        content: Text(
+                                        title: ResponsiveText('Delete field'),
+                                        content: ResponsiveText(
                                           'Are you sure you want to delete this field?',
                                         ),
                                         actions: [
                                           TextButton(
                                             onPressed: () =>
                                                 Navigator.of(ctx).pop(false),
-                                            child: Text('Cancel'),
+                                            child: ResponsiveText('Cancel'),
                                           ),
                                           TextButton(
                                             onPressed: () =>
                                                 Navigator.of(ctx).pop(true),
-                                            child: Text('Delete'),
+                                            child: ResponsiveText('Delete'),
                                           ),
                                         ],
                                       ),
@@ -108,11 +109,11 @@ class ProcedureSection extends StatelessWidget {
                                 itemBuilder: (ctx) => [
                                   PopupMenuItem(
                                     value: 'edit',
-                                    child: Text('Edit'),
+                                    child: ResponsiveText('Edit'),
                                   ),
                                   PopupMenuItem(
                                     value: 'delete',
-                                    child: Text('Delete'),
+                                    child: ResponsiveText('Delete'),
                                   ),
                                 ],
                               )

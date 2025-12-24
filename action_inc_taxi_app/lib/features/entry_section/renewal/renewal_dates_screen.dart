@@ -3,6 +3,7 @@ import 'package:action_inc_taxi_app/core/models/renewal.dart' show Renewal;
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
 import 'package:action_inc_taxi_app/core/widgets/buttons/app_button.dart';
 import 'package:action_inc_taxi_app/core/widgets/buttons/app_outline_button.dart';
+import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/snackbar.dart';
 import 'package:action_inc_taxi_app/cubit/car_details/car_detail_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/selection/selection_cubit.dart';
@@ -156,7 +157,7 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            ResponsiveText(
               'Renewal Data',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
@@ -291,7 +292,7 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
                       if (feesText.isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                            content: Text('Please fill all fees.'),
+                            content: ResponsiveText('Please fill all fees.'),
                           ),
                         );
                         return;
@@ -470,7 +471,7 @@ class _RenewalDataRowWidgetState extends State<_RenewalDataRowWidget> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                ResponsiveText(
                   'Periodic',
                   style: TextStyle(color: Colors.white70, fontSize: 12),
                 ),
@@ -486,7 +487,7 @@ class _RenewalDataRowWidgetState extends State<_RenewalDataRowWidget> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
-                        child: Text(
+                        child: ResponsiveText(
                           _getPeriodLabel(_selectedPeriod),
                           style: TextStyle(
                             color: Colors.white,
@@ -512,7 +513,7 @@ class _RenewalDataRowWidgetState extends State<_RenewalDataRowWidget> {
                                 horizontal: 8,
                                 vertical: 4,
                               ),
-                              child: Text(
+                              child: ResponsiveText(
                                 'None',
                                 style: TextStyle(
                                   color: Colors.white,
@@ -530,7 +531,7 @@ class _RenewalDataRowWidgetState extends State<_RenewalDataRowWidget> {
                                   horizontal: 8,
                                   vertical: 4,
                                 ),
-                                child: Text(
+                                child: ResponsiveText(
                                   '$m month${m == 1 ? '' : 's'}',
                                   style: TextStyle(
                                     color: Colors.white,

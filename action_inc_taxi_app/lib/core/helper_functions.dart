@@ -3,6 +3,19 @@ import 'package:action_inc_taxi_app/core/enums.dart';
 import 'package:flutter/material.dart';
 
 class HelperFunctions {
+  static double getChildAspectRatio(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+
+    if (width < 400) {
+      return 1;
+    } else if (width < 800) {
+      return 2.0;
+    } else {
+      return 2.5;
+    }
+  }
+
+  
   static double percentChange(num previous, num current) {
     if (previous == 0) {
       return 0;

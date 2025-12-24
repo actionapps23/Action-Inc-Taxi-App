@@ -1,6 +1,7 @@
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:action_inc_taxi_app/core/constants/app_constants.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AppDropdown<T> extends StatelessWidget {
   final String? labelText;
@@ -21,6 +22,7 @@ class AppDropdown<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField<T>(
+      isExpanded: true,
       initialValue: value,
       items: items,
       onChanged: enabled ? onChanged : null,
@@ -42,7 +44,7 @@ class AppDropdown<T> extends StatelessWidget {
           borderRadius: BorderRadius.circular(AppConstants.inputBorderRadius),
           borderSide: const BorderSide(color: AppColors.border, width: 1),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
       ),
       style: const TextStyle(color: AppColors.textPrimary),
     );

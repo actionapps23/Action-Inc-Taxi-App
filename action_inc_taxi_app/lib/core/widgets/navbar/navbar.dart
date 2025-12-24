@@ -12,6 +12,8 @@ import 'package:action_inc_taxi_app/features/selection_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
+
 
 class Navbar extends StatelessWidget {
   const Navbar({super.key});
@@ -21,6 +23,7 @@ class Navbar extends StatelessWidget {
     final LoginCubit loginCubit = context.read<LoginCubit>();
     final LoginSuccess loginState = loginCubit.state as LoginSuccess;
     return Container(
+      width: double.infinity,
       margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 12.h),
       decoration: BoxDecoration(
@@ -35,85 +38,84 @@ class Navbar extends StatelessWidget {
           ),
         ],
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          // Logo and title
-          GestureDetector(
-            onTap: () {
-              // emit intial satte for all cubits
-              context.read<SelectionCubit>().reset();
-              context.read<DailyRentCubit>().reset();
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (_) => const SelectionScreen()),
-              );
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  AppAssets.logoPNG,
-                  width: 64.w,
-                  height: 48.h,
-                  fit: BoxFit.contain,
-                ),
-              ],
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // Logo and title
+            GestureDetector(
+              onTap: () {
+                // emit intial satte for all cubits
+                context.read<SelectionCubit>().reset();
+                context.read<DailyRentCubit>().reset();
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (_) => const SelectionScreen()),
+                );
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    AppAssets.logoPNG,
+                    width: 64.w,
+                    height: 48.h,
+                    fit: BoxFit.contain,
+                  ),
+                ],
+              ),
             ),
-          ),
-          // Navigation - make this horizontally scrollable so it doesn't overflow
-          Expanded(
-            child: Row(
+            // Navigation - make this horizontally scrollable so it doesn't overflow
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    NavButton(
+                      'Dashboard',
+                      icon: AppAssets.dashboard,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Dashboard(),
+                          ),
+                        );
+                      },
+                    ),
+                    if (loginState.user.isAdmin) ...[
+                      SizedBox(width: 12.w),
                       NavButton(
-                        'Dashboard',
-                        icon: AppAssets.dashboard,
+                        'Add Employee',
+                        icon: AppAssets.logout,
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => Dashboard(),
+                              builder: (context) => AddEmployeeScreen(),
                             ),
                           );
                         },
                       ),
-                      if (loginState.user.isAdmin) ...[
-                        SizedBox(width: 12.w),
-                        NavButton(
-                          'Add Employee',
-                          icon: AppAssets.logout,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => AddEmployeeScreen(),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-
-                      SizedBox(width: 12.w),
-                      NavButton(
-                        'Log out',
-                        icon: AppAssets.logout,
-                        onTap: () {
-                          // Simple logout: navigate back to login screen
-                          Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(
-                              builder: (_) => const LoginScreen(),
-                            ),
-                            (route) => false,
-                          );
-                        },
-                      ),
-                      SizedBox(width: 24.w),
                     ],
-                  ),
+                  
+                    SizedBox(width: 12.w),
+                    NavButton(
+                      'Log out',
+                      icon: AppAssets.logout,
+                      onTap: () {
+                        // Simple logout: navigate back to login screen
+                        Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                            builder: (_) => const LoginScreen(),
+                          ),
+                          (route) => false,
+                        );
+                      },
+                    ),
+                    SizedBox(width: 24.w),
+                  ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -126,7 +128,7 @@ class Navbar extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        ResponsiveText(
                           loginState.user.name,
                           style: TextStyle(
                             color: Colors.white,
@@ -134,7 +136,7 @@ class Navbar extends StatelessWidget {
                             fontSize: 14,
                           ),
                         ),
-                        Text(
+                        ResponsiveText(
                           loginState.user.role,
                           style: TextStyle(color: Colors.white70, fontSize: 12),
                         ),
@@ -144,8 +146,8 @@ class Navbar extends StatelessWidget {
                 ),
               ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

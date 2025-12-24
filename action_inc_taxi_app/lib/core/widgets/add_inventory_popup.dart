@@ -6,6 +6,7 @@ import 'package:action_inc_taxi_app/core/theme/app_text_styles.dart';
 import 'package:action_inc_taxi_app/core/widgets/form/app_dropdown.dart';
 import 'package:action_inc_taxi_app/core/widgets/form/form_field.dart';
 import 'package:action_inc_taxi_app/core/widgets/inventory_field_widget.dart';
+import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:action_inc_taxi_app/core/widgets/status_chip.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/spacing.dart';
 import 'package:action_inc_taxi_app/cubit/inventory/inventory_cubit.dart';
@@ -89,21 +90,21 @@ class _AddInventoryPopupState extends State<AddInventoryPopup> {
                                 items: [
                                   DropdownMenuItem(
                                     value: "engine",
-                                    child: Text(
+                                    child: ResponsiveText(
                                       "Engine",
                                       style: TextStyle(color: Colors.white),
                                     ),
                                   ),
                                   DropdownMenuItem(
                                     value: "interior",
-                                    child: Text(
+                                    child: ResponsiveText(
                                       "Interior",
                                       style: TextStyle(color: Colors.white),
                                     ),
                                   ),
                                   DropdownMenuItem(
                                     value: "tires",
-                                    child: Text(
+                                    child: ResponsiveText(
                                       "Tires",
                                       style: TextStyle(color: Colors.white),
                                     ),
@@ -218,7 +219,7 @@ class _AddInventoryPopupState extends State<AddInventoryPopup> {
                                   );
                             Navigator.of(context).pop();
                           },
-                          child: Text(
+                          child: ResponsiveText(
                             state is InventoryAdding
                                 ? "Adding..."
                                 : state is InventoryUpdating
