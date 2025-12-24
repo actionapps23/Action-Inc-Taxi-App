@@ -2,6 +2,18 @@ class CategoryModel {
   final String categoryName;
   final List<FieldModel> fields;
   const CategoryModel({required this.categoryName, required this.fields});
+  
+  Map<String, dynamic> toJson() {
+    return {
+      'categoryName': categoryName,
+      'fields': fields.map((field) => field.toJson()).toList(),
+    };
+  }
+  CategoryModel.fromJson(Map<String, dynamic> json)
+    : categoryName = json['categoryName'],
+      fields = (json['fields'] as List<dynamic>)
+          .map((fieldJson) => FieldModel.fromJson(fieldJson))
+          .toList();
 }
 
 class FieldModel {

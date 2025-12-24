@@ -106,20 +106,22 @@ class Navbar extends StatelessWidget {
                       );
                     },
                   ),
-                  SizedBox(width: 12.w),
-                  NavButton(
-                    'Add Employee',
-                    icon: AppAssets.logout,
-                    onTap: () {
-                      // Simple logout: navigate back to login screen
-                      Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(
-                          builder: (_) => const AddEmployeeScreen(),
-                        ),
-                        (route) => false,
-                      );
-                    },
-                  ),
+                  if(loginState.user.isAdmin)...[
+                    SizedBox(width: 12.w),
+                    NavButton(
+                      'Add Employee',
+                      icon: AppAssets.logout,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AddEmployeeScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                 
                   SizedBox(width: 12.w),
                   NavButton(
                     'Log out',
@@ -132,13 +134,14 @@ class Navbar extends StatelessWidget {
                       );
                     },
                   ),
+                  SizedBox(width: 24.w),
                   Row(
                     children: [
                       CircleAvatar(
                         backgroundImage: AssetImage(AppAssets.userAvatar),
                         radius: 18,
                       ),
-                      SizedBox(width: 8.w),
+                      SizedBox(width: 4.w),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

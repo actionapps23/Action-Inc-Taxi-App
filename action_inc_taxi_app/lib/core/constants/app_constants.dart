@@ -31,6 +31,14 @@ class AppConstants {
   static const String maintainanceEmptyMessage =
       'No maintenance requests available.';
 
+  static const String procedureSubmissionError =
+      'Failed to submit procedure record. Please try again.';
+
+  static const String procedureChecklistUpdateError =
+      'Failed to update procedure checklist. Please try again.';
+
+  static const String procedureRecordSubmissionError =
+      'Failed to submit procedure record. Please try again.';
   // Input Styling
   static const double inputBorderRadius = 8.0;
   static const double buttonBorderRadius = 8.0;
