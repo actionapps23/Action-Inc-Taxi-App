@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:math' as math;
 
 import 'package:action_inc_taxi_app/core/theme/app_assets.dart';
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
@@ -23,6 +24,8 @@ class LoginScreen extends HookWidget {
     final employIdController = useTextEditingController();
     final passwordController = useTextEditingController();
     final formKey = useState(GlobalKey<FormState>());
+    final screenW = MediaQuery.of(context).size.width;
+    final containerWidth = screenW < 600 ? 0.9.sw : math.min(0.4.sw, 400.w);
 
     return BlocListener<LoginCubit, LoginState>(
       bloc: context.read<LoginCubit>(),
@@ -46,9 +49,8 @@ class LoginScreen extends HookWidget {
         body: Center(
           child: SingleChildScrollView(
             child: Container(
-              width: 0.4.sw,
+              width: containerWidth,
               margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
-              constraints: BoxConstraints(maxWidth: 400.w),
               padding: EdgeInsets.all(12.w),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(

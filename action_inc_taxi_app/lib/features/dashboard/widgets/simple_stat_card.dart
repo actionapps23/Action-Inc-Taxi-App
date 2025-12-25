@@ -50,7 +50,9 @@ class SimpleStatCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               if (percentChange != null)
-                Flexible(child: PercentChangeIndicator(percentChange: percentChange!)),
+                Flexible(
+                  child: PercentChangeIndicator(percentChange: percentChange!),
+                ),
             ],
           ),
           ResponsiveText(

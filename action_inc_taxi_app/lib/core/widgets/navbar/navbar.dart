@@ -14,7 +14,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 
-
 class Navbar extends StatelessWidget {
   const Navbar({super.key});
 
@@ -76,9 +75,7 @@ class Navbar extends StatelessWidget {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => Dashboard(),
-                        ),
+                        MaterialPageRoute(builder: (context) => Dashboard()),
                       );
                     },
                   ),
@@ -104,9 +101,7 @@ class Navbar extends StatelessWidget {
                     onTap: () {
                       // Simple logout: navigate back to login screen
                       Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(
-                          builder: (_) => const LoginScreen(),
-                        ),
+                        MaterialPageRoute(builder: (_) => const LoginScreen()),
                         (route) => false,
                       );
                     },

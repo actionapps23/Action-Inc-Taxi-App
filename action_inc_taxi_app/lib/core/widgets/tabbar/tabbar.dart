@@ -63,7 +63,9 @@ class _CustomTabBarState extends State<CustomTabBar> {
                 padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0.5.h),
                 decoration: BoxDecoration(
                   color: isSelected ? widget.selectedColor : Colors.transparent,
-                  borderRadius: BorderRadius.circular(widget.borderRadius.w.clamp(6, 12)),
+                  borderRadius: BorderRadius.circular(
+                    widget.borderRadius.w.clamp(6, 12),
+                  ),
                 ),
                 alignment: Alignment.center,
                 child: ResponsiveText(

@@ -49,7 +49,9 @@ class _IncomeBarChartState extends State<IncomeBarChart> {
     final double borderRadius = 12.r;
     final double barWidth = 28.w;
     final double chartHeight = 180.h;
-    final int maxValue = widget.values.isEmpty ? 0 : widget.values.reduce((a, b) => a > b ? a : b);
+    final int maxValue = widget.values.isEmpty
+        ? 0
+        : widget.values.reduce((a, b) => a > b ? a : b);
 
     // dynamic Y-axis labels
     const int ticks = 3; // creates ticks+1 labels (e.g. 3 -> 4 labels)
@@ -60,6 +62,7 @@ class _IncomeBarChartState extends State<IncomeBarChart> {
       }
       return v.toString();
     }
+
     final List<String> yLabels = List.generate(ticks + 1, (i) {
       if (maxValue == 0) return '0';
       final value = ((maxValue) * (ticks - i) / ticks).round();
@@ -90,7 +93,7 @@ class _IncomeBarChartState extends State<IncomeBarChart> {
                   children: yLabels
                       .map(
                         (t) => ResponsiveText(
-                           '₱$t',
+                          '₱$t',
                           style: AppTextStyles.bodyExtraSmall.copyWith(
                             color: Colors.white,
                           ),
@@ -106,7 +109,10 @@ class _IncomeBarChartState extends State<IncomeBarChart> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: List.generate(widget.values.length, (i) {
                         final isHighlighted = i == _selectedIndex;
-                        final barHeight = (widget.values[i] / (maxValue == 0 ? 1 : maxValue)) * chartHeight;
+                        final barHeight =
+                            (widget.values[i] /
+                                (maxValue == 0 ? 1 : maxValue)) *
+                            chartHeight;
                         return GestureDetector(
                           onTap: () {
                             setState(() {
@@ -119,8 +125,7 @@ class _IncomeBarChartState extends State<IncomeBarChart> {
                               mainAxisSize: MainAxisSize.min,
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                if(!isHighlighted)
-                                  SizedBox(height: bubbleH),
+                                if (!isHighlighted) SizedBox(height: bubbleH),
 
                                 if (isHighlighted)
                                   Container(
@@ -135,10 +140,11 @@ class _IncomeBarChartState extends State<IncomeBarChart> {
                                     ),
                                     child: ResponsiveText(
                                       '${widget.currencySymbol} ${widget.values[i]}',
-                                      style: AppTextStyles.bodyExtraSmall.copyWith(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                      style: AppTextStyles.bodyExtraSmall
+                                          .copyWith(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                     ),
                                   ),
                                 Flexible(
@@ -147,21 +153,26 @@ class _IncomeBarChartState extends State<IncomeBarChart> {
                                     width: barWidth,
                                     height: barHeight,
                                     decoration: BoxDecoration(
-                                      color: isHighlighted ? AppColors.primary : Colors.white.withOpacity(0.15),
-                                      borderRadius: BorderRadius.circular((barWidth / 4).r),
+                                      color: isHighlighted
+                                          ? AppColors.primary
+                                          : Colors.white.withOpacity(0.15),
+                                      borderRadius: BorderRadius.circular(
+                                        (barWidth / 4).r,
+                                      ),
                                     ),
                                   ),
                                 ),
                                 Spacing.vSmall,
                                 ConstrainedBox(
-                                  constraints: BoxConstraints(maxWidth: barWidth + 8.w),
+                                  constraints: BoxConstraints(
+                                    maxWidth: barWidth + 8.w,
+                                  ),
                                   child: FittedBox(
                                     fit: BoxFit.scaleDown,
                                     child: ResponsiveText(
                                       widget.labels[i],
-                                      style: AppTextStyles.bodyExtraSmall.copyWith(
-                                        color: Colors.white,
-                                      ),
+                                      style: AppTextStyles.bodyExtraSmall
+                                          .copyWith(color: Colors.white),
                                     ),
                                   ),
                                 ),

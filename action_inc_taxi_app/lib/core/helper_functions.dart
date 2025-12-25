@@ -15,7 +15,6 @@ class HelperFunctions {
     }
   }
 
-  
   static double percentChange(num previous, num current) {
     if (previous == 0) {
       return 0;

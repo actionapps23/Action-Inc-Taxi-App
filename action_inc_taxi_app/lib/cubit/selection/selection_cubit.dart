@@ -6,6 +6,7 @@ import 'package:action_inc_taxi_app/features/entry_section/inspection/vehicle_vi
 import 'package:action_inc_taxi_app/features/entry_section/renewal/renewal_and_status_screen.dart';
 import 'package:action_inc_taxi_app/features/inventory/inventory_sceen.dart';
 import 'package:action_inc_taxi_app/features/maintainence/maintainence_screen.dart';
+import 'package:action_inc_taxi_app/features/purchase/purchase_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'selection_state.dart';
@@ -113,10 +114,7 @@ class SelectionCubit extends Cubit<SelectionState> {
       case 4:
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) =>
-                VehicleViewSelectionScreen(),
-          ),
+          MaterialPageRoute(builder: (context) => VehicleViewSelectionScreen()),
         );
         break;
       case 5:
@@ -135,6 +133,17 @@ class SelectionCubit extends Cubit<SelectionState> {
             builder: (context) =>
                 ProcedureScreen(procedureType: AppConstants.closeProcedure),
           ),
+        );
+      case 7:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => PurchaseScreen()),
+        );
+        break;
+      case 8:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => PurchaseScreen()),
         );
         break;
       default:

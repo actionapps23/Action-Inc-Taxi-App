@@ -47,6 +47,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
     {'title': "Open Procedure", 'icon': AppAssets.openProcedure},
     {'title': "Close Procedure", 'icon': AppAssets.closeProcedure},
     {'title': "Renewal & Status", 'icon': AppAssets.renewalStatus},
+    {'title': "Purchase of Car", 'icon': AppAssets.renewalStatus},
   ];
 
   @override
@@ -98,7 +99,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
                           mainAxisSpacing: 16.h,
                           crossAxisSpacing: 16.w,
                           childAspectRatio: HelperFunctions.getChildAspectRatio(
-                          context
+                            context,
                           ),
                           physics: NeverScrollableScrollPhysics(),
                           children: List.generate(featureCards.length, (i) {

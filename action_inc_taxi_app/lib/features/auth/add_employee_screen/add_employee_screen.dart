@@ -82,7 +82,7 @@ class AddEmployeeScreen extends HookWidget {
                                     controller: TextEditingController(
                                       text: nextEmployeeId,
                                     ),
-                                    labelText: 'Employee ID',
+                                    labelText: 'Employee ID (Auto-generated)',
                                     isReadOnly: true,
                                   ),
                                   SizedBox(height: 24.h),
@@ -133,7 +133,11 @@ class AddEmployeeScreen extends HookWidget {
                                         onChanged: (val) =>
                                             isAdmin.value = val ?? false,
                                       ),
-                                      ResponsiveText('Grant admin privileges'),
+                                      Flexible(
+                                        child: ResponsiveText(
+                                          'Grant admin privileges',
+                                        ),
+                                      ),
                                     ],
                                   ),
                                   SizedBox(height: 24.h),

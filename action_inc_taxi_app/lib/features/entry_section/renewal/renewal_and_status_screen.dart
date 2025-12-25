@@ -210,7 +210,9 @@ class _RenewalAndStatusScreenState extends State<RenewalAndStatusScreen> {
                                                 .read<RenewalAndStatusCubit>()
                                                 .load(),
                                             icon: const Icon(Icons.refresh),
-                                            label: const ResponsiveText('Retry'),
+                                            label: const ResponsiveText(
+                                              'Retry',
+                                            ),
                                             style: ElevatedButton.styleFrom(
                                               backgroundColor: const Color(
                                                 0xFF2ECC40,
@@ -266,7 +268,9 @@ class _RenewalAndStatusScreenState extends State<RenewalAndStatusScreen> {
                                                 .read<RenewalAndStatusCubit>()
                                                 .load(),
                                             icon: const Icon(Icons.refresh),
-                                            label: const ResponsiveText('Refresh'),
+                                            label: const ResponsiveText(
+                                              'Refresh',
+                                            ),
                                             style: ElevatedButton.styleFrom(
                                               backgroundColor: const Color(
                                                 0xFF2ECC40,

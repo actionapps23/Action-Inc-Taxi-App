@@ -99,7 +99,10 @@ class PieChart extends StatelessWidget {
                           style: AppTextStyles.bodySmall,
                         ),
                       ),
-                      ResponsiveText("₱ $total", style: AppTextStyles.bodySmall),
+                      ResponsiveText(
+                        "₱ $total",
+                        style: AppTextStyles.bodySmall,
+                      ),
                     ],
                   ),
                   Spacing.vStandard,

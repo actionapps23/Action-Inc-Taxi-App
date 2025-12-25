@@ -154,7 +154,10 @@ class _CarPlanScreenState extends State<CarPlanScreen> {
               });
               Navigator.pop(context);
             },
-            child: const ResponsiveText('Delete', style: TextStyle(color: Colors.red)),
+            child: const ResponsiveText(
+              'Delete',
+              style: TextStyle(color: Colors.red),
+            ),
           ),
         ],
       ),

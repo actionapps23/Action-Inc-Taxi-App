@@ -1408,7 +1408,8 @@ class _DailyRentCollectionInfoScreenState
                             }
                             if (errors.isNotEmpty) {
                               debugPrint(
-                                  'Errors in form: ${errors.toString()}');
+                                'Errors in form: ${errors.toString()}',
+                              );
                               if (context.mounted) {
                                 SnackBarHelper.showErrorSnackBar(
                                   context,

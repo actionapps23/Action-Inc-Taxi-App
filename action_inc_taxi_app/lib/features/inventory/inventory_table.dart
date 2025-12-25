@@ -5,7 +5,6 @@ import 'package:action_inc_taxi_app/core/widgets/status_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 
-
 class InventoryTable extends StatelessWidget {
   final List<InventoryItemModel> items;
   const InventoryTable({super.key, required this.items});

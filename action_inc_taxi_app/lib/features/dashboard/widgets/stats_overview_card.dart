@@ -41,7 +41,13 @@ class StatsOverviewCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SizedBox(width: 80.w,child: ResponsiveText(statsCardLabel, style: AppTextStyles.bodySmall),),
+                SizedBox(
+                  width: 80.w,
+                  child: ResponsiveText(
+                    statsCardLabel,
+                    style: AppTextStyles.bodySmall,
+                  ),
+                ),
                 Flexible(
                   child: CustomTabBar(
                     backgroundColor: AppColors.buttonText,

@@ -28,7 +28,9 @@ class DbService {
         fleetNumber = fleetNumberRaw.toString();
       }
       final taxiNo = data['taxiNo'] as String?;
-      if (fleetNumber != null && taxiNo != null && fleetTaxiNos.containsKey(fleetNumber)) {
+      if (fleetNumber != null &&
+          taxiNo != null &&
+          fleetTaxiNos.containsKey(fleetNumber)) {
         fleetTaxiNos[fleetNumber]!.add(taxiNo);
       }
     }
@@ -154,7 +156,9 @@ class DbService {
         fleetNumber = int.tryParse(fleetNumberRaw);
       }
       final taxiNo = data['taxiNo'] as String?;
-      if (fleetNumber != null && taxiNo != null && fleetTaxiNos.containsKey(fleetNumber)) {
+      if (fleetNumber != null &&
+          taxiNo != null &&
+          fleetTaxiNos.containsKey(fleetNumber)) {
         fleetTaxiNos[fleetNumber]!.add(taxiNo);
       }
     }
@@ -208,14 +212,18 @@ class DbService {
         fleetNumber = int.tryParse(fleetNumberRaw);
       }
       final taxiNo = data['taxiNo'] as String?;
-      if (fleetNumber != null && taxiNo != null && fleetTaxiNos.containsKey(fleetNumber)) {
+      if (fleetNumber != null &&
+          taxiNo != null &&
+          fleetTaxiNos.containsKey(fleetNumber)) {
         fleetTaxiNos[fleetNumber]!.add(taxiNo);
       }
     }
     final rentQuery = await _firestore.collection(rentsCollection).get();
-    final rents = rentQuery.docs.map((doc) => Rent.fromMap(doc.data())).toList();
+    final rents = rentQuery.docs
+        .map((doc) => Rent.fromMap(doc.data()))
+        .toList();
     final result = <String, Map<String, int>>{};
-    for (var month = 1; month <= now.month ; month++) {
+    for (var month = 1; month <= now.month; month++) {
       final monthString = HelperFunctions.monthIntToString(month);
       final monthKey = '$currentYear-${month.toString().padLeft(2, '0')}';
       int fleet1Amt = 0;
@@ -246,11 +254,8 @@ class DbService {
         'totalAmount': fleet1Amt + fleet2Amt + fleet3Amt + fleet4Amt,
       };
     }
-      return result;
-
-  
+    return result;
   }
-
 
   Future<Map<String, int>> getLastTwoDaysIncome() async {
     final now = DateTime.now().toUtc();

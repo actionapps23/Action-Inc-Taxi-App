@@ -179,7 +179,10 @@ class _DashboardState extends State<Dashboard> {
                               Expanded(
                                 child: IncomeBarChart(
                                   values: dashboardModel.monthlyFleetIncomes,
-                                  labels: AppConstants.monthNames.sublist(0, dashboardModel.monthlyFleetIncomes.length),
+                                  labels: AppConstants.monthNames.sublist(
+                                    0,
+                                    dashboardModel.monthlyFleetIncomes.length,
+                                  ),
                                   highlightedIndex: 0, // April
                                 ),
                               ),

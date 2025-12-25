@@ -26,7 +26,7 @@ class ResponsiveText extends StatelessWidget {
     // Determine responsive font size
     double fontSize = style?.fontSize ?? 14;
 
- if (width < 400) {
+    if (width < 400) {
       fontSize = 10;
     } else if (width < 600) {
       fontSize = 11;

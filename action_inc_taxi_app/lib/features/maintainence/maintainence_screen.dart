@@ -28,7 +28,8 @@ class _MaintainenceScreenState extends State<MaintainenceScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final MaintainanceCubit maintainanceCubit = context.read<MaintainanceCubit>();
+    final MaintainanceCubit maintainanceCubit = context
+        .read<MaintainanceCubit>();
 
     return Scaffold(
       body: SafeArea(
@@ -72,28 +73,28 @@ class _MaintainenceScreenState extends State<MaintainenceScreen> {
                       );
                     }
 
-                        if (state is MaintainanceLoaded) {
-                          final items = state.maintainanceItems;
-                          return ListView.separated(
-                            padding: const EdgeInsets.symmetric(horizontal: 48),
-                            itemCount: items.length,
-                            separatorBuilder: (context, index) => Column(
-                              children: [
-                                Spacing.vLarge,
-                                Divider(color: Colors.white12, height: 1),
-                                Spacing.vLarge,
-                              ],
-                            ),
-                            itemBuilder: (context, index) {
-                              final maintainanceItem = items[index];
-                              return MaintainanceItemCard(
-                                maintainanceModel: maintainanceItem,
-                              );
-                            },
+                    if (state is MaintainanceLoaded) {
+                      final items = state.maintainanceItems;
+                      return ListView.separated(
+                        padding: const EdgeInsets.symmetric(horizontal: 48),
+                        itemCount: items.length,
+                        separatorBuilder: (context, index) => Column(
+                          children: [
+                            Spacing.vLarge,
+                            Divider(color: Colors.white12, height: 1),
+                            Spacing.vLarge,
+                          ],
+                        ),
+                        itemBuilder: (context, index) {
+                          final maintainanceItem = items[index];
+                          return MaintainanceItemCard(
+                            maintainanceModel: maintainanceItem,
                           );
-                        }
-                        // fallback
-                        return Center(child: CircularProgressIndicator());
+                        },
+                      );
+                    }
+                    // fallback
+                    return Center(child: CircularProgressIndicator());
                   },
                 ),
               ),

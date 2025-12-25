@@ -64,7 +64,11 @@ class SummaryCard extends StatelessWidget {
                       color: AppColors.scaffold.withOpacity(0.08),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: Icon(icon, color: AppColors.scaffold, size: max(8.w, 12)),
+                    child: Icon(
+                      icon,
+                      color: AppColors.scaffold,
+                      size: max(8.w, 12),
+                    ),
                   ),
                 ),
               ],

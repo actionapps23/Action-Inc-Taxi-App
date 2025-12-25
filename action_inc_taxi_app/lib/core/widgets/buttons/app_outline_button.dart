@@ -48,10 +48,7 @@ class AppOutlineButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             if (prefixIcon != null) ...[prefixIcon!, const SizedBox(width: 10)],
-            ResponsiveText(
-              label,
-              style: AppTextStyles.bodySmall
-            ),
+            ResponsiveText(label, style: AppTextStyles.bodySmall),
           ],
         ),
       ),

@@ -58,7 +58,10 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
                         const SizedBox(width: 8),
                         Flexible(
                           child: Chip(
-                            label: ResponsiveText(_isSolved ? 'Solved' : 'Unsolved', style: AppTextStyles.bodyExtraSmall,),
+                            label: ResponsiveText(
+                              _isSolved ? 'Solved' : 'Unsolved',
+                              style: AppTextStyles.bodyExtraSmall,
+                            ),
                             backgroundColor: _isSolved
                                 ? AppColors.success
                                 : AppColors.error,

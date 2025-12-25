@@ -52,7 +52,10 @@ class AddSectionPopup extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Spacing.vLarge,
-                  ResponsiveText("Category Name", style: AppTextStyles.bodyExtraSmall),
+                  ResponsiveText(
+                    "Category Name",
+                    style: AppTextStyles.bodyExtraSmall,
+                  ),
                   Spacing.vStandard,
                   AppTextFormField(hintText: "Enter section name"),
                   Spacing.vExtraLarge,
