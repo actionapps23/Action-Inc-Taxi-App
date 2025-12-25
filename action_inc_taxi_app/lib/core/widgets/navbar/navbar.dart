@@ -38,116 +38,113 @@ class Navbar extends StatelessWidget {
           ),
         ],
       ),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            // Logo and title
-            GestureDetector(
-              onTap: () {
-                // emit intial satte for all cubits
-                context.read<SelectionCubit>().reset();
-                context.read<DailyRentCubit>().reset();
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (_) => const SelectionScreen()),
-                );
-              },
+      child: Row(
+        children: [
+          // Logo and title
+          GestureDetector(
+            onTap: () {
+              // emit intial satte for all cubits
+              context.read<SelectionCubit>().reset();
+              context.read<DailyRentCubit>().reset();
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => const SelectionScreen()),
+              );
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  AppAssets.logoPNG,
+                  width: 64.w,
+                  height: 48.h,
+                  fit: BoxFit.contain,
+                ),
+              ],
+            ),
+          ),
+          SizedBox(width: 24.w),
+          // Navigation buttons in the center (scrollable on mobile)
+          Expanded(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset(
-                    AppAssets.logoPNG,
-                    width: 64.w,
-                    height: 48.h,
-                    fit: BoxFit.contain,
+                  NavButton(
+                    'Dashboard',
+                    icon: AppAssets.dashboard,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Dashboard(),
+                        ),
+                      );
+                    },
                   ),
-                ],
-              ),
-            ),
-            // Navigation - make this horizontally scrollable so it doesn't overflow
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
+                  if (loginState.user.isAdmin) ...[
+                    SizedBox(width: 12.w),
                     NavButton(
-                      'Dashboard',
-                      icon: AppAssets.dashboard,
+                      'Add Employee',
+                      icon: AppAssets.logout,
                       onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => Dashboard(),
+                            builder: (context) => AddEmployeeScreen(),
                           ),
                         );
                       },
                     ),
-                    if (loginState.user.isAdmin) ...[
-                      SizedBox(width: 12.w),
-                      NavButton(
-                        'Add Employee',
-                        icon: AppAssets.logout,
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AddEmployeeScreen(),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  
-                    SizedBox(width: 12.w),
-                    NavButton(
-                      'Log out',
-                      icon: AppAssets.logout,
-                      onTap: () {
-                        // Simple logout: navigate back to login screen
-                        Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(
-                            builder: (_) => const LoginScreen(),
-                          ),
-                          (route) => false,
-                        );
-                      },
-                    ),
-                    SizedBox(width: 24.w),
                   ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    CircleAvatar(
-                      backgroundImage: AssetImage(AppAssets.userAvatar),
-                      radius: 18,
-                    ),
-                    SizedBox(width: 4.w),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ResponsiveText(
-                          loginState.user.name,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                          ),
+                  SizedBox(width: 12.w),
+                  NavButton(
+                    'Log out',
+                    icon: AppAssets.logout,
+                    onTap: () {
+                      // Simple logout: navigate back to login screen
+                      Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                          builder: (_) => const LoginScreen(),
                         ),
-                        ResponsiveText(
-                          loginState.user.role,
-                          style: TextStyle(color: Colors.white70, fontSize: 12),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
+                        (route) => false,
+                      );
+                    },
+                  ),
+                  SizedBox(width: 24.w),
+                ],
+              ),
             ),
-          ],
-        ),
+          ),
+          // Avatar and name at the end
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              CircleAvatar(
+                backgroundImage: AssetImage(AppAssets.userAvatar),
+                radius: 18,
+              ),
+              SizedBox(width: 4.w),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ResponsiveText(
+                    loginState.user.name,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                  ResponsiveText(
+                    loginState.user.role,
+                    style: TextStyle(color: Colors.white70, fontSize: 12),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
