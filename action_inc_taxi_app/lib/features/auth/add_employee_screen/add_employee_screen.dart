@@ -91,6 +91,7 @@ class AddEmployeeScreen extends HookWidget {
                                     labelOnTop: true,
                                     controller: nameController,
                                     labelText: 'Name',
+                                    hintText: 'Enter employee name',
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
                                         return 'Please enter employee name';
@@ -104,6 +105,7 @@ class AddEmployeeScreen extends HookWidget {
                                     labelOnTop: true,
                                     controller: passwordController,
                                     labelText: 'Set Password',
+                                    hintText: 'Enter password',
                                     obscureText: true,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
@@ -118,6 +120,7 @@ class AddEmployeeScreen extends HookWidget {
                                     labelOnTop: true,
                                     controller: roleController,
                                     labelText: 'Role',
+                                    hintText: 'Enter role (e.g., Mechanic)',
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
                                         return 'Please enter a role';

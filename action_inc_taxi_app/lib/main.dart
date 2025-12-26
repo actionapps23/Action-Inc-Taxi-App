@@ -1,6 +1,7 @@
 import 'package:action_inc_taxi_app/cubit/auth/add_employee_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/auth/login_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/car_details/car_detail_cubit.dart';
+import 'package:action_inc_taxi_app/cubit/future_purchase/future_purchase_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/inventory/inventory_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/maintainance/maintainance_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/procedure/procedure_cubit.dart';
@@ -49,6 +50,9 @@ class MyApp extends StatelessWidget {
             BlocProvider<AddEmployeeCubit>(create: (_) => AddEmployeeCubit()),
             BlocProvider<LoginCubit>(create: (_) => LoginCubit()),
             BlocProvider<ProcedureCubit>(create: (_) => ProcedureCubit()),
+            BlocProvider<FuturePurchaseCubit>(
+              create: (_) => FuturePurchaseCubit(),
+            ),
           ],
           child: MaterialApp(
             scrollBehavior: ScrollBehavior().copyWith(scrollbars: false),
@@ -78,7 +82,7 @@ class MyApp extends StatelessWidget {
                   ),
               colorScheme: ColorScheme.dark(
                 primary: Colors.green[400] ?? Colors.green,
-                surface: Colors.black,
+                surface: const Color(0xff0f110f),
               ),
             ),
             home: LoginScreen(),

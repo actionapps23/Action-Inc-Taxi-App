@@ -1,3 +1,5 @@
+import 'package:action_inc_taxi_app/core/models/field_entry_model.dart';
+
 class AppConstants {
   static const String openProcedure = 'open_procedure';
   static const String closeProcedure = 'close_procedure';
@@ -69,6 +71,47 @@ class AppConstants {
     'Emily Davis',
   ];
 
+  static List<FieldEntryModel> items = [
+    FieldEntryModel(
+      id: '123',
+      isCompleted: true,
+      title: "Muneeb Masood",
+      SOP: 1000,
+      fees: 2000,
+      timeline: DateTime.now(),
+      lastUpdated: DateTime.now(),
+    ),
+
+    FieldEntryModel(
+      id: '123',
+      isCompleted: false,
+      title: "Muneeb Masood",
+      SOP: 1000,
+      fees: 2000,
+      timeline: DateTime.now(),
+      lastUpdated: DateTime.now(),
+    ),
+    FieldEntryModel(
+      id: '124',
+      isCompleted: true,
+      title: "Muneeb Masood",
+      SOP: 1000,
+      fees: 2000,
+      timeline: DateTime.now(),
+      lastUpdated: DateTime.now(),
+    ),
+
+    FieldEntryModel(
+      id: '125',
+      title: "Muneeb Masood",
+      SOP: 1000,
+      fees: 2000,
+      isCompleted: false,
+      timeline: DateTime.now(),
+      lastUpdated: DateTime.now(),
+    ),
+  ];
+
   static const monthNames = [
     'Jan',
     'Feb',
@@ -83,4 +126,18 @@ class AppConstants {
     'Nov',
     'Dec',
   ];
+
+  // collections
+  static final String lftrbForFranchiseTransferCollection =
+      'ltfrb_franchise_transfer';
+  static final String pnpForFranchiseTransferCollection =
+      'pnp_franchise_transfer';
+  static final String ltoForFranchiseTransferCollection =
+      'lto_franchise_transfer';
+  static final String purchaseCollection = 'purchase';
+  static final String newCarEquipmentCollection = 'new_car_equipments';
+  static final String lftrbCollectionForNewCar = 'ltfrb_process';
+  static final String ltoCollectionForNewCar = 'lto_process';
+  static final String futurePurchaseCollection = 'future_purchases';
+  static final String fieldEntryCollectionName = 'field_entries';
 }

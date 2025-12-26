@@ -47,7 +47,10 @@ class _SelectionScreenState extends State<SelectionScreen> {
     {'title': "Open Procedure", 'icon': AppAssets.openProcedure},
     {'title': "Close Procedure", 'icon': AppAssets.closeProcedure},
     {'title': "Renewal & Status", 'icon': AppAssets.renewalStatus},
-    {'title': "Purchase of Car", 'icon': AppAssets.renewalStatus},
+    {'title': "Purchase of Car", 'icon': AppAssets.carPurchase},
+    {'title': "Franchise Transfer", 'icon': AppAssets.franchiseTransfer},
+    {'title': "Future Purchase", 'icon': AppAssets.futurePurchase},
+    {'title': "Planning", 'icon': AppAssets.planning},
   ];
 
   @override

@@ -26,7 +26,7 @@ class Navbar extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 12.h),
       decoration: BoxDecoration(
-        color: Colors.grey[900],
+        color: Color(0xff191d19),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.blueAccent.withOpacity(0.3), width: 1),
         boxShadow: [

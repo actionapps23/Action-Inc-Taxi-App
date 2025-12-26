@@ -24,6 +24,10 @@ class AppAssets {
   static const cash = '${baseIconPath}cash.svg';
   static const expenses = '${baseIconPath}expenses.svg';
   static const gCash = '${baseIconPath}gcash.svg';
+  static const carPurchase = '${baseIconPath}car_purchase.svg';
+  static const franchiseTransfer = '${baseIconPath}franchise_transfer.svg';
+  static const planning = '${baseIconPath}planning.svg';
+  static const futurePurchase = '${baseIconPath}future_purchase.svg';
 
   // Images
 

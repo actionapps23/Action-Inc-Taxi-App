@@ -1,4 +1,5 @@
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
+import 'package:action_inc_taxi_app/core/theme/app_text_styles.dart';
 import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -46,11 +47,6 @@ class AppTextFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const labelStyle = TextStyle(
-      color: AppColors.textHint,
-      fontWeight: FontWeight.bold,
-      fontSize: 14,
-    );
     const inputStyle = TextStyle(color: AppColors.textHint, fontSize: 14);
     const hintStyle = TextStyle(color: AppColors.textHint, fontSize: 14);
     if (labelOnTop) {
@@ -62,7 +58,7 @@ class AppTextFormField extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 8.0),
               child: ResponsiveText(
                 labelText ?? hintText ?? '',
-                style: labelStyle,
+                style: AppTextStyles.bodyExtraSmall,
                 textAlign: TextAlign.left,
               ),
             ),
@@ -120,7 +116,7 @@ class AppTextFormField extends StatelessWidget {
                 padding: const EdgeInsets.only(right: 16.0),
                 child: ResponsiveText(
                   labelText!,
-                  style: labelStyle,
+                  style: AppTextStyles.bodyExtraSmall,
                   textAlign: textAlign ?? TextAlign.center,
                 ),
               ),

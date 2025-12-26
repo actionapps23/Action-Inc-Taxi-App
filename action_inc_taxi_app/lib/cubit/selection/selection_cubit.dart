@@ -4,6 +4,7 @@ import 'package:action_inc_taxi_app/features/close_procedure/procedure_screen.da
 import 'package:action_inc_taxi_app/features/entry_section/car_detail_main_screen.dart';
 import 'package:action_inc_taxi_app/features/entry_section/inspection/vehicle_view_selection_screen.dart';
 import 'package:action_inc_taxi_app/features/entry_section/renewal/renewal_and_status_screen.dart';
+import 'package:action_inc_taxi_app/features/franchise/franchise_transfer.dart';
 import 'package:action_inc_taxi_app/features/inventory/inventory_sceen.dart';
 import 'package:action_inc_taxi_app/features/maintainence/maintainence_screen.dart';
 import 'package:action_inc_taxi_app/features/purchase/purchase_screen.dart';
@@ -145,6 +146,15 @@ class SelectionCubit extends Cubit<SelectionState> {
           context,
           MaterialPageRoute(builder: (context) => PurchaseScreen()),
         );
+        break;
+      case 9:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => FranchiseTransfer()),
+        );
+        break;
+      case 10:
+        // Planning Screen navigation can be added here
         break;
       default:
         break;

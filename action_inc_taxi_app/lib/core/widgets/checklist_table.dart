@@ -1,42 +1,39 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:action_inc_taxi_app/core/models/field_entry_model.dart';
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
 import 'package:action_inc_taxi_app/core/theme/app_text_styles.dart';
+import 'package:action_inc_taxi_app/core/widgets/buttons/app_outline_button.dart';
+import 'package:action_inc_taxi_app/core/widgets/entry_field_popup.dart';
 import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/spacing.dart';
+import 'package:action_inc_taxi_app/cubit/field/field_cubit.dart';
+import 'package:action_inc_taxi_app/cubit/field/field_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-/// A reusable, responsive table-like widget to display a list of
-/// `FieldEntryModel` (checklist / procedure / purchase steps).
-///
-/// Usage:
-/// ChecklistTable(
-///   title: 'Purchase of Car',
-///   items: myItems,
-///   onEdit: (item) => ...,
-///   onToggleComplete: (item, value) => ...,
-/// )
 class ChecklistTable extends StatelessWidget {
   final String title;
-  final List<FieldEntryModel> items;
   final void Function(FieldEntryModel item)? onEdit;
   final void Function(FieldEntryModel item, bool completed)? onToggleComplete;
+  FieldCubit? fieldCubit;
   final double? maxHeight;
 
-  const ChecklistTable({
-    Key? key,
+  ChecklistTable({
+    super.key,
     required this.title,
-    required this.items,
     this.onEdit,
     this.onToggleComplete,
     this.maxHeight,
-  }) : super(key: key);
+    this.fieldCubit,
+  });
 
   Widget _headerCell(String text, {double flex = 1}) {
     return Expanded(
       flex: (flex * 1000).toInt(),
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 8.w),
+        padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 4.w),
         child: ResponsiveText(
           text,
           style: AppTextStyles.caption.copyWith(
@@ -52,7 +49,7 @@ class ChecklistTable extends StatelessWidget {
     return Expanded(
       flex: (flex * 1000).toInt(),
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 8.w),
+        padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 4.w),
         child: child,
       ),
     );
@@ -60,29 +57,47 @@ class ChecklistTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    fieldCubit ??= context.read<FieldCubit>();
     final table = Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      // crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // Title
-        Center(
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 8.h),
-            child: ResponsiveText(
-              title,
-              style: AppTextStyles.h3.copyWith(color: AppColors.surface),
-            ),
-          ),
-        ),
-        Spacing.vMedium,
-
         // Table card
         Container(
+          margin: EdgeInsets.symmetric(horizontal: 8.w),
           decoration: BoxDecoration(
-            color: AppColors.cardBackground,
+            color: const Color(0xFF191d19),
             borderRadius: BorderRadius.circular(12.r),
           ),
           child: Column(
             children: [
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8.h),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(child: Container()),
+
+                      ResponsiveText(
+                        title,
+                        style: AppTextStyles.bodyExtraSmall,
+                      ),
+                      Spacer(),
+                      AppOutlineButton(
+                        label: "Add New field",
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) =>
+                                EntryFieldPopup(fieldCubit: fieldCubit!),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Spacing.vLarge,
               // Header row
               Container(
                 decoration: BoxDecoration(
@@ -104,91 +119,91 @@ class ChecklistTable extends StatelessWidget {
               ),
 
               // Divider
-              Divider(height: 1.h, color: AppColors.border),
+              Divider(height: 1.h, color: Color(0xff262826)),
 
               // Rows list
               ConstrainedBox(
                 constraints: BoxConstraints(maxHeight: maxHeight ?? 400.h),
                 child: SingleChildScrollView(
                   child: Column(
-                    children: items.map((item) {
-                      return Column(
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                    children: (fieldCubit!.state as FieldEntriesLoaded).entries
+                        .map((item) {
+                          return Column(
                             children: [
-                              _dataCell(
-                                ResponsiveText(
-                                  item.title,
-                                  style: AppTextStyles.bodyMedium.copyWith(
-                                    color: AppColors.surface,
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  _dataCell(
+                                    ResponsiveText(
+                                      item.title,
+                                      style: AppTextStyles.bodyMedium.copyWith(
+                                        color: AppColors.surface,
+                                      ),
+                                      maxLines: 2,
+                                    ),
+                                    flex: 3,
                                   ),
-                                  maxLines: 2,
-                                ),
-                                flex: 3,
-                              ),
-                              _dataCell(
-                                ResponsiveText(
-                                  item.SOP.toString(),
-                                  style: AppTextStyles.bodyMedium,
-                                ),
-                              ),
-                              _dataCell(
-                                ResponsiveText(
-                                  '${item.price} P',
-                                  style: AppTextStyles.bodyMedium,
-                                ),
-                              ),
-                              _dataCell(
-                                ResponsiveText(
-                                  // timeline assumed as DateTime; show relative or days if needed
-                                  '${_formatTimeline(item.timeline)}',
-                                  style: AppTextStyles.bodyMedium,
-                                ),
-                              ),
-                              _dataCell(
-                                ResponsiveText(
-                                  _formatDate(item.lastUpdated),
-                                  style: AppTextStyles.bodyMedium,
-                                ),
-                                flex: 1.5,
-                              ),
-                              _dataCell(
-                                IconButton(
-                                  onPressed: onEdit == null
-                                      ? null
-                                      : () => onEdit!(item),
-                                  icon: Icon(
-                                    Icons.edit,
-                                    color: AppColors.surface,
+                                  _dataCell(
+                                    ResponsiveText(
+                                      item.SOP.toString(),
+                                      style: AppTextStyles.bodyMedium,
+                                    ),
                                   ),
-                                  padding: EdgeInsets.zero,
-                                ),
-                                flex: 0.6,
-                              ),
-                              _dataCell(
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Checkbox(
-                                    value: item is FieldEntryModel
-                                        ? (true ?? false)
-                                        : false,
-                                    onChanged: onToggleComplete == null
-                                        ? null
-                                        : (v) => onToggleComplete!(
-                                            item,
-                                            v ?? false,
-                                          ),
+                                  _dataCell(
+                                    ResponsiveText(
+                                      '${item.fees} P',
+                                      style: AppTextStyles.bodyMedium,
+                                    ),
                                   ),
-                                ),
-                                flex: 0.6,
+                                  _dataCell(
+                                    ResponsiveText(
+                                      // timeline assumed as DateTime; show relative or days if needed
+                                      _formatTimeline(item.timeline),
+                                      style: AppTextStyles.bodyMedium,
+                                    ),
+                                  ),
+                                  _dataCell(
+                                    ResponsiveText(
+                                      _formatDate(item.lastUpdated),
+                                      style: AppTextStyles.bodyMedium,
+                                    ),
+                                    flex: 1.5,
+                                  ),
+                                  _dataCell(
+                                    IconButton(
+                                      onPressed: onEdit == null
+                                          ? null
+                                          : () => onEdit!(item),
+                                      icon: Icon(
+                                        Icons.edit,
+                                        color: AppColors.surface,
+                                      ),
+                                      padding: EdgeInsets.zero,
+                                    ),
+                                    flex: 0.6,
+                                  ),
+                                  _dataCell(
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Checkbox(
+                                        value: (item.isCompleted),
+                                        onChanged: onToggleComplete == null
+                                            ? null
+                                            : (v) => onToggleComplete!(
+                                                item,
+                                                v ?? false,
+                                              ),
+                                      ),
+                                    ),
+                                    flex: 0.6,
+                                  ),
+                                ],
                               ),
+                              Divider(height: 1.h, color: Color(0xff262826)),
                             ],
-                          ),
-                          Divider(height: 1.h, color: AppColors.border),
-                        ],
-                      );
-                    }).toList(),
+                          );
+                        })
+                        .toList(),
                   ),
                 ),
               ),
@@ -212,7 +227,7 @@ class ChecklistTable extends StatelessWidget {
             height: availableHeight.clamp(200.h, mq.size.height),
             child: ListView(
               physics: BouncingScrollPhysics(),
-              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 16.h),
               children: [
                 Center(
                   child: Padding(
@@ -226,7 +241,9 @@ class ChecklistTable extends StatelessWidget {
                   ),
                 ),
                 Spacing.vMedium,
-                ...items.map((item) {
+                ...(fieldCubit!.state as FieldEntriesLoaded).entries.map((
+                  item,
+                ) {
                   return Container(
                     margin: EdgeInsets.only(bottom: 12.h),
                     padding: EdgeInsets.all(12.w),
@@ -250,7 +267,7 @@ class ChecklistTable extends StatelessWidget {
                           runSpacing: 8.h,
                           children: [
                             _infoChip('SOP', item.SOP.toString()),
-                            _infoChip('Price', '${item.price} P'),
+                            _infoChip('Price', '${item.fees} P'),
                             _infoChip(
                               'Timeline',
                               _formatTimeline(item.timeline),
@@ -279,7 +296,7 @@ class ChecklistTable extends StatelessWidget {
                       ],
                     ),
                   );
-                }).toList(),
+                }),
                 // bottom spacing so content doesn't hit screen edge
                 SizedBox(height: 24.h),
               ],

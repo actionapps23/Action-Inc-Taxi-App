@@ -1,10 +1,31 @@
-import 'package:action_inc_taxi_app/core/models/field_entry_model.dart';
+import 'package:action_inc_taxi_app/core/constants/app_constants.dart';
+import 'package:action_inc_taxi_app/core/theme/app_text_styles.dart';
 import 'package:action_inc_taxi_app/core/widgets/checklist_table.dart';
 import 'package:action_inc_taxi_app/core/widgets/navbar/navbar.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/spacing.dart';
+import 'package:action_inc_taxi_app/cubit/field/field_cubit.dart';
+import 'package:action_inc_taxi_app/cubit/field/field_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class PurchaseScreen extends StatelessWidget {
+class PurchaseScreen extends StatefulWidget {
+  const PurchaseScreen({super.key});
+
+  @override
+  State<PurchaseScreen> createState() => _PurchaseScreenState();
+}
+
+class _PurchaseScreenState extends State<PurchaseScreen> {
+  @override
+  void initState() {
+    super.initState();
+    final fieldCubit = FieldCubit(
+      collectionName: AppConstants.purchaseCollection,
+      documentId: AppConstants.purchaseCollection,
+    );
+    fieldCubit.loadFieldEntries();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -12,44 +33,52 @@ class PurchaseScreen extends StatelessWidget {
         children: [
           Navbar(),
           Spacing.vMedium,
-          ChecklistTable(
-            title: "Purchase Of Car",
-            items: [
-              FieldEntryModel(
-                id: '123',
-                title: "Muneeb Masood",
-                SOP: 1000,
-                price: 2000,
-                timeline: DateTime.now(),
-                lastUpdated: DateTime.now(),
-              ),
 
-              FieldEntryModel(
-                id: '123',
-                title: "Muneeb Masood",
-                SOP: 1000,
-                price: 2000,
-                timeline: DateTime.now(),
-                lastUpdated: DateTime.now(),
-              ),
-              FieldEntryModel(
-                id: '124',
-                title: "Muneeb Masood",
-                SOP: 1000,
-                price: 2000,
-                timeline: DateTime.now(),
-                lastUpdated: DateTime.now(),
-              ),
-
-              FieldEntryModel(
-                id: '125',
-                title: "Muneeb Masood",
-                SOP: 1000,
-                price: 2000,
-                timeline: DateTime.now(),
-                lastUpdated: DateTime.now(),
-              ),
-            ],
+          BlocProvider(
+            create: (context) => FieldCubit(
+              collectionName: AppConstants.purchaseCollection,
+              documentId: AppConstants.purchaseCollection,
+            ),
+            child: BlocBuilder<FieldCubit, FieldState>(
+              builder: (context, state) {
+                if (state is FieldLoading || state is FieldInitial) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Purchase Of Car",
+                        style: AppTextStyles.bodyExtraSmall,
+                      ),
+                      Center(child: CircularProgressIndicator()),
+                    ],
+                  );
+                } else if (state is FieldError) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Purchase Of Car",
+                        style: AppTextStyles.bodyExtraSmall,
+                      ),
+                      Center(child: Text("Error: ${state.message}")),
+                    ],
+                  );
+                } else if (state is FieldEntriesLoaded &&
+                    state.entries.isEmpty) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Purchase Of Car",
+                        style: AppTextStyles.bodyExtraSmall,
+                      ),
+                      Center(child: Text("No entries found.")),
+                    ],
+                  );
+                }
+                return ChecklistTable(title: "Purchase Of Car");
+              },
+            ),
           ),
         ],
       ),

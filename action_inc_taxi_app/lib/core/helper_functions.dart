@@ -154,4 +154,16 @@ class HelperFunctions {
     if (month < 1 || month > 12) return '';
     return AppConstants.monthNames[month - 1];
   }
+
+  static getKeyFromTitle(String title) {
+    return title.toLowerCase().replaceAll(' ', '_');
+  }
+
+  static DateTime? parseDateString(String dateString) {
+    try {
+      return DateTime.parse(dateString);
+    } catch (e) {
+      return null;
+    }
+  }
 }
