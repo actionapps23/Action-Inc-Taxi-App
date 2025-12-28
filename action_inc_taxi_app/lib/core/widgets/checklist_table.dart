@@ -1,6 +1,7 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:action_inc_taxi_app/core/models/field_entry_model.dart';
+import 'package:action_inc_taxi_app/core/models/future_purchase_model.dart';
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
 import 'package:action_inc_taxi_app/core/theme/app_text_styles.dart';
 import 'package:action_inc_taxi_app/core/widgets/buttons/app_outline_button.dart';
@@ -9,6 +10,8 @@ import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/spacing.dart';
 import 'package:action_inc_taxi_app/cubit/field/field_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/field/field_state.dart';
+import 'package:action_inc_taxi_app/cubit/future_purchase/future_purchase_cubit.dart';
+import 'package:action_inc_taxi_app/cubit/future_purchase/future_purchase_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,8 +19,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class ChecklistTable extends StatelessWidget {
   final String title;
   final void Function(FieldEntryModel item)? onEdit;
+  final bool isFromFutureCarPurchase;
   final void Function(FieldEntryModel item, bool completed)? onToggleComplete;
   FieldCubit? fieldCubit;
+  FuturePurchaseCubit? futurePurchaseCubit;
   final double? maxHeight;
 
   ChecklistTable({
@@ -25,8 +30,10 @@ class ChecklistTable extends StatelessWidget {
     required this.title,
     this.onEdit,
     this.onToggleComplete,
+    this.isFromFutureCarPurchase = false,
     this.maxHeight,
     this.fieldCubit,
+    this.futurePurchaseCubit,
   });
 
   Widget _headerCell(String text, {double flex = 1}) {
@@ -57,7 +64,10 @@ class ChecklistTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    fieldCubit ??= context.read<FieldCubit>();
+    if(fieldCubit == null && !isFromFutureCarPurchase) {
+          fieldCubit ??= context.read<FieldCubit>();
+    }
+    futurePurchaseCubit ??= context.read<FuturePurchaseCubit>();
     final table = Column(
       // crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -89,7 +99,7 @@ class ChecklistTable extends StatelessWidget {
                           showDialog(
                             context: context,
                             builder: (context) =>
-                                EntryFieldPopup(fieldCubit: fieldCubit!),
+                                EntryFieldPopup(fieldCubit: fieldCubit, isFromFutureCarPurchase: isFromFutureCarPurchase, futurePurchaseCubit: futurePurchaseCubit)
                           );
                         },
                       ),
@@ -107,14 +117,22 @@ class ChecklistTable extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    _headerCell('Purchase Step', flex: 3),
+                   if(!isFromFutureCarPurchase)...[
+                     _headerCell('Purchase Step', flex: 3),
                     _headerCell('SOP', flex: 1),
                     _headerCell('Price', flex: 1),
                     _headerCell('Timeline', flex: 1),
                     _headerCell('Last Update', flex: 1.5),
                     _headerCell('Edit', flex: 0.6),
                     _headerCell('Check Box', flex: 0.6),
-                  ],
+                   ]
+                    else ...[
+                      _headerCell('Franchise Name', flex: 3),
+                      _headerCell('Slots We Have', flex: 1),
+                      _headerCell('Cars We Have', flex: 1),
+                      _headerCell('Remaining Slots', flex: 1.2),
+                      _headerCell('Edit', flex: 0.6),
+                  ],]
                 ),
               ),
 
@@ -126,7 +144,13 @@ class ChecklistTable extends StatelessWidget {
                 constraints: BoxConstraints(maxHeight: maxHeight ?? 400.h),
                 child: SingleChildScrollView(
                   child: Column(
-                    children: (fieldCubit!.state as FieldEntriesLoaded).entries
+                    children: (isFromFutureCarPurchase
+                      ? (futurePurchaseCubit != null && futurePurchaseCubit!.state is FuturePurchaseEntriesLoaded
+                        ? (futurePurchaseCubit!.state as FuturePurchaseEntriesLoaded).entries
+                        : [])
+                      : (fieldCubit != null && fieldCubit!.state is FieldEntriesLoaded
+                        ? (fieldCubit!.state as FieldEntriesLoaded).entries
+                        : []))
                         .map((item) {
                           return Column(
                             children: [
@@ -135,7 +159,7 @@ class ChecklistTable extends StatelessWidget {
                                 children: [
                                   _dataCell(
                                     ResponsiveText(
-                                      item.title,
+                                    isFromFutureCarPurchase ? item.franchiseName : item.title,
                                       style: AppTextStyles.bodyMedium.copyWith(
                                         color: AppColors.surface,
                                       ),
@@ -145,30 +169,32 @@ class ChecklistTable extends StatelessWidget {
                                   ),
                                   _dataCell(
                                     ResponsiveText(
-                                      item.SOP.toString(),
+                                    isFromFutureCarPurchase ? item.slotsWeHave.toString() : item.SOP.toString(),
                                       style: AppTextStyles.bodyMedium,
                                     ),
                                   ),
                                   _dataCell(
                                     ResponsiveText(
-                                      '${item.fees} P',
+                                    isFromFutureCarPurchase ? item.carsWeHave.toString() : '${item.fees} P',
                                       style: AppTextStyles.bodyMedium,
                                     ),
                                   ),
                                   _dataCell(
                                     ResponsiveText(
                                       // timeline assumed as DateTime; show relative or days if needed
-                                      _formatTimeline(item.timeline),
+                                     isFromFutureCarPurchase? (item.slotsWeHave - item.carsWeHave).toString() : _formatTimeline(item.timeline),
                                       style: AppTextStyles.bodyMedium,
                                     ),
                                   ),
-                                  _dataCell(
+                                 if(!isFromFutureCarPurchase)...[
+                                   _dataCell(
                                     ResponsiveText(
                                       _formatDate(item.lastUpdated),
                                       style: AppTextStyles.bodyMedium,
                                     ),
                                     flex: 1.5,
                                   ),
+                                 ],
                                   _dataCell(
                                     IconButton(
                                       onPressed: onEdit == null
@@ -182,7 +208,8 @@ class ChecklistTable extends StatelessWidget {
                                     ),
                                     flex: 0.6,
                                   ),
-                                  _dataCell(
+                                  if(!isFromFutureCarPurchase)...[
+                                      _dataCell(
                                     Align(
                                       alignment: Alignment.centerLeft,
                                       child: Checkbox(
@@ -197,6 +224,8 @@ class ChecklistTable extends StatelessWidget {
                                     ),
                                     flex: 0.6,
                                   ),
+                                  ]
+                                
                                 ],
                               ),
                               Divider(height: 1.h, color: Color(0xff262826)),
@@ -241,7 +270,15 @@ class ChecklistTable extends StatelessWidget {
                   ),
                 ),
                 Spacing.vMedium,
-                ...(fieldCubit!.state as FieldEntriesLoaded).entries.map((
+                ...(
+                  isFromFutureCarPurchase
+                    ? (futurePurchaseCubit != null && futurePurchaseCubit!.state is FuturePurchaseEntriesLoaded
+                        ? (futurePurchaseCubit!.state as FuturePurchaseEntriesLoaded).entries
+                        : [])
+                    : (fieldCubit != null && fieldCubit!.state is FieldEntriesLoaded
+                        ? (fieldCubit!.state as FieldEntriesLoaded).entries
+                        : [])
+                ).map((
                   item,
                 ) {
                   return Container(
@@ -255,7 +292,7 @@ class ChecklistTable extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         ResponsiveText(
-                          item.title,
+                          "item.title",
                           style: AppTextStyles.bodyMedium.copyWith(
                             color: AppColors.surface,
                           ),
@@ -266,13 +303,26 @@ class ChecklistTable extends StatelessWidget {
                           spacing: 12.w,
                           runSpacing: 8.h,
                           children: [
-                            _infoChip('SOP', item.SOP.toString()),
+                           if(isFromFutureCarPurchase)...[
+                                                          _infoChip('Franchise Name', item.franchiseName.toString()),
+
+                              _infoChip('Slots We Have', item.slotsWeHave.toString()),
+                              _infoChip('Cars We Have', item.carsWeHave.toString()),
+                              _infoChip(
+                                'Remaining Slots',
+                                (item.slotsWeHave - item.carsWeHave).toString(),
+                              ),
+                           ]
+                           else ...[
+                            _infoChip("Title", item.title),
+                             _infoChip('SOP', item.SOP.toString()),
                             _infoChip('Price', '${item.fees} P'),
                             _infoChip(
                               'Timeline',
                               _formatTimeline(item.timeline),
                             ),
                             _infoChip('Last', _formatDate(item.lastUpdated)),
+                           ]
                           ],
                         ),
                         Spacing.vSmall,
@@ -285,12 +335,14 @@ class ChecklistTable extends StatelessWidget {
                                   : () => onEdit!(item),
                               icon: Icon(Icons.edit, color: AppColors.surface),
                             ),
-                            Checkbox(
+                            if(!isFromFutureCarPurchase)...[
+                              Checkbox(
                               value: false,
                               onChanged: onToggleComplete == null
                                   ? null
                                   : (v) => onToggleComplete!(item, v ?? false),
                             ),
+                            ]
                           ],
                         ),
                       ],

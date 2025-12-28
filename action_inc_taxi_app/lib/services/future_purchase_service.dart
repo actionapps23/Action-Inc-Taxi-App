@@ -37,7 +37,7 @@ class FuturePurchaseService {
         }, SetOptions(merge: true));
   }
 
-  Future<void> updateFieldEntry(FieldEntryModel field) async {
+  Future<void> updateFieldEntry(FuturePurchaseModel field) async {
     await _firestore
         .collection(AppConstants.futurePurchaseCollection)
         .doc(AppConstants.futurePurchaseCollection)
@@ -52,7 +52,7 @@ class FuturePurchaseService {
         }, SetOptions(merge: true));
   }
 
-  Future<List<FieldEntryModel>> getFieldEntries() async {
+  Future<List<FuturePurchaseModel>> getFieldEntries() async {
     QuerySnapshot snapshot = await _firestore
         .collection(AppConstants.futurePurchaseCollection)
         .doc(AppConstants.futurePurchaseCollection)
@@ -60,7 +60,7 @@ class FuturePurchaseService {
         .get();
     return snapshot.docs
         .map(
-          (doc) => FieldEntryModel.fromJson(doc.data() as Map<String, dynamic>),
+          (doc) => FuturePurchaseModel.fromJson(doc.data() as Map<String, dynamic>),
         )
         .toList();
   }

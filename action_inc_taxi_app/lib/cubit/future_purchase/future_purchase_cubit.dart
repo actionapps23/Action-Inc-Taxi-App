@@ -21,7 +21,7 @@ class FuturePurchaseCubit extends Cubit<FuturePurchaseState> {
     }
   }
 
-  Future<void> updateFieldEntry(FieldEntryModel field) async {
+  Future<void> updateFieldEntry(FuturePurchaseModel field) async {
     emit(FuturePurchaseEntryUpdating());
     try {
       await fieldService.updateFieldEntry(field);

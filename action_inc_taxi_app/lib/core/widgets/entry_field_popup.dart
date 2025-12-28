@@ -1,5 +1,6 @@
 import 'package:action_inc_taxi_app/core/helper_functions.dart';
 import 'package:action_inc_taxi_app/core/models/field_entry_model.dart';
+import 'package:action_inc_taxi_app/core/models/future_purchase_model.dart';
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
 import 'package:action_inc_taxi_app/core/theme/app_text_styles.dart';
 import 'package:action_inc_taxi_app/core/widgets/buttons/app_button.dart';
@@ -9,17 +10,21 @@ import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/spacing.dart';
 import 'package:action_inc_taxi_app/cubit/field/field_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/field/field_state.dart';
+import 'package:action_inc_taxi_app/cubit/future_purchase/future_purchase_cubit.dart';
+import 'package:action_inc_taxi_app/cubit/future_purchase/future_purchase_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class EntryFieldPopup extends StatelessWidget {
-  final FieldCubit fieldCubit;
+  final FieldCubit? fieldCubit;
+  final FuturePurchaseCubit? futurePurchaseCubit;
   final bool isUpdating;
   final bool isFromFutureCarPurchase;
   EntryFieldPopup({
     super.key,
-    required this.fieldCubit,
+    this.fieldCubit,
+    this.futurePurchaseCubit,
     this.isUpdating = false,
     this.isFromFutureCarPurchase = false,
   });
@@ -127,7 +132,8 @@ class EntryFieldPopup extends StatelessWidget {
                     ),
                   ],
                   Spacing.vLarge,
-                  Row(
+                 if(!isFromFutureCarPurchase)...[
+                   Row(
                     children: [
                       ValueListenableBuilder<bool>(
                         valueListenable: _isCompleted,
@@ -145,8 +151,57 @@ class EntryFieldPopup extends StatelessWidget {
                     ],
                   ),
                   Spacing.vExtraLarge,
+                 ],
 
-                  BlocBuilder<FieldCubit, FieldState>(
+                 if(isFromFutureCarPurchase) ...[
+                    BlocBuilder<FuturePurchaseCubit, FuturePurchaseState>(
+                      bloc: futurePurchaseCubit,
+                      builder: (context, state) {
+                        return SizedBox(
+                          width: double.infinity,
+                          height: 48.h,
+                          child: AppButton(
+                            text: isUpdating
+                                ? "Update"
+                                : state is FuturePurchaseEntryUpdated
+                                ? "Updating..."
+                                : state is FuturePurchaseEntryAdding
+                                ? "Adding..."
+                                : "Add",
+                            onPressed: () {
+                              if (isUpdating) {
+                              
+                                  futurePurchaseCubit!.updateFieldEntry(
+                                    FuturePurchaseModel(
+                                      id: _fieldTitleController.text,
+                                      franchiseName: _fieldTitleController.text,
+                                      slotsWeHave: int.parse(_sopController.text),
+                                      carsWeHave: int.parse(_feesController.text),
+                                     
+                                    ),
+                                  );
+                                
+                              } else {
+                                
+                                  futurePurchaseCubit!.addFieldEntry(
+                                    FuturePurchaseModel(
+                                      id: _fieldTitleController.text,
+                                      franchiseName: _fieldTitleController.text,
+                                      slotsWeHave: int.parse(_sopController.text),
+                                      carsWeHave: int.parse(_feesController.text),
+                                 
+                                    ),
+                                  );
+                                
+                              }
+                              Navigator.pop(context);
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                 ]
+                 else ...[ BlocBuilder<FieldCubit, FieldState>(
                     bloc: fieldCubit,
                     builder: (context, state) {
                       return SizedBox(
@@ -163,40 +218,44 @@ class EntryFieldPopup extends StatelessWidget {
                           onPressed: () {
                             final isCompleted = _isCompleted.value;
                             if (isUpdating) {
-                              fieldCubit.updateFieldEntry(
-                                FieldEntryModel(
-                                  title: _fieldTitleController.text,
-                                  SOP: int.parse(_sopController.text),
-                                  isCompleted: isCompleted,
-                                  fees: int.parse(_feesController.text),
-                                  timeline:
-                                      HelperFunctions.parseDateString(
-                                        _timelineController.text,
-                                      ) ??
-                                      DateTime.now(),
-                                ),
-                              );
+                            
+                                fieldCubit!.updateFieldEntry(
+                                  FieldEntryModel(
+                                    title: _fieldTitleController.text,
+                                    SOP: int.parse(_sopController.text),
+                                    isCompleted: isCompleted,
+                                    fees: int.parse(_feesController.text),
+                                    timeline:
+                                        HelperFunctions.parseDateString(
+                                          _timelineController.text,
+                                        ) ??
+                                        DateTime.now(),
+                                  ),
+                                );
+                              
                             } else {
-                              fieldCubit.addFieldEntry(
-                                FieldEntryModel(
-                                  title: _fieldTitleController.text,
-                                  SOP: int.parse(_sopController.text),
-                                  isCompleted: isCompleted,
-                                  fees: int.parse(_feesController.text),
-                                  timeline:
-                                      HelperFunctions.parseDateString(
-                                        _timelineController.text,
-                                      ) ??
-                                      DateTime.now(),
-                                ),
-                              );
+                              
+                                fieldCubit!.addFieldEntry(
+                                  FieldEntryModel(
+                                    title: _fieldTitleController.text,
+                                    SOP: int.parse(_sopController.text),
+                                    isCompleted: isCompleted,
+                                    fees: int.parse(_feesController.text),
+                                    timeline:
+                                        HelperFunctions.parseDateString(
+                                          _timelineController.text,
+                                        ) ??
+                                        DateTime.now(),
+                                  ),
+                                );
+                              
                             }
                             Navigator.pop(context);
                           },
                         ),
                       );
                     },
-                  ),
+                  ),]
                 ],
               ),
             ],

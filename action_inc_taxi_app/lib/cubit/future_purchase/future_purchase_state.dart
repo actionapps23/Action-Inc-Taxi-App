@@ -1,4 +1,4 @@
-import 'package:action_inc_taxi_app/core/models/field_entry_model.dart';
+import 'package:action_inc_taxi_app/core/models/future_purchase_model.dart';
 
 class FuturePurchaseState {}
 
@@ -43,7 +43,7 @@ class FuturePurchaseEntryDeleteError extends FuturePurchaseState {
 }
 
 class FuturePurchaseEntriesLoaded extends FuturePurchaseState {
-  final List<FieldEntryModel> entries;
+  final List<FuturePurchaseModel> entries;
 
   FuturePurchaseEntriesLoaded(this.entries);
 }
