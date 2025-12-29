@@ -81,7 +81,7 @@ class _AddInventoryPopupState extends State<AddInventoryPopup> {
                           ? InventoryField(
                               label: "Select Type",
                               child: AppDropdown(
-                                value: "engine",
+                                value: "engine_fuel",
                                 onChanged: (value) {
                                   setState(() {
                                     _selectedCategory = value!;
@@ -89,23 +89,58 @@ class _AddInventoryPopupState extends State<AddInventoryPopup> {
                                 },
                                 items: [
                                   DropdownMenuItem(
-                                    value: "engine",
+                                    value: "engine_fuel",
                                     child: ResponsiveText(
-                                      "Engine",
+                                      "Engine & Fuel",
                                       style: TextStyle(color: Colors.white),
                                     ),
                                   ),
                                   DropdownMenuItem(
-                                    value: "interior",
+                                    value: "suspension_steering",
                                     child: ResponsiveText(
-                                      "Interior",
+                                      "Suspension & Steering",
                                       style: TextStyle(color: Colors.white),
                                     ),
                                   ),
                                   DropdownMenuItem(
-                                    value: "tires",
+                                    value: "electrical",
                                     child: ResponsiveText(
-                                      "Tires",
+                                      "Electrical & Electronics",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: "cooling_hvac",
+                                    child: ResponsiveText(
+                                      "Cooling & HVAC",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: "transmission_lubricants",
+                                    child: ResponsiveText(
+                                      "Transmission & Lubricants",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: "brakes",
+                                    child: ResponsiveText(
+                                      "Brakes",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: "exterior",
+                                    child: ResponsiveText(
+                                      "Exterior / Accessories",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: "wheels_tires",
+                                    child: ResponsiveText(
+                                      "Wheels & Tires",
                                       style: TextStyle(color: Colors.white),
                                     ),
                                   ),

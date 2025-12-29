@@ -1,5 +1,6 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:action_inc_taxi_app/core/helper_functions.dart';
 import 'package:action_inc_taxi_app/core/models/field_entry_model.dart';
 import 'package:action_inc_taxi_app/core/models/future_purchase_model.dart';
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
@@ -16,9 +17,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class ChecklistTable extends StatelessWidget {
+class ChecklistTable<T> extends StatelessWidget {
   final String title;
-  final void Function(FieldEntryModel item)? onEdit;
   final bool isFromFutureCarPurchase;
   final void Function(FieldEntryModel item, bool completed)? onToggleComplete;
   FieldCubit? fieldCubit;
@@ -28,7 +28,6 @@ class ChecklistTable extends StatelessWidget {
   ChecklistTable({
     super.key,
     required this.title,
-    this.onEdit,
     this.onToggleComplete,
     this.isFromFutureCarPurchase = false,
     this.maxHeight,
@@ -71,7 +70,6 @@ class ChecklistTable extends StatelessWidget {
     final table = Column(
       // crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // Table card
         Container(
           margin: EdgeInsets.symmetric(horizontal: 8.w),
           decoration: BoxDecoration(
@@ -182,14 +180,14 @@ class ChecklistTable extends StatelessWidget {
                                   _dataCell(
                                     ResponsiveText(
                                       // timeline assumed as DateTime; show relative or days if needed
-                                     isFromFutureCarPurchase? (item.slotsWeHave - item.carsWeHave).toString() : _formatTimeline(item.timeline),
+                                     isFromFutureCarPurchase? (item.slotsWeHave - item.carsWeHave).toString() :  HelperFunctions.formatDate(item.timeline),
                                       style: AppTextStyles.bodyMedium,
                                     ),
                                   ),
                                  if(!isFromFutureCarPurchase)...[
                                    _dataCell(
                                     ResponsiveText(
-                                      _formatDate(item.lastUpdated),
+                                      HelperFunctions.formatDate(item.lastUpdated),
                                       style: AppTextStyles.bodyMedium,
                                     ),
                                     flex: 1.5,
@@ -197,9 +195,24 @@ class ChecklistTable extends StatelessWidget {
                                  ],
                                   _dataCell(
                                     IconButton(
-                                      onPressed: onEdit == null
-                                          ? null
-                                          : () => onEdit!(item),
+                                      onPressed: (){
+                                            if(isFromFutureCarPurchase)
+                                            {
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) =>
+                                                    EntryFieldPopup(fieldCubit: fieldCubit, isFromFutureCarPurchase: isFromFutureCarPurchase, futurePurchaseCubit: futurePurchaseCubit, isUpdating: true, futurePurchaseModel: FuturePurchaseModel(franchiseName: item.franchiseName, slotsWeHave: item.slotsWeHave, carsWeHave: item.carsWeHave, id: item.id),)
+                                              );
+                                            }
+                                            else{
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) =>
+                                                    EntryFieldPopup(fieldCubit: fieldCubit, isFromFutureCarPurchase: isFromFutureCarPurchase, futurePurchaseCubit: futurePurchaseCubit, isUpdating: true, fieldEntryModel: FieldEntryModel(title: item.title, SOP: item.SOP, fees: item.fees, timeline: item.timeline, isCompleted: item.isCompleted),)
+                                              );
+                                            }
+                                            
+                                          },
                                       icon: Icon(
                                         Icons.edit,
                                         color: AppColors.surface,
@@ -208,6 +221,7 @@ class ChecklistTable extends StatelessWidget {
                                     ),
                                     flex: 0.6,
                                   ),
+                                  
                                   if(!isFromFutureCarPurchase)...[
                                       _dataCell(
                                     Align(
@@ -319,9 +333,9 @@ class ChecklistTable extends StatelessWidget {
                             _infoChip('Price', '${item.fees} P'),
                             _infoChip(
                               'Timeline',
-                              _formatTimeline(item.timeline),
+                               HelperFunctions.formatDate(item.timeline),
                             ),
-                            _infoChip('Last', _formatDate(item.lastUpdated)),
+                            _infoChip('Last',  HelperFunctions.formatDate(item.lastUpdated)),
                            ]
                           ],
                         ),
@@ -330,9 +344,24 @@ class ChecklistTable extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             IconButton(
-                              onPressed: onEdit == null
-                                  ? null
-                                  : () => onEdit!(item),
+                            onPressed: (){
+                                            if(isFromFutureCarPurchase)
+                                            {
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) =>
+                                                    EntryFieldPopup(fieldCubit: fieldCubit, isFromFutureCarPurchase: isFromFutureCarPurchase, futurePurchaseCubit: futurePurchaseCubit, isUpdating: true, futurePurchaseModel: FuturePurchaseModel(franchiseName: item.franchiseName, slotsWeHave: item.slotsWeHave, carsWeHave: item.carsWeHave),)
+                                              );
+                                            }
+                                            else{
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) =>
+                                                    EntryFieldPopup(fieldCubit: fieldCubit, isFromFutureCarPurchase: isFromFutureCarPurchase, futurePurchaseCubit: futurePurchaseCubit, isUpdating: true, fieldEntryModel: FieldEntryModel(title: item.title, SOP: item.SOP, fees: item.fees, timeline: item.timeline, isCompleted: item.isCompleted),)
+                                              );
+                                            }
+                                            
+                                          },
                               icon: Icon(Icons.edit, color: AppColors.surface),
                             ),
                             if(!isFromFutureCarPurchase)...[
@@ -378,34 +407,5 @@ class ChecklistTable extends StatelessWidget {
     );
   }
 
-  String _formatDate(DateTime d) {
-    // Simple date formatting (dd MMM, yyyy)
-    return '${d.day.toString().padLeft(2, '0')} ${_month(d.month)} ${d.year}';
-  }
 
-  String _month(int m) {
-    const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ];
-    return months[(m - 1).clamp(0, 11)];
-  }
-
-  String _formatTimeline(DateTime t) {
-    // Represent timeline as number of days from now if future, otherwise show formatted date
-    final now = DateTime.now();
-    final diff = t.difference(now).inDays;
-    if (diff > 0 && diff <= 365) return '$diff Days';
-    return _formatDate(t);
-  }
 }

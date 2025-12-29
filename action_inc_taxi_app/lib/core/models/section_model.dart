@@ -34,6 +34,13 @@ class FieldModel {
     this.isChecked = false,
   });
 
+  FieldModel copyWith({String? fieldName, String? fieldKey, bool? isChecked}) {
+    return FieldModel(
+      fieldName: fieldName ?? this.fieldName,
+      fieldKey: fieldKey ?? this.fieldKey,
+      isChecked: isChecked ?? this.isChecked,
+    );
+  }
   Map<String, dynamic> toJson() {
     return {
       'fieldName': fieldName,

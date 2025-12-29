@@ -86,6 +86,9 @@ class HelperFunctions {
     if (newDay > lastDayOfMonth) newDay = lastDayOfMonth;
     return DateTime.utc(newYear, newMonth, newDay);
   }
+  static String formatDate(DateTime d) {
+    return '${d.day.toString().padLeft(2, '0')} ${AppConstants.monthNames[d.month - 1]} ${d.year}';
+  }
 
   static getDateTimeFromUtcMilliSeconds(int utcMs) {
     return DateTime.fromMillisecondsSinceEpoch(utcMs, isUtc: true);

@@ -4,7 +4,7 @@ import 'package:action_inc_taxi_app/core/models/section_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProcedureService {
-  static final String procedureRecords = 'procedures_reocords';
+  static final String procedureRecords = 'procedures_records';
   static final String procedureCheckList = 'procedure_checklist';
   static final String openProcedureChecklist = 'open_procedure_checklist';
   static final String closeProcedureChecklist = 'close_procedure_checklist';

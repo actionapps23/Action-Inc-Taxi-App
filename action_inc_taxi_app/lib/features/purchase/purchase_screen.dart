@@ -16,10 +16,11 @@ class PurchaseScreen extends StatefulWidget {
 }
 
 class _PurchaseScreenState extends State<PurchaseScreen> {
+  late final FieldCubit fieldCubit;
   @override
   void initState() {
     super.initState();
-    final fieldCubit = FieldCubit(
+    fieldCubit = FieldCubit(
       collectionName: AppConstants.purchaseCollection,
       documentId: AppConstants.purchaseCollection,
     );
@@ -34,51 +35,52 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
           Navbar(),
           Spacing.vMedium,
 
-          BlocProvider(
-            create: (context) => FieldCubit(
-              collectionName: AppConstants.purchaseCollection,
-              documentId: AppConstants.purchaseCollection,
-            ),
-            child: BlocBuilder<FieldCubit, FieldState>(
-              builder: (context, state) {
-                if (state is FieldLoading || state is FieldInitial) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Purchase Of Car",
-                        style: AppTextStyles.bodyExtraSmall,
-                      ),
-                      Center(child: CircularProgressIndicator()),
-                    ],
-                  );
-                } else if (state is FieldError) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Purchase Of Car",
-                        style: AppTextStyles.bodyExtraSmall,
-                      ),
-                      Center(child: Text("Error: ${state.message}")),
-                    ],
-                  );
-                } else if (state is FieldEntriesLoaded &&
-                    state.entries.isEmpty) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Purchase Of Car",
-                        style: AppTextStyles.bodyExtraSmall,
-                      ),
-                      Center(child: Text("No entries found.")),
-                    ],
-                  );
-                }
-                return ChecklistTable(title: "Purchase Of Car");
-              },
-            ),
+          BlocBuilder<FieldCubit, FieldState>(
+            bloc: fieldCubit,
+            builder: (context, state) {
+              if (state is FieldLoading || state is FieldInitial) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Purchase Of Car",
+                      style: AppTextStyles.bodyExtraSmall,
+                    ),
+                    Center(child: CircularProgressIndicator()),
+                  ],
+                );
+              } else if (state is FieldError) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Purchase Of Car",
+                      style: AppTextStyles.bodyExtraSmall,
+                    ),
+                    Center(child: Text("Error: ${state.message}")),
+                  ],
+                );
+              } else if (state is FieldEntriesLoaded && state.entries.isEmpty) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          "Purchase Of Car",
+                          style: AppTextStyles.bodyExtraSmall,
+                        ),
+                      ],
+                    ),
+                    Center(child: Text("No entries found.")),
+                  ],
+                );
+              }
+              return ChecklistTable(
+                title: "Purchase Of Car",
+                fieldCubit: fieldCubit,
+              );
+            },
           ),
         ],
       ),

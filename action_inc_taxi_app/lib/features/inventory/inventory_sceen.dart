@@ -21,7 +21,7 @@ class InventorySceen extends StatefulWidget {
 }
 
 class _InventorySceenState extends State<InventorySceen> {
-  String _selectedCategory = "engine";
+  String _selectedCategory = "engine_fuel";
   @override
   void initState() {
     super.initState();
@@ -93,31 +93,75 @@ class _InventorySceenState extends State<InventorySceen> {
                                       value: _selectedCategory,
                                       items: [
                                         DropdownMenuItem(
-                                          value: "engine",
+                                          value: "engine_fuel",
                                           child: ResponsiveText(
-                                            "Engine",
-                                            style: AppTextStyles.bodyExtraSmall,
+                                            "Engine & Fuel",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: "suspension_steering",
+                                          child: ResponsiveText(
+                                            "Suspension & Steering",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: "electrical",
+                                          child: ResponsiveText(
+                                            "Electrical & Electronics",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: "cooling_hvac",
+                                          child: ResponsiveText(
+                                            "Cooling & HVAC",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: "transmission_lubricants",
+                                          child: ResponsiveText(
+                                            "Transmission & Lubricants",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
                                           ),
                                         ),
                                         DropdownMenuItem(
                                           value: "brakes",
                                           child: ResponsiveText(
                                             "Brakes",
-                                            style: AppTextStyles.bodyExtraSmall,
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
                                           ),
                                         ),
                                         DropdownMenuItem(
-                                          value: "tires",
+                                          value: "exterior",
                                           child: ResponsiveText(
-                                            "Tires",
-                                            style: AppTextStyles.bodyExtraSmall,
+                                            "Exterior / Accessories",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
                                           ),
                                         ),
                                         DropdownMenuItem(
-                                          value: "interior",
+                                          value: "wheels_tires",
                                           child: ResponsiveText(
-                                            "Interior",
-                                            style: AppTextStyles.bodyExtraSmall,
+                                            "Wheels & Tires",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
                                           ),
                                         ),
                                       ],

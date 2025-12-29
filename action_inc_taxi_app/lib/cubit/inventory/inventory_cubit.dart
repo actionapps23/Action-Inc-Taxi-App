@@ -9,7 +9,7 @@ class InventoryCubit extends Cubit<InventoryState> {
   Future<void> loadInventory() async {
     emit(InventoryLoading());
     final data = await InventoryDBService.fetchInventoryData();
-    filterByCategory("engine", data);
+    filterByCategory("engine_fuel", data);
   }
 
   Future<void> updateInventoryItem(
@@ -23,7 +23,6 @@ class InventoryCubit extends Cubit<InventoryState> {
         inventorySectionModel,
         previousFieldName,
       );
-      ;
       await loadInventory();
     } catch (e) {
       emit(InventoryError(message: e.toString()));

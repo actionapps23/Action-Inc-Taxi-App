@@ -4,10 +4,13 @@ import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:action_inc_taxi_app/core/widgets/section_widget.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/spacing.dart';
 import 'package:action_inc_taxi_app/features/entry_section/car_plan/action_buttons.dart';
+import 'package:action_inc_taxi_app/features/entry_section/vehicle_inspection_cubit.dart';
+import 'package:action_inc_taxi_app/features/entry_section/vehicle_isnpection_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class VehicleInspectionPanel extends StatelessWidget {
+class VehicleInspectionPanel extends StatefulWidget {
   final String viewName;
   final List<CategoryModel> categories;
   final String mapKey;
@@ -19,7 +22,22 @@ class VehicleInspectionPanel extends StatelessWidget {
   });
 
   @override
+  State<VehicleInspectionPanel> createState() => _VehicleInspectionPanelState();
+}
+
+class _VehicleInspectionPanelState extends State<VehicleInspectionPanel> {
+  @override
+  void initState() {
+    super.initState();
+    final VehicleInspectionPanelCubit vehicleInspectionPanelCubit = context
+        .read<VehicleInspectionPanelCubit>();
+    vehicleInspectionPanelCubit.fetchSubmittedInspectionData('taxiID', widget.mapKey);
+  }
+  @override
   Widget build(BuildContext context) {
+    final VehicleInspectionPanelCubit vehicleInspectionPanelCubit = context
+        .read<VehicleInspectionPanelCubit>();
+
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 8.h),
@@ -29,21 +47,65 @@ class VehicleInspectionPanel extends StatelessWidget {
             Spacing.vMedium,
             Center(
               child: ResponsiveText(
-                viewName,
+                widget.viewName,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
-            Expanded(
-              child: ListView.builder(
-                itemBuilder: (context, index) {
-                  final section = categories[index];
-                  return SectionWidget(category: section);
-                },
-                itemCount: categories.length,
-              ),
+            BlocBuilder(
+              bloc: vehicleInspectionPanelCubit,
+              builder: (context, state) {
+                if (state is VehicleInspectionPanelLoadingState) {
+                  return Expanded(
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                } else if (state is VehicleInspectionPanelErrorState) {
+                  return Expanded(
+                    child: Center(
+                      child: ResponsiveText(
+                        'Error: ${state.errorMessage}',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ),
+                  );
+                }
+                return Expanded(
+                  child: ListView.builder(
+                    itemBuilder: (context, index) {
+                      final section = widget.categories[index];
+                      return SectionWidget(category: section);
+                    },
+                    itemCount: widget.categories.length,
+                  ),
+                );
+              },
             ),
             ActionButtons(
-              onSubmit: () {},
+              onSubmit: () {
+                final List<CategoryModel> selectedCategories = widget.categories
+                    .map((category) {
+                      List<FieldModel> fields = [];
+                      for (FieldModel field in category.fields) {
+                        fields.add(
+                          field.copyWith(
+                            isChecked: vehicleInspectionPanelCubit.isChecked(
+                              field.fieldKey,
+                            ),
+                          ),
+                        );
+                      }
+
+                      return CategoryModel(
+                        categoryName: category.categoryName,
+                        fields: fields,
+                      );
+                    })
+                    .toList();
+                vehicleInspectionPanelCubit.submitInspectionData(
+                  'taxiID',
+                  widget.mapKey,
+                  selectedCategories,
+                );
+              },
               onCancel: () {},
               submitButtonText: "Checked",
               cancelButtonText: "Back",

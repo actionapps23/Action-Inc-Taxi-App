@@ -40,6 +40,8 @@ class _FuturePurchaseScreenState extends State<FuturePurchaseScreen> {
                  title: 'Future Purchase Checklist',
                  isFromFutureCarPurchase: true,
                  futurePurchaseCubit: futurePurchaseCubit,
+                   
+                 
                   ),
                 )
               else if(state is FuturePurchaseError || state is FuturePurchaseEntryUpdateError || state is FuturePurchaseEntryDeleteError || state is FuturePurchaseEntryAddError)
