@@ -141,7 +141,9 @@ class _SelectionScreenState extends State<SelectionScreen> {
                             child: Column(
                               children: [
                                 SizedBox(height: 18.h),
-                                AppTextFormField(
+                               
+                                if (isCarDetails) ...[
+                                   AppTextFormField(
                                   controller: taxiNoController,
                                   hintText: 'Enter Taxi No.',
                                   labelOnTop: true,
@@ -150,7 +152,6 @@ class _SelectionScreenState extends State<SelectionScreen> {
                                     selectionCubit.setTaxiNo(val);
                                   },
                                 ),
-                                if (isCarDetails) ...[
                                   SizedBox(height: 12.h),
                                   AppTextFormField(
                                     controller: regNoController,
@@ -164,7 +165,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
                                   SizedBox(height: 12.h),
                                   AppTextFormField(
                                     controller: driverNameController,
-                                    hintText: 'Driver Name',
+                                    hintText: 'Regular Driver Name',
                                     labelOnTop: true,
                                     onChanged: (val) {
                                       setState(() {});
@@ -172,6 +173,28 @@ class _SelectionScreenState extends State<SelectionScreen> {
                                     },
                                   ),
                                 ] else ...[
+
+                                  SizedBox(height: 12.h),
+                                   AppTextFormField(
+                                    controller: taxiPlateNoController,
+                                    hintText: 'Taxi Plate No.',
+                                    labelOnTop: true,
+                                    onChanged: (val) {
+                                      setState(() {});
+                                      selectionCubit.setTaxiPlateNo(val);
+                                    },
+                                  ),
+                                  SizedBox(height: 12.h),
+                                 
+                                   AppTextFormField(
+                                  controller: taxiNoController,
+                                  hintText: 'Enter Taxi No.',
+                                  labelOnTop: true,
+                                  onChanged: (val) {
+                                    setState(() {});
+                                    selectionCubit.setTaxiNo(val);
+                                  },
+                                ),
                                   SizedBox(height: 12.h),
                                   AppTextFormField(
                                     controller: regNoController,
@@ -180,16 +203,6 @@ class _SelectionScreenState extends State<SelectionScreen> {
                                     onChanged: (val) {
                                       setState(() {});
                                       selectionCubit.setRegNo(val);
-                                    },
-                                  ),
-                                  SizedBox(height: 12.h),
-                                  AppTextFormField(
-                                    controller: taxiPlateNoController,
-                                    hintText: 'Taxi Plate No.',
-                                    labelOnTop: true,
-                                    onChanged: (val) {
-                                      setState(() {});
-                                      selectionCubit.setTaxiPlateNo(val);
                                     },
                                   ),
                                 ],

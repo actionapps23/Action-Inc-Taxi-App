@@ -60,21 +60,44 @@ class _DailyRentCollectionInfoScreenState
         v == null || v.trim().isEmpty ? 'Taxi number is required.' : null,
     'firstDriverName': (v) =>
         v == null || v.trim().isEmpty ? 'Driver name is required.' : null,
-    'secondDriverName': (v) => null,
+    'secondDriverName': (v) {
+      final hasSecondDriverId =
+          secondDriverCnicController.text.trim().isNotEmpty;
+      if (hasSecondDriverId && (v == null || v.trim().isEmpty)) {
+        return 'Second Driver name is required when ID is provided.';
+      }
+      return null;
+    },
     'numberPlate': (v) =>
         v == null || v.trim().isEmpty ? 'Number plate is required.' : null,
     'firstDriverDob': (v) =>
         v == null || v.trim().isEmpty ? 'Driver DOB is required.' : null,
-    'secondDriverDob': (v) => null,
+    'secondDriverDob': (v) {
+      final hasSecondDriverName =
+          secondDriverNameController.text.trim().isNotEmpty;
+      if (hasSecondDriverName && (v == null || v.trim().isEmpty)) {
+        return 'Second Driver DOB is required when name is provided.';
+      }
+      return null;
+    },
     'fleetNo': (v) {
       if (v == null || v.trim().isEmpty) return 'Fleet number is required.';
       final val = v.trim();
-      if (!RegExp(r'^[1-4]$').hasMatch(val))
+      if (!RegExp(r'^[1-4]$').hasMatch(val)) {
         return 'Fleet number must be 1, 2, 3 or 4.';
+      }
       return null;
     },
-    'driverCnic': (v) =>
+    'firstDriverCnic': (v) =>
         v == null || v.trim().isEmpty ? 'Driver CNIC is required.' : null,
+    'secondDriverCnic': (v) {
+      final hasSecondDriverName =
+          secondDriverNameController.text.trim().isNotEmpty;
+      if (hasSecondDriverName && (v == null || v.trim().isEmpty)) {
+        return 'Second Driver ID # is required when name is provided.';
+      }
+      return null;
+    },
     'rentAmount': (v) {
       final raw = (v ?? '').replaceAll(RegExp(r'[^0-9\.]'), '');
       final d = double.tryParse(raw);
@@ -231,7 +254,7 @@ class _DailyRentCollectionInfoScreenState
     errors.addAll(rent.validate());
     if (firstDriverCnicController.text.trim().isEmpty ||
         firstDriverCnicController.text.trim() == '') {
-      errors['driverCnic'] = 'Driver CNIC is required.';
+      errors['firstDriverCnic'] = 'Driver CNIC is required.';
     }
 
     // Additional required-field checks
@@ -240,6 +263,12 @@ class _DailyRentCollectionInfoScreenState
     }
     if (numberPlateController.text.trim().isEmpty) {
       errors['numberPlate'] = 'Number plate is required.';
+    }
+    if(secondDriverCnicController.text.trim().isEmpty && secondDriverNameController.text.trim().isNotEmpty) {
+      errors['secondDriverCnic'] = 'Second Driver ID # is required when name is provided.';
+    }
+    if(secondDriverNameController.text.trim().isEmpty && secondDriverCnicController.text.trim().isNotEmpty) {
+      errors['secondDriverName'] = 'Second Driver name is required when ID is provided.';
     }
     if (fleetNoController.text.trim().isEmpty) {
       errors['fleetNo'] = 'Fleet number is required.';
@@ -637,8 +666,8 @@ class _DailyRentCollectionInfoScreenState
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
                                         controller: firstDriverNameController,
-                                        labelText: 'First Driver Name',
-                                        hintText: 'Enter Driver Name',
+                                        labelText: 'Regular Driver Name',
+                                        hintText: 'Enter Regular Driver Name',
                                         isReadOnly: true,
                                         validator:
                                             _validators['firstDriverName'],
@@ -674,7 +703,7 @@ class _DailyRentCollectionInfoScreenState
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
                                         controller: firstDriverDobController,
-                                        labelText: 'First Driver DOB',
+                                        labelText: 'Regular Driver DOB',
                                         hintText: 'DD MMM, YYYY',
                                         isReadOnly: true,
                                         onTap: widget.fetchDetails
@@ -724,10 +753,10 @@ class _DailyRentCollectionInfoScreenState
                                         labelText: 'FirstDriver ID #',
                                         hintText: 'Enter Driver ID #',
                                         isReadOnly: widget.fetchDetails,
-                                        validator: _validators['driverCnic'],
+                                        validator: _validators['firstDriverCnic'],
                                         onChanged: (s) =>
                                             _updateDraftFromControllers(),
-                                        errorText: fieldErrors['driverCnic'],
+                                        errorText: fieldErrors['firstDriverCnic'],
                                       ),
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
@@ -735,10 +764,10 @@ class _DailyRentCollectionInfoScreenState
                                         labelText: 'Second Driver ID #',
                                         hintText: 'Enter Driver ID #',
                                         isReadOnly: widget.fetchDetails,
-                                        validator: _validators['driverCnic'],
+                                        validator: _validators['secondDriverCnic'],
                                         onChanged: (s) =>
                                             _updateDraftFromControllers(),
-                                        errorText: fieldErrors['driverCnic'],
+                                        errorText: fieldErrors['secondDriverCnic'],
                                       ),
                                     ],
                                   ),
