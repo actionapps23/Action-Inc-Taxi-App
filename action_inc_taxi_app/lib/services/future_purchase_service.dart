@@ -59,7 +59,8 @@ class FuturePurchaseService {
         .get();
     return snapshot.docs
         .map(
-          (doc) => FuturePurchaseModel.fromJson(doc.data() as Map<String, dynamic>),
+          (doc) =>
+              FuturePurchaseModel.fromJson(doc.data() as Map<String, dynamic>),
         )
         .toList();
   }

@@ -12,12 +12,11 @@ class ProcedureCubit extends Cubit<ProcedureState> {
     emit(ProcedureRecordSubmitting());
     try {
       await ProcedureService.submitProcedureRecord(procedure);
-      final submittedProcedure =
-          await ProcedureService.fetchProcedureRecord(
+      final submittedProcedure = await ProcedureService.fetchProcedureRecord(
         procedure.procedureType,
         null,
       );
-        emit(ProcedureRecordAlreadySubmitted(procedureModel: submittedProcedure));
+      emit(ProcedureRecordAlreadySubmitted(procedureModel: submittedProcedure));
     } catch (e) {
       emit(
         ProcedureRecordSubmissionFailed(
@@ -48,8 +47,6 @@ class ProcedureCubit extends Cubit<ProcedureState> {
       );
     }
   }
-
-
 
   Future<void> updateProcedureChecklist(
     String checklistType,

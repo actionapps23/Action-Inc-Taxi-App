@@ -27,7 +27,8 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
       final SelectionCubit selectionCubit = context.read<SelectionCubit>();
       final String taxiNo = selectionCubit.state.taxiNo;
       final String regNo = selectionCubit.state.regNo;
-      carDetailCubit.loadCarDetails(taxiNo, regNo);
+      final String taxiPlateNo = selectionCubit.state.taxiPlateNo;
+      carDetailCubit.loadCarDetails(taxiNo, regNo, taxiPlateNo);
     }
   }
 

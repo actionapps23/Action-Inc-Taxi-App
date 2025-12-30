@@ -41,6 +41,7 @@ class FieldModel {
       isChecked: isChecked ?? this.isChecked,
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'fieldName': fieldName,

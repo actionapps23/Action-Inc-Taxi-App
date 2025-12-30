@@ -41,7 +41,6 @@ class _FranchiseTransferState extends State<FranchiseTransfer> {
     fieldCubitForPNP.loadFieldEntries();
     fieldCubitForLTO.loadFieldEntries();
     fieldCubitForLTFRB.loadFieldEntries();
-
   }
 
   @override
@@ -103,11 +102,14 @@ class _FranchiseTransferState extends State<FranchiseTransfer> {
                           ],
                         ),
                       ],
-                      if (state is FieldLoading || state is FieldInitial || state is FieldEntryAdding || state is FieldEntryDeleting || state is FieldEntryUpdating ) ...[
+                      if (state is FieldLoading ||
+                          state is FieldInitial ||
+                          state is FieldEntryAdding ||
+                          state is FieldEntryDeleting ||
+                          state is FieldEntryUpdating) ...[
                         Spacing.vMedium,
                         Center(child: CircularProgressIndicator()),
-                      ] 
-                      else if (state is FieldError) ...[
+                      ] else if (state is FieldError) ...[
                         Spacing.vMedium,
                         Center(child: Text("Error: ${state.message}")),
                       ] else if (state is FieldError) ...[
@@ -117,7 +119,7 @@ class _FranchiseTransferState extends State<FranchiseTransfer> {
                           state.entries.isEmpty) ...[
                         Spacing.vMedium,
                         Center(child: Text("No entries found.")),
-                      ] else if(state is FieldEntriesLoaded) ...[
+                      ] else if (state is FieldEntriesLoaded) ...[
                         ChecklistTable(
                           title: "LTFRB Process (Franchise Transfer)",
                           fieldCubit: fieldCubitForLTFRB,

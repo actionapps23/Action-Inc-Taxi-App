@@ -571,7 +571,11 @@ class DbService {
     }
   }
 
-  Future<CarDetailModel?> getTaxiDetailInfo(String taxiNo, String regNo) async {
+  Future<CarDetailModel?> getTaxiDetailInfo(
+    String taxiNo,
+    String regNo,
+    String taxiPlateNo,
+  ) async {
     try {
       DocumentSnapshot<Map<String, dynamic>> doc;
       if (taxiNo.isNotEmpty) {
@@ -580,6 +584,14 @@ class DbService {
         final q = await _firestore
             .collection(carsCollection)
             .where('regNo', isEqualTo: regNo)
+            .limit(1)
+            .get();
+        if (q.docs.isEmpty) return null;
+        doc = q.docs.first;
+      } else if (taxiPlateNo.isNotEmpty) {
+        final q = await _firestore
+            .collection(carsCollection)
+            .where('plateNumber', isEqualTo: taxiPlateNo)
             .limit(1)
             .get();
         if (q.docs.isEmpty) return null;

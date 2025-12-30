@@ -12,7 +12,7 @@ class ReportCubit extends Cubit<ReportState> {
     final newRows = List<ReportRow>.from(state.rows)..add(row);
     emit(state.copyWith(rows: newRows));
   }
-  
+
   void setRows(List<ReportRow> rows) {
     emit(state.copyWith(rows: List<ReportRow>.from(rows)));
   }
@@ -32,19 +32,23 @@ class ReportCubit extends Cubit<ReportState> {
     try {
       emit(state.copyWith(status: ReportStatus.generating));
       final rows = state.rows
-          .map((r) => {
-                'date': r.date.toIso8601String().split('T').first,
-                'plateNumber': r.plateNumber,
-                'vehicleModel': r.vehicleModel,
-                'driverName': r.driverName,
-                'cleanliness': r.cleanliness,
-                'remarks': r.remarks,
-              })
+          .map(
+            (r) => {
+              'date': r.date.toIso8601String().split('T').first,
+              'plateNumber': r.plateNumber,
+              'vehicleModel': r.vehicleModel,
+              'driverName': r.driverName,
+              'cleanliness': r.cleanliness,
+              'remarks': r.remarks,
+            },
+          )
           .toList();
       final Uint8List bytes = await ReportService.generateReportPdf(rows);
       emit(state.copyWith(status: ReportStatus.ready, pdfBytes: bytes));
     } catch (e) {
-      emit(state.copyWith(status: ReportStatus.error, errorMessage: e.toString()));
+      emit(
+        state.copyWith(status: ReportStatus.error, errorMessage: e.toString()),
+      );
     }
   }
 
@@ -62,7 +66,9 @@ class ReportCubit extends Cubit<ReportState> {
       final path = await ReportService.uploadPdf(state.pdfBytes!, filename);
       emit(state.copyWith(status: ReportStatus.uploaded, storagePath: path));
     } catch (e) {
-      emit(state.copyWith(status: ReportStatus.error, errorMessage: e.toString()));
+      emit(
+        state.copyWith(status: ReportStatus.error, errorMessage: e.toString()),
+      );
     }
   }
 
@@ -70,14 +76,25 @@ class ReportCubit extends Cubit<ReportState> {
     try {
       if (state.storagePath == null) throw Exception('Upload the PDF first');
       emit(state.copyWith(status: ReportStatus.sending));
-      final resp = await ReportService.sendReportViaCloudFunction(storagePath: state.storagePath!, to: recipientEmail);
+      final resp = await ReportService.sendReportViaCloudFunction(
+        storagePath: state.storagePath!,
+        to: recipientEmail,
+      );
       if (resp.statusCode >= 200 && resp.statusCode < 300) {
         emit(state.copyWith(status: ReportStatus.sent));
       } else {
-        emit(state.copyWith(status: ReportStatus.error, errorMessage: 'Cloud function error ${resp.statusCode}: ${resp.body}'));
+        emit(
+          state.copyWith(
+            status: ReportStatus.error,
+            errorMessage:
+                'Cloud function error ${resp.statusCode}: ${resp.body}',
+          ),
+        );
       }
     } catch (e) {
-      emit(state.copyWith(status: ReportStatus.error, errorMessage: e.toString()));
+      emit(
+        state.copyWith(status: ReportStatus.error, errorMessage: e.toString()),
+      );
     }
   }
 }

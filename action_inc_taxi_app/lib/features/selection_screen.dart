@@ -21,6 +21,7 @@ class SelectionScreen extends StatefulWidget {
 class _SelectionScreenState extends State<SelectionScreen> {
   int selectedIndex = 0;
 
+  final taxiPlateNoController = TextEditingController();
   final taxiNoController = TextEditingController();
   final regNoController = TextEditingController();
   final driverNameController = TextEditingController();
@@ -34,7 +35,8 @@ class _SelectionScreenState extends State<SelectionScreen> {
           driverNameController.text.trim().isNotEmpty;
     } else {
       return taxiNoController.text.trim().isNotEmpty ||
-          regNoController.text.trim().isNotEmpty;
+          regNoController.text.trim().isNotEmpty ||
+          taxiPlateNoController.text.trim().isNotEmpty;
     }
   }
 
@@ -178,6 +180,16 @@ class _SelectionScreenState extends State<SelectionScreen> {
                                     onChanged: (val) {
                                       setState(() {});
                                       selectionCubit.setRegNo(val);
+                                    },
+                                  ),
+                                  SizedBox(height: 12.h),
+                                  AppTextFormField(
+                                    controller: taxiPlateNoController,
+                                    hintText: 'Taxi Plate No.',
+                                    labelOnTop: true,
+                                    onChanged: (val) {
+                                      setState(() {});
+                                      selectionCubit.setTaxiPlateNo(val);
                                     },
                                   ),
                                 ],

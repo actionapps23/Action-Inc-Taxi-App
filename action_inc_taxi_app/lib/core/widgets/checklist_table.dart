@@ -63,8 +63,8 @@ class ChecklistTable<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if(fieldCubit == null && !isFromFutureCarPurchase) {
-          fieldCubit ??= context.read<FieldCubit>();
+    if (fieldCubit == null && !isFromFutureCarPurchase) {
+      fieldCubit ??= context.read<FieldCubit>();
     }
     futurePurchaseCubit ??= context.read<FuturePurchaseCubit>();
     final table = Column(
@@ -96,8 +96,11 @@ class ChecklistTable<T> extends StatelessWidget {
                         onPressed: () {
                           showDialog(
                             context: context,
-                            builder: (context) =>
-                                EntryFieldPopup(fieldCubit: fieldCubit, isFromFutureCarPurchase: isFromFutureCarPurchase, futurePurchaseCubit: futurePurchaseCubit)
+                            builder: (context) => EntryFieldPopup(
+                              fieldCubit: fieldCubit,
+                              isFromFutureCarPurchase: isFromFutureCarPurchase,
+                              futurePurchaseCubit: futurePurchaseCubit,
+                            ),
                           );
                         },
                       ),
@@ -115,22 +118,22 @@ class ChecklistTable<T> extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                   if(!isFromFutureCarPurchase)...[
-                     _headerCell('Purchase Step', flex: 3),
-                    _headerCell('SOP', flex: 1),
-                    _headerCell('Price', flex: 1),
-                    _headerCell('Timeline', flex: 1),
-                    _headerCell('Last Update', flex: 1.5),
-                    _headerCell('Edit', flex: 0.6),
-                    _headerCell('Check Box', flex: 0.6),
-                   ]
-                    else ...[
+                    if (!isFromFutureCarPurchase) ...[
+                      _headerCell('Purchase Step', flex: 3),
+                      _headerCell('SOP', flex: 1),
+                      _headerCell('Price', flex: 1),
+                      _headerCell('Timeline', flex: 1),
+                      _headerCell('Last Update', flex: 1.5),
+                      _headerCell('Edit', flex: 0.6),
+                      _headerCell('Check Box', flex: 0.6),
+                    ] else ...[
                       _headerCell('Franchise Name', flex: 3),
                       _headerCell('Slots We Have', flex: 1),
                       _headerCell('Cars We Have', flex: 1),
                       _headerCell('Remaining Slots', flex: 1.2),
                       _headerCell('Edit', flex: 0.6),
-                  ],]
+                    ],
+                  ],
                 ),
               ),
 
@@ -142,111 +145,170 @@ class ChecklistTable<T> extends StatelessWidget {
                 constraints: BoxConstraints(maxHeight: maxHeight ?? 400.h),
                 child: SingleChildScrollView(
                   child: Column(
-                    children: (isFromFutureCarPurchase
-                      ? (futurePurchaseCubit != null && futurePurchaseCubit!.state is FuturePurchaseEntriesLoaded
-                        ? (futurePurchaseCubit!.state as FuturePurchaseEntriesLoaded).entries
-                        : [])
-                      : (fieldCubit != null && fieldCubit!.state is FieldEntriesLoaded
-                        ? (fieldCubit!.state as FieldEntriesLoaded).entries
-                        : []))
-                        .map((item) {
-                          return Column(
-                            children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                    children:
+                        (isFromFutureCarPurchase
+                                ? (futurePurchaseCubit != null &&
+                                          futurePurchaseCubit!.state
+                                              is FuturePurchaseEntriesLoaded
+                                      ? (futurePurchaseCubit!.state
+                                                as FuturePurchaseEntriesLoaded)
+                                            .entries
+                                      : [])
+                                : (fieldCubit != null &&
+                                          fieldCubit!.state
+                                              is FieldEntriesLoaded
+                                      ? (fieldCubit!.state
+                                                as FieldEntriesLoaded)
+                                            .entries
+                                      : []))
+                            .map((item) {
+                              return Column(
                                 children: [
-                                  _dataCell(
-                                    ResponsiveText(
-                                    isFromFutureCarPurchase ? item.franchiseName : item.title,
-                                      style: AppTextStyles.bodyMedium.copyWith(
-                                        color: AppColors.surface,
-                                      ),
-                                      maxLines: 2,
-                                    ),
-                                    flex: 3,
-                                  ),
-                                  _dataCell(
-                                    ResponsiveText(
-                                    isFromFutureCarPurchase ? item.slotsWeHave.toString() : item.SOP.toString(),
-                                      style: AppTextStyles.bodyMedium,
-                                    ),
-                                  ),
-                                  _dataCell(
-                                    ResponsiveText(
-                                    isFromFutureCarPurchase ? item.carsWeHave.toString() : '${item.fees} P',
-                                      style: AppTextStyles.bodyMedium,
-                                    ),
-                                  ),
-                                  _dataCell(
-                                    ResponsiveText(
-                                      // timeline assumed as DateTime; show relative or days if needed
-                                     isFromFutureCarPurchase? (item.slotsWeHave - item.carsWeHave).toString() :  HelperFunctions.formatDate(item.timeline),
-                                      style: AppTextStyles.bodyMedium,
-                                    ),
-                                  ),
-                                 if(!isFromFutureCarPurchase)...[
-                                   _dataCell(
-                                    ResponsiveText(
-                                      HelperFunctions.formatDate(item.lastUpdated),
-                                      style: AppTextStyles.bodyMedium,
-                                    ),
-                                    flex: 1.5,
-                                  ),
-                                 ],
-                                  _dataCell(
-                                    IconButton(
-                                      onPressed: (){
-                                            if(isFromFutureCarPurchase)
-                                            {
-                                              showDialog(
-                                                context: context,
-                                                builder: (context) =>
-                                                    EntryFieldPopup(fieldCubit: fieldCubit, isFromFutureCarPurchase: isFromFutureCarPurchase, futurePurchaseCubit: futurePurchaseCubit, isUpdating: true, futurePurchaseModel: FuturePurchaseModel(franchiseName: item.franchiseName, slotsWeHave: item.slotsWeHave, carsWeHave: item.carsWeHave, id: item.id),)
-                                              );
-                                            }
-                                            else{
-                                              showDialog(
-                                                context: context,
-                                                builder: (context) =>
-                                                    EntryFieldPopup(fieldCubit: fieldCubit, isFromFutureCarPurchase: isFromFutureCarPurchase, futurePurchaseCubit: futurePurchaseCubit, isUpdating: true, fieldEntryModel: FieldEntryModel(title: item.title, SOP: item.SOP, fees: item.fees, timeline: item.timeline, isCompleted: item.isCompleted),)
-                                              );
-                                            }
-                                            
-                                          },
-                                      icon: Icon(
-                                        Icons.edit,
-                                        color: AppColors.surface,
-                                      ),
-                                      padding: EdgeInsets.zero,
-                                    ),
-                                    flex: 0.6,
-                                  ),
-                                  
-                                  if(!isFromFutureCarPurchase)...[
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
                                       _dataCell(
-                                    Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Checkbox(
-                                        value: (item.isCompleted),
-                                        onChanged: onToggleComplete == null
-                                            ? null
-                                            : (v) => onToggleComplete!(
-                                                item,
-                                                v ?? false,
+                                        ResponsiveText(
+                                          isFromFutureCarPurchase
+                                              ? item.franchiseName
+                                              : item.title,
+                                          style: AppTextStyles.bodyMedium
+                                              .copyWith(
+                                                color: AppColors.surface,
                                               ),
+                                          maxLines: 2,
+                                        ),
+                                        flex: 3,
                                       ),
-                                    ),
-                                    flex: 0.6,
+                                      _dataCell(
+                                        ResponsiveText(
+                                          isFromFutureCarPurchase
+                                              ? item.slotsWeHave.toString()
+                                              : item.SOP.toString(),
+                                          style: AppTextStyles.bodyMedium,
+                                        ),
+                                      ),
+                                      _dataCell(
+                                        ResponsiveText(
+                                          isFromFutureCarPurchase
+                                              ? item.carsWeHave.toString()
+                                              : '${item.fees} P',
+                                          style: AppTextStyles.bodyMedium,
+                                        ),
+                                      ),
+                                      _dataCell(
+                                        ResponsiveText(
+                                          // timeline assumed as DateTime; show relative or days if needed
+                                          isFromFutureCarPurchase
+                                              ? (item.slotsWeHave -
+                                                        item.carsWeHave)
+                                                    .toString()
+                                              : HelperFunctions.formatDate(
+                                                  item.timeline,
+                                                ),
+                                          style: AppTextStyles.bodyMedium,
+                                        ),
+                                      ),
+                                      if (!isFromFutureCarPurchase) ...[
+                                        _dataCell(
+                                          ResponsiveText(
+                                            HelperFunctions.formatDate(
+                                              item.lastUpdated,
+                                            ),
+                                            style: AppTextStyles.bodyMedium,
+                                          ),
+                                          flex: 1.5,
+                                        ),
+                                      ],
+                                      _dataCell(
+                                        IconButton(
+                                          onPressed: () {
+                                            if (isFromFutureCarPurchase) {
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) =>
+                                                    EntryFieldPopup(
+                                                      fieldCubit: fieldCubit,
+                                                      isFromFutureCarPurchase:
+                                                          isFromFutureCarPurchase,
+                                                      futurePurchaseCubit:
+                                                          futurePurchaseCubit,
+                                                      isUpdating: true,
+                                                      futurePurchaseModel:
+                                                          FuturePurchaseModel(
+                                                            franchiseName: item
+                                                                .franchiseName,
+                                                            slotsWeHave: item
+                                                                .slotsWeHave,
+                                                            carsWeHave:
+                                                                item.carsWeHave,
+                                                            id: item.id,
+                                                          ),
+                                                    ),
+                                              );
+                                            } else {
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) =>
+                                                    EntryFieldPopup(
+                                                      fieldCubit: fieldCubit,
+                                                      isFromFutureCarPurchase:
+                                                          isFromFutureCarPurchase,
+                                                      futurePurchaseCubit:
+                                                          futurePurchaseCubit,
+                                                      isUpdating: true,
+                                                      fieldEntryModel:
+                                                          FieldEntryModel(
+                                                            title: item.title,
+                                                            SOP: item.SOP,
+                                                            fees: item.fees,
+                                                            timeline:
+                                                                item.timeline,
+                                                            isCompleted: item
+                                                                .isCompleted,
+                                                          ),
+                                                    ),
+                                              );
+                                            }
+                                          },
+                                          icon: Icon(
+                                            Icons.edit,
+                                            color: AppColors.surface,
+                                          ),
+                                          padding: EdgeInsets.zero,
+                                        ),
+                                        flex: 0.6,
+                                      ),
+
+                                      if (!isFromFutureCarPurchase) ...[
+                                        _dataCell(
+                                          Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Checkbox(
+                                              value: (item.isCompleted),
+                                              onChanged:
+                                                  onToggleComplete == null
+                                                  ? null
+                                                  : (v) => onToggleComplete!(
+                                                      item,
+                                                      v ?? false,
+                                                    ),
+                                            ),
+                                          ),
+                                          flex: 0.6,
+                                        ),
+                                      ],
+                                    ],
                                   ),
-                                  ]
-                                
+                                  Divider(
+                                    height: 1.h,
+                                    color: Color(0xff262826),
+                                  ),
                                 ],
-                              ),
-                              Divider(height: 1.h, color: Color(0xff262826)),
-                            ],
-                          );
-                        })
-                        .toList(),
+                              );
+                            })
+                            .toList(),
                   ),
                 ),
               ),
@@ -284,100 +346,146 @@ class ChecklistTable<T> extends StatelessWidget {
                   ),
                 ),
                 Spacing.vMedium,
-                ...(
-                  isFromFutureCarPurchase
-                    ? (futurePurchaseCubit != null && futurePurchaseCubit!.state is FuturePurchaseEntriesLoaded
-                        ? (futurePurchaseCubit!.state as FuturePurchaseEntriesLoaded).entries
-                        : [])
-                    : (fieldCubit != null && fieldCubit!.state is FieldEntriesLoaded
-                        ? (fieldCubit!.state as FieldEntriesLoaded).entries
-                        : [])
-                ).map((
-                  item,
-                ) {
-                  return Container(
-                    margin: EdgeInsets.only(bottom: 12.h),
-                    padding: EdgeInsets.all(12.w),
-                    decoration: BoxDecoration(
-                      color: AppColors.cardBackground,
-                      borderRadius: BorderRadius.circular(8.r),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ResponsiveText(
-                          "item.title",
-                          style: AppTextStyles.bodyMedium.copyWith(
-                            color: AppColors.surface,
-                          ),
-                          maxLines: 3,
+                ...(isFromFutureCarPurchase
+                        ? (futurePurchaseCubit != null &&
+                                  futurePurchaseCubit!.state
+                                      is FuturePurchaseEntriesLoaded
+                              ? (futurePurchaseCubit!.state
+                                        as FuturePurchaseEntriesLoaded)
+                                    .entries
+                              : [])
+                        : (fieldCubit != null &&
+                                  fieldCubit!.state is FieldEntriesLoaded
+                              ? (fieldCubit!.state as FieldEntriesLoaded)
+                                    .entries
+                              : []))
+                    .map((item) {
+                      return Container(
+                        margin: EdgeInsets.only(bottom: 12.h),
+                        padding: EdgeInsets.all(12.w),
+                        decoration: BoxDecoration(
+                          color: AppColors.cardBackground,
+                          borderRadius: BorderRadius.circular(8.r),
                         ),
-                        Spacing.vSmall,
-                        Wrap(
-                          spacing: 12.w,
-                          runSpacing: 8.h,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                           if(isFromFutureCarPurchase)...[
-                                                          _infoChip('Franchise Name', item.franchiseName.toString()),
-
-                              _infoChip('Slots We Have', item.slotsWeHave.toString()),
-                              _infoChip('Cars We Have', item.carsWeHave.toString()),
-                              _infoChip(
-                                'Remaining Slots',
-                                (item.slotsWeHave - item.carsWeHave).toString(),
+                            ResponsiveText(
+                              "item.title",
+                              style: AppTextStyles.bodyMedium.copyWith(
+                                color: AppColors.surface,
                               ),
-                           ]
-                           else ...[
-                            _infoChip("Title", item.title),
-                             _infoChip('SOP', item.SOP.toString()),
-                            _infoChip('Price', '${item.fees} P'),
-                            _infoChip(
-                              'Timeline',
-                               HelperFunctions.formatDate(item.timeline),
+                              maxLines: 3,
                             ),
-                            _infoChip('Last',  HelperFunctions.formatDate(item.lastUpdated)),
-                           ]
+                            Spacing.vSmall,
+                            Wrap(
+                              spacing: 12.w,
+                              runSpacing: 8.h,
+                              children: [
+                                if (isFromFutureCarPurchase) ...[
+                                  _infoChip(
+                                    'Franchise Name',
+                                    item.franchiseName.toString(),
+                                  ),
+
+                                  _infoChip(
+                                    'Slots We Have',
+                                    item.slotsWeHave.toString(),
+                                  ),
+                                  _infoChip(
+                                    'Cars We Have',
+                                    item.carsWeHave.toString(),
+                                  ),
+                                  _infoChip(
+                                    'Remaining Slots',
+                                    (item.slotsWeHave - item.carsWeHave)
+                                        .toString(),
+                                  ),
+                                ] else ...[
+                                  _infoChip("Title", item.title),
+                                  _infoChip('SOP', item.SOP.toString()),
+                                  _infoChip('Price', '${item.fees} P'),
+                                  _infoChip(
+                                    'Timeline',
+                                    HelperFunctions.formatDate(item.timeline),
+                                  ),
+                                  _infoChip(
+                                    'Last',
+                                    HelperFunctions.formatDate(
+                                      item.lastUpdated,
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            ),
+                            Spacing.vSmall,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                    if (isFromFutureCarPurchase) {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => EntryFieldPopup(
+                                          fieldCubit: fieldCubit,
+                                          isFromFutureCarPurchase:
+                                              isFromFutureCarPurchase,
+                                          futurePurchaseCubit:
+                                              futurePurchaseCubit,
+                                          isUpdating: true,
+                                          futurePurchaseModel:
+                                              FuturePurchaseModel(
+                                                franchiseName:
+                                                    item.franchiseName,
+                                                slotsWeHave: item.slotsWeHave,
+                                                carsWeHave: item.carsWeHave,
+                                              ),
+                                        ),
+                                      );
+                                    } else {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => EntryFieldPopup(
+                                          fieldCubit: fieldCubit,
+                                          isFromFutureCarPurchase:
+                                              isFromFutureCarPurchase,
+                                          futurePurchaseCubit:
+                                              futurePurchaseCubit,
+                                          isUpdating: true,
+                                          fieldEntryModel: FieldEntryModel(
+                                            title: item.title,
+                                            SOP: item.SOP,
+                                            fees: item.fees,
+                                            timeline: item.timeline,
+                                            isCompleted: item.isCompleted,
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  icon: Icon(
+                                    Icons.edit,
+                                    color: AppColors.surface,
+                                  ),
+                                ),
+                                if (!isFromFutureCarPurchase) ...[
+                                  Checkbox(
+                                    value: false,
+                                    onChanged: onToggleComplete == null
+                                        ? null
+                                        : (v) => onToggleComplete!(
+                                            item,
+                                            v ?? false,
+                                          ),
+                                  ),
+                                ],
+                              ],
+                            ),
                           ],
                         ),
-                        Spacing.vSmall,
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            IconButton(
-                            onPressed: (){
-                                            if(isFromFutureCarPurchase)
-                                            {
-                                              showDialog(
-                                                context: context,
-                                                builder: (context) =>
-                                                    EntryFieldPopup(fieldCubit: fieldCubit, isFromFutureCarPurchase: isFromFutureCarPurchase, futurePurchaseCubit: futurePurchaseCubit, isUpdating: true, futurePurchaseModel: FuturePurchaseModel(franchiseName: item.franchiseName, slotsWeHave: item.slotsWeHave, carsWeHave: item.carsWeHave),)
-                                              );
-                                            }
-                                            else{
-                                              showDialog(
-                                                context: context,
-                                                builder: (context) =>
-                                                    EntryFieldPopup(fieldCubit: fieldCubit, isFromFutureCarPurchase: isFromFutureCarPurchase, futurePurchaseCubit: futurePurchaseCubit, isUpdating: true, fieldEntryModel: FieldEntryModel(title: item.title, SOP: item.SOP, fees: item.fees, timeline: item.timeline, isCompleted: item.isCompleted),)
-                                              );
-                                            }
-                                            
-                                          },
-                              icon: Icon(Icons.edit, color: AppColors.surface),
-                            ),
-                            if(!isFromFutureCarPurchase)...[
-                              Checkbox(
-                              value: false,
-                              onChanged: onToggleComplete == null
-                                  ? null
-                                  : (v) => onToggleComplete!(item, v ?? false),
-                            ),
-                            ]
-                          ],
-                        ),
-                      ],
-                    ),
-                  );
-                }),
+                      );
+                    }),
                 // bottom spacing so content doesn't hit screen edge
                 SizedBox(height: 24.h),
               ],
@@ -406,6 +514,4 @@ class ChecklistTable<T> extends StatelessWidget {
       ),
     );
   }
-
-
 }

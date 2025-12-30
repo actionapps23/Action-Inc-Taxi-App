@@ -1,4 +1,3 @@
-import 'package:action_inc_taxi_app/core/models/field_entry_model.dart';
 import 'package:action_inc_taxi_app/core/models/future_purchase_model.dart';
 import 'package:action_inc_taxi_app/cubit/future_purchase/future_purchase_state.dart';
 import 'package:action_inc_taxi_app/services/future_purchase_service.dart';

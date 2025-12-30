@@ -107,7 +107,7 @@ class Navbar extends StatelessWidget {
                     'Log out',
                     icon: AppAssets.logout,
                     onTap: () {
-                      // Simple logout: navigate back to login screen
+                      context.read<SelectionCubit>().reset();
                       Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(builder: (_) => const LoginScreen()),
                         (route) => false,

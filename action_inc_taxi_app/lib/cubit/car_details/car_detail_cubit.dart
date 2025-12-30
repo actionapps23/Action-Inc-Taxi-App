@@ -12,11 +12,12 @@ class CarDetailCubit extends Cubit<CarDetailState> {
     }
   }
 
-  void loadCarDetails(String taxiNo, String regNo) async {
+  void loadCarDetails(String taxiNo, String regNo, String taxiPlateNo) async {
     try {
       final CarDetailModel? carDetail = await dbService.getTaxiDetailInfo(
         taxiNo,
         regNo,
+        taxiPlateNo,
       );
       if (carDetail != null) {
         emit(CarDetailLoaded(carDetailModel: carDetail));

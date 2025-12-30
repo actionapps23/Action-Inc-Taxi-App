@@ -2,9 +2,7 @@ import 'package:action_inc_taxi_app/core/models/section_model.dart';
 import 'package:action_inc_taxi_app/core/widgets/form/app_dropdown.dart';
 import 'package:action_inc_taxi_app/core/widgets/form/form_field.dart';
 import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
-import 'package:action_inc_taxi_app/cubit/procedure/procedure_cubit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/spacing.dart';
 import 'package:action_inc_taxi_app/core/theme/app_text_styles.dart';
@@ -16,10 +14,14 @@ class AddProcedureFieldPopup extends StatefulWidget {
   final bool isEdit;
   final String? initialCategory;
   final FieldModel? initialField;
+  final void Function({required String sectionName, required String fieldName})
+  onSubmit;
+
   const AddProcedureFieldPopup({
     super.key,
     required this.sections,
     required this.procedureType,
+    required this.onSubmit,
     this.isEdit = false,
     this.initialCategory,
     this.initialField,
@@ -30,9 +32,10 @@ class AddProcedureFieldPopup extends StatefulWidget {
 }
 
 class _AddProcedureFieldPopupState extends State<AddProcedureFieldPopup> {
-  late String _selectedSection;
+  String? _selectedSection;
   bool _isCustomSection = false;
-  final TextEditingController _customSectionController = TextEditingController();
+  final TextEditingController _customSectionController =
+      TextEditingController();
   final TextEditingController _fieldNameController = TextEditingController();
 
   @override
@@ -58,7 +61,6 @@ class _AddProcedureFieldPopupState extends State<AddProcedureFieldPopup> {
 
   @override
   Widget build(BuildContext context) {
-    final ProcedureCubit procedureCubit = context.read<ProcedureCubit>();
     return Center(
       child: Material(
         color: Colors.transparent,
@@ -97,10 +99,7 @@ class _AddProcedureFieldPopupState extends State<AddProcedureFieldPopup> {
                     flex: 2,
                     child: AppDropdown<String>(
                       value: _selectedSection,
-                      items: [
-                        ...widget.sections,
-                        'Add new...'
-                      ]
+                      items: [...widget.sections, 'Add new...']
                           .map(
                             (section) => DropdownMenuItem<String>(
                               value: section,
@@ -182,23 +181,14 @@ class _AddProcedureFieldPopupState extends State<AddProcedureFieldPopup> {
                   onPressed: () {
                     final String sectionName = _isCustomSection
                         ? _customSectionController.text.trim()
-                        : _selectedSection;
+                        : _selectedSection ?? '';
                     if (sectionName.isEmpty) return;
                     if (_fieldNameController.text.trim().isEmpty) return;
-                    procedureCubit.updateProcedureChecklist(
-                      widget.procedureType,
-                      CategoryModel(
-                        categoryName: sectionName,
-                        fields: [
-                          FieldModel(
-                            fieldName: _fieldNameController.text,
-                            fieldKey: _fieldNameController.text
-                                .toLowerCase()
-                                .replaceAll(' ', '_'),
-                          ),
-                        ],
-                      ),
+                    widget.onSubmit(
+                      sectionName: sectionName,
+                      fieldName: _fieldNameController.text.trim(),
                     );
+
                     Navigator.of(context).pop();
                   },
                   child: ResponsiveText(

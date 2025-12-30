@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
               create: (_) => FuturePurchaseCubit(),
             ),
           ],
-            child: MaterialApp(
+          child: MaterialApp(
             scrollBehavior: ScrollBehavior().copyWith(scrollbars: false),
             title: 'Action Inc Taxi',
             debugShowCheckedModeBanner: false,
@@ -87,9 +87,7 @@ class MyApp extends StatelessWidget {
               ),
             ),
             home: LoginScreen(),
-            routes: {
-              '/report': (_) => const ReportPage(),
-            },
+            routes: {'/report': (_) => const ReportPage()},
             // home: MaintainenceScreen(),
           ),
         );

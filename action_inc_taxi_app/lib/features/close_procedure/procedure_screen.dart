@@ -1,4 +1,6 @@
 import 'package:action_inc_taxi_app/core/constants/app_constants.dart';
+import 'package:action_inc_taxi_app/core/helper_functions.dart';
+import 'package:action_inc_taxi_app/core/models/section_model.dart';
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
 import 'package:action_inc_taxi_app/core/theme/app_text_styles.dart';
 import 'package:action_inc_taxi_app/core/widgets/add_procedure_field_popup.dart';
@@ -69,9 +71,30 @@ class _ProcedureScreenState extends State<ProcedureScreen> {
                               context: context,
                               builder: (context) => AddProcedureFieldPopup(
                                 sections: state.procedureModel!.categories
-                                        .map((e) => e.categoryName)
-                                        .toList(),
+                                    .map((e) => e.categoryName)
+                                    .toList(),
                                 procedureType: widget.procedureType,
+                                onSubmit:
+                                    ({
+                                      required sectionName,
+                                      required fieldName,
+                                    }) {
+                                      procedureCubit.updateProcedureChecklist(
+                                        widget.procedureType,
+                                        CategoryModel(
+                                          categoryName: sectionName,
+                                          fields: [
+                                            FieldModel(
+                                              fieldName: fieldName,
+                                              fieldKey:
+                                                  HelperFunctions.getKeyFromTitle(
+                                                    fieldName,
+                                                  ),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
                               ),
                             );
                           },

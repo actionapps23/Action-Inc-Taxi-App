@@ -1,12 +1,10 @@
 // ignore_for_file: deprecated_member_use
 
-import 'package:action_inc_taxi_app/core/models/section_model.dart';
 import 'package:action_inc_taxi_app/core/widgets/form/form_field.dart';
 import 'package:action_inc_taxi_app/core/widgets/navbar/navbar.dart';
 import 'package:action_inc_taxi_app/features/entry_section/car_plan/action_buttons.dart';
 import 'package:action_inc_taxi_app/features/entry_section/inspection/view_selection_grid.dart';
 import 'package:action_inc_taxi_app/features/entry_section/vehicle_inspection_panel.dart';
-import 'package:action_inc_taxi_app/features/inspection/vehicle_checklist.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -96,17 +94,6 @@ const List<String> _keys = [
   "right_view",
   "mechanical_part",
   "interior",
-];
-
-const List<List<CategoryModel>> _viewSections = [
-  VehicleChecklist.frontViewSections,
-  VehicleChecklist.rearViewSections,
-  VehicleChecklist.topViewSections,
-  VehicleChecklist.bottomViewSections,
-  VehicleChecklist.leftSideSections,
-  VehicleChecklist.rightSideSections,
-  VehicleChecklist.mechanicalSections,
-  VehicleChecklist.interiorSections,
 ];
 
 // ignore: non_constant_identifier_names

@@ -86,6 +86,7 @@ class HelperFunctions {
     if (newDay > lastDayOfMonth) newDay = lastDayOfMonth;
     return DateTime.utc(newYear, newMonth, newDay);
   }
+
   static String formatDate(DateTime d) {
     return '${d.day.toString().padLeft(2, '0')} ${AppConstants.monthNames[d.month - 1]} ${d.year}';
   }
@@ -161,8 +162,16 @@ class HelperFunctions {
   static getKeyFromTitle(String title) {
     return title.toLowerCase().replaceAll(' ', '_');
   }
+
   static getTitleFromKey(String key) {
-    return key.split('_').map((word) => word.isNotEmpty ? '${word[0].toUpperCase()}${word.substring(1)}' : '').join(' ');
+    return key
+        .split('_')
+        .map(
+          (word) => word.isNotEmpty
+              ? '${word[0].toUpperCase()}${word.substring(1)}'
+              : '',
+        )
+        .join(' ');
   }
 
   static DateTime? parseDateString(String dateString) {

@@ -17,24 +17,31 @@ class VehicleInspectionPanelCubit extends Cubit<VehicleInspectionPanelState> {
   }
 
   Future<void> submitInspectionData(
-    String taxiID,
+    String plateNumber,
     String view,
     List<CategoryModel> categories,
   ) async {
     try {
       emit(VehicleInspectionPanelLoadingState());
-      await InspectionService.submitInspectionData(taxiID, view, categories);
-      await fetchSubmittedInspectionData(taxiID, view);
+      await InspectionService.submitInspectionData(
+        plateNumber,
+        view,
+        categories,
+      );
+      await fetchSubmittedInspectionData(plateNumber, view);
     } catch (e) {
       emit(VehicleInspectionPanelErrorState(e.toString()));
     }
   }
 
-  Future<void> fetchSubmittedInspectionData(String taxiID, String view) async {
+  Future<void> fetchSubmittedInspectionData(
+    String plateNumber,
+    String view,
+  ) async {
     try {
       emit(VehicleInspectionPanelLoadingState());
       final data = await InspectionService.fetchSubmittedInspectionData(
-        taxiID,
+        plateNumber,
         view,
       );
       final Map<String, bool> checkedFieldsFromDB = {};
@@ -43,10 +50,29 @@ class VehicleInspectionPanelCubit extends Cubit<VehicleInspectionPanelState> {
           checkedFieldsFromDB[field.fieldKey] = field.isChecked;
         }
       }
-      emit(VehicleInspectionPanelLoadedState(data).copyWith(checkedFieldsFromDB: checkedFieldsFromDB, checkedFields: checkedFieldsFromDB));
+      emit(
+        VehicleInspectionPanelLoadedState(
+          data,
+          checkedFieldsFromDB,
+          checkedFieldsFromDB,
+        ),
+      );
     } catch (e) {
       emit(VehicleInspectionPanelErrorState(e.toString()));
     }
+  }
+
+  Future<void> updateInspectionChecklist({
+    required String plateNumber,
+    required String view,
+    required CategoryModel category,
+  }) async {
+    await InspectionService.updateInspectionChecklist(
+      plateNumber: plateNumber,
+      view: view,
+      category: category,
+    );
+    await fetchSubmittedInspectionData(plateNumber, view);
   }
 
   void resetAll() {

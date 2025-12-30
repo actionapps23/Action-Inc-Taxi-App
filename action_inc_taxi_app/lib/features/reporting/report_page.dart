@@ -124,7 +124,10 @@ class _ReportViewState extends State<ReportView> {
           const Navbar(),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20.0,
+                vertical: 16.0,
+              ),
               child: Container(
                 decoration: BoxDecoration(
                   color: AppColors.background,
@@ -137,14 +140,20 @@ class _ReportViewState extends State<ReportView> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Inspection Report', style: AppTextStyles.bodyExtraSmall.copyWith(color: Colors.white, fontWeight: FontWeight.w600)),
+                        Text(
+                          'Inspection Report',
+                          style: AppTextStyles.bodyExtraSmall.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                         AppButton(
                           text: '+ Add Row',
                           onPressed: _addEmptyRow,
                           backgroundColor: AppColors.buttonPrimary,
                           textColor: AppColors.buttonText,
                           width: 120,
-                        )
+                        ),
                       ],
                     ),
                     Spacing.vStandard,
@@ -173,49 +182,92 @@ class _ReportViewState extends State<ReportView> {
                                           lastDate: DateTime(2100),
                                         );
                                         if (picked != null) {
-                                          setState(() => _dates[index] = picked);
+                                          setState(
+                                            () => _dates[index] = picked,
+                                          );
                                         }
                                       },
                                       child: Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 12,
+                                          vertical: 8,
+                                        ),
                                         decoration: BoxDecoration(
                                           color: Colors.white10,
-                                          borderRadius: BorderRadius.circular(6),
+                                          borderRadius: BorderRadius.circular(
+                                            6,
+                                          ),
                                         ),
                                         child: Row(
                                           children: [
-                                            const Icon(Icons.calendar_today, size: 16, color: Colors.white70),
+                                            const Icon(
+                                              Icons.calendar_today,
+                                              size: 16,
+                                              color: Colors.white70,
+                                            ),
                                             const SizedBox(width: 8),
-                                            Text('${_dates[index].toIso8601String().split('T').first}', style: const TextStyle(color: Colors.white, fontSize: 14)),
+                                            Text(
+                                              '${_dates[index].toIso8601String().split('T').first}',
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 14,
+                                              ),
+                                            ),
                                           ],
                                         ),
                                       ),
                                     ),
                                     const Spacer(),
                                     IconButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            _plateControllers.removeAt(index);
-                                            _modelControllers.removeAt(index);
-                                            _driverControllers.removeAt(index);
-                                            _cleanControllers.removeAt(index);
-                                            _remarksControllers.removeAt(index);
-                                            _dates.removeAt(index);
-                                          });
-                                        },
-                                        icon: const Icon(Icons.delete, color: Colors.redAccent, size: 20))
+                                      onPressed: () {
+                                        setState(() {
+                                          _plateControllers.removeAt(index);
+                                          _modelControllers.removeAt(index);
+                                          _driverControllers.removeAt(index);
+                                          _cleanControllers.removeAt(index);
+                                          _remarksControllers.removeAt(index);
+                                          _dates.removeAt(index);
+                                        });
+                                      },
+                                      icon: const Icon(
+                                        Icons.delete,
+                                        color: Colors.redAccent,
+                                        size: 20,
+                                      ),
+                                    ),
                                   ],
                                 ),
                                 Spacing.vSmall,
-                                AppTextFormField(labelOnTop: true, labelText: 'Plate Number', controller: _plateControllers[index]),
+                                AppTextFormField(
+                                  labelOnTop: true,
+                                  labelText: 'Plate Number',
+                                  controller: _plateControllers[index],
+                                ),
                                 Spacing.vSmall,
-                                AppTextFormField(labelOnTop: true, labelText: 'Vehicle Model / Type', controller: _modelControllers[index]),
+                                AppTextFormField(
+                                  labelOnTop: true,
+                                  labelText: 'Vehicle Model / Type',
+                                  controller: _modelControllers[index],
+                                ),
                                 Spacing.vSmall,
-                                AppTextFormField(labelOnTop: true, labelText: 'Driver Name', controller: _driverControllers[index]),
+                                AppTextFormField(
+                                  labelOnTop: true,
+                                  labelText: 'Driver Name',
+                                  controller: _driverControllers[index],
+                                ),
                                 Spacing.vSmall,
-                                AppTextFormField(labelOnTop: true, labelText: 'Cleanliness', controller: _cleanControllers[index]),
+                                AppTextFormField(
+                                  labelOnTop: true,
+                                  labelText: 'Cleanliness',
+                                  controller: _cleanControllers[index],
+                                ),
                                 Spacing.vSmall,
-                                AppTextFormField(labelOnTop: true, labelText: 'Remarks', controller: _remarksControllers[index], maxLines: 2),
+                                AppTextFormField(
+                                  labelOnTop: true,
+                                  labelText: 'Remarks',
+                                  controller: _remarksControllers[index],
+                                  maxLines: 2,
+                                ),
                               ],
                             ),
                           );
@@ -275,13 +327,23 @@ class _ReportViewState extends State<ReportView> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Send Report', style: AppTextStyles.bodyExtraSmall.copyWith(color: Colors.white, fontWeight: FontWeight.w500)),
+                          Text(
+                            'Send Report',
+                            style: AppTextStyles.bodyExtraSmall.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                           Spacing.vSmall,
                           Row(
                             children: [
                               Expanded(
                                 flex: 3,
-                                child: AppTextFormField(labelOnTop: true, labelText: 'Recipient email', controller: _recipientController),
+                                child: AppTextFormField(
+                                  labelOnTop: true,
+                                  labelText: 'Recipient email',
+                                  controller: _recipientController,
+                                ),
                               ),
                               Spacing.hMedium,
                               Expanded(
@@ -291,9 +353,12 @@ class _ReportViewState extends State<ReportView> {
                                   child: AppButton(
                                     text: 'Send Email (SES)',
                                     onPressed: () async {
-                                      final to = _recipientController.text.trim();
+                                      final to = _recipientController.text
+                                          .trim();
                                       if (to.isEmpty) return;
-                                      await context.read<ReportCubit>().sendViaCloudFunction(to);
+                                      await context
+                                          .read<ReportCubit>()
+                                          .sendViaCloudFunction(to);
                                     },
                                     backgroundColor: AppColors.buttonPrimary,
                                     textColor: AppColors.buttonText,
@@ -307,46 +372,67 @@ class _ReportViewState extends State<ReportView> {
                       ),
                     ),
                     Spacing.vSmall,
-                    BlocBuilder<ReportCubit, ReportState>(builder: (context, state) {
-                      final isLoading = state.status == ReportStatus.generating ||
-                          state.status == ReportStatus.uploading ||
-                          state.status == ReportStatus.sending;
+                    BlocBuilder<ReportCubit, ReportState>(
+                      builder: (context, state) {
+                        final isLoading =
+                            state.status == ReportStatus.generating ||
+                            state.status == ReportStatus.uploading ||
+                            state.status == ReportStatus.sending;
 
-                      return Container(
-                        padding: const EdgeInsets.all(14),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF1A1A1A),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Row(
-                          children: [
-                            if (isLoading)
-                              const SizedBox(
-                                height: 16,
-                                width: 16,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.buttonPrimary),
+                        return Container(
+                          padding: const EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF1A1A1A),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Row(
+                            children: [
+                              if (isLoading)
+                                const SizedBox(
+                                  height: 16,
+                                  width: 16,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      AppColors.buttonPrimary,
+                                    ),
+                                  ),
+                                ),
+                              if (isLoading) const SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  _getStatusMessage(
+                                    state.status,
+                                    state.errorMessage,
+                                  ),
+                                  style: TextStyle(
+                                    color: state.status == ReportStatus.error
+                                        ? Colors.redAccent
+                                        : Colors.white70,
+                                    fontWeight:
+                                        state.status == ReportStatus.sent
+                                        ? FontWeight.bold
+                                        : FontWeight.normal,
+                                  ),
                                 ),
                               ),
-                            if (isLoading) const SizedBox(width: 12),
-                            Expanded(
-                              child: Text(
-                                _getStatusMessage(state.status, state.errorMessage),
-                                style: TextStyle(
-                                  color: state.status == ReportStatus.error ? Colors.redAccent : Colors.white70,
-                                  fontWeight: state.status == ReportStatus.sent ? FontWeight.bold : FontWeight.normal,
+                              if (state.status == ReportStatus.sent)
+                                const Icon(
+                                  Icons.check_circle,
+                                  color: AppColors.buttonPrimary,
+                                  size: 20,
                                 ),
-                              ),
-                            ),
-                            if (state.status == ReportStatus.sent)
-                              const Icon(Icons.check_circle, color: AppColors.buttonPrimary, size: 20),
-                            if (state.status == ReportStatus.error)
-                              const Icon(Icons.error_outline, color: Colors.redAccent, size: 20),
-                          ],
-                        ),
-                      );
-                    }),
+                              if (state.status == ReportStatus.error)
+                                const Icon(
+                                  Icons.error_outline,
+                                  color: Colors.redAccent,
+                                  size: 20,
+                                ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),

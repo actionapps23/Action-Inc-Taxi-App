@@ -2,7 +2,16 @@ import 'dart:typed_data';
 
 import 'models/report_row.dart';
 
-enum ReportStatus { initial, generating, ready, uploading, uploaded, sending, sent, error }
+enum ReportStatus {
+  initial,
+  generating,
+  ready,
+  uploading,
+  uploaded,
+  sending,
+  sent,
+  error,
+}
 
 class ReportState {
   final List<ReportRow> rows;
@@ -19,7 +28,8 @@ class ReportState {
     this.errorMessage,
   });
 
-  factory ReportState.initial() => ReportState(rows: [], status: ReportStatus.initial);
+  factory ReportState.initial() =>
+      ReportState(rows: [], status: ReportStatus.initial);
 
   ReportState copyWith({
     List<ReportRow>? rows,

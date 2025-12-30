@@ -15,13 +15,17 @@ class ReportService {
   static const String cloudFunctionUrl = '<YOUR_CLOUD_FUNCTION_URL_HERE>';
 
   /// Generate PDF bytes from table rows and app logo in assets/logo/
-  static Future<Uint8List> generateReportPdf(List<Map<String, dynamic>> rows) async {
+  static Future<Uint8List> generateReportPdf(
+    List<Map<String, dynamic>> rows,
+  ) async {
     final pdf = pw.Document();
 
     // try load logo asset
     Uint8List? logoBytes;
     try {
-      logoBytes = (await rootBundle.load('assets/logo/logo.png')).buffer.asUint8List();
+      logoBytes = (await rootBundle.load(
+        'assets/logo/logo.png',
+      )).buffer.asUint8List();
     } catch (_) {
       // ignore if logo not found
       logoBytes = null;
@@ -38,27 +42,50 @@ class ReportService {
                 if (logoBytes != null)
                   pw.Image(pw.MemoryImage(logoBytes), width: 80, height: 80),
                 pw.Column(
-                    crossAxisAlignment: pw.CrossAxisAlignment.start,
-                    children: [
-                      pw.Text('ACTIONINC TRANSPORT CARRIER CORP.', style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
-                    ])
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Text(
+                      'ACTIONINC TRANSPORT CARRIER CORP.',
+                      style: pw.TextStyle(
+                        fontSize: 16,
+                        fontWeight: pw.FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
             pw.SizedBox(height: 12),
             pw.Table.fromTextArray(
-              headers: ['Date', 'Plate Number', 'Vehicle Model / Type', 'Driver Name', 'Cleanliness', 'Remarks'],
-              data: rows.map((r) => [
-                r['date'] ?? '',
-                r['plateNumber'] ?? '',
-                r['vehicleModel'] ?? '',
-                r['driverName'] ?? '',
-                r['cleanliness'] ?? '',
-                r['remarks'] ?? '',
-              ]).toList(),
-              headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 10),
+              headers: [
+                'Date',
+                'Plate Number',
+                'Vehicle Model / Type',
+                'Driver Name',
+                'Cleanliness',
+                'Remarks',
+              ],
+              data: rows
+                  .map(
+                    (r) => [
+                      r['date'] ?? '',
+                      r['plateNumber'] ?? '',
+                      r['vehicleModel'] ?? '',
+                      r['driverName'] ?? '',
+                      r['cleanliness'] ?? '',
+                      r['remarks'] ?? '',
+                    ],
+                  )
+                  .toList(),
+              headerStyle: pw.TextStyle(
+                fontWeight: pw.FontWeight.bold,
+                fontSize: 10,
+              ),
               cellStyle: pw.TextStyle(fontSize: 10),
               cellAlignment: pw.Alignment.centerLeft,
-              headerDecoration: const pw.BoxDecoration(color: PdfColors.grey300),
+              headerDecoration: const pw.BoxDecoration(
+                color: PdfColors.grey300,
+              ),
               columnWidths: {
                 0: pw.FixedColumnWidth(60),
                 1: pw.FixedColumnWidth(70),
@@ -78,7 +105,9 @@ class ReportService {
 
   /// Upload PDF bytes to Firebase Storage. Returns the storage path (not public URL).
   static Future<String> uploadPdf(Uint8List bytes, String filename) async {
-    final ref = FirebaseStorage.instance.ref().child('$_reportsFolder/$filename');
+    final ref = FirebaseStorage.instance.ref().child(
+      '$_reportsFolder/$filename',
+    );
     final metadata = SettableMetadata(contentType: 'application/pdf');
     await ref.putData(bytes, metadata);
     // return the storage path for the cloud function to fetch
@@ -94,7 +123,9 @@ class ReportService {
     String body = 'Please find attached inspection report.',
   }) async {
     if (cloudFunctionUrl.contains('<YOUR_CLOUD_FUNCTION_URL_HERE>')) {
-      throw Exception('cloudFunctionUrl not configured. Set ReportService.cloudFunctionUrl');
+      throw Exception(
+        'cloudFunctionUrl not configured. Set ReportService.cloudFunctionUrl',
+      );
     }
 
     final payload = {
@@ -105,12 +136,19 @@ class ReportService {
     };
 
     final uri = Uri.parse(cloudFunctionUrl);
-    final resp = await http.post(uri, headers: {'Content-Type': 'application/json'}, body: json.encode(payload));
+    final resp = await http.post(
+      uri,
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode(payload),
+    );
     return resp;
   }
 
   /// Preview PDF in browser (web-only). Uses `dart:html` to open a blob URL.
-  static Future<void> previewPdf(Uint8List bytes, {String filename = 'report.pdf'}) async {
+  static Future<void> previewPdf(
+    Uint8List bytes, {
+    String filename = 'report.pdf',
+  }) async {
     final blob = html.Blob([bytes], 'application/pdf');
     final url = html.Url.createObjectUrlFromBlob(blob);
     html.window.open(url, '_blank');

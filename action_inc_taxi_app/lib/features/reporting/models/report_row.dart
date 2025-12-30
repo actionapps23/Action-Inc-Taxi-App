@@ -16,20 +16,20 @@ class ReportRow {
   });
 
   Map<String, dynamic> toMap() => {
-        'date': date.toIso8601String(),
-        'plateNumber': plateNumber,
-        'vehicleModel': vehicleModel,
-        'driverName': driverName,
-        'cleanliness': cleanliness,
-        'remarks': remarks,
-      };
+    'date': date.toIso8601String(),
+    'plateNumber': plateNumber,
+    'vehicleModel': vehicleModel,
+    'driverName': driverName,
+    'cleanliness': cleanliness,
+    'remarks': remarks,
+  };
 
   factory ReportRow.fromMap(Map<String, dynamic> m) => ReportRow(
-        date: DateTime.parse(m['date'] as String),
-        plateNumber: m['plateNumber'] as String,
-        vehicleModel: m['vehicleModel'] as String,
-        driverName: m['driverName'] as String,
-        cleanliness: m['cleanliness'] as String,
-        remarks: m['remarks'] as String,
-      );
+    date: DateTime.parse(m['date'] as String),
+    plateNumber: m['plateNumber'] as String,
+    vehicleModel: m['vehicleModel'] as String,
+    driverName: m['driverName'] as String,
+    cleanliness: m['cleanliness'] as String,
+    remarks: m['remarks'] as String,
+  );
 }

@@ -15,17 +15,31 @@ import 'selection_state.dart';
 
 class SelectionCubit extends Cubit<SelectionState> {
   SelectionCubit()
-    : super(const SelectionState(taxiNo: '', regNo: '', driverName: ''));
+    : super(
+        const SelectionState(
+          taxiPlateNo: '',
+          taxiNo: '',
+          regNo: '',
+          driverName: '',
+        ),
+      );
 
   void setTaxiNo(String value) => emit(state.copyWith(taxiNo: value));
   void setRegNo(String value) => emit(state.copyWith(regNo: value));
   void setDriverName(String value) => emit(state.copyWith(driverName: value));
+  void setTaxiPlateNo(String value) => emit(state.copyWith(taxiPlateNo: value));
 
-  void setAll({String? taxiNo, String? regNo, String? driverName}) => emit(
+  void setAll({
+    String? taxiPlateNo,
+    String? regNo,
+    String? driverName,
+    String? taxiNo,
+  }) => emit(
     state.copyWith(
-      taxiNo: taxiNo ?? state.taxiNo,
+      taxiPlateNo: taxiPlateNo ?? state.taxiPlateNo,
       regNo: regNo ?? state.regNo,
       driverName: driverName ?? state.driverName,
+      taxiNo: taxiNo ?? state.taxiNo,
     ),
   );
   //
@@ -165,6 +179,12 @@ class SelectionCubit extends Cubit<SelectionState> {
     }
   }
 
-  void reset() =>
-      emit(const SelectionState(taxiNo: '', regNo: '', driverName: ''));
+  void reset() => emit(
+    const SelectionState(
+      taxiNo: '',
+      regNo: '',
+      driverName: '',
+      taxiPlateNo: '',
+    ),
+  );
 }

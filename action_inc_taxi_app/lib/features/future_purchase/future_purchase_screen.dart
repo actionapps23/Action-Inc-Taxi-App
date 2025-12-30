@@ -32,25 +32,28 @@ class _FuturePurchaseScreenState extends State<FuturePurchaseScreen> {
           return Column(
             children: [
               Navbar(),
-              if(state is FuturePurchaseLoading || state is FuturePurchaseInitial || state is FuturePurchaseEntryUpdating || state is FuturePurchaseEntryDeleting || state is FuturePurchaseEntryAdding) 
+              if (state is FuturePurchaseLoading ||
+                  state is FuturePurchaseInitial ||
+                  state is FuturePurchaseEntryUpdating ||
+                  state is FuturePurchaseEntryDeleting ||
+                  state is FuturePurchaseEntryAdding)
                 const Center(child: CircularProgressIndicator())
-              else if(state is FuturePurchaseEntriesLoaded)
+              else if (state is FuturePurchaseEntriesLoaded)
                 Expanded(
                   child: ChecklistTable(
-                 title: 'Future Purchase Checklist',
-                 isFromFutureCarPurchase: true,
-                 futurePurchaseCubit: futurePurchaseCubit,
-                   
-                 
+                    title: 'Future Purchase Checklist',
+                    isFromFutureCarPurchase: true,
+                    futurePurchaseCubit: futurePurchaseCubit,
                   ),
                 )
-              else if(state is FuturePurchaseError || state is FuturePurchaseEntryUpdateError || state is FuturePurchaseEntryDeleteError || state is FuturePurchaseEntryAddError)
-                Center(
-                  child: Text(AppConstants.genericErrorMessage),
-                ),
+              else if (state is FuturePurchaseError ||
+                  state is FuturePurchaseEntryUpdateError ||
+                  state is FuturePurchaseEntryDeleteError ||
+                  state is FuturePurchaseEntryAddError)
+                Center(child: Text(AppConstants.genericErrorMessage)),
             ],
           );
-        }
+        },
       ),
     );
   }

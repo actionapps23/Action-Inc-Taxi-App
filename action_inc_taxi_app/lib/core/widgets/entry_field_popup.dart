@@ -41,7 +41,7 @@ class _EntryFieldPopupState extends State<EntryFieldPopup> {
   @override
   initState() {
     super.initState();
-  
+
     if (widget.isUpdating && widget.isFromFutureCarPurchase) {
       _fieldTitleController.text =
           widget.futurePurchaseModel?.franchiseName ?? '';
@@ -53,12 +53,11 @@ class _EntryFieldPopupState extends State<EntryFieldPopup> {
       _fieldTitleController.text = widget.fieldEntryModel?.title ?? '';
       _sopController.text = widget.fieldEntryModel?.SOP.toString() ?? '';
       _feesController.text = widget.fieldEntryModel?.fees.toString() ?? '';
-      _timelineController.text =
-          "22/2022";
+      _timelineController.text = "22/2022";
       _isCompleted.value = widget.fieldEntryModel?.isCompleted ?? false;
-     
     }
   }
+
   final TextEditingController _fieldTitleController = TextEditingController();
 
   final TextEditingController _sopController = TextEditingController();
@@ -111,7 +110,9 @@ class _EntryFieldPopupState extends State<EntryFieldPopup> {
                 children: [
                   Spacing.vLarge,
                   ResponsiveText(
-                    widget.isFromFutureCarPurchase ? 'Franchise Name' : "Field title",
+                    widget.isFromFutureCarPurchase
+                        ? 'Franchise Name'
+                        : "Field title",
                     style: AppTextStyles.bodyExtraSmall,
                   ),
                   Spacing.vSmall,
@@ -166,28 +167,28 @@ class _EntryFieldPopupState extends State<EntryFieldPopup> {
                     ),
                   ],
                   Spacing.vLarge,
-                 if(!widget.isFromFutureCarPurchase)...[
-                   Row(
-                    children: [
-                      ValueListenableBuilder<bool>(
-                        valueListenable: _isCompleted,
-                        builder: (context, value, _) {
-                          return Checkbox(
-                            value: value,
-                            onChanged: (v) => _isCompleted.value = v ?? false,
-                          );
-                        },
-                      ),
-                      ResponsiveText(
-                        "Is Completed",
-                        style: AppTextStyles.bodyExtraSmall,
-                      ),
-                    ],
-                  ),
-                  Spacing.vExtraLarge,
-                 ],
+                  if (!widget.isFromFutureCarPurchase) ...[
+                    Row(
+                      children: [
+                        ValueListenableBuilder<bool>(
+                          valueListenable: _isCompleted,
+                          builder: (context, value, _) {
+                            return Checkbox(
+                              value: value,
+                              onChanged: (v) => _isCompleted.value = v ?? false,
+                            );
+                          },
+                        ),
+                        ResponsiveText(
+                          "Is Completed",
+                          style: AppTextStyles.bodyExtraSmall,
+                        ),
+                      ],
+                    ),
+                    Spacing.vExtraLarge,
+                  ],
 
-                 if(widget.isFromFutureCarPurchase) ...[
+                  if (widget.isFromFutureCarPurchase) ...[
                     BlocBuilder<FuturePurchaseCubit, FuturePurchaseState>(
                       bloc: widget.futurePurchaseCubit,
                       builder: (context, state) {
@@ -204,28 +205,22 @@ class _EntryFieldPopupState extends State<EntryFieldPopup> {
                                 : "Add",
                             onPressed: () {
                               if (widget.isUpdating) {
-                              
-                                  widget.futurePurchaseCubit!.updateFieldEntry(
-                                    widget.futurePurchaseModel!.copyWith(
-                                      franchiseName: _fieldTitleController.text,
-                                      slotsWeHave: int.parse(_sopController.text),
-                                      carsWeHave: int.parse(_feesController.text),
-                                     
-                                    ),
-                                  );
-                                
+                                widget.futurePurchaseCubit!.updateFieldEntry(
+                                  widget.futurePurchaseModel!.copyWith(
+                                    franchiseName: _fieldTitleController.text,
+                                    slotsWeHave: int.parse(_sopController.text),
+                                    carsWeHave: int.parse(_feesController.text),
+                                  ),
+                                );
                               } else {
-                                
-                                  widget.futurePurchaseCubit!.addFieldEntry(
-                                    FuturePurchaseModel(
-                                      id: _fieldTitleController.text,
-                                      franchiseName: _fieldTitleController.text,
-                                      slotsWeHave: int.parse(_sopController.text),
-                                      carsWeHave: int.parse(_feesController.text),
-                                 
-                                    ),
-                                  );
-                                
+                                widget.futurePurchaseCubit!.addFieldEntry(
+                                  FuturePurchaseModel(
+                                    id: _fieldTitleController.text,
+                                    franchiseName: _fieldTitleController.text,
+                                    slotsWeHave: int.parse(_sopController.text),
+                                    carsWeHave: int.parse(_feesController.text),
+                                  ),
+                                );
                               }
                               Navigator.pop(context);
                             },
@@ -233,25 +228,24 @@ class _EntryFieldPopupState extends State<EntryFieldPopup> {
                         );
                       },
                     ),
-                 ]
-                 else ...[ BlocBuilder<FieldCubit, FieldState>(
-                    bloc: widget.fieldCubit,
-                    builder: (context, state) {
-                      return SizedBox(
-                        width: double.infinity,
-                        height: 48.h,
-                        child: AppButton(
-                          text: widget.isUpdating
-                              ? "Update"
-                              : state is FieldEntryUpdating
-                              ? "Updating..."
-                              : state is FieldEntryAdding
-                              ? "Adding..."
-                              : "Add",
-                          onPressed: () {
-                            final isCompleted = _isCompleted.value;
-                            if (widget.isUpdating) {
-                            
+                  ] else ...[
+                    BlocBuilder<FieldCubit, FieldState>(
+                      bloc: widget.fieldCubit,
+                      builder: (context, state) {
+                        return SizedBox(
+                          width: double.infinity,
+                          height: 48.h,
+                          child: AppButton(
+                            text: widget.isUpdating
+                                ? "Update"
+                                : state is FieldEntryUpdating
+                                ? "Updating..."
+                                : state is FieldEntryAdding
+                                ? "Adding..."
+                                : "Add",
+                            onPressed: () {
+                              final isCompleted = _isCompleted.value;
+                              if (widget.isUpdating) {
                                 widget.fieldCubit!.updateFieldEntry(
                                   widget.fieldEntryModel!.copyWith(
                                     title: _fieldTitleController.text,
@@ -264,11 +258,8 @@ class _EntryFieldPopupState extends State<EntryFieldPopup> {
                                         ) ??
                                         DateTime.now(),
                                   ),
-                                  
                                 );
-                              
-                            } else {
-                              
+                              } else {
                                 widget.fieldCubit!.addFieldEntry(
                                   FieldEntryModel(
                                     title: _fieldTitleController.text,
@@ -282,14 +273,14 @@ class _EntryFieldPopupState extends State<EntryFieldPopup> {
                                         DateTime.now(),
                                   ),
                                 );
-                              
-                            }
-                            Navigator.pop(context);
-                          },
-                        ),
-                      );
-                    },
-                  ),]
+                              }
+                              Navigator.pop(context);
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                  ],
                 ],
               ),
             ],

@@ -1,3 +1,4 @@
+import 'package:action_inc_taxi_app/core/widgets/field_action_menu.dart';
 import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:action_inc_taxi_app/core/widgets/add_procedure_field_popup.dart';
@@ -50,72 +51,77 @@ class ProcedureSection extends StatelessWidget {
                           },
                         ),
                         (state is ProcedureLoaded)
-                            ? PopupMenuButton<String>(
-                                icon: Icon(Icons.more_vert),
-                                onSelected: (value) async {
-                                  if (value == 'edit') {
-                                    final sections =
-                                        (procedureCubit.state
-                                            is ProcedureLoaded)
-                                        ? (procedureCubit.state
-                                                  as ProcedureLoaded)
-                                              .procedureModel!
-                                              .categories
-                                              .map((c) => c.categoryName)
-                                              .toList()
-                                        : [category.categoryName];
+                            ? FieldActionsMenu(
+                                onEdit: () {
+                                  final sections =
+                                      (procedureCubit.state is ProcedureLoaded)
+                                      ? (procedureCubit.state
+                                                as ProcedureLoaded)
+                                            .procedureModel!
+                                            .categories
+                                            .map((c) => c.categoryName)
+                                            .toList()
+                                      : [category.categoryName];
 
-                                    showDialog(
-                                      context: context,
-                                      builder: (ctx) => AddProcedureFieldPopup(
-                                        sections: sections,
-                                        procedureType: checklistType,
-                                        isEdit: true,
-                                        initialCategory: category.categoryName,
-                                        initialField: field,
+                                  showDialog(
+                                    context: context,
+                                    builder: (ctx) => AddProcedureFieldPopup(
+                                      sections: sections,
+                                      procedureType: checklistType,
+                                      isEdit: true,
+                                      initialCategory: category.categoryName,
+                                      initialField: field,
+                                      onSubmit:
+                                          ({
+                                            required fieldName,
+                                            required sectionName,
+                                          }) => procedureCubit
+                                              .updateProcedureChecklist(
+                                                checklistType,
+                                                CategoryModel(
+                                                  categoryName: sectionName,
+                                                  fields: [
+                                                    FieldModel(
+                                                      fieldName: fieldName,
+                                                      fieldKey: field.fieldKey,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                    ),
+                                  );
+                                },
+                                onDeleteConfirm: () async {
+                                  final confirmed = await showDialog<bool>(
+                                    context: context,
+                                    builder: (ctx) => AlertDialog(
+                                      title: ResponsiveText('Delete field'),
+                                      content: ResponsiveText(
+                                        'Are you sure you want to delete this field?',
                                       ),
-                                    );
-                                  } else if (value == 'delete') {
-                                    final confirmed = await showDialog<bool>(
-                                      context: context,
-                                      builder: (ctx) => AlertDialog(
-                                        title: ResponsiveText('Delete field'),
-                                        content: ResponsiveText(
-                                          'Are you sure you want to delete this field?',
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.of(ctx).pop(false),
+                                          child: ResponsiveText('Cancel'),
                                         ),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () =>
-                                                Navigator.of(ctx).pop(false),
-                                            child: ResponsiveText('Cancel'),
-                                          ),
-                                          TextButton(
-                                            onPressed: () =>
-                                                Navigator.of(ctx).pop(true),
-                                            child: ResponsiveText('Delete'),
-                                          ),
-                                        ],
-                                      ),
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.of(ctx).pop(true),
+                                          child: ResponsiveText('Delete'),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+
+                                  if (confirmed == true) {
+                                    procedureCubit.deleteProcedureChecklist(
+                                      checklistType,
+                                      category.categoryName,
+                                      field.fieldKey,
                                     );
-                                    if (confirmed == true) {
-                                      procedureCubit.deleteProcedureChecklist(
-                                        checklistType,
-                                        category.categoryName,
-                                        field.fieldKey,
-                                      );
-                                    }
                                   }
                                 },
-                                itemBuilder: (ctx) => [
-                                  PopupMenuItem(
-                                    value: 'edit',
-                                    child: ResponsiveText('Edit'),
-                                  ),
-                                  PopupMenuItem(
-                                    value: 'delete',
-                                    child: ResponsiveText('Delete'),
-                                  ),
-                                ],
                               )
                             : SizedBox.shrink(),
                       ],

@@ -5,9 +5,17 @@ class VehicleInspectionPanelState {
   final Map<String, bool> checkedFields;
   final Map<String, bool> checkedFieldsFromDB;
 
-  const VehicleInspectionPanelState({this.categories, this.checkedFields = const {}, this.checkedFieldsFromDB = const {}});
+  const VehicleInspectionPanelState({
+    this.categories,
+    this.checkedFields = const {},
+    this.checkedFieldsFromDB = const {},
+  });
 
-  VehicleInspectionPanelState copyWith({List<CategoryModel>? categories, Map<String, bool>? checkedFields, Map<String, bool>? checkedFieldsFromDB}) {
+  VehicleInspectionPanelState copyWith({
+    List<CategoryModel>? categories,
+    Map<String, bool>? checkedFields,
+    Map<String, bool>? checkedFieldsFromDB,
+  }) {
     return VehicleInspectionPanelState(
       categories: categories ?? this.categories,
       checkedFields: checkedFields ?? this.checkedFields,
@@ -16,12 +24,31 @@ class VehicleInspectionPanelState {
   }
 }
 
-
 class VehicleInspectionPanelLoadingState extends VehicleInspectionPanelState {}
 
 class VehicleInspectionPanelLoadedState extends VehicleInspectionPanelState {
-  VehicleInspectionPanelLoadedState(List<CategoryModel>? categories)
-      : super(categories: categories);
+  VehicleInspectionPanelLoadedState(
+    List<CategoryModel>? categories,
+    Map<String, bool> checkedFieldsFromDB,
+    Map<String, bool> checkedFields,
+  ) : super(
+        categories: categories,
+        checkedFieldsFromDB: checkedFieldsFromDB,
+        checkedFields: checkedFields,
+      );
+
+  @override
+  VehicleInspectionPanelLoadedState copyWith({
+    List<CategoryModel>? categories,
+    Map<String, bool>? checkedFields,
+    Map<String, bool>? checkedFieldsFromDB,
+  }) {
+    return VehicleInspectionPanelLoadedState(
+      categories ?? this.categories,
+      checkedFieldsFromDB ?? this.checkedFieldsFromDB,
+      checkedFields ?? this.checkedFields,
+    );
+  }
 }
 
 class VehicleInspectionPanelErrorState extends VehicleInspectionPanelState {
@@ -29,4 +56,3 @@ class VehicleInspectionPanelErrorState extends VehicleInspectionPanelState {
 
   VehicleInspectionPanelErrorState(this.errorMessage);
 }
-
