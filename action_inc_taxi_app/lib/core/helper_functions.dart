@@ -161,6 +161,9 @@ class HelperFunctions {
   static getKeyFromTitle(String title) {
     return title.toLowerCase().replaceAll(' ', '_');
   }
+  static getTitleFromKey(String key) {
+    return key.split('_').map((word) => word.isNotEmpty ? '${word[0].toUpperCase()}${word.substring(1)}' : '').join(' ');
+  }
 
   static DateTime? parseDateString(String dateString) {
     try {

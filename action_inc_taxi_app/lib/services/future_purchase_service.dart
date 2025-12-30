@@ -1,5 +1,4 @@
 import 'package:action_inc_taxi_app/core/constants/app_constants.dart';
-import 'package:action_inc_taxi_app/core/models/field_entry_model.dart';
 import 'package:action_inc_taxi_app/core/models/future_purchase_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 

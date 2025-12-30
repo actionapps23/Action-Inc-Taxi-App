@@ -62,13 +62,15 @@ class _ProcedureScreenState extends State<ProcedureScreen> {
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      if (!alreadySubmitted)
+                      if (state is ProcedureLoaded && !alreadySubmitted)
                         AppOutlineButton(
                           onPressed: () {
                             showDialog(
                               context: context,
                               builder: (context) => AddProcedureFieldPopup(
-                                sections: ["Taxi Office", "Garage"],
+                                sections: state.procedureModel!.categories
+                                        .map((e) => e.categoryName)
+                                        .toList(),
                                 procedureType: widget.procedureType,
                               ),
                             );

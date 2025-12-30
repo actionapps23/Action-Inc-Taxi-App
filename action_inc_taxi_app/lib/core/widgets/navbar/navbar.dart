@@ -79,6 +79,14 @@ class Navbar extends StatelessWidget {
                       );
                     },
                   ),
+                  SizedBox(width: 12.w),
+                  NavButton(
+                    'Reports',
+                    icon: AppAssets.taxiInspection,
+                    onTap: () {
+                      Navigator.pushNamed(context, '/report');
+                    },
+                  ),
                   if (loginState.user.isAdmin) ...[
                     SizedBox(width: 12.w),
                     NavButton(

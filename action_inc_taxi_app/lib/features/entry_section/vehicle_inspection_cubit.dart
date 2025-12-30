@@ -37,7 +37,13 @@ class VehicleInspectionPanelCubit extends Cubit<VehicleInspectionPanelState> {
         taxiID,
         view,
       );
-      emit(VehicleInspectionPanelLoadedState(data));
+      final Map<String, bool> checkedFieldsFromDB = {};
+      for (var category in data) {
+        for (var field in category.fields) {
+          checkedFieldsFromDB[field.fieldKey] = field.isChecked;
+        }
+      }
+      emit(VehicleInspectionPanelLoadedState(data).copyWith(checkedFieldsFromDB: checkedFieldsFromDB, checkedFields: checkedFieldsFromDB));
     } catch (e) {
       emit(VehicleInspectionPanelErrorState(e.toString()));
     }

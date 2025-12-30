@@ -6,18 +6,17 @@ import 'package:action_inc_taxi_app/core/widgets/snackbar/spacing.dart';
 import 'package:action_inc_taxi_app/features/entry_section/car_plan/action_buttons.dart';
 import 'package:action_inc_taxi_app/features/entry_section/vehicle_inspection_cubit.dart';
 import 'package:action_inc_taxi_app/features/entry_section/vehicle_isnpection_state.dart';
+import 'package:action_inc_taxi_app/features/inspection/vehicle_checklist.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class VehicleInspectionPanel extends StatefulWidget {
   final String viewName;
-  final List<CategoryModel> categories;
   final String mapKey;
   const VehicleInspectionPanel({
     super.key,
     required this.viewName,
-    required this.categories,
     required this.mapKey,
   });
 
@@ -51,7 +50,7 @@ class _VehicleInspectionPanelState extends State<VehicleInspectionPanel> {
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
-            BlocBuilder(
+            BlocBuilder<VehicleInspectionPanelCubit, VehicleInspectionPanelState>(
               bloc: vehicleInspectionPanelCubit,
               builder: (context, state) {
                 if (state is VehicleInspectionPanelLoadingState) {
@@ -69,19 +68,20 @@ class _VehicleInspectionPanelState extends State<VehicleInspectionPanel> {
                   );
                 }
                 return Expanded(
-                  child: ListView.builder(
-                    itemBuilder: (context, index) {
-                      final section = widget.categories[index];
-                      return SectionWidget(category: section);
-                    },
-                    itemCount: widget.categories.length,
-                  ),
-                );
-              },
-            ),
-            ActionButtons(
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: ListView.builder(
+                          itemBuilder: (context, index) {
+                            final section = VehicleChecklist.rearViewSections[index];
+                            return SectionWidget(category: section);
+                          },
+                          itemCount: VehicleChecklist.rearViewSections.length,
+                        ),
+                      ),
+                      ActionButtons(
               onSubmit: () {
-                final List<CategoryModel> selectedCategories = widget.categories
+                final List<CategoryModel> selectedCategories = VehicleChecklist.rearViewSections
                     .map((category) {
                       List<FieldModel> fields = [];
                       for (FieldModel field in category.fields) {
@@ -110,6 +110,12 @@ class _VehicleInspectionPanelState extends State<VehicleInspectionPanel> {
               submitButtonText: "Checked",
               cancelButtonText: "Back",
             ),
+                    ],
+                  ),
+                );
+              },
+            ),
+            
           ],
         ),
       ),

@@ -31,6 +31,8 @@ class AddProcedureFieldPopup extends StatefulWidget {
 
 class _AddProcedureFieldPopupState extends State<AddProcedureFieldPopup> {
   late String _selectedSection;
+  bool _isCustomSection = false;
+  final TextEditingController _customSectionController = TextEditingController();
   final TextEditingController _fieldNameController = TextEditingController();
 
   @override
@@ -45,6 +47,13 @@ class _AddProcedureFieldPopupState extends State<AddProcedureFieldPopup> {
     if (widget.isEdit && widget.initialField != null) {
       _fieldNameController.text = widget.initialField!.fieldName;
     }
+  }
+
+  @override
+  void dispose() {
+    _customSectionController.dispose();
+    _fieldNameController.dispose();
+    super.dispose();
   }
 
   @override
@@ -88,7 +97,10 @@ class _AddProcedureFieldPopupState extends State<AddProcedureFieldPopup> {
                     flex: 2,
                     child: AppDropdown<String>(
                       value: _selectedSection,
-                      items: widget.sections
+                      items: [
+                        ...widget.sections,
+                        'Add new...'
+                      ]
                           .map(
                             (section) => DropdownMenuItem<String>(
                               value: section,
@@ -102,12 +114,39 @@ class _AddProcedureFieldPopupState extends State<AddProcedureFieldPopup> {
                       onChanged: (value) {
                         setState(() {
                           _selectedSection = value!;
+                          _isCustomSection = value == 'Add new...';
+                          if (!_isCustomSection && widget.sections.isNotEmpty) {
+                            _customSectionController.clear();
+                          }
                         });
                       },
                     ),
                   ),
                 ],
               ),
+              if (_isCustomSection) ...[
+                Spacing.vMedium,
+                Row(
+                  children: [
+                    Expanded(
+                      child: ResponsiveText(
+                        "New Section Name",
+                        style: AppTextStyles.bodyExtraSmall,
+                      ),
+                    ),
+                    Spacing.hStandard,
+                    Expanded(
+                      flex: 2,
+                      child: AppTextFormField(
+                        controller: _customSectionController,
+                        hintText: "Enter section name",
+                        labelText: null,
+                        labelOnTop: false,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
               Spacing.vLarge,
               Row(
                 children: [
@@ -141,10 +180,15 @@ class _AddProcedureFieldPopupState extends State<AddProcedureFieldPopup> {
                     ),
                   ),
                   onPressed: () {
+                    final String sectionName = _isCustomSection
+                        ? _customSectionController.text.trim()
+                        : _selectedSection;
+                    if (sectionName.isEmpty) return;
+                    if (_fieldNameController.text.trim().isEmpty) return;
                     procedureCubit.updateProcedureChecklist(
                       widget.procedureType,
                       CategoryModel(
-                        categoryName: _selectedSection,
+                        categoryName: sectionName,
                         fields: [
                           FieldModel(
                             fieldName: _fieldNameController.text,

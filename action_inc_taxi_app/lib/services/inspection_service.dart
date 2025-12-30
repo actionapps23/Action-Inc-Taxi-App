@@ -1,6 +1,7 @@
 import 'package:action_inc_taxi_app/core/helper_functions.dart';
 import 'package:action_inc_taxi_app/core/models/section_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 class InspectionService {
   static final String inspectionCollection = 'inspections';
@@ -19,41 +20,69 @@ class InspectionService {
     });
 
     for (CategoryModel category in categories) {
+       await _firestore
+            .collection(inspectionCollection)
+            .doc(taxiID)
+            .collection(view)
+            .doc(view)
+            .set({
+              'last_updated': DateTime.now(),
+              'subCategories': FieldValue.arrayUnion([
+                HelperFunctions.getKeyFromTitle(category.categoryName),
+              ]),
+            }, SetOptions(merge: true));
       for (var section in category.fields) {
+       
         await _firestore
             .collection(inspectionCollection)
             .doc(taxiID)
             .collection(view)
             .doc(view)
-            .set({'last_updated': DateTime.now()});
-        
-        await _firestore.
-        collection(inspectionCollection)
-            .doc(taxiID)
-            .collection(view)
-            .doc(view).
-            collection(HelperFunctions.getKeyFromTitle(category.categoryName))
+            .collection(HelperFunctions.getKeyFromTitle(category.categoryName))
             .doc(section.fieldKey)
             .set(section.toJson());
-           
       }
     }
   }
 
-  static Future<List<CategoryModel>>  fetchSubmittedInspectionData(String taxiID, String view) async {
+  static Future<List<CategoryModel>> fetchSubmittedInspectionData(
+    String taxiID,
+    String view,
+  ) async {
     List<CategoryModel> categories = [];
 
-    final querySnapshot = await _firestore
+    final DocumentSnapshot documentSnapshot = await _firestore
         .collection(inspectionCollection)
         .doc(taxiID)
         .collection(view)
+        .doc(view)
         .get();
 
-    for (var doc in querySnapshot.docs) {
-      categories.add(CategoryModel.fromJson(doc.data()));
-    }
+    if (documentSnapshot.exists) {
+      List<dynamic> subCategoriesKey = documentSnapshot.get('subCategories') ?? [];
+      for (String subCategoryKey in subCategoriesKey) {
+        List<FieldModel> fields = [];
+        final QuerySnapshot categorySnapshot = await _firestore
+            .collection(inspectionCollection)
+            .doc(taxiID)
+            .collection(view)
+            .doc(view)
+            .collection(subCategoryKey)
+            .get();
 
+        for (var doc in categorySnapshot.docs) {
+          
+
+          FieldModel fieldModel = FieldModel.fromJson(
+            doc.data() as Map<String, dynamic>,
+          );
+          fields.add(fieldModel);
+         
+        }
+        String categoryName = HelperFunctions.getTitleFromKey(subCategoryKey);
+        categories.add(CategoryModel(categoryName: categoryName, fields: fields));
+      }
+    }
     return categories;
   }
-  
 }
