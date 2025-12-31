@@ -1,5 +1,8 @@
+
 import 'dart:typed_data';
 import 'dart:convert';
+import 'package:action_inc_taxi_app/core/theme/app_assets.dart';
+import 'package:action_inc_taxi_app/env.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/pdf.dart';
@@ -10,9 +13,12 @@ import 'package:http/http.dart' as http;
 
 class ReportService {
   static const String _reportsFolder = 'reports';
-  // This is a placeholder Cloud Function URL which should be deployed by you.
-  // The function should accept JSON: { "storagePath": "reports/xxx.pdf", "to": "email@domain" }
-  static const String cloudFunctionUrl = '<YOUR_CLOUD_FUNCTION_URL_HERE>';
+    // Cloud Function URL for sending reports. Matches the deployed function.
+    // The function should accept JSON: { "storagePath": "reports/xxx.pdf", "to": "email@domain", "subject": "...", "body": "..." }
+    static const String cloudFunctionUrl =
+      'https://us-central1-action-inc-taxi-app.cloudfunctions.net/sendReport';
+
+    static final String cloudFunctionApiKey = Env.cloudFunctionApiKey;
 
   /// Generate PDF bytes from table rows and app logo in assets/logo/
   static Future<Uint8List> generateReportPdf(
@@ -24,7 +30,7 @@ class ReportService {
     Uint8List? logoBytes;
     try {
       logoBytes = (await rootBundle.load(
-        'assets/logo/logo.png',
+       AppAssets.logo
       )).buffer.asUint8List();
     } catch (_) {
       // ignore if logo not found
@@ -136,9 +142,14 @@ class ReportService {
     };
 
     final uri = Uri.parse(cloudFunctionUrl);
+    final headers = {
+      'Content-Type': 'application/json',
+      'x-api-key': cloudFunctionApiKey,
+    };
+
     final resp = await http.post(
       uri,
-      headers: {'Content-Type': 'application/json'},
+      headers: headers,
       body: json.encode(payload),
     );
     return resp;
