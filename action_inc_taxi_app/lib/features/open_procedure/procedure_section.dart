@@ -51,18 +51,11 @@ class ProcedureSection extends StatelessWidget {
                           },
                         ),
                         (state is ProcedureLoaded)
+                        // We only need to pass the current section in popup bcoz here we are editing existing field
                             ? FieldActionsMenu(
                                 onEdit: () {
                                   final sections =
-                                      (procedureCubit.state is ProcedureLoaded)
-                                      ? (procedureCubit.state
-                                                as ProcedureLoaded)
-                                            .procedureModel!
-                                            .categories
-                                            .map((c) => c.categoryName)
-                                            .toList()
-                                      : [category.categoryName];
-
+                                     [category.categoryName];
                                   showDialog(
                                     context: context,
                                     builder: (ctx) => AddProcedureFieldPopup(

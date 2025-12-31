@@ -84,6 +84,26 @@ class InspectionService {
     return categories;
   }
 
+  // static Future<void> deleteInspectionData(String plateNumber) async {
+  //   final docRef = _firestore.collection(inspectionCollection).doc(plateNumber);
+  //   final views = await docRef.listCollections();
+  //   for (final viewCol in views) {
+  //     final viewDocs = await viewCol.get();
+  //     for (final viewDoc in viewDocs.docs) {
+  //       final subCategories = viewDoc.data()?['subCategories'] ?? [];
+  //       for (final subCategoryKey in subCategories) {
+  //         final subCatCol = viewCol.doc(viewDoc.id).collection(subCategoryKey);
+  //         final subCatDocs = await subCatCol.get();
+  //         for (final doc in subCatDocs.docs) {
+  //           await subCatCol.doc(doc.id).delete();
+  //         }
+  //       }
+  //       await viewCol.doc(viewDoc.id).delete();
+  //     }
+  //   }
+  //   await docRef.delete();
+  // }
+
   static Future<void> updateInspectionChecklist({
     required String plateNumber,
     required String view,

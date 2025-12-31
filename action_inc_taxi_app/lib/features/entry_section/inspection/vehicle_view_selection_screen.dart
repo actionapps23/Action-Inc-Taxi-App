@@ -1,6 +1,5 @@
 // ignore_for_file: deprecated_member_use
 
-import 'package:action_inc_taxi_app/core/widgets/form/form_field.dart';
 import 'package:action_inc_taxi_app/core/widgets/navbar/navbar.dart';
 import 'package:action_inc_taxi_app/features/entry_section/car_plan/action_buttons.dart';
 import 'package:action_inc_taxi_app/features/entry_section/inspection/view_selection_grid.dart';
@@ -22,24 +21,6 @@ class VehicleViewSelectionScreen extends StatelessWidget {
           children: [
             const Navbar(),
             SizedBox(height: 24.h),
-            Row(
-              children: [
-                Flexible(
-                  child: AppTextFormField(
-                    isReadOnly: true,
-                    // initialValue: selectionCubit.state.taxiNo,
-                  ),
-                ),
-                SizedBox(width: 16),
-                Expanded(
-                  child: AppTextFormField(
-                    isReadOnly: true,
-                    // initialValue: selectionCubit.state.regNo,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 24),
             Flexible(
               child: ViewSelectionGrid(
                 selectedIndex: selectedIndex,

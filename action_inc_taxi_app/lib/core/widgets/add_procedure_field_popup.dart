@@ -99,7 +99,11 @@ class _AddProcedureFieldPopupState extends State<AddProcedureFieldPopup> {
                     flex: 2,
                     child: AppDropdown<String>(
                       value: _selectedSection,
-                      items: [...widget.sections, 'Add new...']
+                      items: (!widget.isEdit ? [
+                       ...widget.sections,
+                        'Add new...',
+                      ] : [
+                        ...widget.sections,])
                           .map(
                             (section) => DropdownMenuItem<String>(
                               value: section,

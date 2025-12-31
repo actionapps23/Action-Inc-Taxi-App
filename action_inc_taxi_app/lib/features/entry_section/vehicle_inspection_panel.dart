@@ -144,7 +144,7 @@ class _VehicleInspectionPanelState extends State<VehicleInspectionPanel> {
                         child: ListView.builder(
                           itemBuilder: (context, index) {
                             final section = state.categories![index];
-                            return SectionWidget(category: section);
+                            return SectionWidget(category: section, mapKey: widget.mapKey,);
                           },
                           itemCount: state.categories!.length,
                         ),

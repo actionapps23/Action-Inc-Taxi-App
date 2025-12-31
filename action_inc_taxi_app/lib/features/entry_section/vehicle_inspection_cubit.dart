@@ -67,13 +67,20 @@ class VehicleInspectionPanelCubit extends Cubit<VehicleInspectionPanelState> {
     required String view,
     required CategoryModel category,
   }) async {
-    await InspectionService.updateInspectionChecklist(
+  try{
+      await InspectionService.updateInspectionChecklist(
       plateNumber: plateNumber,
       view: view,
       category: category,
     );
     await fetchSubmittedInspectionData(plateNumber, view);
   }
+  catch(e){
+    emit(VehicleInspectionPanelErrorState(e.toString()));
+  }
+  }
+
+
 
   void resetAll() {
     emit(VehicleInspectionPanelState());
