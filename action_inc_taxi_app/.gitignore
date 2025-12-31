@@ -32,6 +32,9 @@ migrate_working_dir/
 .pub/
 /build/
 /coverage/
+# Add env.dart file hre
+lib/env.dart
+functions/node_modules/
 
 # Symbolication related
 app.*.symbols
