@@ -192,7 +192,7 @@ class _AddProcedureFieldPopupState extends State<AddProcedureFieldPopup> {
                     Navigator.of(context).pop();
                   },
                   child: ResponsiveText(
-                    "Add Field",
+                    widget.isEdit ? "Update Field" : "Add Field",
                     style: AppTextStyles.bodyExtraSmall.copyWith(
                       color: AppColors.buttonText,
                       fontWeight: FontWeight.w600,

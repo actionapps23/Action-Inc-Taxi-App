@@ -33,4 +33,22 @@ class MaintainanceCubit extends Cubit<MaintainanceState> {
       emit(MaintainanceError(message: e.toString()));
     }
   }
+
+  Future<void> updateMaintainanceRequest(
+    MaintainanceModel request, {
+    List<PlatformFile>? files,
+  }) async {
+    emit(MaintainanceLoading());
+    try {
+      if (files != null && files.isNotEmpty) {
+        List<String> attachmentUrls = await StorageService.uploadFiles(files);
+        attachmentUrls = [...request.attachmentUrls ?? [], ...attachmentUrls];
+        request = request.copyWith(attachmentUrls: attachmentUrls);
+      }
+      await MaintainanceDbService.updateMaintainanceRequest(request);
+      await fetchMaintainanceItems();
+    } catch (e) {
+      emit(MaintainanceError(message: e.toString()));
+    }
+  }
 }

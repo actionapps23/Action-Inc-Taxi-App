@@ -3,9 +3,11 @@ import 'package:action_inc_taxi_app/core/models/maintainance_model.dart';
 import 'package:action_inc_taxi_app/core/theme/app_text_styles.dart';
 import 'package:action_inc_taxi_app/core/widgets/buttons/app_button.dart';
 import 'package:action_inc_taxi_app/core/widgets/buttons/app_outline_button.dart';
+import 'package:action_inc_taxi_app/core/widgets/report_issue_popup.dart';
 import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/spacing.dart';
 import 'package:action_inc_taxi_app/cubit/auth/login_cubit.dart';
+import 'package:action_inc_taxi_app/cubit/maintainance/maintainance_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,11 +22,11 @@ class MaintainanceItemCard extends StatefulWidget {
 }
 
 class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
-  bool _isSolved = false;
-
+  late bool _isSolved = widget.maintainanceModel.isResolved;
   @override
   Widget build(BuildContext context) {
     final LoginCubit loginCubit = context.read<LoginCubit>();
+    final MaintainanceCubit maintainanceCubit = context.read<MaintainanceCubit>();
     final LoginSuccess loginState = loginCubit.state as LoginSuccess;
     final bool isAdmin = loginState.user.isAdmin;
 
@@ -77,7 +79,9 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
                       HelperFunctions.timeDifferenceFromNow(
                         widget.maintainanceModel.date,
                       ),
-                      style: AppTextStyles.bodyExtraSmall,
+                      style: AppTextStyles.bodyExtraSmall.copyWith(
+                        color: AppColors.subText,
+                      ),
                     ),
                   ],
                 ),
@@ -92,7 +96,7 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
 
                       prefixIcon: Icon(Icons.edit),
                       onPressed: () {
-                        // TODO: wire edit action
+                        showDialog(context: context, builder: (context) => ReportIssuePopup(isEdit: true, maintainanceModel: widget.maintainanceModel,));
                       },
                     ),
                   Spacing.hSmall,
@@ -104,16 +108,25 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
                         : AppColors.success,
                     textColor: _isSolved ? Colors.white : AppColors.buttonText,
                     onPressed: () {
-                      setState(() {
+                        setState(() {
                         _isSolved = !_isSolved;
                       });
+                      maintainanceCubit.updateMaintainanceRequest(
+                        widget.maintainanceModel.copyWith(
+                          isResolved: _isSolved,
+                          lastUpdatedBy: loginState.user.name,
+                          lastUpdatedAt: DateTime.now(),
+                        ),
+                      );
+
+                    
                     },
                   ),
                 ],
               ),
             ],
           ),
-          Spacing.vSmall,
+          Spacing.vMedium,
           ResponsiveText(
             widget.maintainanceModel.description,
             style: AppTextStyles.bodyExtraSmall,
@@ -214,31 +227,41 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  ResponsiveText(
+                  if(widget.maintainanceModel.taxiId != '')...[ 
+                    ResponsiveText(
                     "Taxi No. ",
                     style: AppTextStyles.bodyExtraSmall.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   ResponsiveText(
-                    widget.maintainanceModel.taxiId,
+                    widget.maintainanceModel.taxiId!,
                     style: AppTextStyles.bodyExtraSmall,
                   ),
-                ],
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ResponsiveText(
-                    "Fleet No. ",
+                  ]
+                  else if(widget.maintainanceModel.taxiPlateNumber != '')...[ 
+                    ResponsiveText(
+                    "Taxi Plate No. ",
                     style: AppTextStyles.bodyExtraSmall.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   ResponsiveText(
-                    widget.maintainanceModel.fleetId,
+                    widget.maintainanceModel.taxiPlateNumber!,
                     style: AppTextStyles.bodyExtraSmall,
                   ),
+                  ] else if(widget.maintainanceModel.taxiRegistrationNumber != '')...[ 
+                    ResponsiveText(
+                    "Taxi Reg. No. ",
+                    style: AppTextStyles.bodyExtraSmall.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  ResponsiveText(
+                    widget.maintainanceModel.taxiRegistrationNumber!,
+                    style: AppTextStyles.bodyExtraSmall,
+                  ),
+                  ]
                 ],
               ),
               Row(
@@ -266,7 +289,39 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
                     ),
                   ),
                   ResponsiveText(
-                    widget.maintainanceModel.assignedTo ?? "Not assigned",
+                    widget.maintainanceModel.assignedTo == '' ? "Not assigned" : widget.maintainanceModel.assignedTo!,
+                    style: AppTextStyles.bodyExtraSmall,
+                  ),
+                ],
+              ),
+              // Last Updated By
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ResponsiveText(
+                    "Last Updated By: ",
+                    style: AppTextStyles.bodyExtraSmall.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  ResponsiveText(
+                    widget.maintainanceModel.lastUpdatedBy,
+                    style: AppTextStyles.bodyExtraSmall,
+                  ),
+                ],
+              ),
+              // Last Updated At
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ResponsiveText(
+                    "Last Updated At: ",
+                    style: AppTextStyles.bodyExtraSmall.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  ResponsiveText(
+                    HelperFunctions.formatDate(widget.maintainanceModel.lastUpdatedAt, showTime: true),
                     style: AppTextStyles.bodyExtraSmall,
                   ),
                 ],

@@ -87,8 +87,15 @@ class HelperFunctions {
     return DateTime.utc(newYear, newMonth, newDay);
   }
 
-  static String formatDate(DateTime d) {
+  static String formatDate(DateTime d, {bool showTime = false}) {
+    if (showTime) {
+      final hour = d.hour % 12 == 0 ? 12 : d.hour % 12;
+      final ampm = d.hour >= 12 ? 'PM' : 'AM';
+      return '${d.day.toString().padLeft(2, '0')} ${AppConstants.monthNames[d.month - 1]} ${d.year} at '
+          '${hour.toString().padLeft(2, '0')}:${d.minute.toString().padLeft(2, '0')} $ampm';
+    }
     return '${d.day.toString().padLeft(2, '0')} ${AppConstants.monthNames[d.month - 1]} ${d.year}';
+
   }
 
   static getDateTimeFromUtcMilliSeconds(int utcMs) {

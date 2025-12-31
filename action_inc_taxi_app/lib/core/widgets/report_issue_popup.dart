@@ -8,8 +8,10 @@ import 'package:action_inc_taxi_app/core/widgets/form/form_field.dart';
 import 'package:action_inc_taxi_app/core/widgets/inventory_field_widget.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/snackbar.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/spacing.dart';
+import 'package:action_inc_taxi_app/cubit/auth/login_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/maintainance/maintainance_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/maintainance/maintainance_state.dart';
+import 'package:action_inc_taxi_app/cubit/selection/selection_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
@@ -18,7 +20,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 
 class ReportIssuePopup extends StatefulWidget {
-  const ReportIssuePopup({super.key});
+  final bool isEdit;
+  final MaintainanceModel? maintainanceModel;
+
+  const ReportIssuePopup({super.key, this.isEdit = false, this.maintainanceModel});
 
   @override
   State<ReportIssuePopup> createState() => _ReportIssuePopupState();
@@ -27,10 +32,27 @@ class ReportIssuePopup extends StatefulWidget {
 class _ReportIssuePopupState extends State<ReportIssuePopup> {
   final TextEditingController _issueController = TextEditingController();
   String? _selectedMechanic;
+  final List<String> attachmentUrls = [];
   List<PlatformFile> _selectedFiles = [];
+  @override
+  void initState() {
+    super.initState();
+    if (widget.isEdit && widget.maintainanceModel != null) {
+      _issueController.text = widget.maintainanceModel!.description;
+      attachmentUrls.addAll(widget.maintainanceModel!.attachmentUrls ?? []);
+      if (widget.maintainanceModel!.assignedTo != null &&
+          widget.maintainanceModel!.assignedTo!.isNotEmpty) {
+        _selectedMechanic = widget.maintainanceModel!.assignedTo;
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final SelectionCubit selectionCubit = context.read<SelectionCubit>();
+    final LoginCubit loginCubit = context.read<LoginCubit>();
+    final LoginSuccess loginState = loginCubit.state as LoginSuccess;
+
     final double maxWidth = MediaQuery.of(context).size.width * 0.95;
     final double dialogWidth = maxWidth > 500 ? 500 : maxWidth;
     final MaintainanceCubit maintainanceCubit = context
@@ -56,7 +78,7 @@ class _ReportIssuePopupState extends State<ReportIssuePopup> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       ResponsiveText(
-                        "Report Issues",
+                        widget.isEdit ? "Update maintenance request" : "Report Issues",
                         style: AppTextStyles.bodyExtraSmall.copyWith(
                           fontWeight: FontWeight.w600,
                         ),
@@ -75,7 +97,7 @@ class _ReportIssuePopupState extends State<ReportIssuePopup> {
                     children: [
                       Spacing.vMedium,
                       InventoryField(
-                        label: "Write Problem Description",
+                        label: widget.isEdit ? "Update Problem Description" : "Write Problem Description",
                         child: AppTextFormField(
                           controller: _issueController,
                           maxLines: 4,
@@ -116,6 +138,12 @@ class _ReportIssuePopupState extends State<ReportIssuePopup> {
                                       ...newFiles,
                                     ];
                                   });
+                                  if(widget.isEdit){
+                                    
+                                    
+
+                                  
+                                  }
                                 }
                               } catch (e) {
                                 if (context.mounted) {
@@ -127,7 +155,7 @@ class _ReportIssuePopupState extends State<ReportIssuePopup> {
                               }
                             },
                             child: ResponsiveText(
-                              "Upload Pic / Files",
+                              widget.isEdit ? "Update Pic / Files" : "Upload Pic / Files",
                               style: AppTextStyles.bodyExtraSmall.copyWith(
                                 color: AppColors.textHint,
                               ),
@@ -135,80 +163,133 @@ class _ReportIssuePopupState extends State<ReportIssuePopup> {
                           ),
                         ],
                       ),
-                      if (_selectedFiles.isNotEmpty) ...[
+                      if (_selectedFiles.isNotEmpty || attachmentUrls.isNotEmpty) ...[
                         Spacing.vSmall,
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: _selectedFiles.map((file) {
-                            final isImage =
-                                file.extension != null &&
-                                [
-                                  'jpg',
-                                  'jpeg',
-                                  'png',
-                                  'gif',
-                                  'bmp',
-                                  'webp',
-                                ].contains(file.extension!.toLowerCase());
-                            return Padding(
-                              padding: EdgeInsets.only(
-                                bottom: Spacing.vSmall.height ?? 6,
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Flexible(
-                                    child: ResponsiveText(
-                                      file.name,
-                                      style: AppTextStyles.bodyExtraSmall
-                                          .copyWith(fontSize: 3.sp),
-                                      overflow: TextOverflow.ellipsis,
+                          children: [
+                            // Show local files
+                            ..._selectedFiles.map((file) {
+                              final isImage =
+                                  file.extension != null &&
+                                  [
+                                    'jpg',
+                                    'jpeg',
+                                    'png',
+                                    'gif',
+                                    'bmp',
+                                    'webp',
+                                  ].contains(file.extension!.toLowerCase());
+                              return Padding(
+                                padding: EdgeInsets.only(
+                                  bottom: Spacing.vSmall.height ?? 6,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Flexible(
+                                      child: ResponsiveText(
+                                        file.name,
+                                        style: AppTextStyles.bodyExtraSmall
+                                            .copyWith(fontSize: 3.sp),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     ),
-                                  ),
-                                  Spacing.hSmall,
-                                  if (isImage && file.bytes != null)
+                                    Spacing.hSmall,
+                                    if (isImage && file.bytes != null)
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(4),
+                                        child: Image.memory(
+                                          file.bytes!,
+                                          width: Spacing.vLarge.height ?? 32,
+                                          height: Spacing.vLarge.height ?? 32,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      )
+                                    else
+                                      Icon(
+                                        Icons.insert_drive_file,
+                                        color: AppColors.success,
+                                        size: 18,
+                                      ),
+                                    Spacing.hSmall,
+                                    IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          _selectedFiles.removeWhere(
+                                            (f) => f.name == file.name,
+                                          );
+                                        });
+                                      },
+                                      icon: Icon(
+                                        Icons.close,
+                                        color: AppColors.error,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                            // Show cloud attachments
+                            ...attachmentUrls.asMap().entries.map((entry) {
+                              final idx = entry.key;
+                              final url = entry.value;
+                              return Padding(
+                                padding: EdgeInsets.only(
+                                  bottom: Spacing.vSmall.height ?? 6,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Flexible(
+                                      child: ResponsiveText(
+                                        'image${idx + 1}',
+                                        style: AppTextStyles.bodyExtraSmall
+                                            .copyWith(fontSize: 3.sp),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                    Spacing.hSmall,
                                     ClipRRect(
                                       borderRadius: BorderRadius.circular(4),
-                                      child: Image.memory(
-                                        file.bytes!,
+                                      child: Image.network(
+                                        url,
                                         width: Spacing.vLarge.height ?? 32,
                                         height: Spacing.vLarge.height ?? 32,
                                         fit: BoxFit.cover,
+                                        errorBuilder: (context, error, stackTrace) => Icon(
+                                          Icons.broken_image,
+                                          color: AppColors.error,
+                                          size: 18,
+                                        ),
                                       ),
-                                    )
-                                  else
-                                    Icon(
-                                      Icons.insert_drive_file,
-                                      color: AppColors.success,
-                                      size: 18,
                                     ),
-
-                                  Spacing.hSmall,
-                                  IconButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        _selectedFiles.removeWhere(
-                                          (f) => f.name == file.name,
-                                        );
-                                      });
-                                    },
-                                    icon: Icon(
-                                      Icons.close,
-                                      color: AppColors.error,
+                                    Spacing.hSmall,
+                                    IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          attachmentUrls.removeAt(idx);
+                                        });
+                                      },
+                                      icon: Icon(
+                                        Icons.close,
+                                        color: AppColors.error,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }).toList(),
+                                  ],
+                                ),
+                              );
+                            }),
+                          ],
                         ),
                       ],
                       Spacing.vLarge,
-                      InventoryField(
-                        label: "Assign Mechanic",
+                     if(loginState.user.isAdmin)...[
+                       InventoryField(
+                        label: widget.isEdit ? "Update Mechanic" : "Assign Mechanic",
                         child: AppDropdown<String>(
                           value: _selectedMechanic,
-                          labelText: "Select Mechanic",
+                          labelText: widget.isEdit ? "Update Mechanic" : "Select Mechanic",
                           onChanged: (value) {
                             setState(() {
                               _selectedMechanic = value;
@@ -228,30 +309,47 @@ class _ReportIssuePopupState extends State<ReportIssuePopup> {
                         ),
                       ),
                       Spacing.vLarge,
+                     ],
                       Row(
                         children: [
                           Expanded(
                             child: AppButton(
                               onPressed: () {
                                 if (_issueController.text.isNotEmpty &&
-                                    _selectedMechanic != null) {
-                                  final maintainanceRequest = MaintainanceModel(
-                                    taxiId: '123',
-                                    fleetId: 'fleet_001',
-                                    inspectedBy: "Muneeb Masood",
-                                    assignedTo: "Masood Saeed",
+                                    (_selectedMechanic != null || !loginState.user.isAdmin)) {
+                                 
+                                 if(!widget.isEdit){
+                                   final maintainanceRequest = MaintainanceModel(
+                                    taxiId: selectionCubit.state.taxiNo,
+                                    taxiPlateNumber: selectionCubit.state.taxiPlateNo,
+                                    taxiRegistrationNumber: selectionCubit.state.regNo,
+                                    inspectedBy: loginState.user.name,
+                                    assignedTo: _selectedMechanic ?? '',
                                     id: DateTime.now().millisecondsSinceEpoch
                                         .toString(),
-                                    title: _issueController.text,
+                                    title: title,
                                     description:
-                                        "Assigned to mechanic: $_selectedMechanic",
+                                        _issueController.text,
                                     date: DateTime.now(),
+                                    lastUpdatedBy: loginState.user.name,
+                                    lastUpdatedAt: DateTime.now(),
                                   );
 
-                                  maintainanceCubit.addMaintainanceRequest(
+                                   maintainanceCubit.addMaintainanceRequest(
                                     maintainanceRequest,
                                     _selectedFiles,
                                   );
+                                 }
+                                 else{
+                                  maintainanceCubit.updateMaintainanceRequest(
+                                    widget.maintainanceModel!.copyWith(
+                                      attachmentUrls: attachmentUrls,
+                                      description: _issueController.text,
+                                      assignedTo: _selectedMechanic ?? '',
+                                    ),
+                                    files: _selectedFiles,
+                                  );
+                                 }
                                   Navigator.of(context).pop();
                                 } else {
                                   SnackBarHelper.showErrorSnackBar(
@@ -261,8 +359,8 @@ class _ReportIssuePopupState extends State<ReportIssuePopup> {
                                 }
                               },
                               text: state is MaintainanceLoading
-                                  ? "Submitting..."
-                                  : "Submit",
+                                  ? (widget.isEdit ? "Updating..." : "Submitting...")
+                                  : (widget.isEdit ? "Update" : "Submit"),
 
                               backgroundColor: AppColors.buttonPrimary,
                             ),
@@ -278,5 +376,26 @@ class _ReportIssuePopupState extends State<ReportIssuePopup> {
         );
       },
     );
+    
   }
+
+  String get title {
+    final SelectionCubit selectionCubit = context.read<SelectionCubit>();
+    final plateNo = selectionCubit.state.taxiPlateNo;
+    final regNo = selectionCubit.state.regNo;
+    final taxiNo = selectionCubit.state.taxiNo;
+
+    if (plateNo.isNotEmpty && regNo.isNotEmpty) {
+      return "Issue Report: Taxi Plate No. $plateNo | Reg No. $regNo";
+    } else if (plateNo.isNotEmpty) {
+      return "Issue Report: Taxi Plate No. $plateNo";
+    } else if (regNo.isNotEmpty) {
+      return "Issue Report: Reg No. $regNo";
+    } else if (taxiNo.isNotEmpty) {
+      return "Issue Report: Taxi No. $taxiNo";
+    } else {
+      return "Issue Report: Unknown Taxi";
+    }
+  }
+
 }
