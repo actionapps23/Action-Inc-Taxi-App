@@ -7,7 +7,7 @@ class HelperFunctions {
     double width = MediaQuery.of(context).size.width;
 
     if (width < 400) {
-      return 1;
+      return 1.5;
     } else if (width < 800) {
       return 2.0;
     } else {

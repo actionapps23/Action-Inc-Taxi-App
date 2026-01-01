@@ -44,7 +44,7 @@ class ResponsiveText extends StatelessWidget {
     return Text(
       text,
       style: style?.copyWith(fontSize: fontSize),
-      maxLines: maxLines ?? 1,
+      maxLines: maxLines ?? 5,
       overflow: overflow ?? TextOverflow.ellipsis,
       softWrap: softWrap ?? true,
       textAlign: textAlign,

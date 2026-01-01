@@ -1,5 +1,6 @@
 import 'package:action_inc_taxi_app/core/helper_functions.dart';
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
+import 'package:action_inc_taxi_app/core/utils/device_utils.dart';
 import 'package:action_inc_taxi_app/core/widgets/navbar/navbar.dart';
 import 'package:action_inc_taxi_app/core/widgets/form/form_field.dart';
 import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
@@ -25,6 +26,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
   final taxiNoController = TextEditingController();
   final regNoController = TextEditingController();
   final driverNameController = TextEditingController();
+  late final DeviceUtils deviceUtils;
 
   bool get isCarDetails => selectedIndex == 0;
 
@@ -63,6 +65,12 @@ class _SelectionScreenState extends State<SelectionScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    deviceUtils = DeviceUtils(context);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final selectionCubit = context.read<SelectionCubit>();
     return Scaffold(
@@ -98,7 +106,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
                         ),
                         SizedBox(height: 24.h),
                         GridView.count(
-                          crossAxisCount: 4,
+                          crossAxisCount: deviceUtils.isExtraSmallMobile || deviceUtils.isSmallMobile ? 3 : 4,
                           shrinkWrap: true,
                           mainAxisSpacing: 16.h,
                           crossAxisSpacing: 16.w,

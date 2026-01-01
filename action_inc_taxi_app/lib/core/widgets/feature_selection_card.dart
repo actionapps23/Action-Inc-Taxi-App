@@ -1,4 +1,5 @@
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
+import 'package:action_inc_taxi_app/core/utils/device_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
@@ -20,33 +21,69 @@ class FeatureSelectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final deviceUtils = DeviceUtils(context);
+    
+    // Responsive icon size and layout
+    final iconSize = deviceUtils.isSmallMobile || deviceUtils.isExtraSmallMobile ? 16.0 : 20.0;
+    final useVerticalLayout = deviceUtils.isSmallMobile;
+    
     Widget iconWidget;
     if (iconPath.toLowerCase().endsWith('.svg')) {
-      iconWidget = SvgPicture.asset(iconPath, height: 24, width: 24);
+      iconWidget = SvgPicture.asset(
+        iconPath,
+        height: iconSize,
+        width: iconSize,
+      );
     } else {
-      iconWidget = Image.asset(iconPath, height: 24, width: 24);
+      iconWidget = Image.asset(
+        iconPath,
+        height: iconSize,
+        width: iconSize,
+      );
     }
+
     return GestureDetector(
       onTap: onTap,
       child: Card(
         color: backgroundColor ?? AppColors.cardBackground,
         child: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              iconWidget,
-              SizedBox(width: 8),
-              Flexible(
-                child: ResponsiveText(
-                  cardTitle,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(color: AppColors.scaffold),
+          child: useVerticalLayout
+              ? Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    iconWidget,
+                    const SizedBox(height: 6),
+                    Flexible(
+                      child: ResponsiveText(
+                        cardTitle,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                        style: const TextStyle(
+                          color: AppColors.scaffold,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Flexible(child: iconWidget),
+                    const SizedBox(width: 8),
+                    Flexible(
+                      child: ResponsiveText(
+                        cardTitle,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(color: AppColors.scaffold),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
         ),
       ),
     );

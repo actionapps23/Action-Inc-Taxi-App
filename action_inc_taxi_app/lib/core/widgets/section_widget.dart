@@ -45,7 +45,8 @@ class SectionWidget extends StatelessWidget {
                         children: [
                           IconButton(
                             icon: Icon(Icons.report),
-                            color: Colors.white,
+                            color: Colors.red,
+                            tooltip: 'Report Issue',
                             onPressed: () {
                               showDialog(
                                 context: context,
