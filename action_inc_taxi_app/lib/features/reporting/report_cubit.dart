@@ -28,7 +28,10 @@ class ReportCubit extends Cubit<ReportState> {
     emit(state.copyWith(rows: newRows));
   }
 
-  Future<void> generatePdf() async {
+  Future<void> generatePdf({
+    required String generatedBy,
+    DateTime? generatedAt,
+  }) async {
     try {
       emit(state.copyWith(status: ReportStatus.generating));
       final rows = state.rows
@@ -43,7 +46,11 @@ class ReportCubit extends Cubit<ReportState> {
             },
           )
           .toList();
-      final Uint8List bytes = await ReportService.generateReportPdf(rows);
+      final Uint8List bytes = await ReportService.generateReportPdf(
+        rows,
+        generatedBy: generatedBy,
+        generatedAt: generatedAt ?? DateTime.now(),
+      );
       emit(state.copyWith(status: ReportStatus.ready, pdfBytes: bytes));
     } catch (e) {
       emit(
