@@ -1,3 +1,4 @@
+import 'package:action_inc_taxi_app/core/constants/app_constants.dart';
 import 'package:action_inc_taxi_app/core/helper_functions.dart';
 import 'package:action_inc_taxi_app/core/models/section_model.dart';
 import 'package:action_inc_taxi_app/core/widgets/add_procedure_field_popup.dart';
@@ -35,10 +36,8 @@ class _VehicleInspectionPanelState extends State<VehicleInspectionPanel> {
     super.initState();
     vehicleInspectionPanelCubit = context.read<VehicleInspectionPanelCubit>();
     selectionCubit = context.read<SelectionCubit>();
-    vehicleInspectionPanelCubit.fetchSubmittedInspectionData(
-      selectionCubit.state.taxiPlateNo,
-      widget.mapKey,
-    );
+    refreshData();
+  
   }
 
   @override
@@ -57,32 +56,24 @@ class _VehicleInspectionPanelState extends State<VehicleInspectionPanel> {
             >(
               bloc: vehicleInspectionPanelCubit,
               builder: (context, state) {
-                if (state is VehicleInspectionPanelLoadingState) {
+                if (state is VehicleInspectionChecklistLoading ||
+                    state is VehicleInspectionDataLoading) {
                   return Expanded(
                     child: Center(child: CircularProgressIndicator()),
                   );
                 }
-                if (state is VehicleInspectionPanelErrorState) {
+                if (state is VehicleInspectionDataError ||
+                    state is VehicleIsnpectionChecklistError) {
                   return Expanded(
                     child: Center(
                       child: ResponsiveText(
-                        'Error: ${state.errorMessage}',
+                        'Error: ${AppConstants.genericErrorMessage}',
                         style: TextStyle(color: Colors.red),
                       ),
                     ),
                   );
                 }
-                if (state is! VehicleInspectionPanelLoadedState) {
-                  return Center(
-                    child: ResponsiveText(
-                      widget.viewName,
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  );
-                }
+               
                 return Expanded(
                   child: Column(
                     children: [
@@ -104,7 +95,7 @@ class _VehicleInspectionPanelState extends State<VehicleInspectionPanel> {
                               showDialog(
                                 context: context,
                                 builder: (context) => AddProcedureFieldPopup(
-                                  sections: state.categories!
+                                  sections: state.inspectionChecklistFromDB!
                                       .map((e) => e.categoryName)
                                       .toList(),
                                   procedureType: widget.viewName,
@@ -115,9 +106,6 @@ class _VehicleInspectionPanelState extends State<VehicleInspectionPanel> {
                                       }) {
                                         vehicleInspectionPanelCubit
                                             .updateInspectionChecklist(
-                                              plateNumber: selectionCubit
-                                                  .state
-                                                  .taxiPlateNo,
                                               view: widget.mapKey,
                                               category: CategoryModel(
                                                 categoryName: sectionName,
@@ -143,40 +131,26 @@ class _VehicleInspectionPanelState extends State<VehicleInspectionPanel> {
                       Expanded(
                         child: ListView.builder(
                           itemBuilder: (context, index) {
-                            final section = state.categories![index];
-                            return SectionWidget(category: section, mapKey: widget.mapKey,);
+                            final category =
+                                state.inspectionChecklistFromDB![index];
+                            return SectionWidget(
+                              category: category,
+                              mapKey: widget.mapKey,
+                            );
                           },
-                          itemCount: state.categories!.length,
+                          itemCount: state.inspectionChecklistFromDB!.length,
                         ),
                       ),
                       ActionButtons(
                         onSubmit: () {
-                          final List<CategoryModel> selectedCategories = state
-                              .categories!
-                              .map((category) {
-                                List<FieldModel> fields = [];
-                                for (FieldModel field in category.fields) {
-                                  fields.add(
-                                    field.copyWith(
-                                      isChecked: vehicleInspectionPanelCubit
-                                          .isChecked(field.fieldKey),
-                                    ),
-                                  );
-                                }
-
-                                return CategoryModel(
-                                  categoryName: category.categoryName,
-                                  fields: fields,
-                                );
-                              })
-                              .toList();
                           vehicleInspectionPanelCubit.submitInspectionData(
                             selectionCubit.state.taxiPlateNo,
                             widget.mapKey,
-                            selectedCategories,
                           );
                         },
-                        onCancel: () {},
+                        onCancel: () {
+                          Navigator.pop(context);
+                        },
                         submitButtonText: "Checked",
                         cancelButtonText: "Back",
                       ),
@@ -188,6 +162,16 @@ class _VehicleInspectionPanelState extends State<VehicleInspectionPanel> {
           ],
         ),
       ),
+    );
+  }
+
+ Future<void> refreshData() async {
+    if (vehicleInspectionPanelCubit.state is! VehicleInspectionDataLoaded ||( vehicleInspectionPanelCubit.state is  VehicleInspectionDataLoaded && (vehicleInspectionPanelCubit.state as VehicleInspectionDataLoaded).fieldKey != widget.mapKey)) {
+      await vehicleInspectionPanelCubit.fetchInspectionChecklist(widget.mapKey);
+    }
+    await vehicleInspectionPanelCubit.fetchSubmittedInspectionData(
+      selectionCubit.state.taxiPlateNo,
+      widget.mapKey,
     );
   }
 }

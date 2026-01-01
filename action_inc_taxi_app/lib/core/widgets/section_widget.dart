@@ -76,7 +76,6 @@ class SectionWidget extends StatelessWidget {
                                 procedureType: '',
                                 onSubmit: ({required String fieldName, required String sectionName}) {
                                   vehicleInspectionPanelCubit.updateInspectionChecklist(
-                                    plateNumber: selectionCubit.state.taxiPlateNo,
                                     view: mapKey,
                                     category: CategoryModel(
                                       categoryName: sectionName,
@@ -121,7 +120,6 @@ class SectionWidget extends StatelessWidget {
 
                             if (confirmed == true) {
                             vehicleInspectionPanelCubit.updateInspectionChecklist(
-                              plateNumber: selectionCubit.state.taxiPlateNo,
                               view: mapKey,
                               category: CategoryModel(
                                 categoryName: category.categoryName,

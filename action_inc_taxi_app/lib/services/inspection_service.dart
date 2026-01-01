@@ -4,115 +4,142 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class InspectionService {
   static final String inspectionCollection = 'inspections';
+  static final String inspectionChecklistCollection = 'inspection_checklists';
   static final String categoryCollection = 'categories';
   static final String fieldEntryCollection = 'field_entries';
 
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  static Future<void> submitInspectionData(
-    String plateNumber,
-    String view,
-    List<CategoryModel> categories,
-  ) async {
-    await _firestore.collection(inspectionCollection).doc(plateNumber).set({
-      'taxi_id': plateNumber,
-    });
-
-    for (CategoryModel category in categories) {
-      await _firestore
-          .collection(inspectionCollection)
-          .doc(plateNumber)
-          .collection(view)
-          .doc(view)
-          .set({
-            'last_updated': DateTime.now(),
-            'subCategories': FieldValue.arrayUnion([
-              HelperFunctions.getKeyFromTitle(category.categoryName),
-            ]),
-          }, SetOptions(merge: true));
+  static Future<void> addItemToChecklist({
+    required String view,
+    required CategoryModel category,
+  }) async {
+    try {
+      _firestore.collection(inspectionChecklistCollection).doc(view).set({
+        'last_updated': DateTime.now(),
+        'subCategories': FieldValue.arrayUnion([
+          HelperFunctions.getKeyFromTitle(category.categoryName),
+        ]),
+      }, SetOptions(merge: true));
       for (var section in category.fields) {
         await _firestore
-            .collection(inspectionCollection)
-            .doc(plateNumber)
-            .collection(view)
+            .collection(inspectionChecklistCollection)
+            .doc(view)
+            .collection(HelperFunctions.getKeyFromTitle(category.categoryName))
+            .doc(section.fieldKey)
+            .set(section.toJson());
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  static Future<List<CategoryModel>> fetchInspectionChecklist(String view) async {
+    List<CategoryModel> categories = [];
+
+    final DocumentSnapshot documentSnapshot = await _firestore
+        .collection(inspectionChecklistCollection).doc(view).get();
+
+    if (documentSnapshot.exists) {
+      List<dynamic> subCategories =
+          documentSnapshot.get('subCategories') ?? [];
+
+      for (String categoryKey in subCategories) {
+        final QuerySnapshot categorySnapshot = await _firestore
+            .collection(inspectionChecklistCollection)
+            .doc(view)
+            .collection(categoryKey)
+            .get();
+
+        List<FieldModel> fields = categorySnapshot.docs.map((doc) {
+          return FieldModel.fromJson(doc.data() as Map<String, dynamic>);
+        }).toList();
+
+        categories.add(
+          CategoryModel(
+            categoryName:
+                HelperFunctions.getTitleFromKey(categoryKey),
+            fields: fields,
+          ),
+        );
+      }
+    }
+    return categories;
+
+   
+  }
+
+  static Future<void> updateCheckList(
+    String view,
+    CategoryModel category,
+  ) async {
+    await _firestore.collection(inspectionChecklistCollection).doc(view).set({
+      'last_updated': DateTime.now(),
+      'subCategories': FieldValue.arrayUnion([
+          HelperFunctions.getKeyFromTitle(category.categoryName),
+        ]),
+      }, SetOptions(merge: true));
+      for (var section in category.fields) {
+        await _firestore
+            .collection(inspectionChecklistCollection)
             .doc(view)
             .collection(HelperFunctions.getKeyFromTitle(category.categoryName))
             .doc(section.fieldKey)
             .set(section.toJson());
       }
     }
-  }
+  
 
-  static Future<List<CategoryModel>> fetchSubmittedInspectionData(
+  static Future<void> submitInspectionData(
+    Map<String, bool> checkedFields,
     String plateNumber,
     String view,
   ) async {
-    List<CategoryModel> categories = [];
+    await _firestore
+        .collection(inspectionCollection)
+        .doc(plateNumber)
+        .set({'last_updated': DateTime.now()}, SetOptions(merge: true));
+    for (var entry in checkedFields.entries) {
+      await _firestore
+          .collection(inspectionCollection)
+          .doc(plateNumber)
+          .collection(view)
+          .doc(entry.key)
+          .set({'isChecked': entry.value});
+    }
+  }
 
-    final DocumentSnapshot documentSnapshot = await _firestore
+  static  Future<Map<String, bool>> fetchSubmittedInspectionData(
+    String plateNumber,
+    String view,
+  ) async {
+    Map<String, bool> checkedFieldsFromDB = {};
+
+    final QuerySnapshot dataSnapshot = await _firestore
         .collection(inspectionCollection)
         .doc(plateNumber)
         .collection(view)
-        .doc(view)
         .get();
 
-    if (documentSnapshot.exists) {
-      List<dynamic> subCategoriesKey =
-          documentSnapshot.get('subCategories') ?? [];
-      for (String subCategoryKey in subCategoriesKey) {
-        List<FieldModel> fields = [];
-        final QuerySnapshot categorySnapshot = await _firestore
-            .collection(inspectionCollection)
-            .doc(plateNumber)
-            .collection(view)
-            .doc(view)
-            .collection(subCategoryKey)
-            .get();
-
-        for (var doc in categorySnapshot.docs) {
-          FieldModel fieldModel = FieldModel.fromJson(
-            doc.data() as Map<String, dynamic>,
-          );
-          fields.add(fieldModel);
-        }
-        String categoryName = HelperFunctions.getTitleFromKey(subCategoryKey);
-        categories.add(
-          CategoryModel(categoryName: categoryName, fields: fields),
-        );
-      }
+    for (var doc in dataSnapshot.docs) {
+      checkedFieldsFromDB[doc.id] = doc.get('isChecked') ?? false;
     }
-    return categories;
+
+    return checkedFieldsFromDB;
   }
 
-  // static Future<void> deleteInspectionData(String plateNumber) async {
-  //   final docRef = _firestore.collection(inspectionCollection).doc(plateNumber);
-  //   final views = await docRef.listCollections();
-  //   for (final viewCol in views) {
-  //     final viewDocs = await viewCol.get();
-  //     for (final viewDoc in viewDocs.docs) {
-  //       final subCategories = viewDoc.data()?['subCategories'] ?? [];
-  //       for (final subCategoryKey in subCategories) {
-  //         final subCatCol = viewCol.doc(viewDoc.id).collection(subCategoryKey);
-  //         final subCatDocs = await subCatCol.get();
-  //         for (final doc in subCatDocs.docs) {
-  //           await subCatCol.doc(doc.id).delete();
-  //         }
-  //       }
-  //       await viewCol.doc(viewDoc.id).delete();
-  //     }
-  //   }
-  //   await docRef.delete();
-  // }
-
-  static Future<void> updateInspectionChecklist({
-    required String plateNumber,
-    required String view,
-    required CategoryModel category,
-  }) async {
-    try {
-      await submitInspectionData(plateNumber, view, [category]);
-    } catch (e) {
-      rethrow;
+  static Future<void> updateInspectionData(
+    String plateNumber,
+    String view,
+    Map<String, bool> checkedFields,
+  ) async {
+    for (var entry in checkedFields.entries) {
+      await _firestore
+          .collection(inspectionCollection)
+          .doc(plateNumber)
+          .collection(view)
+          .doc(entry.key)
+          .set({'isChecked': entry.value, 'last_updated': DateTime.now()});
     }
   }
 }
