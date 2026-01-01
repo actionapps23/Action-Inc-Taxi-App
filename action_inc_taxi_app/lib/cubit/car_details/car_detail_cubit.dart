@@ -12,7 +12,12 @@ class CarDetailCubit extends Cubit<CarDetailState> {
     }
   }
 
-  void loadCarDetails(String taxiNo, String regNo, String taxiPlateNo, bool fetchDetails) async {
+  void loadCarDetails(
+    String taxiNo,
+    String regNo,
+    String taxiPlateNo,
+    bool fetchDetails,
+  ) async {
     try {
       emit(CarDetailInitial());
       final CarDetailModel? carDetail = await dbService.getTaxiDetailInfo(
@@ -22,10 +27,9 @@ class CarDetailCubit extends Cubit<CarDetailState> {
       );
       if (carDetail != null) {
         emit(CarDetailLoaded(carDetailModel: carDetail));
-      } else if(carDetail == null && fetchDetails) {
+      } else if (carDetail == null && fetchDetails) {
         emit(CarDetailNotFound());
-      }
-      else{
+      } else {
         emit(CarDetailLoaded());
       }
     } catch (e) {

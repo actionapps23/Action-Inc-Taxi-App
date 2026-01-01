@@ -95,7 +95,6 @@ class HelperFunctions {
           '${hour.toString().padLeft(2, '0')}:${d.minute.toString().padLeft(2, '0')} $ampm';
     }
     return '${d.day.toString().padLeft(2, '0')} ${AppConstants.monthNames[d.month - 1]} ${d.year}';
-
   }
 
   static getDateTimeFromUtcMilliSeconds(int utcMs) {

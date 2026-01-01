@@ -23,7 +23,11 @@ class ReportIssuePopup extends StatefulWidget {
   final bool isEdit;
   final MaintainanceModel? maintainanceModel;
 
-  const ReportIssuePopup({super.key, this.isEdit = false, this.maintainanceModel});
+  const ReportIssuePopup({
+    super.key,
+    this.isEdit = false,
+    this.maintainanceModel,
+  });
 
   @override
   State<ReportIssuePopup> createState() => _ReportIssuePopupState();
@@ -78,7 +82,9 @@ class _ReportIssuePopupState extends State<ReportIssuePopup> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       ResponsiveText(
-                        widget.isEdit ? "Update maintenance request" : "Report Issues",
+                        widget.isEdit
+                            ? "Update maintenance request"
+                            : "Report Issues",
                         style: AppTextStyles.bodyExtraSmall.copyWith(
                           fontWeight: FontWeight.w600,
                         ),
@@ -97,7 +103,9 @@ class _ReportIssuePopupState extends State<ReportIssuePopup> {
                     children: [
                       Spacing.vMedium,
                       InventoryField(
-                        label: widget.isEdit ? "Update Problem Description" : "Write Problem Description",
+                        label: widget.isEdit
+                            ? "Update Problem Description"
+                            : "Write Problem Description",
                         child: AppTextFormField(
                           controller: _issueController,
                           maxLines: 4,
@@ -138,12 +146,7 @@ class _ReportIssuePopupState extends State<ReportIssuePopup> {
                                       ...newFiles,
                                     ];
                                   });
-                                  if(widget.isEdit){
-                                    
-                                    
-
-                                  
-                                  }
+                                  if (widget.isEdit) {}
                                 }
                               } catch (e) {
                                 if (context.mounted) {
@@ -155,7 +158,9 @@ class _ReportIssuePopupState extends State<ReportIssuePopup> {
                               }
                             },
                             child: ResponsiveText(
-                              widget.isEdit ? "Update Pic / Files" : "Upload Pic / Files",
+                              widget.isEdit
+                                  ? "Update Pic / Files"
+                                  : "Upload Pic / Files",
                               style: AppTextStyles.bodyExtraSmall.copyWith(
                                 color: AppColors.textHint,
                               ),
@@ -163,7 +168,8 @@ class _ReportIssuePopupState extends State<ReportIssuePopup> {
                           ),
                         ],
                       ),
-                      if (_selectedFiles.isNotEmpty || attachmentUrls.isNotEmpty) ...[
+                      if (_selectedFiles.isNotEmpty ||
+                          attachmentUrls.isNotEmpty) ...[
                         Spacing.vSmall,
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -257,11 +263,13 @@ class _ReportIssuePopupState extends State<ReportIssuePopup> {
                                         width: Spacing.vLarge.height ?? 32,
                                         height: Spacing.vLarge.height ?? 32,
                                         fit: BoxFit.cover,
-                                        errorBuilder: (context, error, stackTrace) => Icon(
-                                          Icons.broken_image,
-                                          color: AppColors.error,
-                                          size: 18,
-                                        ),
+                                        errorBuilder:
+                                            (context, error, stackTrace) =>
+                                                Icon(
+                                                  Icons.broken_image,
+                                                  color: AppColors.error,
+                                                  size: 18,
+                                                ),
                                       ),
                                     ),
                                     Spacing.hSmall,
@@ -284,72 +292,78 @@ class _ReportIssuePopupState extends State<ReportIssuePopup> {
                         ),
                       ],
                       Spacing.vLarge,
-                     if(loginState.user.isAdmin)...[
-                       InventoryField(
-                        label: widget.isEdit ? "Update Mechanic" : "Assign Mechanic",
-                        child: AppDropdown<String>(
-                          value: _selectedMechanic,
-                          labelText: widget.isEdit ? "Update Mechanic" : "Select Mechanic",
-                          onChanged: (value) {
-                            setState(() {
-                              _selectedMechanic = value;
-                            });
-                          },
-                          items: AppConstants.mechanics
-                              .map(
-                                (mechanic) => DropdownMenuItem(
-                                  value: mechanic,
-                                  child: ResponsiveText(
-                                    mechanic,
-                                    style: AppTextStyles.bodyExtraSmall,
+                      if (loginState.user.isAdmin) ...[
+                        InventoryField(
+                          label: widget.isEdit
+                              ? "Update Mechanic"
+                              : "Assign Mechanic",
+                          child: AppDropdown<String>(
+                            value: _selectedMechanic,
+                            labelText: widget.isEdit
+                                ? "Update Mechanic"
+                                : "Select Mechanic",
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedMechanic = value;
+                              });
+                            },
+                            items: AppConstants.mechanics
+                                .map(
+                                  (mechanic) => DropdownMenuItem(
+                                    value: mechanic,
+                                    child: ResponsiveText(
+                                      mechanic,
+                                      style: AppTextStyles.bodyExtraSmall,
+                                    ),
                                   ),
-                                ),
-                              )
-                              .toList(),
+                                )
+                                .toList(),
+                          ),
                         ),
-                      ),
-                      Spacing.vLarge,
-                     ],
+                        Spacing.vLarge,
+                      ],
                       Row(
                         children: [
                           Expanded(
                             child: AppButton(
                               onPressed: () {
                                 if (_issueController.text.isNotEmpty &&
-                                    (_selectedMechanic != null || !loginState.user.isAdmin)) {
-                                 
-                                 if(!widget.isEdit){
-                                   final maintainanceRequest = MaintainanceModel(
-                                    taxiId: selectionCubit.state.taxiNo,
-                                    taxiPlateNumber: selectionCubit.state.taxiPlateNo,
-                                    taxiRegistrationNumber: selectionCubit.state.regNo,
-                                    inspectedBy: loginState.user.name,
-                                    assignedTo: _selectedMechanic ?? '',
-                                    id: DateTime.now().millisecondsSinceEpoch
-                                        .toString(),
-                                    title: title,
-                                    description:
-                                        _issueController.text,
-                                    date: DateTime.now(),
-                                    lastUpdatedBy: loginState.user.name,
-                                    lastUpdatedAt: DateTime.now(),
-                                  );
+                                    (_selectedMechanic != null ||
+                                        !loginState.user.isAdmin)) {
+                                  if (!widget.isEdit) {
+                                    final maintainanceRequest =
+                                        MaintainanceModel(
+                                          taxiId: selectionCubit.state.taxiNo,
+                                          taxiPlateNumber:
+                                              selectionCubit.state.taxiPlateNo,
+                                          taxiRegistrationNumber:
+                                              selectionCubit.state.regNo,
+                                          inspectedBy: loginState.user.name,
+                                          assignedTo: _selectedMechanic ?? '',
+                                          id: DateTime.now()
+                                              .millisecondsSinceEpoch
+                                              .toString(),
+                                          title: title,
+                                          description: _issueController.text,
+                                          date: DateTime.now(),
+                                          lastUpdatedBy: loginState.user.name,
+                                          lastUpdatedAt: DateTime.now(),
+                                        );
 
-                                   maintainanceCubit.addMaintainanceRequest(
-                                    maintainanceRequest,
-                                    _selectedFiles,
-                                  );
-                                 }
-                                 else{
-                                  maintainanceCubit.updateMaintainanceRequest(
-                                    widget.maintainanceModel!.copyWith(
-                                      attachmentUrls: attachmentUrls,
-                                      description: _issueController.text,
-                                      assignedTo: _selectedMechanic ?? '',
-                                    ),
-                                    files: _selectedFiles,
-                                  );
-                                 }
+                                    maintainanceCubit.addMaintainanceRequest(
+                                      maintainanceRequest,
+                                      _selectedFiles,
+                                    );
+                                  } else {
+                                    maintainanceCubit.updateMaintainanceRequest(
+                                      widget.maintainanceModel!.copyWith(
+                                        attachmentUrls: attachmentUrls,
+                                        description: _issueController.text,
+                                        assignedTo: _selectedMechanic ?? '',
+                                      ),
+                                      files: _selectedFiles,
+                                    );
+                                  }
                                   Navigator.of(context).pop();
                                 } else {
                                   SnackBarHelper.showErrorSnackBar(
@@ -359,7 +373,9 @@ class _ReportIssuePopupState extends State<ReportIssuePopup> {
                                 }
                               },
                               text: state is MaintainanceLoading
-                                  ? (widget.isEdit ? "Updating..." : "Submitting...")
+                                  ? (widget.isEdit
+                                        ? "Updating..."
+                                        : "Submitting...")
                                   : (widget.isEdit ? "Update" : "Submit"),
 
                               backgroundColor: AppColors.buttonPrimary,
@@ -376,7 +392,6 @@ class _ReportIssuePopupState extends State<ReportIssuePopup> {
         );
       },
     );
-    
   }
 
   String get title {
@@ -397,5 +412,4 @@ class _ReportIssuePopupState extends State<ReportIssuePopup> {
       return "Issue Report: Unknown Taxi";
     }
   }
-
 }

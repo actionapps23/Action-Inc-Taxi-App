@@ -14,7 +14,6 @@ import 'package:action_inc_taxi_app/core/models/driver.dart';
 import 'package:intl/intl.dart';
 import 'package:action_inc_taxi_app/core/widgets/buttons/app_button.dart';
 import 'package:action_inc_taxi_app/core/widgets/form/form_field.dart';
-import 'package:action_inc_taxi_app/core/widgets/form/app_dropdown.dart';
 import 'package:action_inc_taxi_app/cubit/selection/selection_cubit.dart';
 
 class DailyRentCollectionInfoScreen extends StatefulWidget {
@@ -62,8 +61,9 @@ class _DailyRentCollectionInfoScreenState
     'firstDriverName': (v) =>
         v == null || v.trim().isEmpty ? 'Driver name is required.' : null,
     'secondDriverName': (v) {
-      final hasSecondDriverId =
-          secondDriverCnicController.text.trim().isNotEmpty;
+      final hasSecondDriverId = secondDriverCnicController.text
+          .trim()
+          .isNotEmpty;
       if (hasSecondDriverId && (v == null || v.trim().isEmpty)) {
         return 'Second Driver name is required when ID is provided.';
       }
@@ -74,8 +74,9 @@ class _DailyRentCollectionInfoScreenState
     'firstDriverDob': (v) =>
         v == null || v.trim().isEmpty ? 'Driver DOB is required.' : null,
     'secondDriverDob': (v) {
-      final hasSecondDriverName =
-          secondDriverNameController.text.trim().isNotEmpty;
+      final hasSecondDriverName = secondDriverNameController.text
+          .trim()
+          .isNotEmpty;
       if (hasSecondDriverName && (v == null || v.trim().isEmpty)) {
         return 'Second Driver DOB is required when name is provided.';
       }
@@ -92,8 +93,9 @@ class _DailyRentCollectionInfoScreenState
     'firstDriverCnic': (v) =>
         v == null || v.trim().isEmpty ? 'Driver CNIC is required.' : null,
     'secondDriverCnic': (v) {
-      final hasSecondDriverName =
-          secondDriverNameController.text.trim().isNotEmpty;
+      final hasSecondDriverName = secondDriverNameController.text
+          .trim()
+          .isNotEmpty;
       if (hasSecondDriverName && (v == null || v.trim().isEmpty)) {
         return 'Second Driver ID # is required when name is provided.';
       }
@@ -134,9 +136,9 @@ class _DailyRentCollectionInfoScreenState
       if (d == null || d < 0) return 'Payment in G-Cash must be 0 or greater.';
       return null;
     },
-    'regNo': (v) =>
-        v == null || v.trim().isEmpty ? 'Registration number is required.' : null
-    ,
+    'regNo': (v) => v == null || v.trim().isEmpty
+        ? 'Registration number is required.'
+        : null,
     'paymentDate': (v) =>
         v == null || v.trim().isEmpty ? 'Payment date is required.' : null,
     'gCashRef': (v) {
@@ -269,11 +271,15 @@ class _DailyRentCollectionInfoScreenState
     if (numberPlateController.text.trim().isEmpty) {
       errors['numberPlate'] = 'Number plate is required.';
     }
-    if(secondDriverCnicController.text.trim().isEmpty && secondDriverNameController.text.trim().isNotEmpty) {
-      errors['secondDriverCnic'] = 'Second Driver ID # is required when name is provided.';
+    if (secondDriverCnicController.text.trim().isEmpty &&
+        secondDriverNameController.text.trim().isNotEmpty) {
+      errors['secondDriverCnic'] =
+          'Second Driver ID # is required when name is provided.';
     }
-    if(secondDriverNameController.text.trim().isEmpty && secondDriverCnicController.text.trim().isNotEmpty) {
-      errors['secondDriverName'] = 'Second Driver name is required when ID is provided.';
+    if (secondDriverNameController.text.trim().isEmpty &&
+        secondDriverCnicController.text.trim().isNotEmpty) {
+      errors['secondDriverName'] =
+          'Second Driver name is required when ID is provided.';
     }
     if (fleetNoController.text.trim().isEmpty) {
       errors['fleetNo'] = 'Fleet number is required.';
@@ -439,7 +445,9 @@ class _DailyRentCollectionInfoScreenState
     final CarDetailCubit carDetailCubit = context.read<CarDetailCubit>();
     final CarDetailState carDetailState = carDetailCubit.state;
 
-    if (widget.fetchDetails ||( carDetailState is CarDetailLoaded && carDetailState.carDetailModel != null)) {
+    if (widget.fetchDetails ||
+        (carDetailState is CarDetailLoaded &&
+            carDetailState.carDetailModel != null)) {
       rent = carDetailState.carDetailModel!.rent;
       driver = carDetailState.carDetailModel!.driver;
       carInfo = carDetailState.carDetailModel!.carInfo;
@@ -574,7 +582,7 @@ class _DailyRentCollectionInfoScreenState
         if (firstDriverNameController.text.trim().isEmpty) {
           firstDriverNameController.text = selectionState.driverName;
         }
-        if(regNoController.text.trim().isEmpty) {
+        if (regNoController.text.trim().isEmpty) {
           regNoController.text = selectionState.regNo;
         }
         final today = DateTime.now();
@@ -692,16 +700,18 @@ class _DailyRentCollectionInfoScreenState
                                         errorText:
                                             fieldErrors['secondDriverName'],
                                       ),
-                                       SizedBox(height: 12.h),
+                                      SizedBox(height: 12.h),
                                       AppTextFormField(
                                         controller: secondDriverCnicController,
                                         labelText: 'Second Driver ID #',
                                         hintText: 'Enter Driver ID #',
                                         isReadOnly: widget.fetchDetails,
-                                        validator: _validators['secondDriverCnic'],
+                                        validator:
+                                            _validators['secondDriverCnic'],
                                         onChanged: (s) =>
                                             _updateDraftFromControllers(),
-                                        errorText: fieldErrors['secondDriverCnic'],
+                                        errorText:
+                                            fieldErrors['secondDriverCnic'],
                                       ),
                                     ],
                                   ),
@@ -750,9 +760,9 @@ class _DailyRentCollectionInfoScreenState
                                         errorText:
                                             fieldErrors['secondDriverDob'],
                                       ),
-                                       SizedBox(height: 12.h),
+                                      SizedBox(height: 12.h),
 
-                                        AppTextFormField(
+                                      AppTextFormField(
                                         controller: contractStartController,
                                         labelText: 'Contract Start',
                                         hintText: 'DD/MM/YYYY',
@@ -771,7 +781,6 @@ class _DailyRentCollectionInfoScreenState
                                         errorText: fieldErrors['contractStart'],
                                       ),
                                       SizedBox(height: 12.h),
-                                     
                                     ],
                                   ),
                                 ),
@@ -779,7 +788,7 @@ class _DailyRentCollectionInfoScreenState
                                 Expanded(
                                   child: Column(
                                     children: [
-                                       AppTextFormField(
+                                      AppTextFormField(
                                         controller: regNoController,
                                         labelText: 'Reg No',
                                         hintText: 'Enter Reg No',
@@ -801,13 +810,15 @@ class _DailyRentCollectionInfoScreenState
                                         labelText: 'First Driver ID #',
                                         hintText: 'Enter Driver ID #',
                                         isReadOnly: widget.fetchDetails,
-                                        validator: _validators['firstDriverCnic'],
+                                        validator:
+                                            _validators['firstDriverCnic'],
                                         onChanged: (s) =>
                                             _updateDraftFromControllers(),
-                                        errorText: fieldErrors['firstDriverCnic'],
+                                        errorText:
+                                            fieldErrors['firstDriverCnic'],
                                       ),
                                       SizedBox(height: 12.h),
-                                       AppTextFormField(
+                                      AppTextFormField(
                                         controller: contractEndController,
                                         labelText: 'Contract End',
                                         hintText: 'DD/MM/YYYY',
@@ -825,7 +836,6 @@ class _DailyRentCollectionInfoScreenState
                                         validator: _validators['paymentDate'],
                                         errorText: fieldErrors['contractEnd'],
                                       ),
-                                     
                                     ],
                                   ),
                                 ),
@@ -906,7 +916,8 @@ class _DailyRentCollectionInfoScreenState
                                   hintText: 'Enter Driver ID #',
                                   isReadOnly: widget.fetchDetails,
                                   validator: _validators['firstDriverCnic'],
-                                  onChanged: (s) => _updateDraftFromControllers(),
+                                  onChanged: (s) =>
+                                      _updateDraftFromControllers(),
                                   errorText: fieldErrors['firstDriverCnic'],
                                 ),
                                 SizedBox(height: 12.h),
@@ -939,7 +950,8 @@ class _DailyRentCollectionInfoScreenState
                                   hintText: 'Enter Driver ID #',
                                   isReadOnly: widget.fetchDetails,
                                   validator: _validators['secondDriverCnic'],
-                                  onChanged: (s) => _updateDraftFromControllers(),
+                                  onChanged: (s) =>
+                                      _updateDraftFromControllers(),
                                   errorText: fieldErrors['secondDriverCnic'],
                                 ),
                                 SizedBox(height: 12.h),
@@ -1042,7 +1054,6 @@ class _DailyRentCollectionInfoScreenState
                                 Expanded(
                                   child: Column(
                                     children: [
-                                    
                                       AppTextFormField(
                                         controller: contractExtraDaysController,
                                         labelText: 'Extra Days',
@@ -1060,7 +1071,7 @@ class _DailyRentCollectionInfoScreenState
                                         hintText: '0',
                                         isReadOnly: true,
                                       ),
-                                       SizedBox(height: 12.h),
+                                      SizedBox(height: 12.h),
                                       AppTextFormField(
                                         controller: paymentDateController,
                                         labelText: 'Payment Date',
@@ -1173,7 +1184,6 @@ class _DailyRentCollectionInfoScreenState
                                         validator: _validators['gCashRef'],
                                         errorText: fieldErrors['gCashRef'],
                                       ),
-                                     
                                     ],
                                   ),
                                 ),
@@ -1208,7 +1218,8 @@ class _DailyRentCollectionInfoScreenState
                                   labelText: 'Extra Days',
                                   hintText: '0',
                                   isReadOnly: widget.fetchDetails,
-                                  onChanged: (s) => _updateDraftFromControllers(),
+                                  onChanged: (s) =>
+                                      _updateDraftFromControllers(),
                                   validator: _validators['extraDays'],
                                   errorText: fieldErrors['extraDays'],
                                 ),
@@ -1240,7 +1251,8 @@ class _DailyRentCollectionInfoScreenState
                                   labelText: 'Maintenance Fees',
                                   hintText: 'Enter Amount',
                                   isReadOnly: widget.fetchDetails,
-                                  onChanged: (s) => _updateDraftFromControllers(),
+                                  onChanged: (s) =>
+                                      _updateDraftFromControllers(),
                                   validator: _validators['maintenanceFees'],
                                   errorText: fieldErrors['maintenanceFees'],
                                 ),
@@ -1250,7 +1262,8 @@ class _DailyRentCollectionInfoScreenState
                                   labelText: 'Car Wash Fees',
                                   hintText: 'Enter Amount',
                                   isReadOnly: widget.fetchDetails,
-                                  onChanged: (s) => _updateDraftFromControllers(),
+                                  onChanged: (s) =>
+                                      _updateDraftFromControllers(),
                                   validator: _validators['carWashFees'],
                                   errorText: fieldErrors['carWashFees'],
                                 ),
@@ -1265,7 +1278,8 @@ class _DailyRentCollectionInfoScreenState
                                     color: Colors.white54,
                                     size: 18,
                                   ),
-                                  onChanged: (s) => _updateDraftFromControllers(),
+                                  onChanged: (s) =>
+                                      _updateDraftFromControllers(),
                                   validator: _validators['paymentCash'],
                                   errorText: fieldErrors['paymentCash'],
                                 ),
@@ -1275,7 +1289,8 @@ class _DailyRentCollectionInfoScreenState
                                   labelText: 'Payment in G-Cash',
                                   hintText: 'Enter Amount',
                                   isReadOnly: widget.fetchDetails,
-                                  onChanged: (s) => _updateDraftFromControllers(),
+                                  onChanged: (s) =>
+                                      _updateDraftFromControllers(),
                                   validator: _validators['paymentGCash'],
                                   errorText: fieldErrors['paymentGCash'],
                                 ),
@@ -1285,7 +1300,8 @@ class _DailyRentCollectionInfoScreenState
                                   labelText: 'G-Cash Ref. No',
                                   hintText: 'Enter Ref',
                                   isReadOnly: widget.fetchDetails,
-                                  onChanged: (s) => _updateDraftFromControllers(),
+                                  onChanged: (s) =>
+                                      _updateDraftFromControllers(),
                                   validator: _validators['gCashRef'],
                                   errorText: fieldErrors['gCashRef'],
                                 ),
@@ -1452,7 +1468,9 @@ class _DailyRentCollectionInfoScreenState
                           },
                           backgroundColor: Colors.green,
                           textColor: AppColors.buttonText,
-                          width: MediaQuery.of(context).size.width < 600 ? 240 : 40.w,
+                          width: MediaQuery.of(context).size.width < 600
+                              ? 240
+                              : 40.w,
                           height: 36.h,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.green,

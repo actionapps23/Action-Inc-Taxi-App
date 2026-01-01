@@ -134,7 +134,8 @@ class ReportService {
       } catch (_) {
         return null;
       }
-  }}
+    }
+  }
 
   /// Upload PDF bytes to Firebase Storage. Returns the storage path (not public URL).
   static Future<String> uploadPdf(Uint8List bytes, String filename) async {

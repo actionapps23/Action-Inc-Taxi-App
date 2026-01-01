@@ -51,11 +51,10 @@ class ProcedureSection extends StatelessWidget {
                           },
                         ),
                         (state is ProcedureLoaded)
-                        // We only need to pass the current section in popup bcoz here we are editing existing field
+                            // We only need to pass the current section in popup bcoz here we are editing existing field
                             ? FieldActionsMenu(
                                 onEdit: () {
-                                  final sections =
-                                     [category.categoryName];
+                                  final sections = [category.categoryName];
                                   showDialog(
                                     context: context,
                                     builder: (ctx) => AddProcedureFieldPopup(

@@ -93,15 +93,12 @@ class VehicleInspectionPanelCubit extends Cubit<VehicleInspectionPanelState> {
   Future<void> updateInspectionChecklist({
     required String view,
     required CategoryModel category,
-      }) async {
+  }) async {
     try {
       await InspectionService.updateCheckList(view, category);
 
       await fetchInspectionChecklist(view);
-      await fetchSubmittedInspectionData(
-        '66',
-        view,
-      );
+      await fetchSubmittedInspectionData('66', view);
     } catch (e) {
       emit(VehicleInspectionDataError(e.toString()));
     }
@@ -156,7 +153,9 @@ class VehicleInspectionPanelCubit extends Cubit<VehicleInspectionPanelState> {
         plateNumber,
         view,
       );
-      emit(VehicleInspectionChecklistLoaded(state.inspectionChecklistFromDB ?? []));
+      emit(
+        VehicleInspectionChecklistLoaded(state.inspectionChecklistFromDB ?? []),
+      );
       await fetchSubmittedInspectionData(plateNumber, view);
     } catch (e) {
       emit(VehicleInspectionDataError(e.toString()));

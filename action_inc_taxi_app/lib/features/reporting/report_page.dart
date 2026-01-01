@@ -135,7 +135,7 @@ class _ReportViewState extends State<ReportView> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                       ResponsiveText(
+                        ResponsiveText(
                           'Vehicle Inspection Report',
                           style: AppTextStyles.bodyExtraSmall.copyWith(
                             color: Colors.white70,
@@ -357,7 +357,6 @@ class _ReportViewState extends State<ReportView> {
       ),
     );
   }
-
 }
 
 class _ReportRowCard extends StatelessWidget {

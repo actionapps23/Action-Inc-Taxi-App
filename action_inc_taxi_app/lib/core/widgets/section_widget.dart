@@ -11,7 +11,11 @@ import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 class SectionWidget extends StatelessWidget {
   final CategoryModel category;
   final String mapKey;
-  const SectionWidget({super.key, required this.category, required this.mapKey});
+  const SectionWidget({
+    super.key,
+    required this.category,
+    required this.mapKey,
+  });
   @override
   Widget build(BuildContext context) {
     final VehicleInspectionPanelCubit vehicleInspectionPanelCubit = context
@@ -65,68 +69,87 @@ class SectionWidget extends StatelessWidget {
                             },
                           ),
 
-                          FieldActionsMenu(onEdit: (){
-                            showDialog(context: context, builder: (context){
-                              return AddProcedureFieldPopup(
-                                sections: [category.categoryName],
-                                initialCategory: category.categoryName,
-                                initialField: field,
-                                isEdit: true,
-                                procedureType: '',
-                                onSubmit: ({required String fieldName, required String sectionName}) {
-                                  vehicleInspectionPanelCubit.updateInspectionChecklist(
-                                    view: mapKey,
-                                    category: CategoryModel(
-                                      categoryName: sectionName,
-                                      fields: category.fields.map((f) {
-                                        if (f.fieldKey == field.fieldKey) {
-                                          return FieldModel(
-                                            fieldName: fieldName,
-                                            fieldKey: field.fieldKey,
-                                          );
-                                        }
-                                        return f;
-                                      }).toList(),
-                                    ),
+                          FieldActionsMenu(
+                            onEdit: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AddProcedureFieldPopup(
+                                    sections: [category.categoryName],
+                                    initialCategory: category.categoryName,
+                                    initialField: field,
+                                    isEdit: true,
+                                    procedureType: '',
+                                    onSubmit:
+                                        ({
+                                          required String fieldName,
+                                          required String sectionName,
+                                        }) {
+                                          vehicleInspectionPanelCubit
+                                              .updateInspectionChecklist(
+                                                view: mapKey,
+                                                category: CategoryModel(
+                                                  categoryName: sectionName,
+                                                  fields: category.fields.map((
+                                                    f,
+                                                  ) {
+                                                    if (f.fieldKey ==
+                                                        field.fieldKey) {
+                                                      return FieldModel(
+                                                        fieldName: fieldName,
+                                                        fieldKey:
+                                                            field.fieldKey,
+                                                      );
+                                                    }
+                                                    return f;
+                                                  }).toList(),
+                                                ),
+                                              );
+                                        },
                                   );
                                 },
                               );
-                            });
-
-                          },
-                           onDeleteConfirm: ()async{
-                            final confirmed = await showDialog<bool>(
-                                    context: context,
-                                    builder: (ctx) => AlertDialog(
-                                      title: ResponsiveText('Delete field'),
-                                      content: ResponsiveText(
-                                        'Are you sure you want to delete this field?',
-                                      ),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.of(ctx).pop(false),
-                                          child: ResponsiveText('Cancel'),
-                                        ),
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.of(ctx).pop(true),
-                                          child: ResponsiveText('Delete'),
-                                        ),
-                                      ],
+                            },
+                            onDeleteConfirm: () async {
+                              final confirmed = await showDialog<bool>(
+                                context: context,
+                                builder: (ctx) => AlertDialog(
+                                  title: ResponsiveText('Delete field'),
+                                  content: ResponsiveText(
+                                    'Are you sure you want to delete this field?',
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.of(ctx).pop(false),
+                                      child: ResponsiveText('Cancel'),
                                     ),
-                                  );
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.of(ctx).pop(true),
+                                      child: ResponsiveText('Delete'),
+                                    ),
+                                  ],
+                                ),
+                              );
 
-                            if (confirmed == true) {
-                            vehicleInspectionPanelCubit.updateInspectionChecklist(
-                              view: mapKey,
-                              category: CategoryModel(
-                                categoryName: category.categoryName,
-                                fields: category.fields.where((f) => f.fieldKey != field.fieldKey).toList(),
-                              ),
-                            
-                            );}
-                          })
+                              if (confirmed == true) {
+                                vehicleInspectionPanelCubit
+                                    .updateInspectionChecklist(
+                                      view: mapKey,
+                                      category: CategoryModel(
+                                        categoryName: category.categoryName,
+                                        fields: category.fields
+                                            .where(
+                                              (f) =>
+                                                  f.fieldKey != field.fieldKey,
+                                            )
+                                            .toList(),
+                                      ),
+                                    );
+                              }
+                            },
+                          ),
                         ],
                       ),
                     ),

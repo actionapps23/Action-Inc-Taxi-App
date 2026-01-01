@@ -106,7 +106,11 @@ class _SelectionScreenState extends State<SelectionScreen> {
                         ),
                         SizedBox(height: 24.h),
                         GridView.count(
-                          crossAxisCount: deviceUtils.isExtraSmallMobile || deviceUtils.isSmallMobile ? 3 : 4,
+                          crossAxisCount:
+                              deviceUtils.isExtraSmallMobile ||
+                                  deviceUtils.isSmallMobile
+                              ? 3
+                              : 4,
                           shrinkWrap: true,
                           mainAxisSpacing: 16.h,
                           crossAxisSpacing: 16.w,
@@ -149,17 +153,17 @@ class _SelectionScreenState extends State<SelectionScreen> {
                             child: Column(
                               children: [
                                 SizedBox(height: 18.h),
-                               
+
                                 if (isCarDetails) ...[
-                                   AppTextFormField(
-                                  controller: taxiNoController,
-                                  hintText: 'Enter Taxi No.',
-                                  labelOnTop: true,
-                                  onChanged: (val) {
-                                    setState(() {});
-                                    selectionCubit.setTaxiNo(val);
-                                  },
-                                ),
+                                  AppTextFormField(
+                                    controller: taxiNoController,
+                                    hintText: 'Enter Taxi No.',
+                                    labelOnTop: true,
+                                    onChanged: (val) {
+                                      setState(() {});
+                                      selectionCubit.setTaxiNo(val);
+                                    },
+                                  ),
                                   SizedBox(height: 12.h),
                                   AppTextFormField(
                                     controller: regNoController,
@@ -181,9 +185,8 @@ class _SelectionScreenState extends State<SelectionScreen> {
                                     },
                                   ),
                                 ] else ...[
-
                                   SizedBox(height: 12.h),
-                                   AppTextFormField(
+                                  AppTextFormField(
                                     controller: taxiPlateNoController,
                                     hintText: 'Taxi Plate No.',
                                     labelOnTop: true,
@@ -193,16 +196,16 @@ class _SelectionScreenState extends State<SelectionScreen> {
                                     },
                                   ),
                                   SizedBox(height: 12.h),
-                                 
-                                   AppTextFormField(
-                                  controller: taxiNoController,
-                                  hintText: 'Enter Taxi No.',
-                                  labelOnTop: true,
-                                  onChanged: (val) {
-                                    setState(() {});
-                                    selectionCubit.setTaxiNo(val);
-                                  },
-                                ),
+
+                                  AppTextFormField(
+                                    controller: taxiNoController,
+                                    hintText: 'Enter Taxi No.',
+                                    labelOnTop: true,
+                                    onChanged: (val) {
+                                      setState(() {});
+                                      selectionCubit.setTaxiNo(val);
+                                    },
+                                  ),
                                   SizedBox(height: 12.h),
                                   AppTextFormField(
                                     controller: regNoController,

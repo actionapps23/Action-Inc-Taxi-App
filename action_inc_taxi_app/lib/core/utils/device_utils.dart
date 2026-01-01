@@ -17,7 +17,8 @@ class DeviceUtils {
 
   bool get isWeb => kIsWeb;
 
-  bool get isPortrait => MediaQuery.of(context).orientation == Orientation.portrait;
-  bool get isLandscape => MediaQuery.of(context).orientation == Orientation.landscape;
-
+  bool get isPortrait =>
+      MediaQuery.of(context).orientation == Orientation.portrait;
+  bool get isLandscape =>
+      MediaQuery.of(context).orientation == Orientation.landscape;
 }

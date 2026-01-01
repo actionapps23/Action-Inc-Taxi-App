@@ -23,19 +23,17 @@ class VehicleInspectionPanelState {
       checkedFieldsFromDB: checkedFieldsFromDB ?? this.checkedFieldsFromDB,
     );
   }
-
 }
 
 class VehicleInspectionChecklistLoading extends VehicleInspectionPanelState {}
 
 class VehicleInspectionChecklistLoaded extends VehicleInspectionPanelState {
   VehicleInspectionChecklistLoaded(
-    List<CategoryModel> inspectionChecklistFromDB,
-   {
-     Map<String, bool>? checkedFields,
+    List<CategoryModel> inspectionChecklistFromDB, {
+    Map<String, bool>? checkedFields,
     Map<String, bool>? checkedFieldsFromDB,
-   }
-  ) : super(inspectionChecklistFromDB: inspectionChecklistFromDB, 
+  }) : super(
+         inspectionChecklistFromDB: inspectionChecklistFromDB,
          checkedFields: checkedFields ?? {},
          checkedFieldsFromDB: checkedFieldsFromDB ?? {},
        );
@@ -48,8 +46,8 @@ class VehicleInspectionChecklistLoaded extends VehicleInspectionPanelState {
   }) {
     return VehicleInspectionChecklistLoaded(
       inspectionChecklistFromDB ?? this.inspectionChecklistFromDB!,
-      checkedFields : checkedFields ?? this.checkedFields,
-      checkedFieldsFromDB : checkedFieldsFromDB ?? this.checkedFieldsFromDB,
+      checkedFields: checkedFields ?? this.checkedFields,
+      checkedFieldsFromDB: checkedFieldsFromDB ?? this.checkedFieldsFromDB,
     );
   }
 }
@@ -60,17 +58,16 @@ class VehicleIsnpectionChecklistError extends VehicleInspectionPanelState {
   VehicleIsnpectionChecklistError(this.errorMessage);
 }
 
-
 class VehicleInspectionDataLoading extends VehicleInspectionPanelState {}
 
 class VehicleInspectionDataLoaded extends VehicleInspectionPanelState {
   final String fieldKey;
 
   VehicleInspectionDataLoaded({
-   required this.fieldKey,
-   required super.checkedFieldsFromDB,
-   required super.inspectionChecklistFromDB,
-   required super.checkedFields,
+    required this.fieldKey,
+    required super.checkedFieldsFromDB,
+    required super.inspectionChecklistFromDB,
+    required super.checkedFields,
   });
 
   @override
@@ -95,4 +92,3 @@ class VehicleInspectionDataError extends VehicleInspectionPanelState {
 
   VehicleInspectionDataError(this.errorMessage);
 }
-

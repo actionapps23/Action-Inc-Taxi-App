@@ -37,7 +37,6 @@ class _VehicleInspectionPanelState extends State<VehicleInspectionPanel> {
     vehicleInspectionPanelCubit = context.read<VehicleInspectionPanelCubit>();
     selectionCubit = context.read<SelectionCubit>();
     refreshData();
-  
   }
 
   @override
@@ -73,7 +72,7 @@ class _VehicleInspectionPanelState extends State<VehicleInspectionPanel> {
                     ),
                   );
                 }
-               
+
                 return Expanded(
                   child: Column(
                     children: [
@@ -165,8 +164,12 @@ class _VehicleInspectionPanelState extends State<VehicleInspectionPanel> {
     );
   }
 
- Future<void> refreshData() async {
-    if (vehicleInspectionPanelCubit.state is! VehicleInspectionDataLoaded ||( vehicleInspectionPanelCubit.state is  VehicleInspectionDataLoaded && (vehicleInspectionPanelCubit.state as VehicleInspectionDataLoaded).fieldKey != widget.mapKey)) {
+  Future<void> refreshData() async {
+    if (vehicleInspectionPanelCubit.state is! VehicleInspectionDataLoaded ||
+        (vehicleInspectionPanelCubit.state is VehicleInspectionDataLoaded &&
+            (vehicleInspectionPanelCubit.state as VehicleInspectionDataLoaded)
+                    .fieldKey !=
+                widget.mapKey)) {
       await vehicleInspectionPanelCubit.fetchInspectionChecklist(widget.mapKey);
     }
     await vehicleInspectionPanelCubit.fetchSubmittedInspectionData(

@@ -22,11 +22,13 @@ class FeatureSelectionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final deviceUtils = DeviceUtils(context);
-    
+
     // Responsive icon size and layout
-    final iconSize = deviceUtils.isSmallMobile || deviceUtils.isExtraSmallMobile ? 16.0 : 20.0;
+    final iconSize = deviceUtils.isSmallMobile || deviceUtils.isExtraSmallMobile
+        ? 16.0
+        : 20.0;
     final useVerticalLayout = deviceUtils.isSmallMobile;
-    
+
     Widget iconWidget;
     if (iconPath.toLowerCase().endsWith('.svg')) {
       iconWidget = SvgPicture.asset(
@@ -35,11 +37,7 @@ class FeatureSelectionCard extends StatelessWidget {
         width: iconSize,
       );
     } else {
-      iconWidget = Image.asset(
-        iconPath,
-        height: iconSize,
-        width: iconSize,
-      );
+      iconWidget = Image.asset(iconPath, height: iconSize, width: iconSize);
     }
 
     return GestureDetector(

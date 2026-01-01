@@ -51,7 +51,8 @@ class MaintainanceModel {
       date: date ?? this.date,
       taxiId: taxiId ?? this.taxiId,
       taxiPlateNumber: taxiPlateNumber ?? this.taxiPlateNumber,
-      taxiRegistrationNumber: taxiRegistrationNumber ?? this.taxiRegistrationNumber,
+      taxiRegistrationNumber:
+          taxiRegistrationNumber ?? this.taxiRegistrationNumber,
       inspectedBy: inspectedBy ?? this.inspectedBy,
       assignedTo: assignedTo ?? this.assignedTo,
       attachmentUrls: attachmentUrls ?? this.attachmentUrls,

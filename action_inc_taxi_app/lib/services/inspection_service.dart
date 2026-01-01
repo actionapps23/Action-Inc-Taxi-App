@@ -34,15 +34,18 @@ class InspectionService {
     }
   }
 
-  static Future<List<CategoryModel>> fetchInspectionChecklist(String view) async {
+  static Future<List<CategoryModel>> fetchInspectionChecklist(
+    String view,
+  ) async {
     List<CategoryModel> categories = [];
 
     final DocumentSnapshot documentSnapshot = await _firestore
-        .collection(inspectionChecklistCollection).doc(view).get();
+        .collection(inspectionChecklistCollection)
+        .doc(view)
+        .get();
 
     if (documentSnapshot.exists) {
-      List<dynamic> subCategories =
-          documentSnapshot.get('subCategories') ?? [];
+      List<dynamic> subCategories = documentSnapshot.get('subCategories') ?? [];
 
       for (String categoryKey in subCategories) {
         final QuerySnapshot categorySnapshot = await _firestore
@@ -57,16 +60,13 @@ class InspectionService {
 
         categories.add(
           CategoryModel(
-            categoryName:
-                HelperFunctions.getTitleFromKey(categoryKey),
+            categoryName: HelperFunctions.getTitleFromKey(categoryKey),
             fields: fields,
           ),
         );
       }
     }
     return categories;
-
-   
   }
 
   static Future<void> updateCheckList(
@@ -76,29 +76,27 @@ class InspectionService {
     await _firestore.collection(inspectionChecklistCollection).doc(view).set({
       'last_updated': DateTime.now(),
       'subCategories': FieldValue.arrayUnion([
-          HelperFunctions.getKeyFromTitle(category.categoryName),
-        ]),
-      }, SetOptions(merge: true));
-      for (var section in category.fields) {
-        await _firestore
-            .collection(inspectionChecklistCollection)
-            .doc(view)
-            .collection(HelperFunctions.getKeyFromTitle(category.categoryName))
-            .doc(section.fieldKey)
-            .set(section.toJson());
-      }
+        HelperFunctions.getKeyFromTitle(category.categoryName),
+      ]),
+    }, SetOptions(merge: true));
+    for (var section in category.fields) {
+      await _firestore
+          .collection(inspectionChecklistCollection)
+          .doc(view)
+          .collection(HelperFunctions.getKeyFromTitle(category.categoryName))
+          .doc(section.fieldKey)
+          .set(section.toJson());
     }
-  
+  }
 
   static Future<void> submitInspectionData(
     Map<String, bool> checkedFields,
     String plateNumber,
     String view,
   ) async {
-    await _firestore
-        .collection(inspectionCollection)
-        .doc(plateNumber)
-        .set({'last_updated': DateTime.now()}, SetOptions(merge: true));
+    await _firestore.collection(inspectionCollection).doc(plateNumber).set({
+      'last_updated': DateTime.now(),
+    }, SetOptions(merge: true));
     for (var entry in checkedFields.entries) {
       await _firestore
           .collection(inspectionCollection)
@@ -109,7 +107,7 @@ class InspectionService {
     }
   }
 
-  static  Future<Map<String, bool>> fetchSubmittedInspectionData(
+  static Future<Map<String, bool>> fetchSubmittedInspectionData(
     String plateNumber,
     String view,
   ) async {

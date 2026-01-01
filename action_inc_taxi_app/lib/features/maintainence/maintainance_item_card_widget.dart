@@ -26,7 +26,8 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
   @override
   Widget build(BuildContext context) {
     final LoginCubit loginCubit = context.read<LoginCubit>();
-    final MaintainanceCubit maintainanceCubit = context.read<MaintainanceCubit>();
+    final MaintainanceCubit maintainanceCubit = context
+        .read<MaintainanceCubit>();
     final LoginSuccess loginState = loginCubit.state as LoginSuccess;
     final bool isAdmin = loginState.user.isAdmin;
 
@@ -96,7 +97,13 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
 
                       prefixIcon: Icon(Icons.edit),
                       onPressed: () {
-                        showDialog(context: context, builder: (context) => ReportIssuePopup(isEdit: true, maintainanceModel: widget.maintainanceModel,));
+                        showDialog(
+                          context: context,
+                          builder: (context) => ReportIssuePopup(
+                            isEdit: true,
+                            maintainanceModel: widget.maintainanceModel,
+                          ),
+                        );
                       },
                     ),
                   Spacing.hSmall,
@@ -108,7 +115,7 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
                         : AppColors.success,
                     textColor: _isSolved ? Colors.white : AppColors.buttonText,
                     onPressed: () {
-                        setState(() {
+                      setState(() {
                         _isSolved = !_isSolved;
                       });
                       maintainanceCubit.updateMaintainanceRequest(
@@ -118,8 +125,6 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
                           lastUpdatedAt: DateTime.now(),
                         ),
                       );
-
-                    
                     },
                   ),
                 ],
@@ -227,41 +232,42 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if(widget.maintainanceModel.taxiId != '')...[ 
+                  if (widget.maintainanceModel.taxiId != '') ...[
                     ResponsiveText(
-                    "Taxi No. ",
-                    style: AppTextStyles.bodyExtraSmall.copyWith(
-                      fontWeight: FontWeight.w600,
+                      "Taxi No. ",
+                      style: AppTextStyles.bodyExtraSmall.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                  ResponsiveText(
-                    widget.maintainanceModel.taxiId!,
-                    style: AppTextStyles.bodyExtraSmall,
-                  ),
-                  ]
-                  else if(widget.maintainanceModel.taxiPlateNumber != '')...[ 
                     ResponsiveText(
-                    "Taxi Plate No. ",
-                    style: AppTextStyles.bodyExtraSmall.copyWith(
-                      fontWeight: FontWeight.w600,
+                      widget.maintainanceModel.taxiId!,
+                      style: AppTextStyles.bodyExtraSmall,
                     ),
-                  ),
-                  ResponsiveText(
-                    widget.maintainanceModel.taxiPlateNumber!,
-                    style: AppTextStyles.bodyExtraSmall,
-                  ),
-                  ] else if(widget.maintainanceModel.taxiRegistrationNumber != '')...[ 
+                  ] else if (widget.maintainanceModel.taxiPlateNumber !=
+                      '') ...[
                     ResponsiveText(
-                    "Taxi Reg. No. ",
-                    style: AppTextStyles.bodyExtraSmall.copyWith(
-                      fontWeight: FontWeight.w600,
+                      "Taxi Plate No. ",
+                      style: AppTextStyles.bodyExtraSmall.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                  ResponsiveText(
-                    widget.maintainanceModel.taxiRegistrationNumber!,
-                    style: AppTextStyles.bodyExtraSmall,
-                  ),
-                  ]
+                    ResponsiveText(
+                      widget.maintainanceModel.taxiPlateNumber!,
+                      style: AppTextStyles.bodyExtraSmall,
+                    ),
+                  ] else if (widget.maintainanceModel.taxiRegistrationNumber !=
+                      '') ...[
+                    ResponsiveText(
+                      "Taxi Reg. No. ",
+                      style: AppTextStyles.bodyExtraSmall.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    ResponsiveText(
+                      widget.maintainanceModel.taxiRegistrationNumber!,
+                      style: AppTextStyles.bodyExtraSmall,
+                    ),
+                  ],
                 ],
               ),
               Row(
@@ -289,7 +295,9 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
                     ),
                   ),
                   ResponsiveText(
-                    widget.maintainanceModel.assignedTo == '' ? "Not assigned" : widget.maintainanceModel.assignedTo!,
+                    widget.maintainanceModel.assignedTo == ''
+                        ? "Not assigned"
+                        : widget.maintainanceModel.assignedTo!,
                     style: AppTextStyles.bodyExtraSmall,
                   ),
                 ],
@@ -321,7 +329,10 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
                     ),
                   ),
                   ResponsiveText(
-                    HelperFunctions.formatDate(widget.maintainanceModel.lastUpdatedAt, showTime: true),
+                    HelperFunctions.formatDate(
+                      widget.maintainanceModel.lastUpdatedAt,
+                      showTime: true,
+                    ),
                     style: AppTextStyles.bodyExtraSmall,
                   ),
                 ],
