@@ -1,6 +1,7 @@
 class CarInfo {
   final String id;
   final String taxiNo;
+  final String? regNo;
   final String? plateNumber;
   final String? fleetNo;
   final String? driverId;
@@ -10,6 +11,7 @@ class CarInfo {
   CarInfo({
     required this.id,
     required this.taxiNo,
+    this.regNo,
     this.plateNumber,
     this.fleetNo,
     this.driverId,
@@ -20,6 +22,7 @@ class CarInfo {
   Map<String, dynamic> toMap() => {
     'id': id,
     'taxiNo': taxiNo,
+    'regNo': regNo,
     'plateNumber': plateNumber,
     'fleetNo': fleetNo,
     'driverId': driverId,
@@ -30,6 +33,7 @@ class CarInfo {
   factory CarInfo.fromMap(Map<String, dynamic> m) => CarInfo(
     id: m['id'] as String,
     taxiNo: m['taxiNo'] as String,
+    regNo: m['regNo'] as String?,
     plateNumber: m['plateNumber'] as String?,
     fleetNo: m['fleetNo'] as String?,
     driverId: m['driverId'] as String?,

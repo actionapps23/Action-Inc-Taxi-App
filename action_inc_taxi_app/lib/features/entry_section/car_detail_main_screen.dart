@@ -22,14 +22,13 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
   @override
   void initState() {
     super.initState();
-    if (widget.fetchDetails) {
       final CarDetailCubit carDetailCubit = context.read<CarDetailCubit>();
       final SelectionCubit selectionCubit = context.read<SelectionCubit>();
       final String taxiNo = selectionCubit.state.taxiNo;
       final String regNo = selectionCubit.state.regNo;
       final String taxiPlateNo = selectionCubit.state.taxiPlateNo;
-      carDetailCubit.loadCarDetails(taxiNo, regNo, taxiPlateNo);
-    }
+      carDetailCubit.loadCarDetails(taxiNo, regNo, taxiPlateNo, widget.fetchDetails);
+    
   }
 
   @override
@@ -44,7 +43,7 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
               backgroundColor: AppColors.background,
               body: Center(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     const Navbar(),
                     SizedBox(height: 32.h),
@@ -88,7 +87,32 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
               ),
             ),
           );
-        } else if (state is CarDetailLoaded || !widget.fetchDetails) {
+        }
+        else if(state is CarDetailInitial){
+          return SafeArea(
+            child: Scaffold(
+              backgroundColor: AppColors.background,
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const Navbar(),
+                    SizedBox(height: 32.h),
+                    const CircularProgressIndicator(
+                      color: Colors.white,
+                    ),
+                    SizedBox(height: 16.h),
+                    const ResponsiveText(
+                      'Checking car details...',
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
+        else if (state is CarDetailLoaded) {
           return SafeArea(
             child: Scaffold(
               backgroundColor: AppColors.background,

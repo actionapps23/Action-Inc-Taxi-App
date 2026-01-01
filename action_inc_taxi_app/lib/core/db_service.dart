@@ -583,7 +583,7 @@ class DbService {
       } else if (regNo.isNotEmpty) {
         final q = await _firestore
             .collection(carsCollection)
-            .where('regNo', isEqualTo: regNo)
+            .where('car.regNo', isEqualTo: regNo)
             .limit(1)
             .get();
         if (q.docs.isEmpty) return null;
@@ -591,7 +591,7 @@ class DbService {
       } else if (taxiPlateNo.isNotEmpty) {
         final q = await _firestore
             .collection(carsCollection)
-            .where('plateNumber', isEqualTo: taxiPlateNo)
+            .where('car.plateNumber', isEqualTo: taxiPlateNo)
             .limit(1)
             .get();
         if (q.docs.isEmpty) return null;

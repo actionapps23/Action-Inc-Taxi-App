@@ -34,6 +34,7 @@ class _DailyRentCollectionInfoScreenState
   final taxiNoController = TextEditingController();
   final numberPlateController = TextEditingController();
   final fleetNoController = TextEditingController();
+  final regNoController = TextEditingController();
   final firstDriverNameController = TextEditingController();
   final firstDriverDobController = TextEditingController();
   final firstDriverCnicController = TextEditingController();
@@ -133,6 +134,9 @@ class _DailyRentCollectionInfoScreenState
       if (d == null || d < 0) return 'Payment in G-Cash must be 0 or greater.';
       return null;
     },
+    'regNo': (v) =>
+        v == null || v.trim().isEmpty ? 'Registration number is required.' : null
+    ,
     'paymentDate': (v) =>
         v == null || v.trim().isEmpty ? 'Payment date is required.' : null,
     'gCashRef': (v) {
@@ -141,8 +145,9 @@ class _DailyRentCollectionInfoScreenState
         '',
       );
       final gcash = double.tryParse(gcashRaw) ?? 0.0;
-      if (gcash > 0 && (v == null || v.trim().isEmpty))
+      if (gcash > 0 && (v == null || v.trim().isEmpty)) {
         return 'G-Cash Ref. No is required if G-Cash payment is entered.';
+      }
       return null;
     },
     'extraDays': (v) {
@@ -422,10 +427,9 @@ class _DailyRentCollectionInfoScreenState
   @override
   void initState() {
     super.initState();
-    // Debug listener to track unexpected changes to this controller
     firstDriverNameController.addListener(() {
       final v = firstDriverNameController.text;
-      debugPrint('DEBUG firstDriverNameController -> "${v}"');
+      debugPrint('DEBUG firstDriverNameController -> "$v"');
       if (v.isEmpty) {
         debugPrint(
           'DEBUG firstDriverNameController emptied here:\n${StackTrace.current}',
@@ -435,7 +439,7 @@ class _DailyRentCollectionInfoScreenState
     final CarDetailCubit carDetailCubit = context.read<CarDetailCubit>();
     final CarDetailState carDetailState = carDetailCubit.state;
 
-    if (widget.fetchDetails) {
+    if (widget.fetchDetails ||( carDetailState is CarDetailLoaded && carDetailState.carDetailModel != null)) {
       rent = carDetailState.carDetailModel!.rent;
       driver = carDetailState.carDetailModel!.driver;
       carInfo = carDetailState.carDetailModel!.carInfo;
@@ -570,6 +574,9 @@ class _DailyRentCollectionInfoScreenState
         if (firstDriverNameController.text.trim().isEmpty) {
           firstDriverNameController.text = selectionState.driverName;
         }
+        if(regNoController.text.trim().isEmpty) {
+          regNoController.text = selectionState.regNo;
+        }
         final today = DateTime.now();
         contractStartController.text = _formatDate(today);
         final twoYears = DateTime(today.year + 2, today.month, today.day);
@@ -685,6 +692,17 @@ class _DailyRentCollectionInfoScreenState
                                         errorText:
                                             fieldErrors['secondDriverName'],
                                       ),
+                                       SizedBox(height: 12.h),
+                                      AppTextFormField(
+                                        controller: secondDriverCnicController,
+                                        labelText: 'Second Driver ID #',
+                                        hintText: 'Enter Driver ID #',
+                                        isReadOnly: widget.fetchDetails,
+                                        validator: _validators['secondDriverCnic'],
+                                        onChanged: (s) =>
+                                            _updateDraftFromControllers(),
+                                        errorText: fieldErrors['secondDriverCnic'],
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -732,6 +750,28 @@ class _DailyRentCollectionInfoScreenState
                                         errorText:
                                             fieldErrors['secondDriverDob'],
                                       ),
+                                       SizedBox(height: 12.h),
+
+                                        AppTextFormField(
+                                        controller: contractStartController,
+                                        labelText: 'Contract Start',
+                                        hintText: 'DD/MM/YYYY',
+                                        suffix: Icon(
+                                          Icons.calendar_today,
+                                          color: Colors.white54,
+                                          size: 18,
+                                        ),
+                                        isReadOnly: true,
+                                        onTap: widget.fetchDetails
+                                            ? null
+                                            : () => _pickDateForController(
+                                                contractStartController,
+                                              ),
+                                        validator: _validators['paymentDate'],
+                                        errorText: fieldErrors['contractStart'],
+                                      ),
+                                      SizedBox(height: 12.h),
+                                     
                                     ],
                                   ),
                                 ),
@@ -739,6 +779,14 @@ class _DailyRentCollectionInfoScreenState
                                 Expanded(
                                   child: Column(
                                     children: [
+                                       AppTextFormField(
+                                        controller: regNoController,
+                                        labelText: 'Reg No',
+                                        hintText: 'Enter Reg No',
+                                        isReadOnly: widget.fetchDetails,
+                                        validator: _validators['regNo'],
+                                      ),
+                                      SizedBox(height: 12.h),
                                       AppTextFormField(
                                         controller: fleetNoController,
                                         labelText: 'Fleet No',
@@ -750,7 +798,7 @@ class _DailyRentCollectionInfoScreenState
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
                                         controller: firstDriverCnicController,
-                                        labelText: 'FirstDriver ID #',
+                                        labelText: 'First Driver ID #',
                                         hintText: 'Enter Driver ID #',
                                         isReadOnly: widget.fetchDetails,
                                         validator: _validators['firstDriverCnic'],
@@ -759,16 +807,25 @@ class _DailyRentCollectionInfoScreenState
                                         errorText: fieldErrors['firstDriverCnic'],
                                       ),
                                       SizedBox(height: 12.h),
-                                      AppTextFormField(
-                                        controller: secondDriverCnicController,
-                                        labelText: 'Second Driver ID #',
-                                        hintText: 'Enter Driver ID #',
-                                        isReadOnly: widget.fetchDetails,
-                                        validator: _validators['secondDriverCnic'],
-                                        onChanged: (s) =>
-                                            _updateDraftFromControllers(),
-                                        errorText: fieldErrors['secondDriverCnic'],
+                                       AppTextFormField(
+                                        controller: contractEndController,
+                                        labelText: 'Contract End',
+                                        hintText: 'DD/MM/YYYY',
+                                        suffix: Icon(
+                                          Icons.calendar_today,
+                                          color: Colors.white54,
+                                          size: 18,
+                                        ),
+                                        isReadOnly: true,
+                                        onTap: widget.fetchDetails
+                                            ? null
+                                            : () => _pickDateForController(
+                                                contractEndController,
+                                              ),
+                                        validator: _validators['paymentDate'],
+                                        errorText: fieldErrors['contractEnd'],
                                       ),
+                                     
                                     ],
                                   ),
                                 ),
@@ -978,44 +1035,7 @@ class _DailyRentCollectionInfoScreenState
                                 Expanded(
                                   child: Column(
                                     children: [
-                                      AppTextFormField(
-                                        controller: contractStartController,
-                                        labelText: 'Contract Start',
-                                        hintText: 'DD/MM/YYYY',
-                                        suffix: Icon(
-                                          Icons.calendar_today,
-                                          color: Colors.white54,
-                                          size: 18,
-                                        ),
-                                        isReadOnly: true,
-                                        onTap: widget.fetchDetails
-                                            ? null
-                                            : () => _pickDateForController(
-                                                contractStartController,
-                                              ),
-                                        validator: _validators['paymentDate'],
-                                        errorText: fieldErrors['contractStart'],
-                                      ),
-                                      SizedBox(height: 12.h),
-                                      AppTextFormField(
-                                        controller: contractEndController,
-                                        labelText: 'Contract End',
-                                        hintText: 'DD/MM/YYYY',
-                                        suffix: Icon(
-                                          Icons.calendar_today,
-                                          color: Colors.white54,
-                                          size: 18,
-                                        ),
-                                        isReadOnly: true,
-                                        onTap: widget.fetchDetails
-                                            ? null
-                                            : () => _pickDateForController(
-                                                contractEndController,
-                                              ),
-                                        validator: _validators['paymentDate'],
-                                        errorText: fieldErrors['contractEnd'],
-                                      ),
-                                      SizedBox(height: 12.h),
+                                    
                                       AppTextFormField(
                                         controller: contractExtraDaysController,
                                         labelText: 'Extra Days',
@@ -1032,6 +1052,25 @@ class _DailyRentCollectionInfoScreenState
                                         labelText: 'No. of Months (auto)',
                                         hintText: '0',
                                         isReadOnly: true,
+                                      ),
+                                       SizedBox(height: 12.h),
+                                      AppTextFormField(
+                                        controller: paymentDateController,
+                                        labelText: 'Payment Date',
+                                        hintText: 'DD/MM/YYYY',
+                                        suffix: Icon(
+                                          Icons.calendar_today,
+                                          color: Colors.white54,
+                                          size: 18,
+                                        ),
+                                        isReadOnly: true,
+                                        onTap: widget.fetchDetails
+                                            ? null
+                                            : () => _pickDateForController(
+                                                paymentDateController,
+                                              ),
+                                        validator: _validators['paymentDate'],
+                                        errorText: fieldErrors['paymentDate'],
                                       ),
                                     ],
                                   ),
@@ -1069,7 +1108,7 @@ class _DailyRentCollectionInfoScreenState
                                             _validators['maintenanceFees'],
                                         errorText:
                                             fieldErrors['maintenanceFees'],
-                                        isReadOnly: true,
+                                        isReadOnly: widget.fetchDetails,
                                       ),
                                       SizedBox(height: 12.h),
                                       AppTextFormField(
@@ -1080,7 +1119,7 @@ class _DailyRentCollectionInfoScreenState
                                             _updateDraftFromControllers(),
                                         validator: _validators['carWashFees'],
                                         errorText: fieldErrors['carWashFees'],
-                                        isReadOnly: true,
+                                        isReadOnly: widget.fetchDetails,
                                       ),
                                     ],
                                   ),
@@ -1127,25 +1166,7 @@ class _DailyRentCollectionInfoScreenState
                                         validator: _validators['gCashRef'],
                                         errorText: fieldErrors['gCashRef'],
                                       ),
-                                      SizedBox(height: 12.h),
-                                      AppTextFormField(
-                                        controller: paymentDateController,
-                                        labelText: 'Payment Date',
-                                        hintText: 'DD/MM/YYYY',
-                                        suffix: Icon(
-                                          Icons.calendar_today,
-                                          color: Colors.white54,
-                                          size: 18,
-                                        ),
-                                        isReadOnly: true,
-                                        onTap: widget.fetchDetails
-                                            ? null
-                                            : () => _pickDateForController(
-                                                paymentDateController,
-                                              ),
-                                        validator: _validators['paymentDate'],
-                                        errorText: fieldErrors['paymentDate'],
-                                      ),
+                                     
                                     ],
                                   ),
                                 ),
@@ -1345,6 +1366,7 @@ class _DailyRentCollectionInfoScreenState
                             _updateDraftFromControllers();
                             final CarInfo carInfo = CarInfo(
                               id: numberPlateController.text,
+                              regNo: regNoController.text,
                               taxiNo: taxiNoController.text,
                               createdAtUtc: DateTime.now()
                                   .toUtc()
