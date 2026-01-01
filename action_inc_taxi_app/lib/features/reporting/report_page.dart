@@ -358,18 +358,6 @@ class _ReportViewState extends State<ReportView> {
     );
   }
 
-  Widget _buildLabel(String text) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: Text(
-        text,
-        style: AppTextStyles.bodyExtraSmall.copyWith(
-          color: Colors.white70,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-    );
-  }
 }
 
 class _ReportRowCard extends StatelessWidget {

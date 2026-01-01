@@ -2,7 +2,6 @@ import 'package:action_inc_taxi_app/core/models/section_model.dart';
 import 'package:action_inc_taxi_app/core/widgets/add_procedure_field_popup.dart';
 import 'package:action_inc_taxi_app/core/widgets/field_action_menu.dart';
 import 'package:action_inc_taxi_app/core/widgets/report_issue_popup.dart';
-import 'package:action_inc_taxi_app/cubit/selection/selection_cubit.dart';
 import 'package:action_inc_taxi_app/features/entry_section/vehicle_inspection_cubit.dart';
 import 'package:action_inc_taxi_app/features/entry_section/vehicle_isnpection_state.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +14,6 @@ class SectionWidget extends StatelessWidget {
   const SectionWidget({super.key, required this.category, required this.mapKey});
   @override
   Widget build(BuildContext context) {
-    final SelectionCubit selectionCubit = context.read<SelectionCubit>();
     final VehicleInspectionPanelCubit vehicleInspectionPanelCubit = context
         .read<VehicleInspectionPanelCubit>();
     return BlocBuilder<
