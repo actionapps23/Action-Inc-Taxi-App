@@ -1,5 +1,5 @@
 import 'package:action_inc_taxi_app/services/employee_service.dart';
-import 'package:action_inc_taxi_app/core/models/employeee_model.dart';
+import 'package:action_inc_taxi_app/core/models/employee_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'add_employee_state.dart';

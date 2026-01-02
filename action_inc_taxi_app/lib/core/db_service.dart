@@ -1,6 +1,6 @@
 import 'package:action_inc_taxi_app/core/helper_functions.dart';
 import 'package:action_inc_taxi_app/core/models/car_detail_model.dart';
-import 'package:action_inc_taxi_app/core/models/employeee_model.dart';
+import 'package:action_inc_taxi_app/core/models/employee_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'models/car_info.dart';
 import 'models/driver.dart';
@@ -506,6 +506,27 @@ class DbService {
     }
   }
 
+  Future<EmployeeModel?> getEmployeeById(String employeeId) async {
+    try {
+      final doc = await _firestore
+          .collection(employeeCollection)
+          .doc(employeeId)
+          .get();
+      if (!doc.exists) return null;
+      final employeeModel = EmployeeModel.fromJson(doc.data()!);
+      return employeeModel;
+    } catch (e) {
+      rethrow;
+    }
+  }
+  Future<void> updateEmployeeToken(String employeeId, String token) async {
+    try {
+      final ref = _firestore.collection(employeeCollection).doc(employeeId);
+      await ref.update({'token': token});
+    } catch (e) {
+      rethrow;
+    }
+  }
   // Add more database interaction methods as needed
   Future<CarInfo?> getCarByTaxiNo(String taxiNo) async {
     try {

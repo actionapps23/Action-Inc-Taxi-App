@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:action_inc_taxi_app/core/models/employeee_model.dart';
+import 'package:action_inc_taxi_app/core/models/employee_model.dart';
 
 class EmployeeService {
   static final String employeeCollection = 'employees';
