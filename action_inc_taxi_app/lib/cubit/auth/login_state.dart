@@ -8,7 +8,8 @@ class LoginLoading extends LoginState {}
 
 class LoginSuccess extends LoginState {
   final EmployeeModel user;
-  LoginSuccess(this.user);
+  final String? savedRoute;
+  LoginSuccess(this.user, {this.savedRoute});
 }
 
 class LoginFailure extends LoginState {

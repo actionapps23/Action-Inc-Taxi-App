@@ -1,14 +1,6 @@
 import 'package:action_inc_taxi_app/core/constants/app_constants.dart';
+import 'package:action_inc_taxi_app/core/routes/app_routes.dart';
 import 'package:action_inc_taxi_app/core/theme/app_assets.dart';
-import 'package:action_inc_taxi_app/features/close_procedure/procedure_screen.dart';
-import 'package:action_inc_taxi_app/features/entry_section/car_detail_main_screen.dart';
-import 'package:action_inc_taxi_app/features/entry_section/inspection/vehicle_view_selection_screen.dart';
-import 'package:action_inc_taxi_app/features/entry_section/renewal/renewal_and_status_screen.dart';
-import 'package:action_inc_taxi_app/features/franchise/franchise_transfer.dart';
-import 'package:action_inc_taxi_app/features/future_purchase/future_purchase_screen.dart';
-import 'package:action_inc_taxi_app/features/inventory/inventory_sceen.dart';
-import 'package:action_inc_taxi_app/features/maintainence/maintainence_screen.dart';
-import 'package:action_inc_taxi_app/features/purchase/purchase_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'selection_state.dart';
@@ -60,119 +52,85 @@ class SelectionCubit extends Cubit<SelectionState> {
     if (id != null && id.isNotEmpty) {
       if (id.toLowerCase() == "maintenance") {
         {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => MaintainenceScreen()),
-          );
+          Navigator.pushNamed(context, AppRoutes.maintainance);
         }
       } else if (id.toLowerCase() == "inventory") {
         {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => InventorySceen()),
-          );
+          Navigator.pushNamed(context, AppRoutes.inventory);
         }
       } else if (id.toLowerCase() == "open procedure") {
         {
-          Navigator.push(
+          Navigator.pushNamed(
             context,
-            MaterialPageRoute(
-              builder: (context) =>
-                  ProcedureScreen(procedureType: AppConstants.openProcedure),
+            AppRoutes.procedure,
+            arguments: const ProcedureRouteArgs(
+              procedureType: AppConstants.openProcedure,
             ),
           );
         }
       } else if (id.toLowerCase() == "close procedure") {
         {
-          Navigator.push(
+          Navigator.pushNamed(
             context,
-            MaterialPageRoute(
-              builder: (context) =>
-                  ProcedureScreen(procedureType: AppConstants.closeProcedure),
+            AppRoutes.procedure,
+            arguments: const ProcedureRouteArgs(
+              procedureType: AppConstants.closeProcedure,
             ),
           );
         }
       } else if (id.toLowerCase() == 'renewal & status') {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => RenewalAndStatusScreen()),
-        );
+        Navigator.pushNamed(context, AppRoutes.renewalStatus);
       }
       return;
     }
     switch (selectedIndex) {
       case 0:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => CarDetailScreen()),
-        );
+        Navigator.pushNamed(context, AppRoutes.carDetail);
         break;
       case 1:
-        Navigator.push(
+        Navigator.pushNamed(
           context,
-          MaterialPageRoute(
-            builder: (context) => CarDetailScreen(fetchDetails: true),
-          ),
+          AppRoutes.carDetail,
+          arguments: const CarDetailRouteArgs(fetchDetails: true),
         );
         break;
       case 2:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => MaintainenceScreen()),
-        );
+        Navigator.pushNamed(context, AppRoutes.maintainance);
         break;
       case 3:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => InventorySceen()),
-        );
+        Navigator.pushNamed(context, AppRoutes.inventory);
         break;
       case 4:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => VehicleViewSelectionScreen()),
-        );
+        Navigator.pushNamed(context, AppRoutes.vehicleViewSelection);
         break;
       case 5:
-        Navigator.push(
+        Navigator.pushNamed(
           context,
-          MaterialPageRoute(
-            builder: (context) =>
-                ProcedureScreen(procedureType: AppConstants.openProcedure),
+          AppRoutes.procedure,
+          arguments: const ProcedureRouteArgs(
+            procedureType: AppConstants.openProcedure,
           ),
         );
         break;
       case 6:
-        Navigator.push(
+        Navigator.pushNamed(
           context,
-          MaterialPageRoute(
-            builder: (context) =>
-                ProcedureScreen(procedureType: AppConstants.closeProcedure),
+          AppRoutes.procedure,
+          arguments: const ProcedureRouteArgs(
+            procedureType: AppConstants.closeProcedure,
           ),
         );
       case 7:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => RenewalAndStatusScreen()),
-        );
+        Navigator.pushNamed(context, AppRoutes.renewalStatus);
         break;
       case 8:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => PurchaseScreen()),
-        );
+        Navigator.pushNamed(context, AppRoutes.purchase);
         break;
       case 9:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => FranchiseTransfer()),
-        );
+        Navigator.pushNamed(context, AppRoutes.franchiseTransfer);
         break;
       case 10:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => FuturePurchaseScreen()),
-        );
+        Navigator.pushNamed(context, AppRoutes.futurePurchase);
         break;
       default:
         break;

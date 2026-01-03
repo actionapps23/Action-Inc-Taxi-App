@@ -31,78 +31,76 @@ class SummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Flexible(
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        margin: EdgeInsets.only(right: 8.w),
-        decoration: BoxDecoration(
-          color: AppColors.cardBackground,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Flexible(
-                  child: ResponsiveText(
-                    title,
-                    style: const TextStyle(
-                      color: AppColors.scaffold,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: 'Poppins',
-                    ),
+    return Container(
+      padding: const EdgeInsets.all(16),
+      margin: EdgeInsets.only(right: 8.w),
+      decoration: BoxDecoration(
+        color: AppColors.cardBackground,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                child: ResponsiveText(
+                  title,
+                  style: const TextStyle(
+                    color: AppColors.scaffold,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'Poppins',
                   ),
                 ),
-                const Spacer(),
-                Flexible(
-                  child: Container(
-                    padding: EdgeInsets.all(max(2.w, 4.h)),
-                    decoration: BoxDecoration(
-                      color: AppColors.scaffold.withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Icon(
-                      icon,
-                      color: AppColors.scaffold,
-                      size: max(8.w, 12),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                ResponsiveText(
-                  '$currencySymbol ${_formatNumber(amount)}',
-                  style: AppTextStyles.bodySmall,
-                ),
-                Spacing.hSmall,
-                Flexible(
-                  child: PercentChangeIndicator(
-                    percentChange: HelperFunctions.percentChange(
-                      lastDayAmount,
-                      amount,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            ResponsiveText(
-              '$lastDayLabel: $currencySymbol ${_formatNumber(lastDayAmount)}',
-              style: const TextStyle(
-                color: AppColors.scaffold,
-                fontSize: 15,
-                fontWeight: FontWeight.w400,
               ),
+              const Spacer(),
+              Flexible(
+                child: Container(
+                  padding: EdgeInsets.all(max(2.w, 4.h)),
+                  decoration: BoxDecoration(
+                    color: AppColors.scaffold.withOpacity(0.08),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(
+                    icon,
+                    color: AppColors.scaffold,
+                    size: max(8.w, 12),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              ResponsiveText(
+                '$currencySymbol ${_formatNumber(amount)}',
+                style: AppTextStyles.bodySmall,
+              ),
+              Spacing.hSmall,
+              Flexible(
+                child: PercentChangeIndicator(
+                  percentChange: HelperFunctions.percentChange(
+                    lastDayAmount,
+                    amount,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          ResponsiveText(
+            '$lastDayLabel: $currencySymbol ${_formatNumber(lastDayAmount)}',
+            style: const TextStyle(
+              color: AppColors.scaffold,
+              fontSize: 15,
+              fontWeight: FontWeight.w400,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

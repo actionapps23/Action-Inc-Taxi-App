@@ -6,10 +6,10 @@ import 'package:action_inc_taxi_app/cubit/inventory/inventory_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/maintainance/maintainance_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/procedure/procedure_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/rent/daily_rent_cubit.dart';
-import 'package:action_inc_taxi_app/features/auth/login_screen.dart';
+import 'package:action_inc_taxi_app/core/routes/app_routes.dart';
+import 'package:action_inc_taxi_app/core/storage/local_storage.dart';
 import 'package:action_inc_taxi_app/features/dashboard/dashboard_cubit.dart';
 import 'package:action_inc_taxi_app/features/entry_section/vehicle_inspection_cubit.dart';
-import 'package:action_inc_taxi_app/features/reporting/report_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
             BlocProvider<CarDetailCubit>(create: (_) => CarDetailCubit()),
             BlocProvider<InventoryCubit>(create: (_) => InventoryCubit()),
             BlocProvider<AddEmployeeCubit>(create: (_) => AddEmployeeCubit()),
-            BlocProvider<LoginCubit>(create: (_) => LoginCubit()),
+            BlocProvider<LoginCubit>(create: (_) => LoginCubit()..isLoggedIn()),
             BlocProvider<ProcedureCubit>(create: (_) => ProcedureCubit()),
             BlocProvider<FuturePurchaseCubit>(
               create: (_) => FuturePurchaseCubit(),
@@ -59,6 +59,7 @@ class MyApp extends StatelessWidget {
             scrollBehavior: ScrollBehavior().copyWith(scrollbars: false),
             title: 'Action Inc Taxi',
             debugShowCheckedModeBanner: false,
+            navigatorObservers: [_RouteObserver()],
             theme: ThemeData(
               fontFamily: 'Lufga',
               textTheme: ThemeData.dark().textTheme
@@ -86,12 +87,50 @@ class MyApp extends StatelessWidget {
                 surface: const Color(0xff0f110f),
               ),
             ),
-            home: LoginScreen(),
-            routes: {'/report': (_) => const ReportPage()},
+            initialRoute: AppRoutes.login,
+            routes: AppRouter.routes,
+            onGenerateRoute: AppRouter.onGenerateRoute,
+            onUnknownRoute: AppRouter.onUnknownRoute,
             // home: MaintainenceScreen(),
           ),
         );
       },
     );
+  }
+}
+
+class _RouteObserver extends NavigatorObserver {
+  @override
+  void didPush(Route route, Route? previousRoute) {
+    _saveRoute(route);
+  }
+
+  @override
+  void didPop(Route route, Route? previousRoute) {
+    if (previousRoute != null) {
+      _saveRoute(previousRoute);
+    }
+  }
+
+  @override
+  void didRemove(Route route, Route? previousRoute) {
+    if (previousRoute != null) {
+      _saveRoute(previousRoute);
+    }
+  }
+
+  @override
+  void didReplace({Route? newRoute, Route? oldRoute}) {
+    if (newRoute != null) {
+      _saveRoute(newRoute);
+    }
+  }
+
+  void _saveRoute(Route route) {
+    if (route.settings.name != null && 
+        route.settings.name != '/' && 
+        route.settings.name != AppRoutes.login) {
+      LocalStorage.saveLastRoute(route.settings.name!);
+    }
   }
 }

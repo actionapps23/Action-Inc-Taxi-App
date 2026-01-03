@@ -1,18 +1,15 @@
 // ignore_for_file: deprecated_member_use
 
+import 'package:action_inc_taxi_app/core/routes/app_routes.dart';
 import 'package:action_inc_taxi_app/core/theme/app_assets.dart';
 import 'package:action_inc_taxi_app/core/widgets/navbar/navbar_buttton.dart';
+import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:action_inc_taxi_app/cubit/auth/login_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/rent/daily_rent_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/selection/selection_cubit.dart';
-import 'package:action_inc_taxi_app/features/auth/add_employee_screen/add_employee_screen.dart';
-import 'package:action_inc_taxi_app/features/dashboard/dashboard.dart';
-import 'package:action_inc_taxi_app/features/auth/login_screen.dart';
-import 'package:action_inc_taxi_app/features/selection_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 
 class Navbar extends StatelessWidget {
   const Navbar({super.key});
@@ -45,9 +42,7 @@ class Navbar extends StatelessWidget {
               // emit intial satte for all cubits
               context.read<SelectionCubit>().reset();
               context.read<DailyRentCubit>().reset();
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (_) => const SelectionScreen()),
-              );
+              Navigator.of(context).pushReplacementNamed(AppRoutes.selection);
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -73,10 +68,7 @@ class Navbar extends StatelessWidget {
                     'Dashboard',
                     icon: AppAssets.dashboard,
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Dashboard()),
-                      );
+                      Navigator.pushNamed(context, AppRoutes.dashboard);
                     },
                   ),
                   SizedBox(width: 12.w),
@@ -84,7 +76,7 @@ class Navbar extends StatelessWidget {
                     'Reports',
                     icon: AppAssets.taxiInspection,
                     onTap: () {
-                      Navigator.pushNamed(context, '/report');
+                      Navigator.pushNamed(context, AppRoutes.report);
                     },
                   ),
                   if (loginState.user.isAdmin) ...[
@@ -93,12 +85,10 @@ class Navbar extends StatelessWidget {
                       'Add Employee',
                       icon: AppAssets.logout,
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AddEmployeeScreen(),
-                          ),
-                        );
+                        context
+                            .read<SelectionCubit>()
+                            .reset();
+                        context.read<LoginCubit>().logout();
                       },
                     ),
                   ],
@@ -108,8 +98,8 @@ class Navbar extends StatelessWidget {
                     icon: AppAssets.logout,
                     onTap: () {
                       context.read<SelectionCubit>().reset();
-                      Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(builder: (_) => const LoginScreen()),
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                        AppRoutes.login,
                         (route) => false,
                       );
                     },

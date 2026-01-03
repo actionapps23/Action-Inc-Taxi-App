@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class LocalStorage {
   static const _tokenKey = 'auth_token';
   static const _employeeIdKey = 'employee_id';
+  static const _lastRouteKey = 'last_route';
 
   static Future<void> saveToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
@@ -12,6 +13,11 @@ class LocalStorage {
   static Future<void> saveID(String employeeId) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_employeeIdKey, employeeId);
+  }
+
+  static Future<void> saveLastRoute(String routeName) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_lastRouteKey, routeName);
   }
 
   static Future<String?> getID() async {
@@ -24,9 +30,16 @@ class LocalStorage {
     return prefs.getString(_tokenKey);
   }
 
-  static Future<void> clearToken() async {
+  static Future<String?> getLastRoute() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_lastRouteKey);
+  }
+
+  static Future<void> clear() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_tokenKey);
+    await prefs.remove(_employeeIdKey);
+    await prefs.remove(_lastRouteKey);
   }
 
   static Future<bool> isLoggedIn() async {

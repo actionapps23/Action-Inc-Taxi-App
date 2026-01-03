@@ -3,7 +3,7 @@ import 'dart:math' as math;
 
 import 'package:action_inc_taxi_app/core/theme/app_assets.dart';
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
-import 'package:action_inc_taxi_app/features/selection_screen.dart';
+import 'package:action_inc_taxi_app/core/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -39,9 +39,8 @@ class LoginScreen extends HookWidget {
           );
         } else if (state is LoginSuccess) {
           SnackBarHelper.showSuccessSnackBar(context, 'Login successful!');
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => SelectionScreen()),
-          );
+          Navigator.of(context)
+              .pushReplacementNamed(state.savedRoute ?? AppRoutes.selection);
         }
       },
       child: Scaffold(

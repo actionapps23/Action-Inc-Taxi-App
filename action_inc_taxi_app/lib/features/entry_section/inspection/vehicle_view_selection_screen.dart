@@ -1,9 +1,9 @@
 // ignore_for_file: deprecated_member_use
 
+import 'package:action_inc_taxi_app/core/routes/app_routes.dart';
 import 'package:action_inc_taxi_app/core/widgets/navbar/navbar.dart';
 import 'package:action_inc_taxi_app/features/entry_section/car_plan/action_buttons.dart';
 import 'package:action_inc_taxi_app/features/entry_section/inspection/view_selection_grid.dart';
-import 'package:action_inc_taxi_app/features/entry_section/vehicle_inspection_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -32,13 +32,12 @@ class VehicleViewSelectionScreen extends StatelessWidget {
             SizedBox(height: 24),
             ActionButtons(
               onSubmit: () {
-                Navigator.push(
+                Navigator.pushNamed(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => VehicleInspectionPanel(
-                      viewName: _viewName[selectedIndex],
-                      mapKey: _keys[selectedIndex],
-                    ),
+                  AppRoutes.vehicleInspectionPanel,
+                  arguments: VehicleInspectionRouteArgs(
+                    viewName: _viewName[selectedIndex],
+                    mapKey: _keys[selectedIndex],
                   ),
                 );
               },

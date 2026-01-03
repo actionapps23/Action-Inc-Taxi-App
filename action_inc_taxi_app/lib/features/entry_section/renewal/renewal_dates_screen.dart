@@ -1,4 +1,5 @@
 import 'package:action_inc_taxi_app/core/helper_functions.dart';
+import 'package:action_inc_taxi_app/core/routes/app_routes.dart';
 import 'package:action_inc_taxi_app/core/models/renewal.dart' show Renewal;
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
 import 'package:action_inc_taxi_app/core/widgets/buttons/app_button.dart';
@@ -7,7 +8,6 @@ import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/snackbar.dart';
 import 'package:action_inc_taxi_app/cubit/car_details/car_detail_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/selection/selection_cubit.dart';
-import 'package:action_inc_taxi_app/features/entry_section/renewal/renewal_and_status_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:action_inc_taxi_app/core/widgets/form/form_field.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -319,12 +319,7 @@ class _RenewalDataTableState extends State<RenewalDataTable> {
                       duration: Duration(seconds: 2),
                     );
                     if (mounted) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => RenewalAndStatusScreen(),
-                        ),
-                      );
+                      Navigator.pushNamed(context, AppRoutes.renewalStatus);
                     }
                   },
                   backgroundColor: Colors.green,

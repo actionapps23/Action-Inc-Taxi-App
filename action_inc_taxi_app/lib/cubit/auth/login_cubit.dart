@@ -20,12 +20,13 @@ class LoginCubit extends Cubit<LoginState> {
         final token = await LocalStorage.getToken();
         final employeeModel = await dbService.getEmployeeById(employeeId!);
         if (employeeModel != null && employeeModel.token == token) {
-          emit(LoginSuccess(employeeModel));
+          final savedRoute = await LocalStorage.getLastRoute();
+          emit(LoginSuccess(employeeModel, savedRoute: savedRoute));
         } else {
-          emit(LoginFailure('Session expired. Please log in again.'));
+          emit(LoginInitial());
         }
       } else {
-        emit(LoginFailure('Not logged in.'));
+        emit(LoginInitial());
       }
    
     } catch (e) {
@@ -50,6 +51,15 @@ class LoginCubit extends Cubit<LoginState> {
       } else {
         emit(LoginFailure('Invalid employee ID or password.'));
       }
+    } catch (e) {
+      emit(LoginFailure(e.toString()));
+    }
+  }
+  Future<void> logout() async {
+    emit(LoginLoading());
+    try {
+      await LocalStorage.clear();
+      emit(LoginInitial());
     } catch (e) {
       emit(LoginFailure(e.toString()));
     }
