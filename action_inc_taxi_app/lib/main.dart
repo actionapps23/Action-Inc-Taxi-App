@@ -7,6 +7,7 @@ import 'package:action_inc_taxi_app/cubit/future_purchase/future_purchase_cubit.
 import 'package:action_inc_taxi_app/cubit/inventory/inventory_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/maintainance/maintainance_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/procedure/procedure_cubit.dart';
+import 'package:action_inc_taxi_app/cubit/purchase/purchase_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/rent/daily_rent_cubit.dart';
 import 'package:action_inc_taxi_app/core/routes/app_routes.dart';
 import 'package:action_inc_taxi_app/core/storage/local_storage.dart';
@@ -54,6 +55,7 @@ class MyApp extends StatelessWidget {
             BlocProvider<AddEmployeeCubit>(create: (_) => AddEmployeeCubit()),
             BlocProvider<LoginCubit>(create: (_) => LoginCubit()..isLoggedIn()),
             BlocProvider<ProcedureCubit>(create: (_) => ProcedureCubit()),
+            BlocProvider<PurchaseCubit>(create: (_) => PurchaseCubit()),
             BlocProvider<FuturePurchaseCubit>(
               create: (_) => FuturePurchaseCubit(),
             ),

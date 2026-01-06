@@ -5,6 +5,9 @@ import 'package:action_inc_taxi_app/core/widgets/navbar/navbar.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/spacing.dart';
 import 'package:action_inc_taxi_app/cubit/field/field_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/field/field_state.dart';
+import 'package:action_inc_taxi_app/cubit/purchase/purchase_cubit.dart';
+import 'package:action_inc_taxi_app/cubit/purchase/purchase_state.dart';
+import 'package:action_inc_taxi_app/cubit/selection/selection_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,14 +20,19 @@ class PurchaseScreen extends StatefulWidget {
 
 class _PurchaseScreenState extends State<PurchaseScreen> {
   late final FieldCubit fieldCubit;
+  late final SelectionCubit selectionCubit;
+  late final PurchaseCubit purchaseCubit;
   @override
   void initState() {
     super.initState();
+    selectionCubit = context.read<SelectionCubit>();
+    purchaseCubit = context.read<PurchaseCubit>();
     fieldCubit = FieldCubit(
-      collectionName: AppConstants.purchaseCollection,
-      documentId: AppConstants.purchaseCollection,
+      collectionName: AppConstants.purchaseChecklistCollection,
+      documentId: AppConstants.purchaseChecklistCollection,
     );
-    fieldCubit.loadFieldEntries();
+    // funcion to fetch data
+    fetchData();
   }
 
   @override
@@ -38,52 +46,63 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
           BlocBuilder<FieldCubit, FieldState>(
             bloc: fieldCubit,
             builder: (context, state) {
-              if (state is FieldLoading || state is FieldInitial) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Purchase Of Car",
-                      style: AppTextStyles.bodyExtraSmall,
-                    ),
-                    Center(child: CircularProgressIndicator()),
-                  ],
-                );
-              } else if (state is FieldError) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Purchase Of Car",
-                      style: AppTextStyles.bodyExtraSmall,
-                    ),
-                    Center(child: Text("Error: ${state.message}")),
-                  ],
-                );
-              } else if (state is FieldEntriesLoaded && state.entries.isEmpty) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Row(
+              return BlocBuilder<PurchaseCubit, PurchaseState>(
+                bloc: purchaseCubit,
+                builder: (context, state) {
+                  if (state is PurchaseLoading || state is PurchaseInitial) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
                           "Purchase Of Car",
                           style: AppTextStyles.bodyExtraSmall,
                         ),
+                        Center(child: CircularProgressIndicator()),
                       ],
-                    ),
-                    Center(child: Text("No entries found.")),
-                  ],
-                );
-              }
-              return ChecklistTable(
-                title: "Purchase Of Car",
-                fieldCubit: fieldCubit,
+                    );
+                  } else if (state is FieldError || state is PurchaseError) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Purchase Of Car",
+                          style: AppTextStyles.bodyExtraSmall,
+                        ),
+                        Center(child: Text("Error: ${AppConstants.genericErrorMessage}")),
+                      ],
+                    );
+                  } 
+                  return ChecklistTable(
+                    title: "Purchase Of Car",
+                    fieldCubit: fieldCubit,
+                    data: (state as PurchaseLoaded).purchaseData,
+                  );
+                },
               );
-            },
+            }
           ),
         ],
       ),
     );
   }
-}
+
+void fetchData() async{
+  try{
+      await fieldCubit.loadFieldEntries();
+    await purchaseCubit.getPurchaseRecord(selectionCubit.state.taxiPlateNo);
+    if(purchaseCubit.state is PurchaseLoaded){
+      final state = purchaseCubit.state as PurchaseLoaded;
+      if(state.purchaseData.isEmpty && fieldCubit.state is FieldEntriesLoaded){
+        await purchaseCubit.savePurchaseRecord(
+          selectionCubit.state.taxiPlateNo,
+          (fieldCubit.state as FieldEntriesLoaded).entries,
+        );
+      }
+    }
+
+  }
+  catch(e){
+    debugPrint("Error fetching purchase data: $e");
+  }
+
+}}

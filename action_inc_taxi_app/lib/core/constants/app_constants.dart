@@ -134,10 +134,11 @@ class AppConstants {
       'pnp_franchise_transfer';
   static final String ltoForFranchiseTransferCollection =
       'lto_franchise_transfer';
-  static final String purchaseCollection = 'purchase';
+  static final String purchaseChecklistCollection = 'purchase_checklist';
+  static final String purchaseCollection = 'purchases';
   static final String newCarEquipmentCollection = 'new_car_equipments';
   static final String lftrbCollectionForNewCar = 'ltfrb_process';
   static final String ltoCollectionForNewCar = 'lto_process';
-  static final String futurePurchaseCollection = 'future_purchases';
+  static final String futurePurchaseChecklistCollection = 'future_purchases_checklist';
   static final String fieldEntryCollectionName = 'field_entries';
 }

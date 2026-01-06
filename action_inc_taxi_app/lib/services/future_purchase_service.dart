@@ -7,15 +7,15 @@ class FuturePurchaseService {
 
   Future<void> addFieldEntry(FuturePurchaseModel field) async {
     await _firestore
-        .collection(AppConstants.futurePurchaseCollection)
-        .doc(AppConstants.futurePurchaseCollection)
+        .collection(AppConstants.futurePurchaseChecklistCollection)
+        .doc(AppConstants.futurePurchaseChecklistCollection)
         .set({
           'last_updated': FieldValue.serverTimestamp(),
         }, SetOptions(merge: true));
 
     await _firestore
-        .collection(AppConstants.futurePurchaseCollection)
-        .doc(AppConstants.futurePurchaseCollection)
+        .collection(AppConstants.futurePurchaseChecklistCollection)
+        .doc(AppConstants.futurePurchaseChecklistCollection)
         .collection(AppConstants.fieldEntryCollectionName)
         .doc(field.id)
         .set(field.toJson());
@@ -23,14 +23,14 @@ class FuturePurchaseService {
 
   Future<void> deleteFieldEntry(String fieldId) async {
     await _firestore
-        .collection(AppConstants.futurePurchaseCollection)
-        .doc(AppConstants.futurePurchaseCollection)
+        .collection(AppConstants.futurePurchaseChecklistCollection)
+        .doc(AppConstants.futurePurchaseChecklistCollection)
         .collection(AppConstants.fieldEntryCollectionName)
         .doc(fieldId)
         .delete();
     await _firestore
-        .collection(AppConstants.futurePurchaseCollection)
-        .doc(AppConstants.futurePurchaseCollection)
+        .collection(AppConstants.futurePurchaseChecklistCollection)
+        .doc(AppConstants.futurePurchaseChecklistCollection)
         .set({
           'last_updated': FieldValue.serverTimestamp(),
         }, SetOptions(merge: true));
@@ -38,14 +38,14 @@ class FuturePurchaseService {
 
   Future<void> updateFieldEntry(FuturePurchaseModel field) async {
     await _firestore
-        .collection(AppConstants.futurePurchaseCollection)
-        .doc(AppConstants.futurePurchaseCollection)
+        .collection(AppConstants.futurePurchaseChecklistCollection)
+        .doc(AppConstants.futurePurchaseChecklistCollection)
         .collection(AppConstants.fieldEntryCollectionName)
         .doc(field.id)
         .update(field.toJson());
     await _firestore
-        .collection(AppConstants.futurePurchaseCollection)
-        .doc(AppConstants.futurePurchaseCollection)
+        .collection(AppConstants.futurePurchaseChecklistCollection)
+        .doc(AppConstants.futurePurchaseChecklistCollection)
         .set({
           'last_updated': FieldValue.serverTimestamp(),
         }, SetOptions(merge: true));
@@ -53,8 +53,8 @@ class FuturePurchaseService {
 
   Future<List<FuturePurchaseModel>> getFieldEntries() async {
     QuerySnapshot snapshot = await _firestore
-        .collection(AppConstants.futurePurchaseCollection)
-        .doc(AppConstants.futurePurchaseCollection)
+        .collection(AppConstants.futurePurchaseChecklistCollection)
+        .doc(AppConstants.futurePurchaseChecklistCollection)
         .collection(AppConstants.fieldEntryCollectionName)
         .get();
     return snapshot.docs
