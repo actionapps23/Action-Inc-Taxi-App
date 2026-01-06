@@ -291,7 +291,8 @@ class _ReportIssuePopupState extends State<ReportIssuePopup> {
                         ),
                       ],
                       Spacing.vLarge,
-                      if ( loginState is LoginSuccess && loginState.user.isAdmin) ...[
+                      if (loginState is LoginSuccess &&
+                          loginState.user.isAdmin) ...[
                         InventoryField(
                           label: widget.isEdit
                               ? "Update Mechanic"
@@ -328,7 +329,8 @@ class _ReportIssuePopupState extends State<ReportIssuePopup> {
                               onPressed: () {
                                 if (_issueController.text.isNotEmpty &&
                                     (_selectedMechanic != null ||
-                                        !(loginState is LoginSuccess && loginState.user.isAdmin))) {
+                                        !(loginState is LoginSuccess &&
+                                            loginState.user.isAdmin))) {
                                   if (!widget.isEdit) {
                                     final maintainanceRequest =
                                         MaintainanceModel(
@@ -337,7 +339,10 @@ class _ReportIssuePopupState extends State<ReportIssuePopup> {
                                               selectionCubit.state.taxiPlateNo,
                                           taxiRegistrationNumber:
                                               selectionCubit.state.regNo,
-                                          inspectedBy: loginState is LoginSuccess ? loginState.user.name : '',
+                                          inspectedBy:
+                                              loginState is LoginSuccess
+                                              ? loginState.user.name
+                                              : '',
                                           assignedTo: _selectedMechanic ?? '',
                                           id: DateTime.now()
                                               .millisecondsSinceEpoch
@@ -345,7 +350,10 @@ class _ReportIssuePopupState extends State<ReportIssuePopup> {
                                           title: title,
                                           description: _issueController.text,
                                           date: DateTime.now(),
-                                          lastUpdatedBy: loginState is LoginSuccess ? loginState.user.name : '',
+                                          lastUpdatedBy:
+                                              loginState is LoginSuccess
+                                              ? loginState.user.name
+                                              : '',
                                           lastUpdatedAt: DateTime.now(),
                                         );
 

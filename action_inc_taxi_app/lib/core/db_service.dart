@@ -519,6 +519,7 @@ class DbService {
       rethrow;
     }
   }
+
   Future<void> updateEmployeeToken(String employeeId, String token) async {
     try {
       final ref = _firestore.collection(employeeCollection).doc(employeeId);
@@ -527,6 +528,7 @@ class DbService {
       rethrow;
     }
   }
+
   // Add more database interaction methods as needed
   Future<CarInfo?> getCarByTaxiNo(String taxiNo) async {
     try {

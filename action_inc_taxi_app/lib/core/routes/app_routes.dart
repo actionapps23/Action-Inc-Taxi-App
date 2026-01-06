@@ -16,7 +16,6 @@ import 'package:action_inc_taxi_app/features/selection_screen.dart';
 import 'package:flutter/material.dart';
 
 class AppRoutes {
-
   static const String login = 'login';
   static const String selection = 'selection';
   static const String dashboard = 'dashboard';
@@ -32,44 +31,36 @@ class AppRoutes {
   static const String purchase = 'purchase';
   static const String franchiseTransfer = 'franchise-transfer';
   static const String futurePurchase = 'future-purchase';
-
 }
 
 class AppRouter {
   static Map<String, WidgetBuilder> get routes => {
-        AppRoutes.selection: (_) => const SelectionScreen(),
-        AppRoutes.dashboard: (_) => Dashboard(),
-        AppRoutes.report: (_) => const ReportPage(),
-        AppRoutes.addEmployee: (_) => AddEmployeeScreen(),
-        AppRoutes.maintainance: (_) => MaintainenceScreen(),
-        AppRoutes.inventory: (_) => InventorySceen(),
-        AppRoutes.vehicleViewSelection: (_) =>
-            const VehicleViewSelectionScreen(),
-        AppRoutes.renewalStatus: (_) => RenewalAndStatusScreen(),
-        AppRoutes.purchase: (_) => PurchaseScreen(),
-        AppRoutes.franchiseTransfer: (_) => FranchiseTransfer(),
-        AppRoutes.futurePurchase: (_) => FuturePurchaseScreen(),
-      };
+    AppRoutes.selection: (_) => const SelectionScreen(),
+    AppRoutes.dashboard: (_) => Dashboard(),
+    AppRoutes.report: (_) => const ReportPage(),
+    AppRoutes.addEmployee: (_) => AddEmployeeScreen(),
+    AppRoutes.maintainance: (_) => MaintainenceScreen(),
+    AppRoutes.inventory: (_) => InventorySceen(),
+    AppRoutes.vehicleViewSelection: (_) => const VehicleViewSelectionScreen(),
+    AppRoutes.renewalStatus: (_) => RenewalAndStatusScreen(),
+    AppRoutes.purchase: (_) => PurchaseScreen(),
+    AppRoutes.franchiseTransfer: (_) => FranchiseTransfer(),
+    AppRoutes.futurePurchase: (_) => FuturePurchaseScreen(),
+  };
 
   static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
     return MaterialPageRoute(
       settings: settings,
       builder: (context) {
-
         if (settings.name == AppRoutes.carDetail) {
           final args = settings.arguments as CarDetailRouteArgs?;
-          return CarDetailScreen(
-            fetchDetails: args?.fetchDetails ?? false,
-            
-          );
+          return CarDetailScreen(fetchDetails: args?.fetchDetails ?? false);
         }
 
         if (settings.name == AppRoutes.procedure) {
           final args = settings.arguments as ProcedureRouteArgs?;
           if (args == null) return const LoginScreen();
-          return ProcedureScreen(
-            procedureType: args.procedureType,
-          );
+          return ProcedureScreen(procedureType: args.procedureType);
         }
 
         if (settings.name == AppRoutes.vehicleInspectionPanel) {

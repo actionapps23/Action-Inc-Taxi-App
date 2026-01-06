@@ -38,8 +38,9 @@ class LoginScreen extends HookWidget {
             'Incorrect credentials. Please try again.',
           );
         } else if (state is LoginSuccess) {
-          Navigator.of(context)
-              .pushReplacementNamed(state.savedRoute ?? AppRoutes.selection);
+          Navigator.of(
+            context,
+          ).pushReplacementNamed(state.savedRoute ?? AppRoutes.selection);
         }
       },
       child: Scaffold(

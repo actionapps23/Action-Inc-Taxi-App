@@ -15,7 +15,7 @@ class LoginCubit extends Cubit<LoginState> {
     emit(LoginLoading());
     try {
       final isLoggedIn = await LocalStorage.isLoggedIn();
-      if(isLoggedIn) {
+      if (isLoggedIn) {
         final employeeId = await LocalStorage.getID();
         final token = await LocalStorage.getToken();
         final employeeModel = await dbService.getEmployeeById(employeeId!);
@@ -28,7 +28,6 @@ class LoginCubit extends Cubit<LoginState> {
       } else {
         emit(LoginInitial());
       }
-   
     } catch (e) {
       emit(LoginFailure(e.toString()));
     }
@@ -55,6 +54,7 @@ class LoginCubit extends Cubit<LoginState> {
       emit(LoginFailure(e.toString()));
     }
   }
+
   Future<void> logout() async {
     emit(LoginLoading());
     try {

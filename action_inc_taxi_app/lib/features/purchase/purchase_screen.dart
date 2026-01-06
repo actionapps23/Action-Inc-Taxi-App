@@ -68,10 +68,14 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                           "Purchase Of Car",
                           style: AppTextStyles.bodyExtraSmall,
                         ),
-                        Center(child: Text("Error: ${AppConstants.genericErrorMessage}")),
+                        Center(
+                          child: Text(
+                            "Error: ${AppConstants.genericErrorMessage}",
+                          ),
+                        ),
                       ],
                     );
-                  } 
+                  }
                   return ChecklistTable(
                     title: "Purchase Of Car",
                     fieldCubit: fieldCubit,
@@ -79,30 +83,29 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                   );
                 },
               );
-            }
+            },
           ),
         ],
       ),
     );
   }
 
-void fetchData() async{
-  try{
+  void fetchData() async {
+    try {
       await fieldCubit.loadFieldEntries();
-    await purchaseCubit.getPurchaseRecord(selectionCubit.state.taxiPlateNo);
-    if(purchaseCubit.state is PurchaseLoaded){
-      final state = purchaseCubit.state as PurchaseLoaded;
-      if(state.purchaseData.isEmpty && fieldCubit.state is FieldEntriesLoaded){
-        await purchaseCubit.savePurchaseRecord(
-          selectionCubit.state.taxiPlateNo,
-          (fieldCubit.state as FieldEntriesLoaded).entries,
-        );
+      await purchaseCubit.getPurchaseRecord(selectionCubit.state.taxiPlateNo);
+      if (purchaseCubit.state is PurchaseLoaded) {
+        final state = purchaseCubit.state as PurchaseLoaded;
+        if (state.purchaseData.isEmpty &&
+            fieldCubit.state is FieldEntriesLoaded) {
+          await purchaseCubit.savePurchaseRecord(
+            selectionCubit.state.taxiPlateNo,
+            (fieldCubit.state as FieldEntriesLoaded).entries,
+          );
+        }
       }
+    } catch (e) {
+      debugPrint("Error fetching purchase data: $e");
     }
-
   }
-  catch(e){
-    debugPrint("Error fetching purchase data: $e");
-  }
-
-}}
+}

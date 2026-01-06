@@ -79,15 +79,14 @@ class Navbar extends StatelessWidget {
                       Navigator.pushNamed(context, AppRoutes.report);
                     },
                   ),
-                  if (loginState is LoginSuccess && loginState.user.isAdmin) ...[
+                  if (loginState is LoginSuccess &&
+                      loginState.user.isAdmin) ...[
                     SizedBox(width: 12.w),
                     NavButton(
                       'Add Employee',
                       icon: AppAssets.logout,
                       onTap: () {
-                        context
-                            .read<SelectionCubit>()
-                            .reset();
+                        context.read<SelectionCubit>().reset();
                         context.read<LoginCubit>().logout();
                       },
                     ),
@@ -121,18 +120,20 @@ class Navbar extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (loginState is LoginSuccess) ResponsiveText(
-                    loginState.user.name,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
+                  if (loginState is LoginSuccess)
+                    ResponsiveText(
+                      loginState.user.name,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
                     ),
-                  ),
-                  if (loginState is LoginSuccess) ResponsiveText(
-                    loginState.user.role,
-                    style: TextStyle(color: Colors.white70, fontSize: 12),
-                  ),
+                  if (loginState is LoginSuccess)
+                    ResponsiveText(
+                      loginState.user.role,
+                      style: TextStyle(color: Colors.white70, fontSize: 12),
+                    ),
                 ],
               ),
             ],

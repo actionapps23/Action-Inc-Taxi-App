@@ -28,7 +28,9 @@ class PurchaseService {
     }
   }
 
-  static Future<List<FieldEntryModel>> getPurchaseRecord(String taxiPlateNumber) async {
+  static Future<List<FieldEntryModel>> getPurchaseRecord(
+    String taxiPlateNumber,
+  ) async {
     try {
       final List<FieldEntryModel> purchaseData = [];
       QuerySnapshot querySnapshot = await _firestore

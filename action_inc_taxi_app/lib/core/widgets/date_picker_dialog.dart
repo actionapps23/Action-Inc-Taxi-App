@@ -1,3 +1,4 @@
+import 'package:action_inc_taxi_app/core/helper_functions.dart';
 import 'package:flutter/material.dart';
 
 Future<DateTime?> showDatePickerDialog(
@@ -12,8 +13,7 @@ Future<DateTime?> showDatePickerDialog(
   );
 
   if (pickedDate != null) {
-    controller.text =
-        '${pickedDate.year}-${pickedDate.month}-${pickedDate.day}';
+    controller.text = HelperFunctions.formatDate(pickedDate);
   }
 
   return pickedDate;

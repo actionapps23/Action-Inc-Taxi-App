@@ -121,7 +121,9 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
                       maintainanceCubit.updateMaintainanceRequest(
                         widget.maintainanceModel.copyWith(
                           isResolved: _isSolved,
-                          lastUpdatedBy: loginState is LoginSuccess ? loginState.user.name : '',
+                          lastUpdatedBy: loginState is LoginSuccess
+                              ? loginState.user.name
+                              : '',
                           lastUpdatedAt: DateTime.now(),
                         ),
                       );

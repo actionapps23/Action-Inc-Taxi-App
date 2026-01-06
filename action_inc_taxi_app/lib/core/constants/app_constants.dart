@@ -139,6 +139,7 @@ class AppConstants {
   static final String newCarEquipmentCollection = 'new_car_equipments';
   static final String lftrbCollectionForNewCar = 'ltfrb_process';
   static final String ltoCollectionForNewCar = 'lto_process';
-  static final String futurePurchaseChecklistCollection = 'future_purchases_checklist';
+  static final String futurePurchaseChecklistCollection =
+      'future_purchases_checklist';
   static final String fieldEntryCollectionName = 'field_entries';
 }

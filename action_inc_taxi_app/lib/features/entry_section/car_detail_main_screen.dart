@@ -28,12 +28,12 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
     final String taxiNo = selectionCubit.state.taxiNo;
     final String regNo = selectionCubit.state.regNo;
     final String taxiPlateNo = selectionCubit.state.taxiPlateNo;
-       if (taxiNo.isEmpty && regNo.isEmpty && taxiPlateNo.isEmpty) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Navigator.pushReplacementNamed(context, AppRoutes.selection);
-    });
-    return;
-  }
+    if (taxiNo.isEmpty && regNo.isEmpty && taxiPlateNo.isEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushReplacementNamed(context, AppRoutes.selection);
+      });
+      return;
+    }
     carDetailCubit.loadCarDetails(
       taxiNo,
       regNo,

@@ -10,8 +10,9 @@ class PurchaseCubit extends Cubit<PurchaseState> {
   Future<void> getPurchaseRecord(String taxiPlateNumber) async {
     emit(PurchaseLoading());
     try {
-      final purchaseData =
-          await PurchaseService.getPurchaseRecord(taxiPlateNumber);
+      final purchaseData = await PurchaseService.getPurchaseRecord(
+        taxiPlateNumber,
+      );
       emit(PurchaseLoaded(purchaseData: purchaseData));
     } catch (e) {
       emit(PurchaseError(message: e.toString()));
@@ -19,7 +20,9 @@ class PurchaseCubit extends Cubit<PurchaseState> {
   }
 
   Future<void> savePurchaseRecord(
-      String taxiPlateNumber, List<FieldEntryModel> purchaseData) async {
+    String taxiPlateNumber,
+    List<FieldEntryModel> purchaseData,
+  ) async {
     emit(PurchaseLoading());
     try {
       await PurchaseService.savePurchaseRecord(taxiPlateNumber, purchaseData);
@@ -31,4 +34,3 @@ class PurchaseCubit extends Cubit<PurchaseState> {
     }
   }
 }
-

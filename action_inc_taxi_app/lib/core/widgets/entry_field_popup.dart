@@ -53,7 +53,9 @@ class _EntryFieldPopupState extends State<EntryFieldPopup> {
       _fieldTitleController.text = widget.fieldEntryModel?.title ?? '';
       _sopController.text = widget.fieldEntryModel?.SOP.toString() ?? '';
       _feesController.text = widget.fieldEntryModel?.fees.toString() ?? '';
-      _timelineController.text = "22/2022";
+      _timelineController.text = HelperFunctions.formatDate(
+        widget.fieldEntryModel!.timeline,
+      );
       _isCompleted.value = widget.fieldEntryModel?.isCompleted ?? false;
     }
   }

@@ -50,11 +50,10 @@ class SelectionCubit extends Cubit<SelectionState> {
   //
   void proceed(int selectedIndex, BuildContext context, String? id) {
     if (id != null && id.isNotEmpty) {
-      if(id.toLowerCase() == "future purchase"){
+      if (id.toLowerCase() == "future purchase") {
         {
           Navigator.pushNamed(context, AppRoutes.futurePurchase);
         }
-
       }
       if (id.toLowerCase() == "maintenance") {
         {
@@ -96,7 +95,7 @@ class SelectionCubit extends Cubit<SelectionState> {
       case 1:
         Navigator.pushNamed(
           context,
-         AppRoutes.carDetail,
+          AppRoutes.carDetail,
           arguments: CarDetailRouteArgs(fetchDetails: true),
         );
 

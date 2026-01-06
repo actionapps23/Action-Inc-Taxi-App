@@ -21,7 +21,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:action_inc_taxi_app/cubit/selection/selection_cubit.dart';
 import 'package:action_inc_taxi_app/core/db_service.dart';
 
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -132,11 +131,10 @@ class _RouteObserver extends NavigatorObserver {
   }
 
   void _saveRoute(Route route) {
-    if (route.settings.name != null && 
-        route.settings.name != '/' && 
+    if (route.settings.name != null &&
+        route.settings.name != '/' &&
         route.settings.name != AppRoutes.login &&
-        route.settings.name != "/${AppRoutes.login}"
-        ) {
+        route.settings.name != "/${AppRoutes.login}") {
       LocalStorage.saveLastRoute(route.settings.name!);
     }
   }
