@@ -38,7 +38,6 @@ class LoginScreen extends HookWidget {
             'Incorrect credentials. Please try again.',
           );
         } else if (state is LoginSuccess) {
-          SnackBarHelper.showSuccessSnackBar(context, 'Login successful!');
           Navigator.of(context)
               .pushReplacementNamed(state.savedRoute ?? AppRoutes.selection);
         }

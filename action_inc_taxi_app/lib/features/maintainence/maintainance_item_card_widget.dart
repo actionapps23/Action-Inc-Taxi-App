@@ -28,8 +28,8 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
     final LoginCubit loginCubit = context.read<LoginCubit>();
     final MaintainanceCubit maintainanceCubit = context
         .read<MaintainanceCubit>();
-    final LoginSuccess loginState = loginCubit.state as LoginSuccess;
-    final bool isAdmin = loginState.user.isAdmin;
+    final LoginState loginState = loginCubit.state;
+    final bool isAdmin = loginState is LoginSuccess && loginState.user.isAdmin;
 
     return Container(
       decoration: BoxDecoration(
@@ -121,7 +121,7 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
                       maintainanceCubit.updateMaintainanceRequest(
                         widget.maintainanceModel.copyWith(
                           isResolved: _isSolved,
-                          lastUpdatedBy: loginState.user.name,
+                          lastUpdatedBy: loginState is LoginSuccess ? loginState.user.name : '',
                           lastUpdatedAt: DateTime.now(),
                         ),
                       );

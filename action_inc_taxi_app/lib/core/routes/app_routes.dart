@@ -1,4 +1,3 @@
-import 'package:action_inc_taxi_app/cubit/auth/login_cubit.dart';
 import 'package:action_inc_taxi_app/features/auth/add_employee_screen/add_employee_screen.dart';
 import 'package:action_inc_taxi_app/features/auth/login_screen.dart';
 import 'package:action_inc_taxi_app/features/close_procedure/procedure_screen.dart';
@@ -15,32 +14,29 @@ import 'package:action_inc_taxi_app/features/purchase/purchase_screen.dart';
 import 'package:action_inc_taxi_app/features/reporting/report_page.dart';
 import 'package:action_inc_taxi_app/features/selection_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AppRoutes {
-  const AppRoutes._();
 
-  static const String login = '/login';
-  static const String selection = '/selection';
-  static const String dashboard = '/dashboard';
-  static const String report = '/report';
-  static const String addEmployee = '/add-employee';
-  static const String maintainance = '/maintenance';
-  static const String inventory = '/inventory';
-  static const String vehicleViewSelection = '/vehicle-view-selection';
-  static const String vehicleInspectionPanel = '/vehicle-inspection-panel';
-  static const String renewalStatus = '/renewal-status';
-  static const String carDetail = '/car-detail';
-  static const String procedure = '/procedure';
-  static const String purchase = '/purchase';
-  static const String franchiseTransfer = '/franchise-transfer';
-  static const String futurePurchase = '/future-purchase';
+  static const String login = 'login';
+  static const String selection = 'selection';
+  static const String dashboard = 'dashboard';
+  static const String report = 'report';
+  static const String addEmployee = 'add-employee';
+  static const String maintainance = 'maintenance';
+  static const String inventory = 'inventory';
+  static const String vehicleViewSelection = 'vehicle-view-selection';
+  static const String vehicleInspectionPanel = 'vehicle-inspection-panel';
+  static const String renewalStatus = 'renewal-status';
+  static const String carDetail = 'car-detail';
+  static const String procedure = 'procedure';
+  static const String purchase = 'purchase';
+  static const String franchiseTransfer = 'franchise-transfer';
+  static const String futurePurchase = 'future-purchase';
 
 }
 
 class AppRouter {
   static Map<String, WidgetBuilder> get routes => {
-        AppRoutes.login: (_) => const LoginScreen(),
         AppRoutes.selection: (_) => const SelectionScreen(),
         AppRoutes.dashboard: (_) => Dashboard(),
         AppRoutes.report: (_) => const ReportPage(),
@@ -64,6 +60,7 @@ class AppRouter {
           final args = settings.arguments as CarDetailRouteArgs?;
           return CarDetailScreen(
             fetchDetails: args?.fetchDetails ?? false,
+            
           );
         }
 

@@ -1,3 +1,4 @@
+import 'package:action_inc_taxi_app/core/routes/app_routes.dart';
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
 import 'package:action_inc_taxi_app/core/widgets/navbar/navbar.dart';
 import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
@@ -27,6 +28,12 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
     final String taxiNo = selectionCubit.state.taxiNo;
     final String regNo = selectionCubit.state.regNo;
     final String taxiPlateNo = selectionCubit.state.taxiPlateNo;
+       if (taxiNo.isEmpty && regNo.isEmpty && taxiPlateNo.isEmpty) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Navigator.pushReplacementNamed(context, AppRoutes.selection);
+    });
+    return;
+  }
     carDetailCubit.loadCarDetails(
       taxiNo,
       regNo,

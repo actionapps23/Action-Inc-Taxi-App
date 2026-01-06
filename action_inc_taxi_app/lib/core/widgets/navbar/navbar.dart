@@ -17,7 +17,7 @@ class Navbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final LoginCubit loginCubit = context.read<LoginCubit>();
-    final LoginSuccess loginState = loginCubit.state as LoginSuccess;
+    final LoginState loginState = loginCubit.state;
     return Container(
       width: double.infinity,
       margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
@@ -79,7 +79,7 @@ class Navbar extends StatelessWidget {
                       Navigator.pushNamed(context, AppRoutes.report);
                     },
                   ),
-                  if (loginState.user.isAdmin) ...[
+                  if (loginState is LoginSuccess && loginState.user.isAdmin) ...[
                     SizedBox(width: 12.w),
                     NavButton(
                       'Add Employee',
@@ -121,7 +121,7 @@ class Navbar extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ResponsiveText(
+                  if (loginState is LoginSuccess) ResponsiveText(
                     loginState.user.name,
                     style: TextStyle(
                       color: Colors.white,
@@ -129,7 +129,7 @@ class Navbar extends StatelessWidget {
                       fontSize: 14,
                     ),
                   ),
-                  ResponsiveText(
+                  if (loginState is LoginSuccess) ResponsiveText(
                     loginState.user.role,
                     style: TextStyle(color: Colors.white70, fontSize: 12),
                   ),

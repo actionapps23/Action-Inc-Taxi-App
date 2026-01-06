@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:action_inc_taxi_app/cubit/auth/add_employee_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/auth/login_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/car_details/car_detail_cubit.dart';
@@ -17,6 +19,7 @@ import 'firebase_options.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:action_inc_taxi_app/cubit/selection/selection_cubit.dart';
 import 'package:action_inc_taxi_app/core/db_service.dart';
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -129,7 +132,9 @@ class _RouteObserver extends NavigatorObserver {
   void _saveRoute(Route route) {
     if (route.settings.name != null && 
         route.settings.name != '/' && 
-        route.settings.name != AppRoutes.login) {
+        route.settings.name != AppRoutes.login &&
+        route.settings.name != "/${AppRoutes.login}"
+        ) {
       LocalStorage.saveLastRoute(route.settings.name!);
     }
   }
