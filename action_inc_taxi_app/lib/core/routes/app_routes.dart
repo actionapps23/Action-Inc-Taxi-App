@@ -1,3 +1,4 @@
+import 'package:action_inc_taxi_app/core/widgets/pratice.dart';
 import 'package:action_inc_taxi_app/features/auth/add_employee_screen/add_employee_screen.dart';
 import 'package:action_inc_taxi_app/features/auth/login_screen.dart';
 import 'package:action_inc_taxi_app/features/close_procedure/procedure_screen.dart';
@@ -10,12 +11,15 @@ import 'package:action_inc_taxi_app/features/franchise/franchise_transfer.dart';
 import 'package:action_inc_taxi_app/features/future_purchase/future_purchase_screen.dart';
 import 'package:action_inc_taxi_app/features/inventory/inventory_sceen.dart';
 import 'package:action_inc_taxi_app/features/maintainence/maintainence_screen.dart';
+import 'package:action_inc_taxi_app/features/purchase/new_car_details.dart';
 import 'package:action_inc_taxi_app/features/purchase/purchase_screen.dart';
 import 'package:action_inc_taxi_app/features/reporting/report_page.dart';
 import 'package:action_inc_taxi_app/features/selection_screen.dart';
+import 'package:action_inc_taxi_app/features/unknown/unknown_screen.dart';
 import 'package:flutter/material.dart';
 
 class AppRoutes {
+  static const String practice = 'practice';
   static const String login = 'login';
   static const String selection = 'selection';
   static const String dashboard = 'dashboard';
@@ -31,11 +35,18 @@ class AppRoutes {
   static const String purchase = 'purchase';
   static const String franchiseTransfer = 'franchise-transfer';
   static const String futurePurchase = 'future-purchase';
+  static const String newCarDetails = 'new-car-details';
+  static const String unknown = 'unknown';
+
 }
+
 
 class AppRouter {
   static Map<String, WidgetBuilder> get routes => {
     AppRoutes.selection: (_) => const SelectionScreen(),
+    AppRoutes.newCarDetails: (_) => NewCarDetails(),
+    AppRoutes.unknown : (_) =>  UnknownScreen(),
+    AppRoutes.practice: (_) => PracticeScreen(),
     AppRoutes.dashboard: (_) => Dashboard(),
     AppRoutes.report: (_) => const ReportPage(),
     AppRoutes.addEmployee: (_) => AddEmployeeScreen(),
@@ -46,6 +57,7 @@ class AppRouter {
     AppRoutes.purchase: (_) => PurchaseScreen(),
     AppRoutes.franchiseTransfer: (_) => FranchiseTransfer(),
     AppRoutes.futurePurchase: (_) => FuturePurchaseScreen(),
+    AppRoutes.login: (_) => const LoginScreen(),
   };
 
   static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
@@ -72,7 +84,8 @@ class AppRouter {
           );
         }
 
-        return const LoginScreen();
+
+        return const UnknownScreen();
       },
     );
   }
@@ -80,7 +93,7 @@ class AppRouter {
   static Route<dynamic> onUnknownRoute(RouteSettings settings) {
     return MaterialPageRoute(
       settings: settings,
-      builder: (_) => const LoginScreen(),
+      builder: (_) => const UnknownScreen(),
     );
   }
 }

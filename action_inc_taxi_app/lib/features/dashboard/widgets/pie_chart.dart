@@ -9,10 +9,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 
-class PieChart extends StatelessWidget {
+class PieChart extends StatefulWidget {
   final FleetIncomeModel fleetIncome;
   const PieChart({super.key, required this.fleetIncome});
 
+  @override
+  State<PieChart> createState() => _PieChartState();
+}
+
+class _PieChartState extends State<PieChart> {
+  int selectedTabIndex = 0;
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
@@ -24,12 +30,12 @@ class PieChart extends StatelessWidget {
     final DashboardCubit dashboardCubit = context.read<DashboardCubit>();
 
     final fleets = [
-      {"name": "Fleet 1", "amount": fleetIncome.fleet1Amt},
-      {"name": "Fleet 2", "amount": fleetIncome.fleet2Amt},
-      {"name": "Fleet 3", "amount": fleetIncome.fleet3Amt},
-      {"name": "Fleet 4", "amount": fleetIncome.fleet4Amt},
+      {"name": "Fleet 1", "amount": widget.fleetIncome.fleet1Amt},
+      {"name": "Fleet 2", "amount": widget.fleetIncome.fleet2Amt},
+      {"name": "Fleet 3", "amount": widget.fleetIncome.fleet3Amt},
+      {"name": "Fleet 4", "amount": widget.fleetIncome.fleet4Amt},
     ];
-    final total = fleetIncome.totalFleetAmt;
+    final total = widget.fleetIncome.totalFleetAmt;
     final List<Color> pieColors = [
       const Color(0xFF1e4620),
       const Color(0xFF357b38),
@@ -62,7 +68,12 @@ class PieChart extends StatelessWidget {
                       selectedTabKey = 'monthly';
                     }
                     dashboardCubit.fetchFleetAmounts(selectedTabKey);
+                    selectedTabIndex = index;
+                    setState(() {
+                      
+                    });
                   },
+                  selectedTabIndex: selectedTabIndex,
                 ),
               ),
             ],
@@ -76,10 +87,10 @@ class PieChart extends StatelessWidget {
                 child: CustomPaint(
                   painter: _PieChartPainter(
                     values: [
-                      fleetIncome.fleet1Amt,
-                      fleetIncome.fleet2Amt,
-                      fleetIncome.fleet3Amt,
-                      fleetIncome.fleet4Amt,
+                      widget.fleetIncome.fleet1Amt,
+                      widget.fleetIncome.fleet2Amt,
+                      widget.fleetIncome.fleet3Amt,
+                      widget.fleetIncome.fleet4Amt,
                     ],
                     colors: pieColors,
                   ),

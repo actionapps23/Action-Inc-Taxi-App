@@ -5,6 +5,7 @@ import 'package:action_inc_taxi_app/core/theme/app_assets.dart';
 import 'package:action_inc_taxi_app/core/widgets/navbar/navbar_buttton.dart';
 import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:action_inc_taxi_app/cubit/auth/login_cubit.dart';
+import 'package:action_inc_taxi_app/cubit/purchase/purchase_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/rent/daily_rent_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/selection/selection_cubit.dart';
 import 'package:flutter/material.dart';
@@ -87,6 +88,8 @@ class Navbar extends StatelessWidget {
                       icon: AppAssets.logout,
                       onTap: () {
                         context.read<SelectionCubit>().reset();
+                        context.read<DailyRentCubit>().reset();
+                        context.read<PurchaseCubit>().reset();
                         context.read<LoginCubit>().logout();
                       },
                     ),
@@ -97,6 +100,7 @@ class Navbar extends StatelessWidget {
                     icon: AppAssets.logout,
                     onTap: () {
                       context.read<SelectionCubit>().reset();
+                      loginCubit.logout();
                       Navigator.of(context).pushNamedAndRemoveUntil(
                         AppRoutes.login,
                         (route) => false,

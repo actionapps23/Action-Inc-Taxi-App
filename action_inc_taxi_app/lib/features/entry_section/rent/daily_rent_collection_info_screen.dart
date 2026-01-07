@@ -126,8 +126,9 @@ class _DailyRentCollectionInfoScreenState
     'paymentCash': (v) {
       final raw = (v ?? '').replaceAll(RegExp(r'[^0-9\.]'), '');
       final d = double.tryParse(raw);
-      if (d == null || d <= 0)
+      if (d == null || d <= 0) {
         return 'Payment in cash is required and must be greater than 0.';
+      }
       return null;
     },
     'paymentGCash': (v) {

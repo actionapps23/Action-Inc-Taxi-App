@@ -1,7 +1,10 @@
 import 'package:action_inc_taxi_app/core/constants/app_constants.dart';
+import 'package:action_inc_taxi_app/core/routes/app_routes.dart';
 import 'package:action_inc_taxi_app/core/theme/app_text_styles.dart';
+import 'package:action_inc_taxi_app/core/widgets/buttons/app_button.dart';
 import 'package:action_inc_taxi_app/core/widgets/checklist_table.dart';
 import 'package:action_inc_taxi_app/core/widgets/navbar/navbar.dart';
+import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/spacing.dart';
 import 'package:action_inc_taxi_app/cubit/field/field_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/field/field_state.dart';
@@ -19,9 +22,10 @@ class PurchaseScreen extends StatefulWidget {
 }
 
 class _PurchaseScreenState extends State<PurchaseScreen> {
-  late final FieldCubit fieldCubit;
   late final SelectionCubit selectionCubit;
   late final PurchaseCubit purchaseCubit;
+  late final FieldCubit fieldCubit;
+
   @override
   void initState() {
     super.initState();
@@ -31,8 +35,13 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
       collectionName: AppConstants.purchaseChecklistCollection,
       documentId: AppConstants.purchaseChecklistCollection,
     );
-    // funcion to fetch data
     fetchData();
+  }
+
+  @override
+  void dispose() {
+    fieldCubit.close();
+    super.dispose();
   }
 
   @override
@@ -42,48 +51,77 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
         children: [
           Navbar(),
           Spacing.vMedium,
-
-          BlocBuilder<FieldCubit, FieldState>(
-            bloc: fieldCubit,
-            builder: (context, fiedState) {
-              return BlocBuilder<PurchaseCubit, PurchaseState>(
-                bloc: purchaseCubit,
-                builder: (context, purchaseState) {
-                  if (purchaseState is PurchaseLoading || purchaseState is PurchaseInitial) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Purchase Of Car",
-                          style: AppTextStyles.bodyExtraSmall,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              // ...existing code...
+            ],
+          ),
+          Expanded(
+            child: BlocProvider<FieldCubit>.value(
+              value: fieldCubit,
+              child: BlocBuilder<FieldCubit, FieldState>(
+                builder: (context, fiedState) {
+                  return BlocBuilder<PurchaseCubit, PurchaseState>(
+                    bloc: purchaseCubit,
+                    builder: (context, purchaseState) {
+                      if (purchaseState is PurchaseLoading ||
+                          purchaseState is PurchaseInitial) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            ResponsiveText(
+                              "Purchase Of Car",
+                              style: AppTextStyles.bodyExtraSmall,
+                            ),
+                            Center(child: CircularProgressIndicator()),
+                          ],
+                        );
+                      } else if (fiedState is FieldError ||
+                          purchaseState is PurchaseError) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            ResponsiveText(
+                              "Purchase Of Car",
+                              style: AppTextStyles.bodyExtraSmall,
+                            ),
+                            Center(
+                              child: ResponsiveText(
+                                "Error: ${AppConstants.genericErrorMessage}",
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+                      return SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            ChecklistTable(
+                              title: "Purchase Of Car",
+                              fieldCubit: fieldCubit,
+                              data: (purchaseState as PurchaseLoaded)
+                                  .purchaseData,
+                              showUpdateTaxiNumberButton: true,
+                            ),
+                            SizedBox(height: 24),
+                            AppButton(
+                              text: "Next",
+                              onPressed: () {
+                                Navigator.pushReplacementNamed(
+                                  context,
+                                  AppRoutes.newCarDetails,
+                                );
+                              },
+                            ),
+                          ],
                         ),
-                        Center(child: CircularProgressIndicator()),
-                      ],
-                    );
-                  } else if (fiedState is FieldError || purchaseState is PurchaseError) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Purchase Of Car",
-                          style: AppTextStyles.bodyExtraSmall,
-                        ),
-                        Center(
-                          child: Text(
-                            "Error: ${AppConstants.genericErrorMessage}",
-                          ),
-                        ),
-                      ],
-                    );
-                  }
-                  return ChecklistTable(
-                    title: "Purchase Of Car",
-                    fieldCubit: fieldCubit,
-                    data: (purchaseState as PurchaseLoaded).purchaseData,
+                      );
+                    },
                   );
                 },
-              );
-            },
+              ),
+            ),
           ),
         ],
       ),
@@ -92,6 +130,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
 
   void fetchData() async {
     try {
+      purchaseCubit.reset();
       await fieldCubit.loadFieldEntries();
       await purchaseCubit.getPurchaseRecord(selectionCubit.state.taxiPlateNo);
       if (purchaseCubit.state is PurchaseLoaded) {

@@ -26,7 +26,11 @@ class PurchaseCubit extends Cubit<PurchaseState> {
   ) async {
     emit(PurchaseLoading());
     try {
-      await PurchaseService.savePurchaseRecord(taxiPlateNumber, purchaseData, AppConstants.purchaseCollection);
+      await PurchaseService.savePurchaseRecord(
+        taxiPlateNumber,
+        purchaseData,
+        AppConstants.purchaseCollection,
+      );
       final data = await PurchaseService.getPurchaseRecord(taxiPlateNumber);
       emit(PurchaseLoaded(purchaseData: data));
     } catch (e) {
@@ -40,13 +44,17 @@ class PurchaseCubit extends Cubit<PurchaseState> {
   Future<void> getAllChecklists(String taxiPlateNumber) async {
     emit(PurchaseLoading());
     try {
-    final Map<String, List<FieldEntryModel>> data = await PurchaseService.getAllChecklists(taxiPlateNumber);
+      final Map<String, List<FieldEntryModel>> data =
+          await PurchaseService.getAllChecklists(taxiPlateNumber);
+      debugPrint("Fetched all checklists data: $data");
 
-      emit(AllDataLoaded(
-        newCarEquipmentData: data['newCarEquipmentData'] ?? [],
-        ltfrbData: data['ltfrbData'] ?? [],
-        ltoData: data['ltoData'] ?? [],
-      ));
+      emit(
+        AllDataLoaded(
+          newCarEquipmentData: data['newCarEquipmentData'] ?? [],
+          ltfrbData: data['ltfrbData'] ?? [],
+          ltoData: data['ltoData'] ?? [],
+        ),
+      );
     } catch (e) {
       debugPrint("Error fetching checklists: $e");
       emit(PurchaseError(message: e.toString()));
@@ -61,29 +69,64 @@ class PurchaseCubit extends Cubit<PurchaseState> {
   ) async {
     emit(PurchaseLoading());
     try {
-      await PurchaseService.savePurchaseRecord(
-        taxiPlateNumber,
-        newCarEquipmentData,
-        AppConstants.newCarEquipmentRecordCollection
+      await Future.wait([
+        PurchaseService.savePurchaseRecord(
+          taxiPlateNumber,
+          newCarEquipmentData,
+          AppConstants.newCarEquipmentRecordCollection,
+        ),
+        PurchaseService.savePurchaseRecord(
+          taxiPlateNumber,
+          ltfrbData,
+          AppConstants.lftrbRecordCollectionForNewCar,
+        ),
+        PurchaseService.savePurchaseRecord(
+          taxiPlateNumber,
+          ltoData,
+          AppConstants.ltoRecordCollectionForNewCar,
+        ),
+      ]);
+      emit(
+        AllDataLoaded(
+          newCarEquipmentData: newCarEquipmentData,
+          ltfrbData: ltfrbData,
+          ltoData: ltoData,
+        ),
       );
-      await PurchaseService.savePurchaseRecord(
-        taxiPlateNumber,
-        ltfrbData,
-        AppConstants.lftrbRecordCollectionForNewCar
-      );
-      await PurchaseService.savePurchaseRecord(
-        taxiPlateNumber,
-        ltoData,
-        AppConstants.ltoRecordCollectionForNewCar
-      );
-      emit(AllDataLoaded(
-        newCarEquipmentData: newCarEquipmentData,
-        ltfrbData: ltfrbData,
-        ltoData: ltoData,
-      ));
     } catch (e) {
       debugPrint("Error saving all checklists: $e");
       emit(PurchaseError(message: e.toString()));
     }
+  }
+
+  // This function is to replace the temporary taxi plate number with the updated one
+  Future<void> updateTaxiPlateNumber(
+    String oldTaxiPlateNumber,
+    String newTaxiPlateNumber,
+  ) async {
+    emit(PurchaseLoading());
+    try {
+      await PurchaseService.updateTaxiPlateNumber(
+        oldTaxiPlateNumber,
+        newTaxiPlateNumber,
+        [
+          AppConstants.purchaseCollection,
+          AppConstants.newCarEquipmentChecklistCollection,
+          AppConstants.lftrbChecklistCollectionForNewCar,
+          AppConstants.ltoChecklistCollectionForNewCar,
+        ],
+      );
+      final purchaseData = await PurchaseService.getPurchaseRecord(
+        newTaxiPlateNumber,
+      );
+      emit(PurchaseLoaded(purchaseData: purchaseData));
+    } catch (e) {
+      debugPrint("Error updating taxi plate number: $e");
+      emit(PurchaseError(message: e.toString()));
+    }
+  }
+
+  void reset() {
+    emit(PurchaseInitial());
   }
 }

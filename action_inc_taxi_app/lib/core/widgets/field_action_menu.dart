@@ -1,3 +1,4 @@
+import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:flutter/material.dart';
 
 class FieldActionsMenu extends StatelessWidget {
@@ -22,8 +23,8 @@ class FieldActionsMenu extends StatelessWidget {
         }
       },
       itemBuilder: (ctx) => const [
-        PopupMenuItem(value: 'edit', child: Text('Edit')),
-        PopupMenuItem(value: 'delete', child: Text('Delete')),
+        PopupMenuItem(value: 'edit', child: ResponsiveText('Edit')),
+        PopupMenuItem(value: 'delete', child: ResponsiveText('Delete')),
       ],
     );
   }

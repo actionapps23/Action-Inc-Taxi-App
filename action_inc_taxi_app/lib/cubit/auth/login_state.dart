@@ -10,6 +10,13 @@ class LoginSuccess extends LoginState {
   final EmployeeModel user;
   final String? savedRoute;
   LoginSuccess(this.user, {this.savedRoute});
+
+  LoginSuccess copyWith({String? savedRoute}) {
+    return LoginSuccess(
+      user,
+      savedRoute: savedRoute ?? this.savedRoute,
+    );
+  }
 }
 
 class LoginFailure extends LoginState {

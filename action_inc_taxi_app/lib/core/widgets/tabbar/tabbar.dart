@@ -13,6 +13,7 @@ class CustomTabBar extends StatefulWidget {
   final Color selectedTextColor;
   final double height;
   final double borderRadius;
+  final int selectedTabIndex;
 
   const CustomTabBar({
     super.key,
@@ -25,6 +26,7 @@ class CustomTabBar extends StatefulWidget {
     this.selectedTextColor = Colors.white,
     this.height = 24,
     this.borderRadius = 24,
+    this.selectedTabIndex = 0,
   });
 
   @override
@@ -32,7 +34,6 @@ class CustomTabBar extends StatefulWidget {
 }
 
 class _CustomTabBarState extends State<CustomTabBar> {
-  int _selectedTab = 0;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -45,13 +46,11 @@ class _CustomTabBarState extends State<CustomTabBar> {
         scrollDirection: Axis.horizontal,
         child: Row(
           children: List.generate(widget.tabs.length, (index) {
-            final bool isSelected = index == _selectedTab;
+            final bool isSelected = index == widget.selectedTabIndex;
             return GestureDetector(
               onTap: () {
                 widget.onTabSelected(index);
-                setState(() {
-                  _selectedTab = index;
-                });
+               
               },
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),

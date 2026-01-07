@@ -1,6 +1,7 @@
 import 'package:action_inc_taxi_app/core/constants/app_constants.dart';
 import 'package:action_inc_taxi_app/core/widgets/checklist_table.dart';
 import 'package:action_inc_taxi_app/core/widgets/navbar/navbar.dart';
+import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:action_inc_taxi_app/cubit/future_purchase/future_purchase_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/future_purchase/future_purchase_state.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +51,7 @@ class _FuturePurchaseScreenState extends State<FuturePurchaseScreen> {
                   state is FuturePurchaseEntryUpdateError ||
                   state is FuturePurchaseEntryDeleteError ||
                   state is FuturePurchaseEntryAddError)
-                Center(child: Text(AppConstants.genericErrorMessage)),
+                Center(child: ResponsiveText(AppConstants.genericErrorMessage)),
             ],
           );
         },

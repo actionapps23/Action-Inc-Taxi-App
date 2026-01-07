@@ -7,7 +7,7 @@ import 'package:action_inc_taxi_app/features/dashboard/widgets/simple_stat_card.
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class StatsOverviewCard extends StatelessWidget {
+class StatsOverviewCard extends StatefulWidget {
   final String statsCardLabel;
   final int targetValue;
   final int optimumTarget;
@@ -28,6 +28,12 @@ class StatsOverviewCard extends StatelessWidget {
   });
 
   @override
+  State<StatsOverviewCard> createState() => _StatsOverviewCardState();
+}
+
+class _StatsOverviewCardState extends State<StatsOverviewCard> {
+  int selectedTabIndex = 0;
+  @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
@@ -44,7 +50,7 @@ class StatsOverviewCard extends StatelessWidget {
                 SizedBox(
                   width: 80.w,
                   child: ResponsiveText(
-                    statsCardLabel,
+                    widget.statsCardLabel,
                     style: AppTextStyles.bodySmall,
                   ),
                 ),
@@ -52,7 +58,12 @@ class StatsOverviewCard extends StatelessWidget {
                   child: CustomTabBar(
                     backgroundColor: AppColors.buttonText,
                     tabs: ["Daily", "Weekly", "Yearly"],
-                    onTabSelected: onTabSelected,
+                    onTabSelected: (index) {
+                      setState(() {
+                        selectedTabIndex = index;
+                      });
+                        widget.onTabSelected(index);
+                    },
                   ),
                 ),
               ],
@@ -61,23 +72,23 @@ class StatsOverviewCard extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: SimpleStatCard(label: "Target", value: targetValue),
+                  child: SimpleStatCard(label: "Target", value: widget.targetValue),
                 ),
                 Spacing.hSmall,
                 Expanded(
                   child: SimpleStatCard(
                     label: "Optimum target",
-                    value: optimumTarget,
+                    value: widget.optimumTarget,
                   ),
                 ),
                 Spacing.hSmall,
                 Expanded(
                   child: SimpleStatCard(
                     label: "Target collection",
-                    value: targetCollection,
-                    percentChange: percentChange,
+                    value: widget.targetCollection,
+                    percentChange: widget.percentChange,
                     showLastStats: true,
-                    lastAmount: lastAmount,
+                    lastAmount: widget.lastAmount,
                   ),
                 ),
               ],

@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'package:action_inc_taxi_app/core/theme/app_assets.dart';
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
 import 'package:action_inc_taxi_app/core/routes/app_routes.dart';
+import 'package:action_inc_taxi_app/cubit/purchase/purchase_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -38,6 +39,11 @@ class LoginScreen extends HookWidget {
             'Incorrect credentials. Please try again.',
           );
         } else if (state is LoginSuccess) {
+          if(state.savedRoute == "new-car-details"){
+            // Seeting the state to initial so when we get to purchase sceen we not get an error
+            context.read<PurchaseCubit>().reset();
+            state = state.copyWith(savedRoute: AppRoutes.selection);
+          }
           Navigator.of(
             context,
           ).pushReplacementNamed(state.savedRoute ?? AppRoutes.selection);

@@ -78,6 +78,9 @@ class _EntryFieldPopupState extends State<EntryFieldPopup> {
         color: Colors.transparent,
         child: Container(
           width: 100.w,
+          constraints: BoxConstraints(
+            maxHeight: 0.8.sh, // 80% of screen height, adjust as needed
+          ),
           padding: EdgeInsets.all(8.w),
           decoration: BoxDecoration(
             color: AppColors.cardBackground,
@@ -106,184 +109,188 @@ class _EntryFieldPopupState extends State<EntryFieldPopup> {
                   ),
                 ],
               ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Spacing.vLarge,
-                  ResponsiveText(
-                    widget.isFromFutureCarPurchase
-                        ? 'Franchise Name'
-                        : "Field title",
-                    style: AppTextStyles.bodyExtraSmall,
-                  ),
-                  Spacing.vSmall,
-                  AppTextFormField(
-                    hintText: widget.isFromFutureCarPurchase
-                        ? "Enter franchise name"
-                        : "Enter field title",
-                    controller: _fieldTitleController,
-                  ),
-                  Spacing.vLarge,
-                  ResponsiveText(
-                    widget.isFromFutureCarPurchase ? "Slots we have" : "SOP",
-                    style: AppTextStyles.bodyExtraSmall,
-                  ),
-                  Spacing.vSmall,
-                  AppTextFormField(
-                    hintText: widget.isFromFutureCarPurchase
-                        ? "Enter slots we have"
-                        : "Enter SOP",
-                    controller: _sopController,
-                  ),
-                  Spacing.vLarge,
-                  ResponsiveText(
-                    widget.isFromFutureCarPurchase ? "Cars we have" : "Fees",
-                    style: AppTextStyles.bodyExtraSmall,
-                  ),
-                  Spacing.vSmall,
-                  AppTextFormField(
-                    hintText: widget.isFromFutureCarPurchase
-                        ? "Enter cars we have"
-                        : "Enter Fees",
-                    controller: _feesController,
-                  ),
-                  Spacing.vLarge,
-
-                  if (!widget.isFromFutureCarPurchase) ...[
-                    ResponsiveText(
-                      "Timeline",
-                      style: AppTextStyles.bodyExtraSmall,
-                    ),
-                    Spacing.vSmall,
-                    AppTextFormField(
-                      hintText: "Enter Timeline",
-                      isReadOnly: true,
-                      onTap: () {
-                        showDatePickerDialog(context, _timelineController);
-                        debugPrint(
-                          "Picked date: \\${_timelineController.text}",
-                        );
-                      },
-                      controller: _timelineController,
-                    ),
-                  ],
-                  Spacing.vLarge,
-                  if (!widget.isFromFutureCarPurchase) ...[
-                    Row(
-                      children: [
-                        ValueListenableBuilder<bool>(
-                          valueListenable: _isCompleted,
-                          builder: (context, value, _) {
-                            return Checkbox(
-                              value: value,
-                              onChanged: (v) => _isCompleted.value = v ?? false,
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Spacing.vLarge,
+                      ResponsiveText(
+                        widget.isFromFutureCarPurchase
+                            ? 'Franchise Name'
+                            : "Field title",
+                        style: AppTextStyles.bodyExtraSmall,
+                      ),
+                      Spacing.vSmall,
+                      AppTextFormField(
+                        hintText: widget.isFromFutureCarPurchase
+                            ? "Enter franchise name"
+                            : "Enter field title",
+                        controller: _fieldTitleController,
+                      ),
+                      Spacing.vLarge,
+                      ResponsiveText(
+                        widget.isFromFutureCarPurchase ? "Slots we have" : "SOP",
+                        style: AppTextStyles.bodyExtraSmall,
+                      ),
+                      Spacing.vSmall,
+                      AppTextFormField(
+                        hintText: widget.isFromFutureCarPurchase
+                            ? "Enter slots we have"
+                            : "Enter SOP",
+                        controller: _sopController,
+                      ),
+                      Spacing.vLarge,
+                      ResponsiveText(
+                        widget.isFromFutureCarPurchase ? "Cars we have" : "Fees",
+                        style: AppTextStyles.bodyExtraSmall,
+                      ),
+                      Spacing.vSmall,
+                      AppTextFormField(
+                        hintText: widget.isFromFutureCarPurchase
+                            ? "Enter cars we have"
+                            : "Enter Fees",
+                        controller: _feesController,
+                      ),
+                      Spacing.vLarge,
+                  
+                      if (!widget.isFromFutureCarPurchase) ...[
+                        ResponsiveText(
+                          "Timeline",
+                          style: AppTextStyles.bodyExtraSmall,
+                        ),
+                        Spacing.vSmall,
+                        AppTextFormField(
+                          hintText: "Enter Timeline",
+                          isReadOnly: true,
+                          onTap: () {
+                            showDatePickerDialog(context, _timelineController);
+                            debugPrint(
+                              "Picked date: \\${_timelineController.text}",
+                            );
+                          },
+                          controller: _timelineController,
+                        ),
+                      ],
+                      Spacing.vLarge,
+                      if (!widget.isFromFutureCarPurchase) ...[
+                        Row(
+                          children: [
+                            ValueListenableBuilder<bool>(
+                              valueListenable: _isCompleted,
+                              builder: (context, value, _) {
+                                return Checkbox(
+                                  value: value,
+                                  onChanged: (v) => _isCompleted.value = v ?? false,
+                                );
+                              },
+                            ),
+                            ResponsiveText(
+                              "Is Completed",
+                              style: AppTextStyles.bodyExtraSmall,
+                            ),
+                          ],
+                        ),
+                        Spacing.vExtraLarge,
+                      ],
+                  
+                      if (widget.isFromFutureCarPurchase) ...[
+                        BlocBuilder<FuturePurchaseCubit, FuturePurchaseState>(
+                          bloc: widget.futurePurchaseCubit,
+                          builder: (context, state) {
+                            return SizedBox(
+                              width: double.infinity,
+                              height: 48.h,
+                              child: AppButton(
+                                text: widget.isUpdating
+                                    ? "Update"
+                                    : state is FuturePurchaseEntryUpdated
+                                    ? "Updating..."
+                                    : state is FuturePurchaseEntryAdding
+                                    ? "Adding..."
+                                    : "Add",
+                                onPressed: () {
+                                  if (widget.isUpdating) {
+                                    widget.futurePurchaseCubit!.updateFieldEntry(
+                                      widget.futurePurchaseModel!.copyWith(
+                                        franchiseName: _fieldTitleController.text,
+                                        slotsWeHave: int.parse(_sopController.text),
+                                        carsWeHave: int.parse(_feesController.text),
+                                      ),
+                                    );
+                                  } else {
+                                    widget.futurePurchaseCubit!.addFieldEntry(
+                                      FuturePurchaseModel(
+                                        id: _fieldTitleController.text,
+                                        franchiseName: _fieldTitleController.text,
+                                        slotsWeHave: int.parse(_sopController.text),
+                                        carsWeHave: int.parse(_feesController.text),
+                                      ),
+                                    );
+                                  }
+                                  Navigator.pop(context);
+                                },
+                              ),
                             );
                           },
                         ),
-                        ResponsiveText(
-                          "Is Completed",
-                          style: AppTextStyles.bodyExtraSmall,
+                      ] else ...[
+                        BlocBuilder<FieldCubit, FieldState>(
+                          bloc: widget.fieldCubit,
+                          builder: (context, state) {
+                            return SizedBox(
+                              width: double.infinity,
+                              height: 48.h,
+                              child: AppButton(
+                                text: widget.isUpdating
+                                    ? "Update"
+                                    : state is FieldEntryUpdating
+                                    ? "Updating..."
+                                    : state is FieldEntryAdding
+                                    ? "Adding..."
+                                    : "Add",
+                                onPressed: () {
+                                  final isCompleted = _isCompleted.value;
+                                  if (widget.isUpdating) {
+                                    widget.fieldCubit!.updateFieldEntry(
+                                      widget.fieldEntryModel!.copyWith(
+                                        title: _fieldTitleController.text,
+                                        SOP: int.parse(_sopController.text),
+                                        isCompleted: isCompleted,
+                                        fees: int.parse(_feesController.text),
+                                        timeline:
+                                            HelperFunctions.parseDateString(
+                                              _timelineController.text,
+                                            ) ??
+                                            DateTime.now(),
+                                      ),
+                                    );
+                                  } else {
+                                    widget.fieldCubit!.addFieldEntry(
+                                      FieldEntryModel(
+                                        title: _fieldTitleController.text,
+                                        SOP: int.parse(_sopController.text),
+                                        isCompleted: isCompleted,
+                                        fees: int.parse(_feesController.text),
+                                        timeline:
+                                            HelperFunctions.parseDateString(
+                                              _timelineController.text,
+                                            ) ??
+                                            DateTime.now(),
+                                      ),
+                                    );
+                                  }
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            );
+                          },
                         ),
                       ],
-                    ),
-                    Spacing.vExtraLarge,
-                  ],
-
-                  if (widget.isFromFutureCarPurchase) ...[
-                    BlocBuilder<FuturePurchaseCubit, FuturePurchaseState>(
-                      bloc: widget.futurePurchaseCubit,
-                      builder: (context, state) {
-                        return SizedBox(
-                          width: double.infinity,
-                          height: 48.h,
-                          child: AppButton(
-                            text: widget.isUpdating
-                                ? "Update"
-                                : state is FuturePurchaseEntryUpdated
-                                ? "Updating..."
-                                : state is FuturePurchaseEntryAdding
-                                ? "Adding..."
-                                : "Add",
-                            onPressed: () {
-                              if (widget.isUpdating) {
-                                widget.futurePurchaseCubit!.updateFieldEntry(
-                                  widget.futurePurchaseModel!.copyWith(
-                                    franchiseName: _fieldTitleController.text,
-                                    slotsWeHave: int.parse(_sopController.text),
-                                    carsWeHave: int.parse(_feesController.text),
-                                  ),
-                                );
-                              } else {
-                                widget.futurePurchaseCubit!.addFieldEntry(
-                                  FuturePurchaseModel(
-                                    id: _fieldTitleController.text,
-                                    franchiseName: _fieldTitleController.text,
-                                    slotsWeHave: int.parse(_sopController.text),
-                                    carsWeHave: int.parse(_feesController.text),
-                                  ),
-                                );
-                              }
-                              Navigator.pop(context);
-                            },
-                          ),
-                        );
-                      },
-                    ),
-                  ] else ...[
-                    BlocBuilder<FieldCubit, FieldState>(
-                      bloc: widget.fieldCubit,
-                      builder: (context, state) {
-                        return SizedBox(
-                          width: double.infinity,
-                          height: 48.h,
-                          child: AppButton(
-                            text: widget.isUpdating
-                                ? "Update"
-                                : state is FieldEntryUpdating
-                                ? "Updating..."
-                                : state is FieldEntryAdding
-                                ? "Adding..."
-                                : "Add",
-                            onPressed: () {
-                              final isCompleted = _isCompleted.value;
-                              if (widget.isUpdating) {
-                                widget.fieldCubit!.updateFieldEntry(
-                                  widget.fieldEntryModel!.copyWith(
-                                    title: _fieldTitleController.text,
-                                    SOP: int.parse(_sopController.text),
-                                    isCompleted: isCompleted,
-                                    fees: int.parse(_feesController.text),
-                                    timeline:
-                                        HelperFunctions.parseDateString(
-                                          _timelineController.text,
-                                        ) ??
-                                        DateTime.now(),
-                                  ),
-                                );
-                              } else {
-                                widget.fieldCubit!.addFieldEntry(
-                                  FieldEntryModel(
-                                    title: _fieldTitleController.text,
-                                    SOP: int.parse(_sopController.text),
-                                    isCompleted: isCompleted,
-                                    fees: int.parse(_feesController.text),
-                                    timeline:
-                                        HelperFunctions.parseDateString(
-                                          _timelineController.text,
-                                        ) ??
-                                        DateTime.now(),
-                                  ),
-                                );
-                              }
-                              Navigator.pop(context);
-                            },
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ],
+                    ],
+                  ),
+                ),
               ),
             ],
           ),

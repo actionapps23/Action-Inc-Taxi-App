@@ -447,7 +447,7 @@ class _ReportRowCard extends StatelessWidget {
                         color: Colors.white70,
                       ),
                       const SizedBox(width: 8),
-                      Text(
+                      ResponsiveText(
                         date.toIso8601String().split('T').first,
                         style: const TextStyle(
                           color: Colors.white,

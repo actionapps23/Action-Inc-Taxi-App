@@ -4,6 +4,7 @@ import 'package:action_inc_taxi_app/core/widgets/buttons/app_outline_button.dart
 import 'package:action_inc_taxi_app/core/widgets/checklist_table.dart';
 import 'package:action_inc_taxi_app/core/widgets/entry_field_popup.dart';
 import 'package:action_inc_taxi_app/core/widgets/navbar/navbar.dart';
+import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/snackbar.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/spacing.dart';
 import 'package:action_inc_taxi_app/cubit/field/field_cubit.dart';
@@ -82,7 +83,7 @@ class _FranchiseTransferState extends State<FranchiseTransfer> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Expanded(
-                              child: Text(
+                              child: ResponsiveText(
                                 "Franchise Transfer",
                                 style: AppTextStyles.bodySmall,
                                 textAlign: TextAlign.center,
@@ -111,14 +112,14 @@ class _FranchiseTransferState extends State<FranchiseTransfer> {
                         Center(child: CircularProgressIndicator()),
                       ] else if (state is FieldError) ...[
                         Spacing.vMedium,
-                        Center(child: Text("Error: ${state.message}")),
+                        Center(child: ResponsiveText("Error: ${state.message}")),
                       ] else if (state is FieldError) ...[
                         Spacing.vMedium,
-                        Text("Error: ${state.message}"),
+                        ResponsiveText("Error: ${state.message}"),
                       ] else if (state is FieldEntriesLoaded &&
                           state.entries.isEmpty) ...[
                         Spacing.vMedium,
-                        Center(child: Text("No entries found.")),
+                        Center(child: ResponsiveText("No entries found.")),
                       ] else if (state is FieldEntriesLoaded) ...[
                         ChecklistTable(
                           title: "LTFRB Process (Franchise Transfer)",

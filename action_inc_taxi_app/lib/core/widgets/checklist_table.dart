@@ -6,6 +6,7 @@ import 'package:action_inc_taxi_app/core/models/future_purchase_model.dart';
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
 import 'package:action_inc_taxi_app/core/theme/app_text_styles.dart';
 import 'package:action_inc_taxi_app/core/widgets/buttons/app_outline_button.dart';
+import 'package:action_inc_taxi_app/core/widgets/buttons/app_text_button.dart';
 import 'package:action_inc_taxi_app/core/widgets/entry_field_popup.dart';
 import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/spacing.dart';
@@ -13,6 +14,9 @@ import 'package:action_inc_taxi_app/cubit/field/field_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/field/field_state.dart';
 import 'package:action_inc_taxi_app/cubit/future_purchase/future_purchase_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/future_purchase/future_purchase_state.dart';
+import 'package:action_inc_taxi_app/cubit/purchase/purchase_cubit.dart';
+import 'package:action_inc_taxi_app/cubit/selection/selection_cubit.dart';
+import 'package:action_inc_taxi_app/features/purchase/edit_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -25,6 +29,7 @@ class ChecklistTable<T> extends StatelessWidget {
   FieldCubit? fieldCubit;
   FuturePurchaseCubit? futurePurchaseCubit;
   final double? maxHeight;
+  final bool showUpdateTaxiNumberButton;
 
   ChecklistTable({
     super.key,
@@ -35,6 +40,7 @@ class ChecklistTable<T> extends StatelessWidget {
     this.maxHeight,
     this.fieldCubit,
     this.futurePurchaseCubit,
+    this.showUpdateTaxiNumberButton = false,
   });
 
   Widget _headerCell(String text, {double flex = 1}) {
@@ -65,6 +71,8 @@ class ChecklistTable<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final SelectionCubit selectionCubit = context.read<SelectionCubit>();
+    final PurchaseCubit purchaseCubit = context.read<PurchaseCubit>();
     late FieldEntryModel? fieldEntryModel;
     List<FieldEntryModel>? data =
         fieldCubit != null && fieldCubit!.state is FieldEntriesLoaded
@@ -98,18 +106,49 @@ class ChecklistTable<T> extends StatelessWidget {
                         style: AppTextStyles.bodyExtraSmall,
                       ),
                       Spacer(),
-                      AppOutlineButton(
-                        label: "Add New field",
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) => EntryFieldPopup(
-                              fieldCubit: fieldCubit,
-                              isFromFutureCarPurchase: isFromFutureCarPurchase,
-                              futurePurchaseCubit: futurePurchaseCubit,
-                            ),
+                      Column(
+                        children: [
+                          AppOutlineButton(
+                            label: "Add New field",
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => EntryFieldPopup(
+                                  fieldCubit: fieldCubit,
+                                  isFromFutureCarPurchase: isFromFutureCarPurchase,
+                                  futurePurchaseCubit: futurePurchaseCubit,
+                                ),
+                              );
+                            },
+                          ),
+
+                          if(showUpdateTaxiNumberButton)...[
+                            Spacing.vSmall,
+                              AppTextButton(
+                text: "Update Taxi Number",
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return EditFieldPopup(
+                        title: "Update Taxi plate number",
+                        label: "Taxi plate number",
+                        initialValue: selectionCubit.state.taxiPlateNo,
+                        hintText: "Enter new plate number",
+                        onSave: (newPlate) {
+                          purchaseCubit.updateTaxiPlateNumber(
+                            selectionCubit.state.taxiPlateNo,
+                            newPlate,
                           );
+                          selectionCubit.setTaxiPlateNo(newPlate);
                         },
+                      );
+                    },
+                  );
+                },
+              ),
+                          ]
+                        ],
                       ),
                     ],
                   ),
