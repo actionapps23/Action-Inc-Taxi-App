@@ -8,16 +8,17 @@ class PurchaseService {
   static Future<void> savePurchaseRecord(
     String taxiPlateNumber,
     List<FieldEntryModel> purchaseData,
+    final String collectionName,
   ) async {
     try {
       await _firestore
-          .collection(AppConstants.purchaseCollection)
+          .collection(collectionName)
           .doc(taxiPlateNumber)
           .set({'last_updated': FieldValue.serverTimestamp()});
 
       for (var i in purchaseData) {
         await _firestore
-            .collection(AppConstants.purchaseCollection)
+            .collection(collectionName)
             .doc(taxiPlateNumber)
             .collection(taxiPlateNumber)
             .doc(i.id)
@@ -26,6 +27,54 @@ class PurchaseService {
     } catch (e) {
       rethrow;
     }
+  }
+  static Future<Map<String, List<FieldEntryModel>>> getAllChecklists(String taxiPlateNumber) async {
+    final List<FieldEntryModel> newCarEquipmentCheckListCollection = [];
+    final List<FieldEntryModel> lftrbCheckListCollectionForNewCar = [];
+    final List<FieldEntryModel> ltoCheckListCollectionForNewCar = [];
+
+    QuerySnapshot newCarEquimentSnapshot = await _firestore
+        .collection(AppConstants.newCarEquipmentChecklistCollection)
+        .doc(taxiPlateNumber).collection(taxiPlateNumber).get();
+    
+    if(newCarEquimentSnapshot.docs.isNotEmpty){
+      for(var doc in newCarEquimentSnapshot.docs){
+        var data = doc.data() as Map<String, dynamic>;
+        newCarEquipmentCheckListCollection.add(FieldEntryModel.fromJson(data));
+      }
+    }
+    QuerySnapshot lftrbSnapshot = await _firestore
+        .collection(AppConstants.lftrbChecklistCollectionForNewCar)
+        .doc(taxiPlateNumber).collection(taxiPlateNumber).get();
+
+    if(lftrbSnapshot.docs.isNotEmpty){
+      for(var doc in lftrbSnapshot.docs){
+        var data = doc.data() as Map<String, dynamic>;
+        lftrbCheckListCollectionForNewCar.add(FieldEntryModel.fromJson(data));
+      }
+    }
+
+    QuerySnapshot ltoSnapshot = await _firestore
+        .collection(AppConstants.ltoChecklistCollectionForNewCar)
+        .doc(taxiPlateNumber).collection(taxiPlateNumber).get();
+
+    if(ltoSnapshot.docs.isNotEmpty){
+      for(var doc in ltoSnapshot.docs){
+        var data = doc.data() as Map<String, dynamic>;
+        ltoCheckListCollectionForNewCar.add(FieldEntryModel.fromJson(data));
+      }
+    }
+    
+  
+
+
+    final purchaseData = {
+      'newCarEquipmentData': newCarEquipmentCheckListCollection,
+      'ltfrbData': lftrbCheckListCollectionForNewCar,
+      'ltoData': ltoCheckListCollectionForNewCar,
+    };
+    return purchaseData;
+
   }
 
   static Future<List<FieldEntryModel>> getPurchaseRecord(

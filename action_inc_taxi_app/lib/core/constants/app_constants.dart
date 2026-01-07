@@ -136,9 +136,12 @@ class AppConstants {
       'lto_franchise_transfer';
   static final String purchaseChecklistCollection = 'purchase_checklist';
   static final String purchaseCollection = 'purchases';
-  static final String newCarEquipmentCollection = 'new_car_equipments';
-  static final String lftrbCollectionForNewCar = 'ltfrb_process';
-  static final String ltoCollectionForNewCar = 'lto_process';
+  static final String newCarEquipmentChecklistCollection = 'new_car_equipments_checklist';
+  static final String lftrbChecklistCollectionForNewCar = 'ltfrb_process_checklist';
+  static final String ltoChecklistCollectionForNewCar = 'lto_process_checklist';
+  static final String newCarEquipmentRecordCollection = 'new_car_equipments_records';
+  static final String lftrbRecordCollectionForNewCar = 'ltfrb_process_records';
+  static final String ltoRecordCollectionForNewCar = 'lto_process_records';
   static final String futurePurchaseChecklistCollection =
       'future_purchases_checklist';
   static final String fieldEntryCollectionName = 'field_entries';

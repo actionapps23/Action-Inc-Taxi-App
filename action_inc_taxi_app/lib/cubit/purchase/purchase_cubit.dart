@@ -1,3 +1,4 @@
+import 'package:action_inc_taxi_app/core/constants/app_constants.dart';
 import 'package:action_inc_taxi_app/core/models/field_entry_model.dart';
 import 'package:action_inc_taxi_app/cubit/purchase/purchase_state.dart';
 import 'package:action_inc_taxi_app/services/purchase_service.dart';
@@ -25,11 +26,63 @@ class PurchaseCubit extends Cubit<PurchaseState> {
   ) async {
     emit(PurchaseLoading());
     try {
-      await PurchaseService.savePurchaseRecord(taxiPlateNumber, purchaseData);
+      await PurchaseService.savePurchaseRecord(taxiPlateNumber, purchaseData, AppConstants.purchaseCollection);
       final data = await PurchaseService.getPurchaseRecord(taxiPlateNumber);
       emit(PurchaseLoaded(purchaseData: data));
     } catch (e) {
       debugPrint("Error saving purchase record: $e");
+      emit(PurchaseError(message: e.toString()));
+    }
+  }
+
+  // function to get the data for newCarEquipment, ltfrbChecklist, ltoChecklist
+
+  Future<void> getAllChecklists(String taxiPlateNumber) async {
+    emit(PurchaseLoading());
+    try {
+    final Map<String, List<FieldEntryModel>> data = await PurchaseService.getAllChecklists(taxiPlateNumber);
+
+      emit(AllDataLoaded(
+        newCarEquipmentData: data['newCarEquipmentData'] ?? [],
+        ltfrbData: data['ltfrbData'] ?? [],
+        ltoData: data['ltoData'] ?? [],
+      ));
+    } catch (e) {
+      debugPrint("Error fetching checklists: $e");
+      emit(PurchaseError(message: e.toString()));
+    }
+  }
+
+  Future<void> saveAllChecklists(
+    String taxiPlateNumber,
+    List<FieldEntryModel> newCarEquipmentData,
+    List<FieldEntryModel> ltfrbData,
+    List<FieldEntryModel> ltoData,
+  ) async {
+    emit(PurchaseLoading());
+    try {
+      await PurchaseService.savePurchaseRecord(
+        taxiPlateNumber,
+        newCarEquipmentData,
+        AppConstants.newCarEquipmentRecordCollection
+      );
+      await PurchaseService.savePurchaseRecord(
+        taxiPlateNumber,
+        ltfrbData,
+        AppConstants.lftrbRecordCollectionForNewCar
+      );
+      await PurchaseService.savePurchaseRecord(
+        taxiPlateNumber,
+        ltoData,
+        AppConstants.ltoRecordCollectionForNewCar
+      );
+      emit(AllDataLoaded(
+        newCarEquipmentData: newCarEquipmentData,
+        ltfrbData: ltfrbData,
+        ltoData: ltoData,
+      ));
+    } catch (e) {
+      debugPrint("Error saving all checklists: $e");
       emit(PurchaseError(message: e.toString()));
     }
   }

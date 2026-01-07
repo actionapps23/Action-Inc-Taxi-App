@@ -29,6 +29,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
   late final DeviceUtils deviceUtils;
 
   bool get isCarDetails => selectedIndex == 0;
+  bool get isPurchase => selectedIndex == 8;
 
   bool get canProceed {
     if (isCarDetails) {
@@ -43,17 +44,17 @@ class _SelectionScreenState extends State<SelectionScreen> {
   }
 
   final List<Map<String, dynamic>> featureCards = [
-    {'title': "Rent a Car", 'icon': AppAssets.carDetailsIcon},
-    {'title': "Car Details", 'icon': AppAssets.carDetailsIcon},
-    {'title': "Maintenance", 'icon': AppAssets.maintenance},
-    {'title': "Inventory", 'icon': AppAssets.inventory},
-    {'title': "Taxi Inspection", 'icon': AppAssets.taxiInspection},
-    {'title': "Open Procedure", 'icon': AppAssets.openProcedure},
-    {'title': "Close Procedure", 'icon': AppAssets.closeProcedure},
-    {'title': "Renewal & Status", 'icon': AppAssets.renewalStatus},
-    {'title': "Purchase of Car", 'icon': AppAssets.carPurchase},
-    {'title': "Franchise Transfer", 'icon': AppAssets.franchiseTransfer},
-    {'title': "Future Purchase", 'icon': AppAssets.futurePurchase},
+     {'title': "Rent a Car", 'id': 'rent_a_car', 'icon': AppAssets.carDetailsIcon},
+     {'title': "Car Details", 'id': 'car_details', 'icon': AppAssets.carDetailsIcon},
+     {'title': "Maintenance", 'id': 'maintenance', 'icon': AppAssets.maintenance},
+     {'title': "Inventory", 'id': 'inventory', 'icon': AppAssets.inventory},
+     {'title': "Taxi Inspection", 'id': 'taxi_inspection', 'icon': AppAssets.taxiInspection},
+     {'title': "Open Procedure", 'id': 'open_procedure', 'icon': AppAssets.openProcedure},
+     {'title': "Close Procedure", 'id': 'close_procedure', 'icon': AppAssets.closeProcedure},
+     {'title': "Renewal & Status", 'id': 'renewal_status', 'icon': AppAssets.renewalStatus},
+     {'title': "Purchase of Car", 'id': 'car_purchase', 'icon': AppAssets.carPurchase},
+     {'title': "Franchise Transfer", 'id': 'franchise_transfer', 'icon': AppAssets.franchiseTransfer},
+     {'title': "Future Purchase", 'id': 'future_purchase', 'icon': AppAssets.futurePurchase},
   ];
 
   @override
@@ -129,7 +130,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
                                 selectionCubit.proceed(
                                   i,
                                   context,
-                                  featureCards[i]['title'],
+                                  featureCards[i]['id'],
                                 );
                                 setState(() {
                                   selectedIndex = i;
@@ -197,7 +198,8 @@ class _SelectionScreenState extends State<SelectionScreen> {
                                   ),
                                   SizedBox(height: 12.h),
 
-                                  AppTextFormField(
+                                 if(!isPurchase)...[
+                                   AppTextFormField(
                                     controller: taxiNoController,
                                     hintText: 'Enter Taxi No.',
                                     labelOnTop: true,
@@ -216,6 +218,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
                                       selectionCubit.setRegNo(val);
                                     },
                                   ),
+                                 ]
                                 ],
                                 SizedBox(height: 24.h),
                                 AppButton(

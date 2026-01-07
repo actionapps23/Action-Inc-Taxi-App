@@ -45,11 +45,11 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
 
           BlocBuilder<FieldCubit, FieldState>(
             bloc: fieldCubit,
-            builder: (context, state) {
+            builder: (context, fiedState) {
               return BlocBuilder<PurchaseCubit, PurchaseState>(
                 bloc: purchaseCubit,
-                builder: (context, state) {
-                  if (state is PurchaseLoading || state is PurchaseInitial) {
+                builder: (context, purchaseState) {
+                  if (purchaseState is PurchaseLoading || purchaseState is PurchaseInitial) {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -60,7 +60,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                         Center(child: CircularProgressIndicator()),
                       ],
                     );
-                  } else if (state is FieldError || state is PurchaseError) {
+                  } else if (fiedState is FieldError || purchaseState is PurchaseError) {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -79,7 +79,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                   return ChecklistTable(
                     title: "Purchase Of Car",
                     fieldCubit: fieldCubit,
-                    data: (state as PurchaseLoaded).purchaseData,
+                    data: (purchaseState as PurchaseLoaded).purchaseData,
                   );
                 },
               );

@@ -50,7 +50,7 @@ class SelectionCubit extends Cubit<SelectionState> {
   //
   void proceed(int selectedIndex, BuildContext context, String? id) {
     if (id != null && id.isNotEmpty) {
-      if (id.toLowerCase() == "future purchase") {
+      if (id.toLowerCase() == "future_purchase") {
         {
           Navigator.pushNamed(context, AppRoutes.futurePurchase);
         }
@@ -63,7 +63,7 @@ class SelectionCubit extends Cubit<SelectionState> {
         {
           Navigator.pushNamed(context, AppRoutes.inventory);
         }
-      } else if (id.toLowerCase() == "open procedure") {
+      } else if (id.toLowerCase() == "open_procedure") {
         {
           Navigator.pushNamed(
             context,
@@ -73,7 +73,7 @@ class SelectionCubit extends Cubit<SelectionState> {
             ),
           );
         }
-      } else if (id.toLowerCase() == "close procedure") {
+      } else if (id.toLowerCase() == "close_procedure") {
         {
           Navigator.pushNamed(
             context,
@@ -83,7 +83,7 @@ class SelectionCubit extends Cubit<SelectionState> {
             ),
           );
         }
-      } else if (id.toLowerCase() == 'renewal & status') {
+      } else if (id.toLowerCase() == 'renewal_status') {
         Navigator.pushNamed(context, AppRoutes.renewalStatus);
       }
       return;
