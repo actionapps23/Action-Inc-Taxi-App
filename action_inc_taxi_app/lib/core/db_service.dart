@@ -476,6 +476,23 @@ class DbService {
     return {'totalCarWashFeesToday': 0, 'totalCarWashFeesYesterday': 0};
   }
 
+  Future<void> updateEmployeePassword(String employeeId, String currentHashPassword, String newHashPassword) async {
+    try {
+      final ref = _firestore.collection(employeeCollection).doc(employeeId);
+      final doc = await ref.get();
+      if (!doc.exists) {
+        throw Exception('Employee not found');
+      }
+      final employeeModel = EmployeeModel.fromJson(doc.data()!);
+      if (employeeModel.password != currentHashPassword) {
+        throw Exception('Current password is incorrect');
+      }
+      await ref.update({'hashPassword': newHashPassword});
+    } catch (e) {
+      rethrow;
+    }
+
+  }
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   final String employeeCollection = 'employees';

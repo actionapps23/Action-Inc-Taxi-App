@@ -19,6 +19,14 @@ class LoginSuccess extends LoginState {
   }
 }
 
+class UpdatePasswordSuccess extends LoginState {}
+class UpdatePasswordFailure extends LoginState {
+  final String error;
+  UpdatePasswordFailure(this.error);
+}
+
+class UpdatePasswordLoading extends LoginState {}
+
 class LoginFailure extends LoginState {
   final String error;
   LoginFailure(this.error);

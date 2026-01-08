@@ -99,6 +99,18 @@ class Navbar extends StatelessWidget {
                   ],
                   SizedBox(width: 12.w),
                   NavButton(
+                    'Change Password',
+                    icon: AppAssets.logout,
+                    onTap: () {
+                     
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                        AppRoutes.changePassword,
+                        (route) => false,
+                      );
+                    },
+                  ),
+                   SizedBox(width: 12.w),
+                  NavButton(
                     'Log out',
                     icon: AppAssets.logout,
                     onTap: () {

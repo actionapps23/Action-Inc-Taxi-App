@@ -1,6 +1,7 @@
 import 'package:action_inc_taxi_app/auth_gate.dart';
 import 'package:action_inc_taxi_app/core/widgets/pratice.dart';
 import 'package:action_inc_taxi_app/features/auth/add_employee_screen/add_employee_screen.dart';
+import 'package:action_inc_taxi_app/features/auth/change_password_screen/change_password_screen.dart';
 import 'package:action_inc_taxi_app/features/auth/login_screen.dart';
 import 'package:action_inc_taxi_app/features/close_procedure/procedure_screen.dart';
 import 'package:action_inc_taxi_app/features/dashboard/dashboard.dart';
@@ -24,6 +25,7 @@ class AppRoutes {
   static const String login = 'login';
   static const String selection = 'selection';
   static const String dashboard = 'dashboard';
+  static const String changePassword = 'change-password';
   static const String report = 'report';
   static const String addEmployee = 'add-employee';
   static const String maintainance = 'maintenance';
@@ -44,6 +46,7 @@ class AppRouter {
   static Map<String, WidgetBuilder> get routes => {
         AppRoutes.selection: (_) => const AuthGate(child: SelectionScreen()),
         AppRoutes.newCarDetails: (_) => AuthGate(child: NewCarDetails()),
+        AppRoutes.changePassword: (_) => const AuthGate(child: ChangePasswordScreen()),
         AppRoutes.unknown: (_) => const UnknownScreen(),
         AppRoutes.practice: (_) => AuthGate(child: PracticeScreen()),
         AppRoutes.dashboard: (_) => AuthGate(child: Dashboard()),
