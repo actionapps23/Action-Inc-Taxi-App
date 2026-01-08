@@ -28,6 +28,23 @@ class PurchaseService {
     }
   }
 
+  static Future<void> updatePurchaseRecord(
+    String taxiPlateNumber,
+    FieldEntryModel updatedEntry,
+  ){
+
+    try {
+      return _firestore
+          .collection(AppConstants.purchaseRecordsCollection)
+          .doc(taxiPlateNumber)
+          .collection(taxiPlateNumber)
+          .doc(updatedEntry.id)
+          .set(updatedEntry.toJson());
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   static Future<List<FieldEntryModel>> getPurchaseRecord(
     String taxiPlateNumber,
   ) async {

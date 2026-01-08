@@ -18,6 +18,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class EntryFieldPopup extends StatefulWidget {
   final FieldCubit? fieldCubit;
+  final Function(FieldEntryModel)? onAdd;
+  final Function(FieldEntryModel)? onEdit;
   final FuturePurchaseCubit? futurePurchaseCubit;
   final bool isUpdating;
   final bool isFromFutureCarPurchase;
@@ -27,6 +29,8 @@ class EntryFieldPopup extends StatefulWidget {
     super.key,
     this.fieldCubit,
     this.futurePurchaseCubit,
+    this.onAdd,
+    this.onEdit,
     this.isUpdating = false,
     this.isFromFutureCarPurchase = false,
     this.futurePurchaseModel,
@@ -253,6 +257,23 @@ class _EntryFieldPopupState extends State<EntryFieldPopup> {
                                 onPressed: () {
                                   final isCompleted = _isCompleted.value;
                                   if (widget.isUpdating) {
+                                    if(widget.onEdit != null){
+                                      widget.onEdit!(
+                                        widget.fieldEntryModel!.copyWith(
+                                          title: _fieldTitleController.text,
+                                          SOP: int.parse(_sopController.text),
+                                          isCompleted: isCompleted,
+                                          fees: int.parse(_feesController.text),
+                                          timeline:
+                                              HelperFunctions.parseDateString(
+                                                _timelineController.text,
+                                              ) ??
+                                              DateTime.now(),
+                                        ),
+                                      );
+                                      Navigator.pop(context);
+                                      return;
+                                    } 
                                     widget.fieldCubit!.updateFieldEntry(
                                       widget.fieldEntryModel!.copyWith(
                                         title: _fieldTitleController.text,
@@ -267,6 +288,23 @@ class _EntryFieldPopupState extends State<EntryFieldPopup> {
                                       ),
                                     );
                                   } else {
+                                    if(widget.onAdd != null){
+                                      widget.onAdd!(
+                                        FieldEntryModel(
+                                          title: _fieldTitleController.text,
+                                          SOP: int.parse(_sopController.text),
+                                          isCompleted: isCompleted,
+                                          fees: int.parse(_feesController.text),
+                                          timeline:
+                                              HelperFunctions.parseDateString(
+                                                _timelineController.text,
+                                              ) ??
+                                              DateTime.now(),
+                                        ),
+                                      );
+                                      Navigator.pop(context);
+                                      return;
+                                    }
                                     widget.fieldCubit!.addFieldEntry(
                                       FieldEntryModel(
                                         title: _fieldTitleController.text,

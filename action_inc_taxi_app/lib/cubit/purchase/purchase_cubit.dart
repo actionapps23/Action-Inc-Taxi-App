@@ -39,6 +39,24 @@ class PurchaseCubit extends Cubit<PurchaseState> {
     }
   }
 
+  Future<void> updatePurchaseRecord(
+    String taxiPlateNumber,
+    FieldEntryModel updatedEntry
+  ) async{
+    emit(PurchaseLoading());
+    try {
+      await PurchaseService.updatePurchaseRecord(
+        taxiPlateNumber,
+        updatedEntry,
+      );
+      final data = await PurchaseService.getPurchaseRecord(taxiPlateNumber);
+      emit(PurchaseLoaded(purchaseData: data));
+    } catch (e) {
+      debugPrint("Error updating purchase record: $e");
+      emit(PurchaseError(message: e.toString()));
+    }
+    
+  }
   // function to get the data for newCarEquipment, ltfrbChecklist, ltoChecklist
 
   Future<void> getAllChecklists(String taxiPlateNumber) async {

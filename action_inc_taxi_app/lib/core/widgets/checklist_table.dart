@@ -201,7 +201,7 @@ class ChecklistTable<T> extends StatelessWidget {
                                                 as FuturePurchaseEntriesLoaded)
                                             .entries
                                       : [])
-                                : fieldEntires ?? [])
+                                : data ?? [])
                             .map((item) {
                               fieldEntryModel = (data?.firstWhere(
                                 (element) => element.id == item.id,
@@ -321,6 +321,10 @@ class ChecklistTable<T> extends StatelessWidget {
                                                             isCompleted: item
                                                                 .isCompleted,
                                                           ),
+                                                          onEdit: (updatedItem) {
+                                                            purchaseCubit.updatePurchaseRecord(selectionCubit.state.taxiPlateNo, updatedItem);
+                                                          },
+                                                         
                                                     ),
                                               );
                                             }
