@@ -128,14 +128,24 @@ class AppConstants {
   ];
 
   // collections
-  static final String lftrbForFranchiseTransferCollection =
-      'ltfrb_franchise_transfer';
-  static final String pnpForFranchiseTransferCollection =
-      'pnp_franchise_transfer';
-  static final String ltoForFranchiseTransferCollection =
-      'lto_franchise_transfer';
+  static final String lftrbChecklistForFranchiseTransferCollection =
+      'ltfrb_franchise_transfer_checklist';
+  static final String pnpChecklistForFranchiseTransferCollection =
+      'pnp_franchise_transfer_checklist';
+  static final String ltoChecklistForFranchiseTransferCollection =
+      'lto_franchise_transfer_checklist';
+
+  static final String lftrbRecordForFranchiseTransferCollection =
+      'ltfrb_franchise_transfer_records';
+  
+  static final String pnpRecordForFranchiseTransferCollection =
+      'pnp_franchise_transfer_records';
+  
+  static final String ltoRecordForFranchiseTransferCollection =
+      'lto_franchise_transfer_records';
+
   static final String purchaseChecklistCollection = 'purchase_checklist';
-  static final String purchaseCollection = 'purchases';
+  static final String purchaseRecordsCollection = 'purchase_records';
   static final String newCarEquipmentChecklistCollection = 'new_car_equipments_checklist';
   static final String lftrbChecklistCollectionForNewCar = 'ltfrb_process_checklist';
   static final String ltoChecklistCollectionForNewCar = 'lto_process_checklist';

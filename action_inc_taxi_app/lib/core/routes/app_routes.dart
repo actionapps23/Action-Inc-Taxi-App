@@ -1,3 +1,4 @@
+import 'package:action_inc_taxi_app/auth_gate.dart';
 import 'package:action_inc_taxi_app/core/widgets/pratice.dart';
 import 'package:action_inc_taxi_app/features/auth/add_employee_screen/add_employee_screen.dart';
 import 'package:action_inc_taxi_app/features/auth/login_screen.dart';
@@ -37,28 +38,26 @@ class AppRoutes {
   static const String futurePurchase = 'future-purchase';
   static const String newCarDetails = 'new-car-details';
   static const String unknown = 'unknown';
-
 }
-
 
 class AppRouter {
   static Map<String, WidgetBuilder> get routes => {
-    AppRoutes.selection: (_) => const SelectionScreen(),
-    AppRoutes.newCarDetails: (_) => NewCarDetails(),
-    AppRoutes.unknown : (_) =>  UnknownScreen(),
-    AppRoutes.practice: (_) => PracticeScreen(),
-    AppRoutes.dashboard: (_) => Dashboard(),
-    AppRoutes.report: (_) => const ReportPage(),
-    AppRoutes.addEmployee: (_) => AddEmployeeScreen(),
-    AppRoutes.maintainance: (_) => MaintainenceScreen(),
-    AppRoutes.inventory: (_) => InventorySceen(),
-    AppRoutes.vehicleViewSelection: (_) => const VehicleViewSelectionScreen(),
-    AppRoutes.renewalStatus: (_) => RenewalAndStatusScreen(),
-    AppRoutes.purchase: (_) => PurchaseScreen(),
-    AppRoutes.franchiseTransfer: (_) => FranchiseTransfer(),
-    AppRoutes.futurePurchase: (_) => FuturePurchaseScreen(),
-    AppRoutes.login: (_) => const LoginScreen(),
-  };
+        AppRoutes.selection: (_) => const AuthGate(child: SelectionScreen()),
+        AppRoutes.newCarDetails: (_) => AuthGate(child: NewCarDetails()),
+        AppRoutes.unknown: (_) => const UnknownScreen(),
+        AppRoutes.practice: (_) => AuthGate(child: PracticeScreen()),
+        AppRoutes.dashboard: (_) => AuthGate(child: Dashboard()),
+        AppRoutes.report: (_) => const AuthGate(child: ReportPage()),
+        AppRoutes.addEmployee: (_) => AuthGate(child: AddEmployeeScreen()),
+        AppRoutes.maintainance: (_) => AuthGate(child: MaintainenceScreen()),
+        AppRoutes.inventory: (_) => AuthGate(child: InventorySceen()),
+        AppRoutes.vehicleViewSelection: (_) => const AuthGate(child: VehicleViewSelectionScreen()),
+        AppRoutes.renewalStatus: (_) => AuthGate(child: RenewalAndStatusScreen()),
+        AppRoutes.purchase: (_) => AuthGate(child: PurchaseScreen()),
+        AppRoutes.franchiseTransfer: (_) => AuthGate(child: FranchiseTransfer()),
+        AppRoutes.futurePurchase: (_) => AuthGate(child: FuturePurchaseScreen()),
+        AppRoutes.login: (_) => const LoginScreen(),
+      };
 
   static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
     return MaterialPageRoute(
@@ -66,25 +65,20 @@ class AppRouter {
       builder: (context) {
         if (settings.name == AppRoutes.carDetail) {
           final args = settings.arguments as CarDetailRouteArgs?;
-          return CarDetailScreen(fetchDetails: args?.fetchDetails ?? false);
+          return AuthGate(child: CarDetailScreen(fetchDetails: args?.fetchDetails ?? false));
         }
-
         if (settings.name == AppRoutes.procedure) {
           final args = settings.arguments as ProcedureRouteArgs?;
           if (args == null) return const LoginScreen();
-          return ProcedureScreen(procedureType: args.procedureType);
+          return AuthGate(child: ProcedureScreen(procedureType: args.procedureType));
         }
-
         if (settings.name == AppRoutes.vehicleInspectionPanel) {
           final args = settings.arguments as VehicleInspectionRouteArgs?;
           if (args == null) return const LoginScreen();
-          return VehicleInspectionPanel(
-            viewName: args.viewName,
-            mapKey: args.mapKey,
+          return AuthGate(
+            child: VehicleInspectionPanel(viewName: args.viewName, mapKey: args.mapKey),
           );
         }
-
-
         return const UnknownScreen();
       },
     );
@@ -111,8 +105,5 @@ class ProcedureRouteArgs {
 class VehicleInspectionRouteArgs {
   final String viewName;
   final String mapKey;
-  const VehicleInspectionRouteArgs({
-    required this.viewName,
-    required this.mapKey,
-  });
+  const VehicleInspectionRouteArgs({required this.viewName, required this.mapKey});
 }

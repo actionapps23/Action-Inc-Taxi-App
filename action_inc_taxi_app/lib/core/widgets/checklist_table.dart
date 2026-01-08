@@ -73,11 +73,12 @@ class ChecklistTable<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     final SelectionCubit selectionCubit = context.read<SelectionCubit>();
     final PurchaseCubit purchaseCubit = context.read<PurchaseCubit>();
-    late FieldEntryModel? fieldEntryModel;
-    List<FieldEntryModel>? data =
+    late FieldEntryModel fieldEntryModel;
+    List<FieldEntryModel>? fieldEntires =
         fieldCubit != null && fieldCubit!.state is FieldEntriesLoaded
         ? (fieldCubit!.state as FieldEntriesLoaded).entries
         : null;
+        
     if (fieldCubit == null && !isFromFutureCarPurchase) {
       fieldCubit ??= context.read<FieldCubit>();
     }
@@ -200,15 +201,15 @@ class ChecklistTable<T> extends StatelessWidget {
                                                 as FuturePurchaseEntriesLoaded)
                                             .entries
                                       : [])
-                                : data ?? [])
+                                : fieldEntires ?? [])
                             .map((item) {
-                              fieldEntryModel = data?.firstWhere(
+                              fieldEntryModel = (data?.firstWhere(
                                 (element) => element.id == item.id,
                                 orElse: () => item,
-                              );
-                              data = data?.map((e) {
+                              )) ?? item;
+                              fieldEntires = fieldEntires?.map((e) {
                                 if (e.id == item.id) {
-                                  return fieldEntryModel!;
+                                  return fieldEntryModel;
                                 }
                                 return e;
                               }).toList();
@@ -223,8 +224,7 @@ class ChecklistTable<T> extends StatelessWidget {
                                         ResponsiveText(
                                           isFromFutureCarPurchase
                                               ? item.franchiseName
-                                              : fieldEntryModel?.title ??
-                                                    item.title,
+                                              : fieldEntryModel.title,
                                           style: AppTextStyles.bodyMedium
                                               .copyWith(
                                                 color: AppColors.surface,
@@ -237,9 +237,8 @@ class ChecklistTable<T> extends StatelessWidget {
                                         ResponsiveText(
                                           isFromFutureCarPurchase
                                               ? item.slotsWeHave.toString()
-                                              : fieldEntryModel?.SOP
-                                                        .toString() ??
-                                                    item.SOP.toString(),
+                                              : fieldEntryModel.SOP
+                                                        .toString(),
                                           style: AppTextStyles.bodyMedium,
                                         ),
                                       ),
@@ -247,7 +246,7 @@ class ChecklistTable<T> extends StatelessWidget {
                                         ResponsiveText(
                                           isFromFutureCarPurchase
                                               ? item.carsWeHave.toString()
-                                              : '${fieldEntryModel?.fees ?? item.fees} P',
+                                              : '${fieldEntryModel.fees} P',
                                           style: AppTextStyles.bodyMedium,
                                         ),
                                       ),
@@ -259,8 +258,7 @@ class ChecklistTable<T> extends StatelessWidget {
                                                         item.carsWeHave)
                                                     .toString()
                                               : HelperFunctions.formatDate(
-                                                  fieldEntryModel?.timeline ??
-                                                      item.timeline,
+                                                  fieldEntryModel.timeline,
                                                 ),
                                           style: AppTextStyles.bodyMedium,
                                         ),
@@ -269,8 +267,7 @@ class ChecklistTable<T> extends StatelessWidget {
                                         _dataCell(
                                           ResponsiveText(
                                             HelperFunctions.formatDate(
-                                              fieldEntryModel?.lastUpdated ??
-                                                  item.lastUpdated,
+                                              fieldEntryModel.lastUpdated,
                                             ),
                                             style: AppTextStyles.bodyMedium,
                                           ),
@@ -429,7 +426,7 @@ class ChecklistTable<T> extends StatelessWidget {
                             ResponsiveText(
                               isFromFutureCarPurchase
                                   ? item.franchiseName
-                                  : fieldEntryModel?.title ?? item.title,
+                                  : fieldEntryModel.title,
                               style: AppTextStyles.bodyMedium.copyWith(
                                 color: AppColors.surface,
                               ),
@@ -462,29 +459,27 @@ class ChecklistTable<T> extends StatelessWidget {
                                 ] else ...[
                                   _infoChip(
                                     "Title",
-                                    fieldEntryModel?.title ?? item.title,
+                                    fieldEntryModel.title,
                                   ),
                                   _infoChip(
                                     'SOP',
-                                    (fieldEntryModel?.SOP ?? item.SOP)
+                                    (fieldEntryModel.SOP)
                                         .toString(),
                                   ),
                                   _infoChip(
                                     'Price',
-                                    '${fieldEntryModel?.fees ?? item.fees} P',
+                                    '${fieldEntryModel.fees} P',
                                   ),
                                   _infoChip(
                                     'Timeline',
                                     HelperFunctions.formatDate(
-                                      fieldEntryModel?.timeline ??
-                                          item.timeline,
+                                      fieldEntryModel.timeline,
                                     ),
                                   ),
                                   _infoChip(
                                     'Last',
                                     HelperFunctions.formatDate(
-                                      fieldEntryModel?.lastUpdated ??
-                                          item.lastUpdated,
+                                      fieldEntryModel.lastUpdated,
                                     ),
                                   ),
                                 ],
@@ -527,20 +522,15 @@ class ChecklistTable<T> extends StatelessWidget {
                                           isUpdating: true,
                                           fieldEntryModel: FieldEntryModel(
                                             title:
-                                                fieldEntryModel?.title ??
-                                                item.title,
+                                                fieldEntryModel.title,
                                             SOP:
-                                                fieldEntryModel?.SOP ??
-                                                item.SOP,
+                                                fieldEntryModel.SOP,
                                             fees:
-                                                fieldEntryModel?.fees ??
-                                                item.fees,
+                                                fieldEntryModel.fees,
                                             timeline:
-                                                fieldEntryModel?.timeline ??
-                                                item.timeline,
+                                                fieldEntryModel.timeline,
                                             isCompleted:
-                                                fieldEntryModel?.isCompleted ??
-                                                item.isCompleted,
+                                                fieldEntryModel.isCompleted,
                                           ),
                                         ),
                                       );
@@ -557,7 +547,7 @@ class ChecklistTable<T> extends StatelessWidget {
                                     onChanged: onToggleComplete == null
                                         ? null
                                         : (v) => onToggleComplete!(
-                                            fieldEntryModel ?? item,
+                                            fieldEntryModel,
                                             v ?? false,
                                           ),
                                   ),

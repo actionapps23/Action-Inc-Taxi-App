@@ -2,12 +2,12 @@ import 'package:action_inc_taxi_app/core/constants/app_constants.dart';
 import 'package:action_inc_taxi_app/core/models/field_entry_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class PurchaseService {
+class FranchiseTransferService {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  static Future<void> savePurchaseRecord(
+  static Future<void> saveFranchiseTransferRecord(
     String taxiPlateNumber,
-    List<FieldEntryModel> purchaseData,
+    List<FieldEntryModel> franchiseTransferData,
     final String collectionName,
   ) async {
     try {
@@ -15,7 +15,7 @@ class PurchaseService {
         'last_updated': FieldValue.serverTimestamp(),
       });
 
-      for (var i in purchaseData) {
+      for (var i in franchiseTransferData) {
         await _firestore
             .collection(collectionName)
             .doc(taxiPlateNumber)
@@ -28,11 +28,11 @@ class PurchaseService {
     }
   }
 
-  static Future<List<FieldEntryModel>> getPurchaseRecord(
+  static Future<List<FieldEntryModel>> getFranchiseTransferRecord(
     String taxiPlateNumber,
   ) async {
     try {
-      final List<FieldEntryModel> purchaseData = [];
+      final List<FieldEntryModel> franchiseTransferData = [];
       QuerySnapshot querySnapshot = await _firestore
           .collection(AppConstants.purchaseRecordsCollection)
           .doc(taxiPlateNumber)
@@ -42,11 +42,11 @@ class PurchaseService {
       if (querySnapshot.docs.isNotEmpty) {
         for (var doc in querySnapshot.docs) {
           var data = doc.data() as Map<String, dynamic>;
-          purchaseData.add(FieldEntryModel.fromJson(data));
+          franchiseTransferData.add(FieldEntryModel.fromJson(data));
         }
-        return purchaseData;
+        return franchiseTransferData;
       }
-      return purchaseData;
+      return franchiseTransferData;
     } catch (e) {
       rethrow;
     }
@@ -55,12 +55,12 @@ class PurchaseService {
   static Future<Map<String, List<FieldEntryModel>>> getAllChecklists(
     String taxiPlateNumber,
   ) async {
-    final List<FieldEntryModel> newCarEquipmentRecordCollection = [];
-    final List<FieldEntryModel> lftrbRecordCollectionForNewCar = [];
-    final List<FieldEntryModel> ltoRecordCollectionForNewCar = [];
+    final List<FieldEntryModel> pnpCheckListCollectionForFranchiseTransfer = [];
+    final List<FieldEntryModel> lftrbCheckListCollectionForFranchiseTransfer = [];
+    final List<FieldEntryModel> ltoCheckListCollectionForFranchiseTransfer = [];
 
     QuerySnapshot newCarEquipmentSnapshot = await _firestore
-        .collection(AppConstants.newCarEquipmentRecordCollection)
+        .collection(AppConstants.pnpChecklistForFranchiseTransferCollection)
         .doc(taxiPlateNumber)
         .collection(taxiPlateNumber)
         .get();
@@ -68,11 +68,11 @@ class PurchaseService {
     if (newCarEquipmentSnapshot.docs.isNotEmpty) {
       for (var doc in newCarEquipmentSnapshot.docs) {
         var data = doc.data() as Map<String, dynamic>;
-        newCarEquipmentRecordCollection.add(FieldEntryModel.fromJson(data));
+        pnpCheckListCollectionForFranchiseTransfer.add(FieldEntryModel.fromJson(data));
       }
     }
     QuerySnapshot lftrbSnapshot = await _firestore
-        .collection(AppConstants.lftrbRecordCollectionForNewCar)
+        .collection(AppConstants.lftrbChecklistForFranchiseTransferCollection)
         .doc(taxiPlateNumber)
         .collection(taxiPlateNumber)
         .get();
@@ -80,12 +80,12 @@ class PurchaseService {
     if (lftrbSnapshot.docs.isNotEmpty) {
       for (var doc in lftrbSnapshot.docs) {
         var data = doc.data() as Map<String, dynamic>;
-        lftrbRecordCollectionForNewCar.add(FieldEntryModel.fromJson(data));
+        lftrbCheckListCollectionForFranchiseTransfer.add(FieldEntryModel.fromJson(data));
       }
     }
 
     QuerySnapshot ltoSnapshot = await _firestore
-        .collection(AppConstants.ltoRecordCollectionForNewCar)
+        .collection(AppConstants.ltoChecklistForFranchiseTransferCollection)
         .doc(taxiPlateNumber)
         .collection(taxiPlateNumber)
         .get();
@@ -93,48 +93,16 @@ class PurchaseService {
     if (ltoSnapshot.docs.isNotEmpty) {
       for (var doc in ltoSnapshot.docs) {
         var data = doc.data() as Map<String, dynamic>;
-        ltoRecordCollectionForNewCar.add(FieldEntryModel.fromJson(data));
+        ltoCheckListCollectionForFranchiseTransfer.add(FieldEntryModel.fromJson(data));
       }
     }
 
     final purchaseData = {
-      'newCarEquipmentData': newCarEquipmentRecordCollection,
-      'ltfrbData': lftrbRecordCollectionForNewCar,
-      'ltoData': ltoRecordCollectionForNewCar,
+      'pnpData': pnpCheckListCollectionForFranchiseTransfer,
+      'ltfrbData': lftrbCheckListCollectionForFranchiseTransfer,
+      'ltoData': ltoCheckListCollectionForFranchiseTransfer,
     };
     return purchaseData;
   }
 
-  static Future<void> updateTaxiPlateNumber(
-    String oldPlateNumber,
-    String newPlateNumber,
-    final List<String> collectionNames,
-  ) async {
-    try {
-      for (var collectionName in collectionNames) {
-        final oldDocRef = _firestore.collection(collectionName).doc(oldPlateNumber);
-        final newDocRef = _firestore.collection(collectionName).doc(newPlateNumber);
-
-        final oldDocSnapshot = await oldDocRef.get();
-        if (oldDocSnapshot.exists) {
-
-          await newDocRef.set(oldDocSnapshot.data()!);
-
-          final subCollectionSnapshot = await oldDocRef.collection(oldPlateNumber).get();
-          for (var doc in subCollectionSnapshot.docs) {
-            await newDocRef
-                .collection(newPlateNumber)
-                .doc(doc.id)
-                .set(doc.data());
-          }
-          for(var  doc in subCollectionSnapshot.docs) {
-            await oldDocRef.collection(oldPlateNumber).doc(doc.id).delete();
-          }
-          await oldDocRef.delete();
-        }
-      }
-    } catch (e) {
-      rethrow;
-    }
-  }
 }

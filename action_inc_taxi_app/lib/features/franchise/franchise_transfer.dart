@@ -28,16 +28,16 @@ class _FranchiseTransferState extends State<FranchiseTransfer> {
   void initState() {
     super.initState();
     fieldCubitForLTFRB = FieldCubit(
-      collectionName: AppConstants.lftrbForFranchiseTransferCollection,
-      documentId: AppConstants.lftrbForFranchiseTransferCollection,
+      collectionName: AppConstants.lftrbChecklistForFranchiseTransferCollection,
+      documentId: AppConstants.lftrbRecordForFranchiseTransferCollection,
     );
     fieldCubitForPNP = FieldCubit(
-      collectionName: AppConstants.pnpForFranchiseTransferCollection,
-      documentId: AppConstants.pnpForFranchiseTransferCollection,
+      collectionName: AppConstants.pnpChecklistForFranchiseTransferCollection,
+      documentId: AppConstants.pnpRecordForFranchiseTransferCollection,
     );
     fieldCubitForLTO = FieldCubit(
-      collectionName: AppConstants.ltoForFranchiseTransferCollection,
-      documentId: AppConstants.ltoForFranchiseTransferCollection,
+      collectionName: AppConstants.ltoChecklistForFranchiseTransferCollection,
+      documentId: AppConstants.ltoRecordForFranchiseTransferCollection,
     );
     fieldCubitForPNP.loadFieldEntries();
     fieldCubitForLTO.loadFieldEntries();
@@ -89,17 +89,17 @@ class _FranchiseTransferState extends State<FranchiseTransfer> {
                                 textAlign: TextAlign.center,
                               ),
                             ),
-                            AppOutlineButton(
-                              label: "Add new Field",
-                              onPressed: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => EntryFieldPopup(
-                                    fieldCubit: fieldCubitForLTFRB,
-                                  ),
-                                );
-                              },
-                            ),
+                            // AppOutlineButton(
+                            //   label: "Add new Field",
+                            //   onPressed: () {
+                            //     showDialog(
+                            //       context: context,
+                            //       builder: (context) => EntryFieldPopup(
+                            //         fieldCubit: fieldCubitForLTFRB,
+                            //       ),
+                            //     );
+                            //   },
+                            // ),
                           ],
                         ),
                       ],
@@ -116,22 +116,21 @@ class _FranchiseTransferState extends State<FranchiseTransfer> {
                       ] else if (state is FieldError) ...[
                         Spacing.vMedium,
                         ResponsiveText("Error: ${state.message}"),
-                      ] else if (state is FieldEntriesLoaded &&
-                          state.entries.isEmpty) ...[
-                        Spacing.vMedium,
-                        Center(child: ResponsiveText("No entries found.")),
                       ] else if (state is FieldEntriesLoaded) ...[
                         ChecklistTable(
                           title: "LTFRB Process (Franchise Transfer)",
                           fieldCubit: fieldCubitForLTFRB,
+                          data: state.entries,
                         ),
                         ChecklistTable(
                           title: "PNP Process (Franchise Transfer)",
                           fieldCubit: fieldCubitForPNP,
+                          data: state.entries,
                         ),
                         ChecklistTable(
                           title: "LTO Process (Franchise Transfer)",
                           fieldCubit: fieldCubitForLTO,
+                          data: state.entries,
                         ),
                       ],
                     ],

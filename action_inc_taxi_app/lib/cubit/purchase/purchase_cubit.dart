@@ -29,7 +29,7 @@ class PurchaseCubit extends Cubit<PurchaseState> {
       await PurchaseService.savePurchaseRecord(
         taxiPlateNumber,
         purchaseData,
-        AppConstants.purchaseCollection,
+        AppConstants.purchaseRecordsCollection,
       );
       final data = await PurchaseService.getPurchaseRecord(taxiPlateNumber);
       emit(PurchaseLoaded(purchaseData: data));
@@ -110,10 +110,13 @@ class PurchaseCubit extends Cubit<PurchaseState> {
         oldTaxiPlateNumber,
         newTaxiPlateNumber,
         [
-          AppConstants.purchaseCollection,
-          AppConstants.newCarEquipmentChecklistCollection,
-          AppConstants.lftrbChecklistCollectionForNewCar,
-          AppConstants.ltoChecklistCollectionForNewCar,
+          AppConstants.purchaseRecordsCollection,
+          AppConstants.newCarEquipmentRecordCollection,
+          AppConstants.lftrbRecordCollectionForNewCar,
+          AppConstants.ltoRecordCollectionForNewCar,
+          AppConstants.lftrbRecordForFranchiseTransferCollection,
+          AppConstants.pnpRecordForFranchiseTransferCollection,
+          AppConstants.ltoRecordForFranchiseTransferCollection,
         ],
       );
       final purchaseData = await PurchaseService.getPurchaseRecord(

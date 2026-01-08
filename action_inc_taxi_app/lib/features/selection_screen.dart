@@ -30,6 +30,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
 
   bool get isCarDetails => selectedIndex == 0;
   bool get isPurchase => selectedIndex == 8;
+  bool get isFranchiseTransfer => selectedIndex == 9;
 
   bool get canProceed {
     if (isCarDetails) {
@@ -198,7 +199,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
                                   ),
                                   SizedBox(height: 12.h),
 
-                                 if(!isPurchase)...[
+                                 if(!isPurchase && !isFranchiseTransfer)...[
                                    AppTextFormField(
                                     controller: taxiNoController,
                                     hintText: 'Enter Taxi No.',
