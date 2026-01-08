@@ -296,7 +296,7 @@ class DbService {
   Future<Map<String, int>> getMaintainanceCollectionByPeriod(
     String periodType,
   ) async {
-    if (periodType != 'daily') {
+    if (periodType == 'daily') {
       final todayDateKey = HelperFunctions.generateDateKeyFromUtc(
         DateTime.now().toUtc().millisecondsSinceEpoch,
       );

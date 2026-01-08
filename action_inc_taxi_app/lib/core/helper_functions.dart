@@ -17,7 +17,11 @@ class HelperFunctions {
 
   static double percentChange(num previous, num current) {
     if (previous == 0) {
-      return 0;
+      if (current == 0) {
+        return 0;
+      } else {
+        return 100;
+      }
     }
     return ((current - previous) / previous) * 100;
   }

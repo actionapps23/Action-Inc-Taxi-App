@@ -303,13 +303,14 @@ class _DashboardState extends State<Dashboard> {
                               Expanded(
                                 child: StatsOverviewCard(
                                   statsCardLabel: "Expenses Saved",
-                                  targetValue:
-                                      dashboardModel.expensesSavedTargetValue,
-                                  optimumTarget:
-                                      dashboardModel.expensesSavedOptimumTarget,
-                                  targetCollection: dashboardModel
-                                      .expensesSavedTargetCollection,
-                                  percentChange: 8.5,
+                                  targetValue: 0,
+                                      // dashboardModel.expensesSavedTargetValue,
+                                  optimumTarget: 0,
+                                      // dashboardModel.expensesSavedOptimumTarget,
+                                  targetCollection: 0,
+                                  // dashboardModel
+                                  //     .expensesSavedTargetCollection,
+                                  percentChange: 0,
                                   onTabSelected: (value) {},
                                 ),
                               ),
