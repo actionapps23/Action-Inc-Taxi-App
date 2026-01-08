@@ -1,5 +1,3 @@
-import 'package:action_inc_taxi_app/core/models/field_entry_model.dart';
-
 class AppConstants {
   static const String openProcedure = 'open_procedure';
   static const String closeProcedure = 'close_procedure';
@@ -69,47 +67,6 @@ class AppConstants {
     'Jane Smith',
     'Mike Johnson',
     'Emily Davis',
-  ];
-
-  static List<FieldEntryModel> items = [
-    FieldEntryModel(
-      id: '123',
-      isCompleted: true,
-      title: "Muneeb Masood",
-      SOP: 1000,
-      fees: 2000,
-      timeline: DateTime.now(),
-      lastUpdated: DateTime.now(),
-    ),
-
-    FieldEntryModel(
-      id: '123',
-      isCompleted: false,
-      title: "Muneeb Masood",
-      SOP: 1000,
-      fees: 2000,
-      timeline: DateTime.now(),
-      lastUpdated: DateTime.now(),
-    ),
-    FieldEntryModel(
-      id: '124',
-      isCompleted: true,
-      title: "Muneeb Masood",
-      SOP: 1000,
-      fees: 2000,
-      timeline: DateTime.now(),
-      lastUpdated: DateTime.now(),
-    ),
-
-    FieldEntryModel(
-      id: '125',
-      title: "Muneeb Masood",
-      SOP: 1000,
-      fees: 2000,
-      isCompleted: false,
-      timeline: DateTime.now(),
-      lastUpdated: DateTime.now(),
-    ),
   ];
 
   static const monthNames = [

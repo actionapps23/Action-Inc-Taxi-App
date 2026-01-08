@@ -69,6 +69,9 @@ class Navbar extends StatelessWidget {
                     'Dashboard',
                     icon: AppAssets.dashboard,
                     onTap: () {
+                      context.read<SelectionCubit>().reset();
+                      context.read<DailyRentCubit>().reset();
+                      context.read<PurchaseCubit>().reset();
                       Navigator.pushNamed(context, AppRoutes.dashboard);
                     },
                   ),

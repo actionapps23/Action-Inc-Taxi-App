@@ -34,8 +34,7 @@ class AuthGate extends StatelessWidget {
               );
             }
             if (
-                lastRouteSnapshot.data == AppRoutes.carDetail ||
-                lastRouteSnapshot.data == AppRoutes.vehicleViewSelection ||
+               
                 lastRouteSnapshot.data == AppRoutes.vehicleInspectionPanel
             ) {
               WidgetsBinding.instance.addPostFrameCallback((_) {

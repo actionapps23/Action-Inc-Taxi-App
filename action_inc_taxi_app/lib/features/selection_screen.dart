@@ -33,15 +33,12 @@ class _SelectionScreenState extends State<SelectionScreen> {
   bool get isFranchiseTransfer => selectedIndex == 9;
 
   bool get canProceed {
-    if (isCarDetails) {
-      return taxiNoController.text.trim().isNotEmpty &&
-          regNoController.text.trim().isNotEmpty &&
-          driverNameController.text.trim().isNotEmpty;
-    } else {
-      return taxiNoController.text.trim().isNotEmpty ||
-          regNoController.text.trim().isNotEmpty ||
-          taxiPlateNoController.text.trim().isNotEmpty;
+    if (taxiNoController.text.trim().isNotEmpty ||
+        regNoController.text.trim().isNotEmpty ||
+        taxiPlateNoController.text.trim().isNotEmpty) {
+      return true;
     }
+    return false;
   }
 
   final List<Map<String, dynamic>> featureCards = [
@@ -156,37 +153,6 @@ class _SelectionScreenState extends State<SelectionScreen> {
                               children: [
                                 SizedBox(height: 18.h),
 
-                                if (isCarDetails) ...[
-                                  AppTextFormField(
-                                    controller: taxiNoController,
-                                    hintText: 'Enter Taxi No.',
-                                    labelOnTop: true,
-                                    onChanged: (val) {
-                                      setState(() {});
-                                      selectionCubit.setTaxiNo(val);
-                                    },
-                                  ),
-                                  SizedBox(height: 12.h),
-                                  AppTextFormField(
-                                    controller: regNoController,
-                                    hintText: 'Taxi Registration No.',
-                                    labelOnTop: true,
-                                    onChanged: (val) {
-                                      setState(() {});
-                                      selectionCubit.setRegNo(val);
-                                    },
-                                  ),
-                                  SizedBox(height: 12.h),
-                                  AppTextFormField(
-                                    controller: driverNameController,
-                                    hintText: 'Regular Driver Name',
-                                    labelOnTop: true,
-                                    onChanged: (val) {
-                                      setState(() {});
-                                      selectionCubit.setDriverName(val);
-                                    },
-                                  ),
-                                ] else ...[
                                   SizedBox(height: 12.h),
                                   AppTextFormField(
                                     controller: taxiPlateNoController,
@@ -220,7 +186,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
                                     },
                                   ),
                                  ]
-                                ],
+                                ,
                                 SizedBox(height: 24.h),
                                 AppButton(
                                   text: 'Enter',

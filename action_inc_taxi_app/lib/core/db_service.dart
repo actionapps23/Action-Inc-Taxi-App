@@ -602,11 +602,11 @@ class DbService {
     try {
       DocumentSnapshot<Map<String, dynamic>> doc;
       if (taxiNo.isNotEmpty) {
-        doc = await _firestore.collection(carsCollection).doc(taxiNo).get();
+        doc = await _firestore.collection(carsCollection).doc(taxiNo.toUpperCase()).get();
       } else if (regNo.isNotEmpty) {
         final q = await _firestore
             .collection(carsCollection)
-            .where('car.regNo', isEqualTo: regNo)
+            .where('car.regNo', isEqualTo: regNo.toUpperCase())
             .limit(1)
             .get();
         if (q.docs.isEmpty) return null;
@@ -614,7 +614,7 @@ class DbService {
       } else if (taxiPlateNo.isNotEmpty) {
         final q = await _firestore
             .collection(carsCollection)
-            .where('car.plateNumber', isEqualTo: taxiPlateNo)
+            .where('car.plateNumber', isEqualTo: taxiPlateNo.toLowerCase())
             .limit(1)
             .get();
         if (q.docs.isEmpty) return null;

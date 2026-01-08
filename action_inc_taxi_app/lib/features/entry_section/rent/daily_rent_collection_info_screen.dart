@@ -462,7 +462,7 @@ class _DailyRentCollectionInfoScreenState
       numberPlateController.text = carInfo?.plateNumber ?? '';
       fleetNoController.text = carInfo?.fleetNo ?? '';
       carStatusOnRoad = carInfo?.onRoad ?? true;
-
+      regNoController.text = carInfo?.regNo ?? '';
       secondDriverCnicController.text = driver?.secondDriverCnic ?? '';
       secondDriverDobController.text = HelperFunctions.formatDateFromUtcMillis(
         driver?.secondDriverDobUtc,
@@ -504,10 +504,14 @@ class _DailyRentCollectionInfoScreenState
           numberPlateController.text = carInfo.plateNumber ?? '';
           fleetNoController.text = carInfo.fleetNo ?? '';
           carStatusOnRoad = carInfo.onRoad;
-        } else if (!widget.fetchDetails) {
+        } else if (!widget.fetchDetails && taxiNoController.text.trim().isEmpty) {
           taxiNoController.text = selectionState.taxiNo;
+          if(numberPlateController.text.trim().isEmpty){
+            numberPlateController.text = selectionState.taxiPlateNo;
+          }
         }
         if (driver != null && !widget.fetchDetails) {
+          
           firstDriverNameController.text = driver.firstDriverName;
           firstDriverCnicController.text = driver.firstDriverCnic;
           firstDriverDobController.text = driver.firstDriverDobUtc != null
@@ -528,7 +532,7 @@ class _DailyRentCollectionInfoScreenState
                   ),
                 )
               : '';
-        } else if (!widget.fetchDetails) {
+        } else if (!widget.fetchDetails && firstDriverNameController.text.trim().isEmpty) {
           firstDriverNameController.text = selectionState.driverName;
         }
         if (rent != null && !widget.fetchDetails) {
@@ -585,6 +589,9 @@ class _DailyRentCollectionInfoScreenState
         }
         if (regNoController.text.trim().isEmpty) {
           regNoController.text = selectionState.regNo;
+        }
+        if(numberPlateController.text.trim().isEmpty){
+          numberPlateController.text = selectionState.taxiPlateNo;
         }
         final today = DateTime.now();
         contractStartController.text = _formatDate(today);
