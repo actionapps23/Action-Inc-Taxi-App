@@ -14,18 +14,20 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class SummaryCard extends StatelessWidget {
   final String title;
   final int amount;
-  final int lastDayAmount;
-  final String lastDayLabel;
+  final int? lastDayAmount;
+  final String? lastDayLabel;
   final String currencySymbol;
   final IconData icon;
+  final VoidCallback? onPressed;
 
   const SummaryCard({
     super.key,
     required this.title,
     required this.amount,
-    required this.lastDayAmount,
-    required this.lastDayLabel,
+    this.lastDayAmount,
+    this.lastDayLabel,
     this.currencySymbol = '₱',
+    this.onPressed,
     this.icon = Icons.account_balance_wallet_outlined,
   });
 
@@ -63,10 +65,13 @@ class SummaryCard extends StatelessWidget {
                     color: AppColors.scaffold.withOpacity(0.08),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Icon(
-                    icon,
-                    color: AppColors.scaffold,
+                  child: IconButton(
+                    icon: Icon(
+                      icon,
+                      color: AppColors.scaffold,
                     size: max(8.w, 12),
+                    ),
+                    onPressed: onPressed,
                   ),
                 ),
               ),
@@ -81,24 +86,36 @@ class SummaryCard extends StatelessWidget {
                 style: AppTextStyles.bodySmall,
               ),
               Spacing.hSmall,
-              Flexible(
+             if (lastDayAmount != null)...[
+               Flexible(
                 child: PercentChangeIndicator(
                   percentChange: HelperFunctions.percentChange(
-                    lastDayAmount,
+                    lastDayAmount!,
                     amount,
                   ),
                 ),
               ),
+             ]
             ],
           ),
           const SizedBox(height: 16),
-          ResponsiveText(
-            '$lastDayLabel: $currencySymbol ${_formatNumber(lastDayAmount)}',
-            style: const TextStyle(
-              color: AppColors.scaffold,
-              fontSize: 15,
-              fontWeight: FontWeight.w400,
-            ),
+          if (lastDayLabel != null )
+           ResponsiveText(
+              '$lastDayLabel',
+              style: const TextStyle(
+                color: AppColors.scaffold,
+                fontSize: 15,
+                fontWeight: FontWeight.w400,
+              ),
+          ),
+          if( lastDayLabel == null && lastDayAmount != null )
+            ResponsiveText(
+              '$lastDayLabel: $currencySymbol ${_formatNumber(lastDayAmount!)}',
+              style: const TextStyle(
+                color: AppColors.scaffold,
+                fontSize: 15,
+                fontWeight: FontWeight.w400,
+              ),
           ),
         ],
       ),

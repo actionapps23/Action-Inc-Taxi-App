@@ -9,10 +9,10 @@ import 'package:action_inc_taxi_app/core/widgets/snackbar/spacing.dart';
 import 'package:action_inc_taxi_app/features/dashboard/dashboard_cubit.dart';
 import 'package:action_inc_taxi_app/features/dashboard/dashboard_state.dart';
 import 'package:action_inc_taxi_app/features/dashboard/widgets/income_bar_chart.dart';
-import 'package:action_inc_taxi_app/features/dashboard/widgets/percent_chnage_indicator.dart';
 import 'package:action_inc_taxi_app/features/dashboard/widgets/pie_chart.dart';
 import 'package:action_inc_taxi_app/features/dashboard/widgets/stats_overview_card.dart';
 import 'package:action_inc_taxi_app/features/dashboard/widgets/summary_card.dart';
+import 'package:action_inc_taxi_app/features/purchase/edit_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -66,60 +66,14 @@ class _DashboardState extends State<Dashboard> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Spacing.vLarge,
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: AppColors.cardBackground,
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 8.w,
-                                      vertical: 12.h,
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        ResponsiveText(
-                                          "Total Banked today",
-                                          style: AppTextStyles.bodySmall,
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                ResponsiveText(
-                                                  "₱ ${dashboardModel.totalAmountPaidToday.toStringAsFixed(2)}",
-                                                  style:
-                                                      AppTextStyles.bodySmall,
-                                                ),
-                                                Spacing.hSmall,
-                                                PercentChangeIndicator(
-                                                  percentChange:
-                                                      HelperFunctions.percentChange(
-                                                        dashboardModel
-                                                            .totalAmountYesterday,
-                                                        dashboardModel
-                                                            .totalAmountPaidToday,
-                                                      ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                        Spacing.vExtraLarge,
-                                        ResponsiveText(
-                                          "Last day Income ₱${dashboardModel.totalAmountYesterday}",
-                                          style: AppTextStyles.bodyExtraSmall,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
+                               SummaryCard(title: "Total Banked today", amount: dashboardModel.totalAmountPaidToday, lastDayLabel: "Note: Please note that this is manual entry and not persisted in database", icon: Icons.edit, onPressed: () {
+                                 showDialog(context: context, builder: (context){
+                                  return EditFieldPopup(title: "Udpate Amount", label: "Total Banked today", initialValue: dashboardModel.totalAmountPaidToday.toString(), hintText: "Enter new amount", onSave: (newAmt){
+                                    dashboardCubit.updateTodayBankedAmount(int.parse(newAmt));
+                                  });
+
+                                 });
+                               },),
                                 Spacing.vLarge,
                                 Row(
                                   children: [
@@ -172,7 +126,8 @@ class _DashboardState extends State<Dashboard> {
                                     fleet2Amt: dashboardModel.fleet2Amt,
                                     fleet3Amt: dashboardModel.fleet3Amt,
                                     fleet4Amt: dashboardModel.fleet4Amt,
-                                    totalFleetAmt: dashboardModel.totalFleetAmt,
+                                    totalFleetAmtForChart: dashboardModel.totalFleetAmtForChart,
+                                    totalFleetAmtForStatsCard: dashboardModel.totalFleetAmtForStatsCard,
                                   ),
                                 ),
                               ),
@@ -196,14 +151,14 @@ class _DashboardState extends State<Dashboard> {
                                 child: StatsOverviewCard(
                                   statsCardLabel: "Fleet Income",
                                   targetValue:
-                                      dashboardModel.fleetIncomeTargetValue,
+                                      0,
                                   optimumTarget:
-                                      dashboardModel.fleetIncomeOptimumTarget,
+                                      0,
                                   targetCollection:
-                                      dashboardModel.totalFleetAmt,
+                                      dashboardModel.totalFleetAmtForStatsCard,
                                   percentChange: HelperFunctions.percentChange(
                                     dashboardModel.fleetIncomePreviousPeriod,
-                                    dashboardModel.totalFleetAmt,
+                                    dashboardModel.totalFleetAmtForStatsCard,
                                   ),
                                   lastAmount:
                                       dashboardModel.fleetIncomePreviousPeriod,
@@ -216,7 +171,7 @@ class _DashboardState extends State<Dashboard> {
                                       );
                                     } else if (value == 2) {
                                       dashboardCubit.fetchFleetAmounts(
-                                        'yearly',
+                                        'monthly',
                                       );
                                     }
                                   },
@@ -252,7 +207,7 @@ class _DashboardState extends State<Dashboard> {
                                     } else if (value == 2) {
                                       dashboardCubit
                                           .fetchcarWashCollectionAmount(
-                                            'yearly',
+                                            'monthly',
                                           );
                                     }
                                   },
@@ -293,7 +248,7 @@ class _DashboardState extends State<Dashboard> {
                                     } else if (value == 2) {
                                       dashboardCubit
                                           .fetchMaintainanceCollectionAmount(
-                                            'yearly',
+                                            'monthly',
                                           );
                                     }
                                   },

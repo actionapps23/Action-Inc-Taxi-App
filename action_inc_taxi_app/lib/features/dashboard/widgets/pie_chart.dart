@@ -35,7 +35,7 @@ class _PieChartState extends State<PieChart> {
       {"name": "Fleet 3", "amount": widget.fleetIncome.fleet3Amt},
       {"name": "Fleet 4", "amount": widget.fleetIncome.fleet4Amt},
     ];
-    final total = widget.fleetIncome.totalFleetAmt;
+    final total = widget.fleetIncome.totalFleetAmtForChart;
     final List<Color> pieColors = [
       const Color(0xFF1e4620),
       const Color(0xFF357b38),
@@ -58,7 +58,7 @@ class _PieChartState extends State<PieChart> {
               const Spacer(),
               Flexible(
                 child: CustomTabBar(
-                  tabs: ["Daily", "Weekly", "Yearly"],
+                  tabs: ["Daily", "Weekly", "Monthly"],
                   onTabSelected: (index) {
                     if (index == 0) {
                       selectedTabKey = 'daily';
@@ -67,7 +67,7 @@ class _PieChartState extends State<PieChart> {
                     } else if (index == 2) {
                       selectedTabKey = 'monthly';
                     }
-                    dashboardCubit.fetchFleetAmounts(selectedTabKey);
+                    dashboardCubit.fetchFleetAmounts(selectedTabKey, isForPieChart: true);
                     selectedTabIndex = index;
                     setState(() {
                       

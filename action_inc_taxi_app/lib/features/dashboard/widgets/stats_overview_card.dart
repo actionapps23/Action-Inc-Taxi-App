@@ -56,8 +56,9 @@ class _StatsOverviewCardState extends State<StatsOverviewCard> {
                 ),
                 Flexible(
                   child: CustomTabBar(
+                    selectedTabIndex: selectedTabIndex,
                     backgroundColor: AppColors.buttonText,
-                    tabs: ["Daily", "Weekly", "Yearly"],
+                    tabs: ["Daily", "Weekly", "Monthly"],
                     onTabSelected: (index) {
                       setState(() {
                         selectedTabIndex = index;
