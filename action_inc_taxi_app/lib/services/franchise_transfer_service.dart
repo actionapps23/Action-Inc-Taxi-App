@@ -51,7 +51,23 @@ class FranchiseTransferService {
       rethrow;
     }
   }
+  static Future<void> updateFranchiseTransferRecord(
+    String taxiPlateNumber,
+    FieldEntryModel updatedEntry,
+    String collectionName
+  ){
 
+    try {
+      return _firestore
+          .collection(collectionName)
+          .doc(taxiPlateNumber)
+          .collection(taxiPlateNumber)
+          .doc(updatedEntry.id)
+          .set(updatedEntry.toJson());
+    } catch (e) {
+      rethrow;
+    }
+  }
   static Future<Map<String, List<FieldEntryModel>>> getAllChecklists(
     String taxiPlateNumber,
   ) async {
@@ -59,20 +75,20 @@ class FranchiseTransferService {
     final List<FieldEntryModel> lftrbCheckListCollectionForFranchiseTransfer = [];
     final List<FieldEntryModel> ltoCheckListCollectionForFranchiseTransfer = [];
 
-    QuerySnapshot newCarEquipmentSnapshot = await _firestore
-        .collection(AppConstants.pnpChecklistForFranchiseTransferCollection)
+    QuerySnapshot pnpRecordForFranchiseTransferSnapshot = await _firestore
+        .collection(AppConstants.pnpRecordForFranchiseTransferCollection)
         .doc(taxiPlateNumber)
         .collection(taxiPlateNumber)
         .get();
 
-    if (newCarEquipmentSnapshot.docs.isNotEmpty) {
-      for (var doc in newCarEquipmentSnapshot.docs) {
+    if (pnpRecordForFranchiseTransferSnapshot.docs.isNotEmpty) {
+      for (var doc in pnpRecordForFranchiseTransferSnapshot.docs) {
         var data = doc.data() as Map<String, dynamic>;
         pnpCheckListCollectionForFranchiseTransfer.add(FieldEntryModel.fromJson(data));
       }
     }
     QuerySnapshot lftrbSnapshot = await _firestore
-        .collection(AppConstants.lftrbChecklistForFranchiseTransferCollection)
+        .collection(AppConstants.lftrbRecordForFranchiseTransferCollection)
         .doc(taxiPlateNumber)
         .collection(taxiPlateNumber)
         .get();
@@ -85,7 +101,7 @@ class FranchiseTransferService {
     }
 
     QuerySnapshot ltoSnapshot = await _firestore
-        .collection(AppConstants.ltoChecklistForFranchiseTransferCollection)
+        .collection(AppConstants.ltoRecordForFranchiseTransferCollection)
         .doc(taxiPlateNumber)
         .collection(taxiPlateNumber)
         .get();

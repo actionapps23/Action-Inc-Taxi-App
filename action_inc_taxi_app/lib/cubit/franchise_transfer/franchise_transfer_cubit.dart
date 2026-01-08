@@ -30,6 +30,25 @@ class FranchiseTransferCubit extends Cubit<FranchiseTransferState> {
     }
   }
 
+  Future<void> updateFranchiseTransferRecord(
+    String taxiPlateNumber,
+    FieldEntryModel updatedEntry,
+    String collectionName,
+  ) async{
+    emit(FranchiseTransferLoading());
+    try {
+      await FranchiseTransferService.updateFranchiseTransferRecord(
+        taxiPlateNumber,
+        updatedEntry,
+        collectionName
+      );
+    await getAllChecklists(taxiPlateNumber);
+    } catch (e) {
+      debugPrint("Error updating purchase record: $e");
+      emit(FranchiseTransferError(message: e.toString()));
+    }
+    
+  }
   Future<void> saveAllChecklists(
     String taxiPlateNumber,
     List<FieldEntryModel> pnpData,
@@ -47,12 +66,12 @@ class FranchiseTransferCubit extends Cubit<FranchiseTransferState> {
         FranchiseTransferService.saveFranchiseTransferRecord(
           taxiPlateNumber,
           ltfrbData,
-          AppConstants.lftrbRecordCollectionForNewCar,
+          AppConstants.lftrbRecordForFranchiseTransferCollection,
         ),
         FranchiseTransferService.saveFranchiseTransferRecord(
           taxiPlateNumber,
           ltoData,
-          AppConstants.ltoRecordCollectionForNewCar,
+          AppConstants.ltoRecordForFranchiseTransferCollection,
         ),
       ]);
       emit(

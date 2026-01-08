@@ -3,6 +3,7 @@
 import 'package:action_inc_taxi_app/cubit/auth/add_employee_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/auth/login_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/car_details/car_detail_cubit.dart';
+import 'package:action_inc_taxi_app/cubit/franchise_transfer/franchise_transfer_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/future_purchase/future_purchase_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/inventory/inventory_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/maintainance/maintainance_cubit.dart';
@@ -53,6 +54,7 @@ class MyApp extends StatelessWidget {
             BlocProvider<InventoryCubit>(create: (_) => InventoryCubit()),
             BlocProvider<AddEmployeeCubit>(create: (_) => AddEmployeeCubit()),
             BlocProvider<LoginCubit>(create: (_) => LoginCubit()..isLoggedIn()),
+            BlocProvider<FranchiseTransferCubit>(create: (_) => FranchiseTransferCubit()),
             BlocProvider<ProcedureCubit>(create: (_) => ProcedureCubit()),
             BlocProvider<PurchaseCubit>(create: (_) => PurchaseCubit()),
             BlocProvider<FuturePurchaseCubit>(
