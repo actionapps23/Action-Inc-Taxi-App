@@ -31,11 +31,12 @@ class PurchaseService {
   static Future<void> updatePurchaseRecord(
     String taxiPlateNumber,
     FieldEntryModel updatedEntry,
+    String collectionName
   ){
 
     try {
       return _firestore
-          .collection(AppConstants.purchaseRecordsCollection)
+          .collection(collectionName)
           .doc(taxiPlateNumber)
           .collection(taxiPlateNumber)
           .doc(updatedEntry.id)

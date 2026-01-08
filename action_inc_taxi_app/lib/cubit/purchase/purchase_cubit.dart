@@ -41,16 +41,23 @@ class PurchaseCubit extends Cubit<PurchaseState> {
 
   Future<void> updatePurchaseRecord(
     String taxiPlateNumber,
-    FieldEntryModel updatedEntry
+    FieldEntryModel updatedEntry,
+    String collectionName,
+    {final bool fromPurchaseScreen = true,}
   ) async{
     emit(PurchaseLoading());
     try {
       await PurchaseService.updatePurchaseRecord(
         taxiPlateNumber,
         updatedEntry,
+        collectionName
       );
-      final data = await PurchaseService.getPurchaseRecord(taxiPlateNumber);
-      emit(PurchaseLoaded(purchaseData: data));
+      if(fromPurchaseScreen){
+        getPurchaseRecord(taxiPlateNumber);
+      }
+      else{
+        getAllChecklists(taxiPlateNumber);
+      }
     } catch (e) {
       debugPrint("Error updating purchase record: $e");
       emit(PurchaseError(message: e.toString()));

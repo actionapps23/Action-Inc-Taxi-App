@@ -24,6 +24,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class ChecklistTable<T> extends StatelessWidget {
   final String title;
   final bool isFromFutureCarPurchase;
+  final void Function(FieldEntryModel item)? onEdit;
+  final void Function(FuturePurchaseModel item)? onAdd;
   final List<FieldEntryModel>? data;
   final void Function(FieldEntryModel item, bool completed)? onToggleComplete;
   FieldCubit? fieldCubit;
@@ -33,6 +35,8 @@ class ChecklistTable<T> extends StatelessWidget {
 
   ChecklistTable({
     super.key,
+    this.onAdd,
+    this.onEdit,
     required this.title,
     this.onToggleComplete,
     this.data,
@@ -322,7 +326,9 @@ class ChecklistTable<T> extends StatelessWidget {
                                                                 .isCompleted,
                                                           ),
                                                           onEdit: (updatedItem) {
-                                                            purchaseCubit.updatePurchaseRecord(selectionCubit.state.taxiPlateNo, updatedItem);
+                                                            if (onEdit != null) {
+                                                              onEdit!(updatedItem);
+                                                            }
                                                           },
                                                          
                                                     ),

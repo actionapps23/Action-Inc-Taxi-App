@@ -110,18 +110,42 @@ class _NewCarDetailsState extends State<NewCarDetails> {
             title: "New Car equipments",
             fieldCubit: fieldCubitForNewCarEquipment,
             data: purchaseState.newCarEquipmentData,
+            onEdit: (updatedItem) {
+              purchaseCubit.updatePurchaseRecord(
+                selectionCubit.state.taxiPlateNo,
+                updatedItem,
+                AppConstants.newCarEquipmentRecordCollection,
+                fromPurchaseScreen: false,
+              );
+            },
           ),
           Spacing.vLarge,
           ChecklistTable(
             title: "LTFRB Process (Franchise Compliance)",
             fieldCubit: fieldCubitForLTFRB,
             data: purchaseState.ltfrbData,
+            onEdit: (updatedItem) {
+              purchaseCubit.updatePurchaseRecord(
+                selectionCubit.state.taxiPlateNo,
+                updatedItem,
+                AppConstants.lftrbRecordCollectionForNewCar,
+                fromPurchaseScreen: false,
+              );
+            },
           ),
           Spacing.vLarge,
           ChecklistTable(
             title: "LTO Process",
             fieldCubit: fieldCubitForLTO,
             data: purchaseState.ltoData,
+            onEdit: (updatedItem) {
+              purchaseCubit.updatePurchaseRecord(
+                selectionCubit.state.taxiPlateNo,
+                updatedItem,
+                AppConstants.ltoRecordCollectionForNewCar,
+                fromPurchaseScreen: false,
+              );
+            },
           ),
           Spacing.vLarge,
         ],
@@ -147,7 +171,7 @@ class _NewCarDetailsState extends State<NewCarDetails> {
     );
   }
   Future<void> _initializeChecklists() async {
-    final selectionCubit = context.read<SelectionCubit>();
+    selectionCubit = context.read<SelectionCubit>();
     fieldCubitForNewCarEquipment = FieldCubit(
       collectionName: AppConstants.newCarEquipmentChecklistCollection,
       documentId: AppConstants.newCarEquipmentChecklistCollection,
@@ -164,19 +188,34 @@ class _NewCarDetailsState extends State<NewCarDetails> {
     await fieldCubitForLTFRB.loadFieldEntries();
     await fieldCubitForLTO.loadFieldEntries();
     await purchaseCubit.getAllChecklists(selectionCubit.state.taxiPlateNo);
+
+    final fieldStateForNewCarEquipment = fieldCubitForNewCarEquipment.state;
+    final fieldStateForLTFRB = fieldCubitForLTFRB.state;
+    final fieldStateForLTO = fieldCubitForLTO.state;
+    
     final purchaseState = purchaseCubit.state;
 
-    if (purchaseState is AllDataLoaded) {
-      if (purchaseState.newCarEquipmentData.isEmpty ||
-          purchaseState.ltfrbData.isEmpty ||
-          purchaseState.ltoData.isEmpty) {
-        await purchaseCubit.saveAllChecklists(
-          selectionCubit.state.taxiPlateNo,
-          purchaseState.newCarEquipmentData,
-          purchaseState.ltfrbData,
-          purchaseState.ltoData,
-        );
-      }
+    final allDataLoaded = purchaseState is AllDataLoaded &&
+        fieldStateForNewCarEquipment is FieldEntriesLoaded &&
+        fieldStateForLTFRB is FieldEntriesLoaded &&
+        fieldStateForLTO is FieldEntriesLoaded;
+
+    final needsToSaveChecklists = allDataLoaded && (
+      (purchaseState).newCarEquipmentData.isEmpty ||
+      purchaseState.ltfrbData.isEmpty ||
+      purchaseState.ltoData.isEmpty ||
+      (fieldStateForNewCarEquipment).entries.length != purchaseState.newCarEquipmentData.length ||
+      (fieldStateForLTFRB).entries.length != purchaseState.ltfrbData.length ||
+      (fieldStateForLTO).entries.length != purchaseState.ltoData.length
+    );
+
+    if (needsToSaveChecklists) {
+      await purchaseCubit.saveAllChecklists(
+        selectionCubit.state.taxiPlateNo,
+        (fieldStateForNewCarEquipment).entries,
+        (fieldStateForLTFRB).entries,
+        (fieldStateForLTO).entries,
+      );
     }
   }
 }
