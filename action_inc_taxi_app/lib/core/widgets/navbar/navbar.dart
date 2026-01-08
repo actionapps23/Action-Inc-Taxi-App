@@ -90,10 +90,10 @@ class Navbar extends StatelessWidget {
                       'Add Employee',
                       icon: AppAssets.logout,
                       onTap: () {
-                        context.read<SelectionCubit>().reset();
-                        context.read<DailyRentCubit>().reset();
-                        context.read<PurchaseCubit>().reset();
-                        context.read<LoginCubit>().logout();
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                        AppRoutes.addEmployee,
+                        (route) => false,
+                      );
                       },
                     ),
                   ],

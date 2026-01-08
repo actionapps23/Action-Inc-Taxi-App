@@ -82,7 +82,7 @@ class ChecklistTable<T> extends StatelessWidget {
         fieldCubit != null && fieldCubit!.state is FieldEntriesLoaded
         ? (fieldCubit!.state as FieldEntriesLoaded).entries
         : null;
-        
+
     if (fieldCubit == null && !isFromFutureCarPurchase) {
       fieldCubit ??= context.read<FieldCubit>();
     }
@@ -120,39 +120,41 @@ class ChecklistTable<T> extends StatelessWidget {
                                 context: context,
                                 builder: (context) => EntryFieldPopup(
                                   fieldCubit: fieldCubit,
-                                  isFromFutureCarPurchase: isFromFutureCarPurchase,
+                                  isFromFutureCarPurchase:
+                                      isFromFutureCarPurchase,
                                   futurePurchaseCubit: futurePurchaseCubit,
                                 ),
                               );
                             },
                           ),
 
-                          if(showUpdateTaxiNumberButton)...[
+                          if (showUpdateTaxiNumberButton) ...[
                             Spacing.vSmall,
-                              AppTextButton(
-                text: "Update Taxi Number",
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return EditFieldPopup(
-                        title: "Update Taxi plate number",
-                        label: "Taxi plate number",
-                        initialValue: selectionCubit.state.taxiPlateNo,
-                        hintText: "Enter new plate number",
-                        onSave: (newPlate) {
-                          purchaseCubit.updateTaxiPlateNumber(
-                            selectionCubit.state.taxiPlateNo,
-                            newPlate,
-                          );
-                          selectionCubit.setTaxiPlateNo(newPlate);
-                        },
-                      );
-                    },
-                  );
-                },
-              ),
-                          ]
+                            AppTextButton(
+                              text: "Update Taxi Number",
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return EditFieldPopup(
+                                      title: "Update Taxi plate number",
+                                      label: "Taxi plate number",
+                                      initialValue:
+                                          selectionCubit.state.taxiPlateNo,
+                                      hintText: "Enter new plate number",
+                                      onSave: (newPlate) {
+                                        purchaseCubit.updateTaxiPlateNumber(
+                                          selectionCubit.state.taxiPlateNo,
+                                          newPlate,
+                                        );
+                                        selectionCubit.setTaxiPlateNo(newPlate);
+                                      },
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ],
                         ],
                       ),
                     ],
@@ -207,16 +209,20 @@ class ChecklistTable<T> extends StatelessWidget {
                                       : [])
                                 : data ?? [])
                             .map((item) {
-                              fieldEntryModel = (data?.firstWhere(
-                                (element) => element.id == item.id,
-                                orElse: () => item,
-                              )) ?? item;
-                              fieldEntires = fieldEntires?.map((e) {
-                                if (e.id == item.id) {
-                                  return fieldEntryModel;
-                                }
-                                return e;
-                              }).toList();
+                              if (!isFromFutureCarPurchase) {
+                                fieldEntryModel =
+                                    (data?.firstWhere(
+                                      (element) => element.id == item.id,
+                                      orElse: () => item,
+                                    )) ??
+                                    item;
+                                fieldEntires = fieldEntires?.map((e) {
+                                  if (e.id == item.id) {
+                                    return fieldEntryModel;
+                                  }
+                                  return e;
+                                }).toList();
+                              }
 
                               return Column(
                                 children: [
@@ -241,8 +247,7 @@ class ChecklistTable<T> extends StatelessWidget {
                                         ResponsiveText(
                                           isFromFutureCarPurchase
                                               ? item.slotsWeHave.toString()
-                                              : fieldEntryModel.SOP
-                                                        .toString(),
+                                              : fieldEntryModel.SOP.toString(),
                                           style: AppTextStyles.bodyMedium,
                                         ),
                                       ),
@@ -325,12 +330,11 @@ class ChecklistTable<T> extends StatelessWidget {
                                                             isCompleted: item
                                                                 .isCompleted,
                                                           ),
-                                                          onEdit: (updatedItem) {
-                                                            if (onEdit != null) {
-                                                              onEdit!(updatedItem);
-                                                            }
-                                                          },
-                                                         
+                                                      onEdit: (updatedItem) {
+                                                        if (onEdit != null) {
+                                                          onEdit!(updatedItem);
+                                                        }
+                                                      },
                                                     ),
                                               );
                                             }
@@ -467,14 +471,10 @@ class ChecklistTable<T> extends StatelessWidget {
                                         .toString(),
                                   ),
                                 ] else ...[
-                                  _infoChip(
-                                    "Title",
-                                    fieldEntryModel.title,
-                                  ),
+                                  _infoChip("Title", fieldEntryModel.title),
                                   _infoChip(
                                     'SOP',
-                                    (fieldEntryModel.SOP)
-                                        .toString(),
+                                    (fieldEntryModel.SOP).toString(),
                                   ),
                                   _infoChip(
                                     'Price',
@@ -531,14 +531,10 @@ class ChecklistTable<T> extends StatelessWidget {
                                               futurePurchaseCubit,
                                           isUpdating: true,
                                           fieldEntryModel: FieldEntryModel(
-                                            title:
-                                                fieldEntryModel.title,
-                                            SOP:
-                                                fieldEntryModel.SOP,
-                                            fees:
-                                                fieldEntryModel.fees,
-                                            timeline:
-                                                fieldEntryModel.timeline,
+                                            title: fieldEntryModel.title,
+                                            SOP: fieldEntryModel.SOP,
+                                            fees: fieldEntryModel.fees,
+                                            timeline: fieldEntryModel.timeline,
                                             isCompleted:
                                                 fieldEntryModel.isCompleted,
                                           ),
