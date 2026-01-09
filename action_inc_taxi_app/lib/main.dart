@@ -1,5 +1,9 @@
 // ignore_for_file: deprecated_member_use
 
+// Use 'dart:html' only for web to access browser APIs
+// ignore: avoid_web_libraries_in_flutter
+import 'dart:html' as html;
+
 import 'package:action_inc_taxi_app/cubit/auth/add_employee_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/auth/login_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/car_details/car_detail_cubit.dart';
@@ -24,6 +28,13 @@ import 'package:action_inc_taxi_app/core/db_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Only run this code on web platforms
+  // ignore: undefined_prefixed_name
+  if (identical(0, 0.0)) {
+    html.window.onBeforeUnload.listen((event) {
+      LocalStorage.saveWasReloaded(true);
+    });
+  }
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }

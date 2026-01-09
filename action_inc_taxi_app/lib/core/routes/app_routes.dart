@@ -66,21 +66,8 @@ class AppRouter {
     return MaterialPageRoute(
       settings: settings,
       builder: (context) {
-        if (settings.name == AppRoutes.carDetail) {
-          final args = settings.arguments as CarDetailRouteArgs?;
-          return AuthGate(child: CarDetailScreen(fetchDetails: args?.fetchDetails ?? false));
-        }
-        if (settings.name == AppRoutes.procedure) {
-          final args = settings.arguments as ProcedureRouteArgs?;
-          if (args == null) return const LoginScreen();
-          return AuthGate(child: ProcedureScreen(procedureType: args.procedureType));
-        }
-        if (settings.name == AppRoutes.vehicleInspectionPanel) {
-          final args = settings.arguments as VehicleInspectionRouteArgs?;
-          if (args == null) return const LoginScreen();
-          return AuthGate(
-            child: VehicleInspectionPanel(viewName: args.viewName, mapKey: args.mapKey),
-          );
+        if (settings.name == AppRoutes.carDetail || settings.name == AppRoutes.procedure || settings.name == AppRoutes.vehicleInspectionPanel) {
+          return AuthGate(routeSettings: settings,);
         }
         return const UnknownScreen();
       },

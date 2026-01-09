@@ -10,6 +10,21 @@ class LocalStorage {
     await prefs.setString(_tokenKey, token);
   }
 
+  static Future<void> saveWasReloaded(bool wasReloaded) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('was_reloaded', wasReloaded);
+  }
+
+  static Future<bool> wasReloaded() async{
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.containsKey('was_reloaded');
+  }
+
+  static Future<void> clearWasReloaded() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('was_reloaded');
+  }
+
   static Future<void> saveID(String employeeId) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_employeeIdKey, employeeId);
