@@ -308,15 +308,19 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  ResponsiveText(
-                    "Last Updated By: ",
-                    style: AppTextStyles.bodyExtraSmall.copyWith(
-                      fontWeight: FontWeight.w600,
+                  Flexible(
+                    child: ResponsiveText(
+                      "Last Updated By: ",
+                      style: AppTextStyles.bodyExtraSmall.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
-                  ResponsiveText(
-                    widget.maintainanceModel.lastUpdatedBy,
-                    style: AppTextStyles.bodyExtraSmall,
+                  Flexible(
+                    child: ResponsiveText(
+                      widget.maintainanceModel.lastUpdatedBy,
+                      style: AppTextStyles.bodyExtraSmall,
+                    ),
                   ),
                 ],
               ),

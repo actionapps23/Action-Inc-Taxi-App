@@ -163,8 +163,7 @@ class _ProcedureScreenState extends State<ProcedureScreen> {
                                     .procedureModel!,
                               );
                             },
-                            width: 40.w,
-                            height: 44.h,
+
                           ),
                         ],
                       );

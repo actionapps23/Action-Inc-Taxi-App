@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:action_inc_taxi_app/core/routes/app_routes.dart';
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
+import 'package:action_inc_taxi_app/core/utils/device_utils.dart';
 import 'package:action_inc_taxi_app/core/widgets/navbar/navbar.dart';
 import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/snackbar.dart';
@@ -25,6 +26,7 @@ class ChangePasswordScreen extends HookWidget {
     final confirmPassController = useTextEditingController();
     final formKey = useState(GlobalKey<FormState>());
     final loginCubit = context.read<LoginCubit>();
+    final DeviceUtils deviceUtils = DeviceUtils(context);
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -47,7 +49,7 @@ class ChangePasswordScreen extends HookWidget {
                 child: 
                   SingleChildScrollView(
                     child: Container(
-                      width: 0.4.sw,
+                      width: deviceUtils.getResponsiveWidth().sw,
                       margin: EdgeInsets.symmetric(
                         horizontal: 16.w,
                         vertical: 24.h,

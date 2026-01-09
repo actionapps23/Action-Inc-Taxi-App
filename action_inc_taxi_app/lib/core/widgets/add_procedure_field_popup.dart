@@ -1,4 +1,5 @@
 import 'package:action_inc_taxi_app/core/models/section_model.dart';
+import 'package:action_inc_taxi_app/core/utils/device_utils.dart';
 import 'package:action_inc_taxi_app/core/widgets/form/app_dropdown.dart';
 import 'package:action_inc_taxi_app/core/widgets/form/form_field.dart';
 import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
@@ -61,11 +62,12 @@ class _AddProcedureFieldPopupState extends State<AddProcedureFieldPopup> {
 
   @override
   Widget build(BuildContext context) {
+    final deviceUtils = DeviceUtils(context);
     return Center(
       child: Material(
         color: Colors.transparent,
         child: Container(
-          width: 100.w,
+          width: deviceUtils.getResponsiveWidth().sw,
           padding: EdgeInsets.all(4.w),
           decoration: BoxDecoration(
             color: AppColors.cardBackground,

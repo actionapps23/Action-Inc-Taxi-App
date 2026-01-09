@@ -14,6 +14,7 @@ import 'package:action_inc_taxi_app/cubit/inventory/inventory_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:action_inc_taxi_app/core/utils/device_utils.dart';
 
 class AddInventoryPopup extends StatefulWidget {
   final InventoryItemModel? item;
@@ -51,12 +52,37 @@ class _AddInventoryPopupState extends State<AddInventoryPopup> {
     return BlocBuilder<InventoryCubit, InventoryState>(
       bloc: inventoryCubit,
       builder: (context, state) {
+        final device = DeviceUtils(context);
+        double popupWidth;
+        EdgeInsets popupPadding;
+        final screenWidth = MediaQuery.of(context).size.width;
+
+        if (device.isExtraSmallMobile) {
+          popupWidth = screenWidth * 0.98;
+          popupPadding = const EdgeInsets.symmetric(horizontal: 8, vertical: 16);
+        } else if (device.isSmallMobile) {
+          popupWidth = screenWidth * 0.95;
+          popupPadding = const EdgeInsets.symmetric(horizontal: 16, vertical: 24);
+        } else if (device.isMediumMobile) {
+          popupWidth = screenWidth * 0.85;
+          popupPadding = const EdgeInsets.symmetric(horizontal: 20, vertical: 28);
+        } else if (device.isTablet) {
+          popupWidth = screenWidth * 0.7;
+          popupPadding = const EdgeInsets.all(32);
+        } else if (device.isLargeTablet) {
+          popupWidth = screenWidth * 0.5;
+          popupPadding = const EdgeInsets.all(40);
+        } else {
+          popupWidth = screenWidth * 0.35;
+          popupPadding = const EdgeInsets.all(48);
+        }
+
         return Center(
           child: Material(
             color: Colors.transparent,
             child: Container(
-              width: 100.w,
-              padding: const EdgeInsets.all(32),
+              width: popupWidth,
+              padding: popupPadding,
               decoration: BoxDecoration(
                 color: AppColors.cardBackground,
                 borderRadius: BorderRadius.circular(16),
@@ -71,7 +97,7 @@ class _AddInventoryPopupState extends State<AddInventoryPopup> {
                     },
                     icon: Icon(Icons.close, color: Colors.white),
                   ),
-
+                  // ...existing code...
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,

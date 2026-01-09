@@ -3,6 +3,7 @@ import 'package:action_inc_taxi_app/core/models/field_entry_model.dart';
 import 'package:action_inc_taxi_app/core/models/future_purchase_model.dart';
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
 import 'package:action_inc_taxi_app/core/theme/app_text_styles.dart';
+import 'package:action_inc_taxi_app/core/utils/device_utils.dart';
 import 'package:action_inc_taxi_app/core/widgets/buttons/app_button.dart';
 import 'package:action_inc_taxi_app/core/widgets/date_picker_dialog.dart';
 import 'package:action_inc_taxi_app/core/widgets/form/form_field.dart';
@@ -76,12 +77,13 @@ class _EntryFieldPopupState extends State<EntryFieldPopup> {
 
   @override
   Widget build(BuildContext context) {
+    final DeviceUtils deviceUtils = DeviceUtils(context);
     return Center(
       child: Material(
         borderRadius: BorderRadius.circular(16),
         color: Colors.transparent,
         child: Container(
-          width: 100.w,
+          width: deviceUtils.getResponsiveWidth().sw,
           constraints: BoxConstraints(
             maxHeight: 0.8.sh, // 80% of screen height, adjust as needed
           ),

@@ -14,6 +14,23 @@ class DeviceUtils {
   bool get isTablet => _width >= 768 && _width < 1024;
   bool get isLargeTablet => _width >= 1024 && _width < 1440;
   bool get isDesktop => _width >= 1440;
+  
+
+  double getResponsiveWidth(){
+    if(isExtraSmallMobile){
+      return 0.9;
+    } else if(isSmallMobile){
+      return 0.8;
+    } else if(isMediumMobile){
+      return 0.7;
+    } else if(isTablet){
+      return 0.6;
+    } else if(isLargeTablet){
+      return 0.5;
+    } else {
+      return 0.4;
+    }
+  }
 
   bool get isWeb => kIsWeb;
 

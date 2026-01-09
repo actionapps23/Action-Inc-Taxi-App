@@ -1,4 +1,5 @@
 import 'package:action_inc_taxi_app/core/theme/app_text_styles.dart';
+import 'package:action_inc_taxi_app/core/utils/device_utils.dart';
 import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:action_inc_taxi_app/core/widgets/form/form_field.dart';
@@ -45,11 +46,12 @@ class _EditFieldPopupState extends State<EditFieldPopup> {
 
   @override
   Widget build(BuildContext context) {
+    final deviceUtils = DeviceUtils(context);
     return Center(
       child: Material(
         color: Colors.transparent,
         child: Container(
-          width: 100.w,
+          width: deviceUtils.getResponsiveWidth().sw,
           padding: EdgeInsets.all(4.w),
           decoration: BoxDecoration(
             color: AppColors.cardBackground,

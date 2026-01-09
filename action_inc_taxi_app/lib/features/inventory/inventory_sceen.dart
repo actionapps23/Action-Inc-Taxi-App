@@ -75,20 +75,21 @@ class _InventorySceenState extends State<InventorySceen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              ResponsiveText(
-                                "Inventory",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
+                              Flexible(
+                                child: ResponsiveText(
+                                  "Inventory",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                  ),
                                 ),
                               ),
                               Spacing.hLarge,
-                              Column(
-                                children: [
-                                  SizedBox(
-                                    width: 60.w,
-                                    child: AppDropdown<String>(
+                              Flexible(
+                                child: Column(
+                                  children: [
+                                    AppDropdown<String>(
                                       labelText: "Category",
                                       value: _selectedCategory,
                                       items: [
@@ -176,13 +177,12 @@ class _InventorySceenState extends State<InventorySceen> {
                                         }
                                       },
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                               Spacing.hLarge,
-                              Row(
-                                children: [
-                                  AppOutlineButton(
+                              Flexible(child:
+                              AppOutlineButton(
                                     borderColor: AppColors.scaffold,
                                     label: "Add New Item",
                                     padding: EdgeInsets.symmetric(
@@ -196,9 +196,8 @@ class _InventorySceenState extends State<InventorySceen> {
                                             AddInventoryPopup(),
                                       );
                                     },
-                                  ),
-                                ],
-                              ),
+                                  ),)
+                             
                             ],
                           ),
                           Spacing.vLarge,

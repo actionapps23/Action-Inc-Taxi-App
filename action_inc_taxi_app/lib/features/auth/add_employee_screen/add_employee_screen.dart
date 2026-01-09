@@ -1,5 +1,6 @@
 import 'package:action_inc_taxi_app/core/theme/app_assets.dart';
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
+import 'package:action_inc_taxi_app/core/utils/device_utils.dart';
 import 'package:action_inc_taxi_app/core/widgets/navbar/navbar.dart';
 import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,7 @@ class AddEmployeeScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final deviceUtils = DeviceUtils(context);
     final nameController = useTextEditingController();
     final passwordController = useTextEditingController();
     final roleController = useTextEditingController();
@@ -45,7 +47,7 @@ class AddEmployeeScreen extends HookWidget {
                       Center(
                         child: SingleChildScrollView(
                           child: Container(
-                            width: 0.4.sw,
+                            width:  deviceUtils.getResponsiveWidth().sw,
                             margin: EdgeInsets.symmetric(
                               horizontal: 16.w,
                               vertical: 24.h,
@@ -200,3 +202,5 @@ class AddEmployeeScreen extends HookWidget {
     );
   }
 }
+
+
