@@ -63,7 +63,7 @@ class _StatsOverviewCardState extends State<StatsOverviewCard> {
                       setState(() {
                         selectedTabIndex = index;
                       });
-                        widget.onTabSelected(index);
+                      widget.onTabSelected(index);
                     },
                   ),
                 ),
@@ -73,7 +73,10 @@ class _StatsOverviewCardState extends State<StatsOverviewCard> {
             Row(
               children: [
                 Expanded(
-                  child: SimpleStatCard(label: "Target", value: widget.targetValue),
+                  child: SimpleStatCard(
+                    label: "Target",
+                    value: widget.targetValue,
+                  ),
                 ),
                 Spacing.hSmall,
                 Expanded(

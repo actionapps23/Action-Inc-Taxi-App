@@ -2,7 +2,6 @@ import 'package:action_inc_taxi_app/core/constants/app_constants.dart';
 import 'package:action_inc_taxi_app/core/models/field_entry_model.dart';
 import 'package:action_inc_taxi_app/cubit/purchase/purchase_state.dart';
 import 'package:action_inc_taxi_app/services/purchase_service.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PurchaseCubit extends Cubit<PurchaseState> {
@@ -34,7 +33,6 @@ class PurchaseCubit extends Cubit<PurchaseState> {
       final data = await PurchaseService.getPurchaseRecord(taxiPlateNumber);
       emit(PurchaseLoaded(purchaseData: data));
     } catch (e) {
-      debugPrint("Error saving purchase record: $e");
       emit(PurchaseError(message: e.toString()));
     }
   }
@@ -42,27 +40,24 @@ class PurchaseCubit extends Cubit<PurchaseState> {
   Future<void> updatePurchaseRecord(
     String taxiPlateNumber,
     FieldEntryModel updatedEntry,
-    String collectionName,
-    {final bool fromPurchaseScreen = true,}
-  ) async{
+    String collectionName, {
+    final bool fromPurchaseScreen = true,
+  }) async {
     emit(PurchaseLoading());
     try {
       await PurchaseService.updatePurchaseRecord(
         taxiPlateNumber,
         updatedEntry,
-        collectionName
+        collectionName,
       );
-      if(fromPurchaseScreen){
+      if (fromPurchaseScreen) {
         getPurchaseRecord(taxiPlateNumber);
-      }
-      else{
+      } else {
         getAllChecklists(taxiPlateNumber);
       }
     } catch (e) {
-      debugPrint("Error updating purchase record: $e");
       emit(PurchaseError(message: e.toString()));
     }
-    
   }
   // function to get the data for newCarEquipment, ltfrbChecklist, ltoChecklist
 
@@ -71,7 +66,6 @@ class PurchaseCubit extends Cubit<PurchaseState> {
     try {
       final Map<String, List<FieldEntryModel>> data =
           await PurchaseService.getAllChecklists(taxiPlateNumber);
-      debugPrint("Fetched all checklists data: $data");
 
       emit(
         AllDataLoaded(
@@ -81,7 +75,6 @@ class PurchaseCubit extends Cubit<PurchaseState> {
         ),
       );
     } catch (e) {
-      debugPrint("Error fetching checklists: $e");
       emit(PurchaseError(message: e.toString()));
     }
   }
@@ -119,7 +112,6 @@ class PurchaseCubit extends Cubit<PurchaseState> {
         ),
       );
     } catch (e) {
-      debugPrint("Error saving all checklists: $e");
       emit(PurchaseError(message: e.toString()));
     }
   }
@@ -149,7 +141,6 @@ class PurchaseCubit extends Cubit<PurchaseState> {
       );
       emit(PurchaseLoaded(purchaseData: purchaseData));
     } catch (e) {
-      debugPrint("Error updating taxi plate number: $e");
       emit(PurchaseError(message: e.toString()));
     }
   }

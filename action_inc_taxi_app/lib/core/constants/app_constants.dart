@@ -94,19 +94,22 @@ class AppConstants {
 
   static final String lftrbRecordForFranchiseTransferCollection =
       'ltfrb_franchise_transfer_records';
-  
+
   static final String pnpRecordForFranchiseTransferCollection =
       'pnp_franchise_transfer_records';
-  
+
   static final String ltoRecordForFranchiseTransferCollection =
       'lto_franchise_transfer_records';
 
   static final String purchaseChecklistCollection = 'purchase_checklist';
   static final String purchaseRecordsCollection = 'purchase_records';
-  static final String newCarEquipmentChecklistCollection = 'new_car_equipments_checklist';
-  static final String lftrbChecklistCollectionForNewCar = 'ltfrb_process_checklist';
+  static final String newCarEquipmentChecklistCollection =
+      'new_car_equipments_checklist';
+  static final String lftrbChecklistCollectionForNewCar =
+      'ltfrb_process_checklist';
   static final String ltoChecklistCollectionForNewCar = 'lto_process_checklist';
-  static final String newCarEquipmentRecordCollection = 'new_car_equipments_records';
+  static final String newCarEquipmentRecordCollection =
+      'new_car_equipments_records';
   static final String lftrbRecordCollectionForNewCar = 'ltfrb_process_records';
   static final String ltoRecordCollectionForNewCar = 'lto_process_records';
   static final String futurePurchaseChecklistCollection =

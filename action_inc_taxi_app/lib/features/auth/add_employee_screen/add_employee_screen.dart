@@ -47,7 +47,7 @@ class AddEmployeeScreen extends HookWidget {
                       Center(
                         child: SingleChildScrollView(
                           child: Container(
-                            width:  deviceUtils.getResponsiveWidth().sw,
+                            width: deviceUtils.getResponsiveWidth().sw,
                             margin: EdgeInsets.symmetric(
                               horizontal: 16.w,
                               vertical: 24.h,
@@ -202,5 +202,3 @@ class AddEmployeeScreen extends HookWidget {
     );
   }
 }
-
-

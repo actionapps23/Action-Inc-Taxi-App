@@ -33,7 +33,10 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
     final LoginState loginState = loginCubit.state;
     final bool isAdmin = loginState is LoginSuccess && loginState.user.isAdmin;
 
-    final bool isMobile = deviceUtils.isSmallMobile || deviceUtils.isMediumMobile || deviceUtils.isExtraSmallMobile;
+    final bool isMobile =
+        deviceUtils.isSmallMobile ||
+        deviceUtils.isMediumMobile ||
+        deviceUtils.isExtraSmallMobile;
 
     Widget titleSection = Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,7 +64,10 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
               color: Colors.white,
               fontSize: isMobile ? 10.sp : 12.sp,
             ),
-            padding: EdgeInsets.symmetric(horizontal: isMobile ? 12.w : 16.w, vertical: isMobile ? 4.h : 8.h),
+            padding: EdgeInsets.symmetric(
+              horizontal: isMobile ? 12.w : 16.w,
+              vertical: isMobile ? 4.h : 8.h,
+            ),
           ),
         ),
       ],
@@ -89,7 +95,9 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
               if (isAdmin) Spacing.vStandard,
               AppButton(
                 text: _isSolved ? 'Mark as Unsolved' : 'Mark as Solved',
-                backgroundColor: _isSolved ? AppColors.error : AppColors.success,
+                backgroundColor: _isSolved
+                    ? AppColors.error
+                    : AppColors.success,
                 textColor: _isSolved ? Colors.white : AppColors.buttonText,
                 onPressed: () {
                   setState(() {
@@ -98,16 +106,16 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
                   maintainanceCubit.updateMaintainanceRequest(
                     widget.maintainanceModel.copyWith(
                       isResolved: _isSolved,
-                      lastUpdatedBy: loginState is LoginSuccess ? loginState.user.name : '',
+                      lastUpdatedBy: loginState is LoginSuccess
+                          ? loginState.user.name
+                          : '',
                       lastUpdatedAt: DateTime.now(),
                     ),
                   );
                 },
               ),
-                          Spacing.vMedium,
-
-            ]
-            ,
+              Spacing.vMedium,
+            ],
           )
         : Row(
             mainAxisSize: MainAxisSize.min,
@@ -129,7 +137,9 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
               if (isAdmin) Spacing.hSmall,
               AppButton(
                 text: _isSolved ? 'Mark as Unsolved' : 'Mark as Solved',
-                backgroundColor: _isSolved ? AppColors.error : AppColors.success,
+                backgroundColor: _isSolved
+                    ? AppColors.error
+                    : AppColors.success,
                 textColor: _isSolved ? Colors.white : AppColors.buttonText,
                 onPressed: () {
                   setState(() {
@@ -138,7 +148,9 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
                   maintainanceCubit.updateMaintainanceRequest(
                     widget.maintainanceModel.copyWith(
                       isResolved: _isSolved,
-                      lastUpdatedBy: loginState is LoginSuccess ? loginState.user.name : '',
+                      lastUpdatedBy: loginState is LoginSuccess
+                          ? loginState.user.name
+                          : '',
                       lastUpdatedAt: DateTime.now(),
                     ),
                   );
@@ -168,22 +180,37 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
                                     borderRadius: BorderRadius.circular(12),
                                     child: Image.network(
                                       attachmentUrl,
-                                      width: 0.9.w * MediaQuery.of(context).size.width,
-                                      height: 0.7.h * MediaQuery.of(context).size.height,
+                                      width:
+                                          0.9.w *
+                                          MediaQuery.of(context).size.width,
+                                      height:
+                                          0.7.h *
+                                          MediaQuery.of(context).size.height,
                                       fit: BoxFit.contain,
-                                      errorBuilder: (context, error, stackTrace) => Container(
-                                        width: 0.9.w * MediaQuery.of(context).size.width,
-                                        height: 0.7.h * MediaQuery.of(context).size.height,
-                                        decoration: BoxDecoration(
-                                          color: Colors.black12,
-                                          borderRadius: BorderRadius.circular(12),
-                                        ),
-                                        child: Icon(
-                                          Icons.image,
-                                          color: Colors.blueAccent,
-                                          size: 64,
-                                        ),
-                                      ),
+                                      errorBuilder:
+                                          (context, error, stackTrace) =>
+                                              Container(
+                                                width:
+                                                    0.9.w *
+                                                    MediaQuery.of(
+                                                      context,
+                                                    ).size.width,
+                                                height:
+                                                    0.7.h *
+                                                    MediaQuery.of(
+                                                      context,
+                                                    ).size.height,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.black12,
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                ),
+                                                child: Icon(
+                                                  Icons.image,
+                                                  color: Colors.blueAccent,
+                                                  size: 64,
+                                                ),
+                                              ),
                                     ),
                                   ),
                                 ),
@@ -195,19 +222,20 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
                           attachmentUrl,
                           width: 50,
                           height: 50,
-                          errorBuilder: (context, error, stackTrace) => Container(
-                            width: 50,
-                            height: 50,
-                            decoration: BoxDecoration(
-                              color: Colors.black12,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Icon(
-                              Icons.image,
-                              color: Colors.blueAccent,
-                              size: 32,
-                            ),
-                          ),
+                          errorBuilder: (context, error, stackTrace) =>
+                              Container(
+                                width: 50,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: Colors.black12,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Icon(
+                                  Icons.image,
+                                  color: Colors.blueAccent,
+                                  size: 32,
+                                ),
+                              ),
                         ),
                       ),
                     ),
@@ -233,22 +261,37 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
                                   borderRadius: BorderRadius.circular(12),
                                   child: Image.network(
                                     attachmentUrl,
-                                    width: 0.9.w * MediaQuery.of(context).size.width,
-                                    height: 0.7.h * MediaQuery.of(context).size.height,
+                                    width:
+                                        0.9.w *
+                                        MediaQuery.of(context).size.width,
+                                    height:
+                                        0.7.h *
+                                        MediaQuery.of(context).size.height,
                                     fit: BoxFit.contain,
-                                    errorBuilder: (context, error, stackTrace) => Container(
-                                      width: 0.9.w * MediaQuery.of(context).size.width,
-                                      height: 0.7.h * MediaQuery.of(context).size.height,
-                                      decoration: BoxDecoration(
-                                        color: Colors.black12,
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: Icon(
-                                        Icons.image,
-                                        color: Colors.blueAccent,
-                                        size: 64,
-                                      ),
-                                    ),
+                                    errorBuilder:
+                                        (context, error, stackTrace) =>
+                                            Container(
+                                              width:
+                                                  0.9.w *
+                                                  MediaQuery.of(
+                                                    context,
+                                                  ).size.width,
+                                              height:
+                                                  0.7.h *
+                                                  MediaQuery.of(
+                                                    context,
+                                                  ).size.height,
+                                              decoration: BoxDecoration(
+                                                color: Colors.black12,
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                              ),
+                                              child: Icon(
+                                                Icons.image,
+                                                color: Colors.blueAccent,
+                                                size: 64,
+                                              ),
+                                            ),
                                   ),
                                 ),
                               ),
@@ -298,7 +341,9 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
               ),
               ResponsiveText(
                 widget.maintainanceModel.taxiId!,
-                style: AppTextStyles.bodyExtraSmall.copyWith(fontSize: isMobile ? 10.sp : 12.sp),
+                style: AppTextStyles.bodyExtraSmall.copyWith(
+                  fontSize: isMobile ? 10.sp : 12.sp,
+                ),
               ),
             ] else if (widget.maintainanceModel.taxiPlateNumber != '') ...[
               ResponsiveText(
@@ -310,9 +355,12 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
               ),
               ResponsiveText(
                 widget.maintainanceModel.taxiPlateNumber!,
-                style: AppTextStyles.bodyExtraSmall.copyWith(fontSize: isMobile ? 10.sp : 12.sp),
+                style: AppTextStyles.bodyExtraSmall.copyWith(
+                  fontSize: isMobile ? 10.sp : 12.sp,
+                ),
               ),
-            ] else if (widget.maintainanceModel.taxiRegistrationNumber != '') ...[
+            ] else if (widget.maintainanceModel.taxiRegistrationNumber !=
+                '') ...[
               ResponsiveText(
                 "Taxi Reg. No. ",
                 style: AppTextStyles.bodyExtraSmall.copyWith(
@@ -322,7 +370,9 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
               ),
               ResponsiveText(
                 widget.maintainanceModel.taxiRegistrationNumber!,
-                style: AppTextStyles.bodyExtraSmall.copyWith(fontSize: isMobile ? 10.sp : 12.sp),
+                style: AppTextStyles.bodyExtraSmall.copyWith(
+                  fontSize: isMobile ? 10.sp : 12.sp,
+                ),
               ),
             ],
           ],
@@ -339,7 +389,9 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
             ),
             ResponsiveText(
               widget.maintainanceModel.inspectedBy,
-              style: AppTextStyles.bodyExtraSmall.copyWith(fontSize: isMobile ? 10.sp : 12.sp),
+              style: AppTextStyles.bodyExtraSmall.copyWith(
+                fontSize: isMobile ? 10.sp : 12.sp,
+              ),
             ),
           ],
         ),
@@ -354,8 +406,12 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
               ),
             ),
             ResponsiveText(
-              widget.maintainanceModel.assignedTo == '' ? "Not assigned" : widget.maintainanceModel.assignedTo!,
-              style: AppTextStyles.bodyExtraSmall.copyWith(fontSize: isMobile ? 10.sp : 12.sp),
+              widget.maintainanceModel.assignedTo == ''
+                  ? "Not assigned"
+                  : widget.maintainanceModel.assignedTo!,
+              style: AppTextStyles.bodyExtraSmall.copyWith(
+                fontSize: isMobile ? 10.sp : 12.sp,
+              ),
             ),
           ],
         ),
@@ -374,7 +430,9 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
             Flexible(
               child: ResponsiveText(
                 widget.maintainanceModel.lastUpdatedBy,
-                style: AppTextStyles.bodyExtraSmall.copyWith(fontSize: isMobile ? 10.sp : 12.sp),
+                style: AppTextStyles.bodyExtraSmall.copyWith(
+                  fontSize: isMobile ? 10.sp : 12.sp,
+                ),
               ),
             ),
           ],
@@ -394,7 +452,9 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
                 widget.maintainanceModel.lastUpdatedAt,
                 showTime: true,
               ),
-              style: AppTextStyles.bodyExtraSmall.copyWith(fontSize: isMobile ? 10.sp : 12.sp),
+              style: AppTextStyles.bodyExtraSmall.copyWith(
+                fontSize: isMobile ? 10.sp : 12.sp,
+              ),
             ),
           ],
         ),
@@ -418,7 +478,9 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
                 titleSection,
                 Spacing.vSmall,
                 ResponsiveText(
-                  HelperFunctions.timeDifferenceFromNow(widget.maintainanceModel.date),
+                  HelperFunctions.timeDifferenceFromNow(
+                    widget.maintainanceModel.date,
+                  ),
                   style: AppTextStyles.bodyExtraSmall.copyWith(
                     color: AppColors.subText,
                     fontSize: 10.sp,
@@ -459,7 +521,9 @@ class _MaintainanceItemCardState extends State<MaintainanceItemCard> {
                           titleSection,
                           Spacing.vSmall,
                           ResponsiveText(
-                            HelperFunctions.timeDifferenceFromNow(widget.maintainanceModel.date),
+                            HelperFunctions.timeDifferenceFromNow(
+                              widget.maintainanceModel.date,
+                            ),
                             style: AppTextStyles.bodyExtraSmall.copyWith(
                               color: AppColors.subText,
                               fontSize: 12.sp,

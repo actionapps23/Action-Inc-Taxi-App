@@ -39,7 +39,7 @@ class _NewCarDetailsState extends State<NewCarDetails> {
       body: SingleChildScrollView(
         child: BlocBuilder<FieldCubit, FieldState>(
           bloc: fieldCubitForLTO,
-          builder: (context , fieldStateForLTO) {
+          builder: (context, fieldStateForLTO) {
             return BlocBuilder<FieldCubit, FieldState>(
               bloc: fieldCubitForLTFRB,
               builder: (context, fieldStateForLTFRB) {
@@ -54,16 +54,20 @@ class _NewCarDetailsState extends State<NewCarDetails> {
                           children: [
                             Navbar(),
                             _buildHeader(fieldState),
-                            _buildBody([fieldCubitForLTFRB, fieldCubitForLTO, fieldCubitForNewCarEquipment], purchaseState),
+                            _buildBody([
+                              fieldCubitForLTFRB,
+                              fieldCubitForLTO,
+                              fieldCubitForNewCarEquipment,
+                            ], purchaseState),
                           ],
                         );
                       },
                     );
                   },
                 );
-              }
+              },
             );
-          }
+          },
         ),
       ),
     );
@@ -89,7 +93,9 @@ class _NewCarDetailsState extends State<NewCarDetails> {
       );
     }
     if (fieldCubits.any((fieldCubit) => fieldCubit.state is FieldError)) {
-      final errorFieldCubit = fieldCubits.firstWhere((fieldCubit) => fieldCubit.state is FieldError);
+      final errorFieldCubit = fieldCubits.firstWhere(
+        (fieldCubit) => fieldCubit.state is FieldError,
+      );
       return _buildError((errorFieldCubit.state as FieldError).message);
     }
     if (purchaseState is PurchaseError) {
@@ -155,9 +161,11 @@ class _NewCarDetailsState extends State<NewCarDetails> {
   }
 
   bool _isLoading(List<FieldCubit> fieldCubits, PurchaseState purchaseState) {
-    return fieldCubits.any((fieldCubit) =>
-            fieldCubit.state is FieldLoading ||
-            fieldCubit.state is FieldInitial) ||
+    return fieldCubits.any(
+          (fieldCubit) =>
+              fieldCubit.state is FieldLoading ||
+              fieldCubit.state is FieldInitial,
+        ) ||
         purchaseState is PurchaseLoading ||
         purchaseState is PurchaseInitial;
   }
@@ -170,6 +178,7 @@ class _NewCarDetailsState extends State<NewCarDetails> {
       ],
     );
   }
+
   Future<void> _initializeChecklists() async {
     selectionCubit = context.read<SelectionCubit>();
     fieldCubitForNewCarEquipment = FieldCubit(
@@ -192,22 +201,25 @@ class _NewCarDetailsState extends State<NewCarDetails> {
     final fieldStateForNewCarEquipment = fieldCubitForNewCarEquipment.state;
     final fieldStateForLTFRB = fieldCubitForLTFRB.state;
     final fieldStateForLTO = fieldCubitForLTO.state;
-    
+
     final purchaseState = purchaseCubit.state;
 
-    final allDataLoaded = purchaseState is AllDataLoaded &&
+    final allDataLoaded =
+        purchaseState is AllDataLoaded &&
         fieldStateForNewCarEquipment is FieldEntriesLoaded &&
         fieldStateForLTFRB is FieldEntriesLoaded &&
         fieldStateForLTO is FieldEntriesLoaded;
 
-    final needsToSaveChecklists = allDataLoaded && (
-      (purchaseState).newCarEquipmentData.isEmpty ||
-      purchaseState.ltfrbData.isEmpty ||
-      purchaseState.ltoData.isEmpty ||
-      (fieldStateForNewCarEquipment).entries.length != purchaseState.newCarEquipmentData.length ||
-      (fieldStateForLTFRB).entries.length != purchaseState.ltfrbData.length ||
-      (fieldStateForLTO).entries.length != purchaseState.ltoData.length
-    );
+    final needsToSaveChecklists =
+        allDataLoaded &&
+        ((purchaseState).newCarEquipmentData.isEmpty ||
+            purchaseState.ltfrbData.isEmpty ||
+            purchaseState.ltoData.isEmpty ||
+            (fieldStateForNewCarEquipment).entries.length !=
+                purchaseState.newCarEquipmentData.length ||
+            (fieldStateForLTFRB).entries.length !=
+                purchaseState.ltfrbData.length ||
+            (fieldStateForLTO).entries.length != purchaseState.ltoData.length);
 
     if (needsToSaveChecklists) {
       await purchaseCubit.saveAllChecklists(

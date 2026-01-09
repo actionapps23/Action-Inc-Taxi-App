@@ -12,14 +12,12 @@ class LoginSuccess extends LoginState {
   LoginSuccess(this.user, {this.savedRoute});
 
   LoginSuccess copyWith({String? savedRoute}) {
-    return LoginSuccess(
-      user,
-      savedRoute: savedRoute ?? this.savedRoute,
-    );
+    return LoginSuccess(user, savedRoute: savedRoute ?? this.savedRoute);
   }
 }
 
 class UpdatePasswordSuccess extends LoginState {}
+
 class UpdatePasswordFailure extends LoginState {
   final String error;
   UpdatePasswordFailure(this.error);

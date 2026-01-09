@@ -50,7 +50,6 @@ class _CustomTabBarState extends State<CustomTabBar> {
             return GestureDetector(
               onTap: () {
                 widget.onTabSelected(index);
-               
               },
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),

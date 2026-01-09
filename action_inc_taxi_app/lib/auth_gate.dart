@@ -6,12 +6,10 @@ import 'package:action_inc_taxi_app/features/entry_section/vehicle_inspection_pa
 import 'package:flutter/material.dart';
 
 class AuthGate extends StatelessWidget {
-final Widget? child;
+  final Widget? child;
   final RouteSettings? routeSettings;
 
   const AuthGate({super.key, this.child, this.routeSettings});
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -49,50 +47,72 @@ final Widget? child;
                 }
                 if (wasReloadedSnapshot.data!) {
                   clearWasReloaded();
-                  if (lastRouteSnapshot.data == AppRoutes.vehicleInspectionPanel ||
+                  if (lastRouteSnapshot.data ==
+                          AppRoutes.vehicleInspectionPanel ||
                       lastRouteSnapshot.data == AppRoutes.newCarDetails ||
                       lastRouteSnapshot.data == AppRoutes.carDetail ||
                       lastRouteSnapshot.data == AppRoutes.franchiseTransfer ||
-                      lastRouteSnapshot.data == AppRoutes.vehicleViewSelection ||
+                      lastRouteSnapshot.data ==
+                          AppRoutes.vehicleViewSelection ||
                       lastRouteSnapshot.data == AppRoutes.purchase) {
                     WidgetsBinding.instance.addPostFrameCallback((_) {
-                      Navigator.pushReplacementNamed(context, AppRoutes.selection);
+                      Navigator.pushReplacementNamed(
+                        context,
+                        AppRoutes.selection,
+                      );
                     });
                     return const SizedBox.shrink();
                   }
                 }
-                if(routeSettings != null){
-                  if(routeSettings!.name == AppRoutes.vehicleInspectionPanel){
-                    final args = routeSettings!.arguments as VehicleInspectionRouteArgs?;
+                if (routeSettings != null) {
+                  if (routeSettings!.name == AppRoutes.vehicleInspectionPanel) {
+                    final args =
+                        routeSettings!.arguments as VehicleInspectionRouteArgs?;
                     if (args == null) {
                       WidgetsBinding.instance.addPostFrameCallback((_) {
-                        Navigator.pushReplacementNamed(context, AppRoutes.selection);
+                        Navigator.pushReplacementNamed(
+                          context,
+                          AppRoutes.selection,
+                        );
                       });
                       return const SizedBox.shrink();
                     }
                     return AuthGate(
-                      child: VehicleInspectionPanel(viewName: args.viewName, mapKey: args.mapKey),
+                      child: VehicleInspectionPanel(
+                        viewName: args.viewName,
+                        mapKey: args.mapKey,
+                      ),
                     );
-                  }
-                  else if(routeSettings!.name == AppRoutes.carDetail){
-                    final args = routeSettings!.arguments as CarDetailRouteArgs?;
-                    if(args == null){
+                  } else if (routeSettings!.name == AppRoutes.carDetail) {
+                    final args =
+                        routeSettings!.arguments as CarDetailRouteArgs?;
+                    if (args == null) {
                       WidgetsBinding.instance.addPostFrameCallback((_) {
-                        Navigator.pushReplacementNamed(context, AppRoutes.selection);
+                        Navigator.pushReplacementNamed(
+                          context,
+                          AppRoutes.selection,
+                        );
                       });
                       return const SizedBox.shrink();
                     }
-                    return AuthGate(child: CarDetailScreen(fetchDetails: args.fetchDetails));
-                  }
-                  else if(routeSettings!.name == AppRoutes.procedure){
-                    final args = routeSettings!.arguments as ProcedureRouteArgs?;
-                    if(args == null){
+                    return AuthGate(
+                      child: CarDetailScreen(fetchDetails: args.fetchDetails),
+                    );
+                  } else if (routeSettings!.name == AppRoutes.procedure) {
+                    final args =
+                        routeSettings!.arguments as ProcedureRouteArgs?;
+                    if (args == null) {
                       WidgetsBinding.instance.addPostFrameCallback((_) {
-                        Navigator.pushReplacementNamed(context, AppRoutes.selection);
+                        Navigator.pushReplacementNamed(
+                          context,
+                          AppRoutes.selection,
+                        );
                       });
                       return const SizedBox.shrink();
                     }
-                    return AuthGate(child: ProcedureScreen(procedureType: args.procedureType));
+                    return AuthGate(
+                      child: ProcedureScreen(procedureType: args.procedureType),
+                    );
                   }
                 }
                 return child!;
@@ -105,10 +125,6 @@ final Widget? child;
   }
 }
 
-void clearWasReloaded() async{
-                    await LocalStorage.clearWasReloaded();
-                    debugPrint("Cleared wasReloaded flag");
-                    final wasReloaded = await LocalStorage.wasReloaded();
-                    debugPrint("wasReloaded after clearing: $wasReloaded");
-
+void clearWasReloaded() async {
+  await LocalStorage.clearWasReloaded();
 }

@@ -13,7 +13,6 @@ import 'package:action_inc_taxi_app/cubit/inventory/inventory_cubit.dart';
 import 'package:action_inc_taxi_app/cubit/inventory/inventory_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:action_inc_taxi_app/core/utils/device_utils.dart';
 
 class AddInventoryPopup extends StatefulWidget {
@@ -59,13 +58,22 @@ class _AddInventoryPopupState extends State<AddInventoryPopup> {
 
         if (device.isExtraSmallMobile) {
           popupWidth = screenWidth * 0.98;
-          popupPadding = const EdgeInsets.symmetric(horizontal: 8, vertical: 16);
+          popupPadding = const EdgeInsets.symmetric(
+            horizontal: 8,
+            vertical: 16,
+          );
         } else if (device.isSmallMobile) {
           popupWidth = screenWidth * 0.95;
-          popupPadding = const EdgeInsets.symmetric(horizontal: 16, vertical: 24);
+          popupPadding = const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 24,
+          );
         } else if (device.isMediumMobile) {
           popupWidth = screenWidth * 0.85;
-          popupPadding = const EdgeInsets.symmetric(horizontal: 20, vertical: 28);
+          popupPadding = const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 28,
+          );
         } else if (device.isTablet) {
           popupWidth = screenWidth * 0.7;
           popupPadding = const EdgeInsets.all(32);

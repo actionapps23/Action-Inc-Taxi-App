@@ -39,7 +39,7 @@ class LoginScreen extends HookWidget {
             'Incorrect credentials. Please try again.',
           );
         } else if (state is LoginSuccess) {
-          if(state.savedRoute == "new-car-details"){
+          if (state.savedRoute == "new-car-details") {
             // Seeting the state to initial so when we get to purchase sceen we not get an error
             context.read<PurchaseCubit>().reset();
             state = state.copyWith(savedRoute: AppRoutes.selection);

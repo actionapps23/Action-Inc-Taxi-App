@@ -5,6 +5,7 @@ class FranchiseTransferState {}
 class FranchiseTransferInitial extends FranchiseTransferState {}
 
 class FranchiseTransferLoading extends FranchiseTransferState {}
+
 class FranchiseTransferLoaded extends FranchiseTransferState {
   final List<FieldEntryModel> purchaseData;
 
@@ -30,5 +31,3 @@ class AllDataLoaded extends FranchiseTransferState {
     required this.ltoData,
   });
 }
-
-

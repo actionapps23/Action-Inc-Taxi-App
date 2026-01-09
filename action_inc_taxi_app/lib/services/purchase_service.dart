@@ -31,9 +31,8 @@ class PurchaseService {
   static Future<void> updatePurchaseRecord(
     String taxiPlateNumber,
     FieldEntryModel updatedEntry,
-    String collectionName
-  ){
-
+    String collectionName,
+  ) {
     try {
       return _firestore
           .collection(collectionName)
@@ -130,22 +129,27 @@ class PurchaseService {
   ) async {
     try {
       for (var collectionName in collectionNames) {
-        final oldDocRef = _firestore.collection(collectionName).doc(oldPlateNumber);
-        final newDocRef = _firestore.collection(collectionName).doc(newPlateNumber);
+        final oldDocRef = _firestore
+            .collection(collectionName)
+            .doc(oldPlateNumber);
+        final newDocRef = _firestore
+            .collection(collectionName)
+            .doc(newPlateNumber);
 
         final oldDocSnapshot = await oldDocRef.get();
         if (oldDocSnapshot.exists) {
-
           await newDocRef.set(oldDocSnapshot.data()!);
 
-          final subCollectionSnapshot = await oldDocRef.collection(oldPlateNumber).get();
+          final subCollectionSnapshot = await oldDocRef
+              .collection(oldPlateNumber)
+              .get();
           for (var doc in subCollectionSnapshot.docs) {
             await newDocRef
                 .collection(newPlateNumber)
                 .doc(doc.id)
                 .set(doc.data());
           }
-          for(var  doc in subCollectionSnapshot.docs) {
+          for (var doc in subCollectionSnapshot.docs) {
             await oldDocRef.collection(oldPlateNumber).doc(doc.id).delete();
           }
           await oldDocRef.delete();

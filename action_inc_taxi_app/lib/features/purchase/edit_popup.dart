@@ -74,7 +74,7 @@ class _EditFieldPopupState extends State<EditFieldPopup> {
                 padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 4.w),
                 child: ResponsiveText(
                   widget.title,
-                  style: AppTextStyles.bodyExtraSmall
+                  style: AppTextStyles.bodyExtraSmall,
                 ),
               ),
               Padding(

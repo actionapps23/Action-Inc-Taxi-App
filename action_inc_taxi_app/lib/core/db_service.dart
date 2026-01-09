@@ -476,7 +476,11 @@ class DbService {
     return {'totalCarWashFeesToday': 0, 'totalCarWashFeesYesterday': 0};
   }
 
-  Future<void> updateEmployeePassword(String employeeId, String currentHashPassword, String newHashPassword) async {
+  Future<void> updateEmployeePassword(
+    String employeeId,
+    String currentHashPassword,
+    String newHashPassword,
+  ) async {
     try {
       final ref = _firestore.collection(employeeCollection).doc(employeeId);
       final doc = await ref.get();
@@ -491,8 +495,8 @@ class DbService {
     } catch (e) {
       rethrow;
     }
-
   }
+
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   final String employeeCollection = 'employees';
@@ -619,7 +623,10 @@ class DbService {
     try {
       DocumentSnapshot<Map<String, dynamic>> doc;
       if (taxiNo.isNotEmpty) {
-        doc = await _firestore.collection(carsCollection).doc(taxiNo.toUpperCase()).get();
+        doc = await _firestore
+            .collection(carsCollection)
+            .doc(taxiNo.toUpperCase())
+            .get();
       } else if (regNo.isNotEmpty) {
         final q = await _firestore
             .collection(carsCollection)

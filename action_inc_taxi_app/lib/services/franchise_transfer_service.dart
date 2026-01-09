@@ -51,12 +51,12 @@ class FranchiseTransferService {
       rethrow;
     }
   }
+
   static Future<void> updateFranchiseTransferRecord(
     String taxiPlateNumber,
     FieldEntryModel updatedEntry,
-    String collectionName
-  ){
-
+    String collectionName,
+  ) {
     try {
       return _firestore
           .collection(collectionName)
@@ -68,11 +68,13 @@ class FranchiseTransferService {
       rethrow;
     }
   }
+
   static Future<Map<String, List<FieldEntryModel>>> getAllChecklists(
     String taxiPlateNumber,
   ) async {
     final List<FieldEntryModel> pnpCheckListCollectionForFranchiseTransfer = [];
-    final List<FieldEntryModel> lftrbCheckListCollectionForFranchiseTransfer = [];
+    final List<FieldEntryModel> lftrbCheckListCollectionForFranchiseTransfer =
+        [];
     final List<FieldEntryModel> ltoCheckListCollectionForFranchiseTransfer = [];
 
     QuerySnapshot pnpRecordForFranchiseTransferSnapshot = await _firestore
@@ -84,7 +86,9 @@ class FranchiseTransferService {
     if (pnpRecordForFranchiseTransferSnapshot.docs.isNotEmpty) {
       for (var doc in pnpRecordForFranchiseTransferSnapshot.docs) {
         var data = doc.data() as Map<String, dynamic>;
-        pnpCheckListCollectionForFranchiseTransfer.add(FieldEntryModel.fromJson(data));
+        pnpCheckListCollectionForFranchiseTransfer.add(
+          FieldEntryModel.fromJson(data),
+        );
       }
     }
     QuerySnapshot lftrbSnapshot = await _firestore
@@ -96,7 +100,9 @@ class FranchiseTransferService {
     if (lftrbSnapshot.docs.isNotEmpty) {
       for (var doc in lftrbSnapshot.docs) {
         var data = doc.data() as Map<String, dynamic>;
-        lftrbCheckListCollectionForFranchiseTransfer.add(FieldEntryModel.fromJson(data));
+        lftrbCheckListCollectionForFranchiseTransfer.add(
+          FieldEntryModel.fromJson(data),
+        );
       }
     }
 
@@ -109,7 +115,9 @@ class FranchiseTransferService {
     if (ltoSnapshot.docs.isNotEmpty) {
       for (var doc in ltoSnapshot.docs) {
         var data = doc.data() as Map<String, dynamic>;
-        ltoCheckListCollectionForFranchiseTransfer.add(FieldEntryModel.fromJson(data));
+        ltoCheckListCollectionForFranchiseTransfer.add(
+          FieldEntryModel.fromJson(data),
+        );
       }
     }
 
@@ -120,5 +128,4 @@ class FranchiseTransferService {
     };
     return purchaseData;
   }
-
 }

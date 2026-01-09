@@ -37,122 +37,134 @@ class ChangePasswordScreen extends HookWidget {
             Center(
               child: BlocListener<LoginCubit, LoginState>(
                 bloc: loginCubit,
-                listener: (context, state){
-                  if(state is UpdatePasswordFailure){
+                listener: (context, state) {
+                  if (state is UpdatePasswordFailure) {
                     SnackBarHelper.showErrorSnackBar(context, state.error);
-                  }
-                  else if(state is UpdatePasswordSuccess){
-                    SnackBarHelper.showSuccessSnackBar(context, 'Password updated successfully');
+                  } else if (state is UpdatePasswordSuccess) {
+                    SnackBarHelper.showSuccessSnackBar(
+                      context,
+                      'Password updated successfully',
+                    );
                     Navigator.pushNamed(context, AppRoutes.selection);
                   }
                 },
-                child: 
-                  SingleChildScrollView(
-                    child: Container(
-                      width: deviceUtils.getResponsiveWidth().sw,
-                      margin: EdgeInsets.symmetric(
-                        horizontal: 16.w,
-                        vertical: 24.h,
+                child: SingleChildScrollView(
+                  child: Container(
+                    width: deviceUtils.getResponsiveWidth().sw,
+                    margin: EdgeInsets.symmetric(
+                      horizontal: 16.w,
+                      vertical: 24.h,
+                    ),
+                    constraints: BoxConstraints(maxWidth: 400.w),
+                    padding: EdgeInsets.all(12.w),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(
+                        AppConstants.cardBorderRadius,
                       ),
-                      constraints: BoxConstraints(maxWidth: 400.w),
-                      padding: EdgeInsets.all(12.w),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(
-                          AppConstants.cardBorderRadius,
-                        ),
-                        border: Border.all(color: AppColors.border),
-                      ),
-                      child: Form(
-                        key: formKey.value,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            SizedBox(height: 36.h),
-                            BlocBuilder<LoginCubit, LoginState>(
-                              builder: (context, state) => ResponsiveText(
-                                state is UpdatePasswordLoading ? 'Changing Password...' : 'Change Password',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 20,
-                                ),
-                                textAlign: TextAlign.center,
+                      border: Border.all(color: AppColors.border),
+                    ),
+                    child: Form(
+                      key: formKey.value,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          SizedBox(height: 36.h),
+                          BlocBuilder<LoginCubit, LoginState>(
+                            builder: (context, state) => ResponsiveText(
+                              state is UpdatePasswordLoading
+                                  ? 'Changing Password...'
+                                  : 'Change Password',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 20,
                               ),
+                              textAlign: TextAlign.center,
                             ),
-                            SizedBox(height: 32.h),
-                            AppTextFormField(
-                              labelOnTop: true,
-                              controller: currentPassController,
-                              labelText: 'Current Password',
-                              hintText: 'Enter current password',
-                              obscureText: true,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter your current password';
-                                }
-                                return null;
-                              },
+                          ),
+                          SizedBox(height: 32.h),
+                          AppTextFormField(
+                            labelOnTop: true,
+                            controller: currentPassController,
+                            labelText: 'Current Password',
+                            hintText: 'Enter current password',
+                            obscureText: true,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your current password';
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(height: 24.h),
+                          AppTextFormField(
+                            labelOnTop: true,
+                            controller: newPassController,
+                            labelText: 'New Password',
+                            hintText: 'Enter new password',
+                            obscureText: true,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter a new password';
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(height: 24.h),
+                          AppTextFormField(
+                            labelOnTop: true,
+                            controller: confirmPassController,
+                            labelText: 'Confirm New Password',
+                            hintText: 'Re-enter new password',
+                            obscureText: true,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please confirm your new password';
+                              }
+                              if (value != newPassController.text) {
+                                return 'Passwords do not match';
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(height: 32.h),
+                          AppButton(
+                            text: 'Change Password',
+                            onPressed: () async {
+                              if (formKey.value.currentState?.validate() ??
+                                  false) {
+                                final currentPassword = currentPassController
+                                    .text
+                                    .trim();
+                                final newPassword = newPassController.text
+                                    .trim();
+                                await context
+                                    .read<LoginCubit>()
+                                    .updateEmployeePassword(
+                                      sha256
+                                          .convert(utf8.encode(currentPassword))
+                                          .toString(),
+                                      sha256
+                                          .convert(utf8.encode(newPassword))
+                                          .toString(),
+                                    );
+                              }
+                            },
+                            width: 60.w,
+                            height: 44.h,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.buttonPrimary,
+                              foregroundColor: AppColors.background,
                             ),
-                            SizedBox(height: 24.h),
-                            AppTextFormField(
-                              labelOnTop: true,
-                              controller: newPassController,
-                              labelText: 'New Password',
-                              hintText: 'Enter new password',
-                              obscureText: true,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter a new password';
-                                }
-                                return null;
-                              },
+                            textStyle: const TextStyle(
+                              fontWeight: FontWeight.w700,
                             ),
-                            SizedBox(height: 24.h),
-                            AppTextFormField(
-                              labelOnTop: true,
-                              controller: confirmPassController,
-                              labelText: 'Confirm New Password',
-                              hintText: 'Re-enter new password',
-                              obscureText: true,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please confirm your new password';
-                                }
-                                if (value != newPassController.text) {
-                                  return 'Passwords do not match';
-                                }
-                                return null;
-                              },
-                            ),
-                            SizedBox(height: 32.h),
-                            AppButton(
-                              text: 'Change Password',
-                              onPressed: () async {
-                                if (formKey.value.currentState?.validate() ?? false) {
-                                  final currentPassword = currentPassController.text.trim();
-                                  final newPassword = newPassController.text.trim();
-                                  await context.read<LoginCubit>().updateEmployeePassword(
-                                    sha256.convert(utf8.encode(currentPassword)).toString(),
-                                    sha256.convert(utf8.encode(newPassword)).toString(),
-                                  );
-                                                  }
-                              },
-                              width: 60.w,
-                              height: 44.h,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.buttonPrimary,
-                                foregroundColor: AppColors.background,
-                              ),
-                              textStyle: const TextStyle(
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
-                  )
-                
+                  ),
+                ),
               ),
             ),
           ],

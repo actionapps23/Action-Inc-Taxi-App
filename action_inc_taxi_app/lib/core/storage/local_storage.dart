@@ -15,7 +15,7 @@ class LocalStorage {
     await prefs.setBool('was_reloaded', wasReloaded);
   }
 
-  static Future<bool> wasReloaded() async{
+  static Future<bool> wasReloaded() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.containsKey('was_reloaded');
   }

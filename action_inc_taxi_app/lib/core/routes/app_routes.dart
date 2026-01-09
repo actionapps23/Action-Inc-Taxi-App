@@ -1,14 +1,10 @@
 import 'package:action_inc_taxi_app/auth_gate.dart';
-import 'package:action_inc_taxi_app/core/widgets/pratice.dart';
 import 'package:action_inc_taxi_app/features/auth/add_employee_screen/add_employee_screen.dart';
 import 'package:action_inc_taxi_app/features/auth/change_password_screen/change_password_screen.dart';
 import 'package:action_inc_taxi_app/features/auth/login_screen.dart';
-import 'package:action_inc_taxi_app/features/close_procedure/procedure_screen.dart';
 import 'package:action_inc_taxi_app/features/dashboard/dashboard.dart';
-import 'package:action_inc_taxi_app/features/entry_section/car_detail_main_screen.dart';
 import 'package:action_inc_taxi_app/features/entry_section/inspection/vehicle_view_selection_screen.dart';
 import 'package:action_inc_taxi_app/features/entry_section/renewal/renewal_and_status_screen.dart';
-import 'package:action_inc_taxi_app/features/entry_section/vehicle_inspection_panel.dart';
 import 'package:action_inc_taxi_app/features/franchise/franchise_transfer.dart';
 import 'package:action_inc_taxi_app/features/future_purchase/future_purchase_screen.dart';
 import 'package:action_inc_taxi_app/features/inventory/inventory_sceen.dart';
@@ -44,30 +40,33 @@ class AppRoutes {
 
 class AppRouter {
   static Map<String, WidgetBuilder> get routes => {
-        AppRoutes.selection: (_) => const AuthGate(child: SelectionScreen()),
-        AppRoutes.newCarDetails: (_) => AuthGate(child: NewCarDetails()),
-        AppRoutes.changePassword: (_) => const AuthGate(child: ChangePasswordScreen()),
-        AppRoutes.unknown: (_) => const UnknownScreen(),
-        AppRoutes.practice: (_) => AuthGate(child: PracticeScreen()),
-        AppRoutes.dashboard: (_) => AuthGate(child: Dashboard()),
-        AppRoutes.report: (_) => const AuthGate(child: ReportPage()),
-        AppRoutes.addEmployee: (_) => AuthGate(child: AddEmployeeScreen()),
-        AppRoutes.maintainance: (_) => AuthGate(child: MaintainenceScreen()),
-        AppRoutes.inventory: (_) => AuthGate(child: InventorySceen()),
-        AppRoutes.vehicleViewSelection: (_) => const AuthGate(child: VehicleViewSelectionScreen()),
-        AppRoutes.renewalStatus: (_) => AuthGate(child: RenewalAndStatusScreen()),
-        AppRoutes.purchase: (_) => AuthGate(child: PurchaseScreen()),
-        AppRoutes.franchiseTransfer: (_) => AuthGate(child: FranchiseTransfer()),
-        AppRoutes.futurePurchase: (_) => AuthGate(child: FuturePurchaseScreen()),
-        AppRoutes.login: (_) => const LoginScreen(),
-      };
+    AppRoutes.selection: (_) => const AuthGate(child: SelectionScreen()),
+    AppRoutes.newCarDetails: (_) => AuthGate(child: NewCarDetails()),
+    AppRoutes.changePassword: (_) =>
+        const AuthGate(child: ChangePasswordScreen()),
+    AppRoutes.unknown: (_) => const UnknownScreen(),
+    AppRoutes.dashboard: (_) => AuthGate(child: Dashboard()),
+    AppRoutes.report: (_) => const AuthGate(child: ReportPage()),
+    AppRoutes.addEmployee: (_) => AuthGate(child: AddEmployeeScreen()),
+    AppRoutes.maintainance: (_) => AuthGate(child: MaintainenceScreen()),
+    AppRoutes.inventory: (_) => AuthGate(child: InventorySceen()),
+    AppRoutes.vehicleViewSelection: (_) =>
+        const AuthGate(child: VehicleViewSelectionScreen()),
+    AppRoutes.renewalStatus: (_) => AuthGate(child: RenewalAndStatusScreen()),
+    AppRoutes.purchase: (_) => AuthGate(child: PurchaseScreen()),
+    AppRoutes.franchiseTransfer: (_) => AuthGate(child: FranchiseTransfer()),
+    AppRoutes.futurePurchase: (_) => AuthGate(child: FuturePurchaseScreen()),
+    AppRoutes.login: (_) => const LoginScreen(),
+  };
 
   static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
     return MaterialPageRoute(
       settings: settings,
       builder: (context) {
-        if (settings.name == AppRoutes.carDetail || settings.name == AppRoutes.procedure || settings.name == AppRoutes.vehicleInspectionPanel) {
-          return AuthGate(routeSettings: settings,);
+        if (settings.name == AppRoutes.carDetail ||
+            settings.name == AppRoutes.procedure ||
+            settings.name == AppRoutes.vehicleInspectionPanel) {
+          return AuthGate(routeSettings: settings);
         }
         return const UnknownScreen();
       },
@@ -95,5 +94,8 @@ class ProcedureRouteArgs {
 class VehicleInspectionRouteArgs {
   final String viewName;
   final String mapKey;
-  const VehicleInspectionRouteArgs({required this.viewName, required this.mapKey});
+  const VehicleInspectionRouteArgs({
+    required this.viewName,
+    required this.mapKey,
+  });
 }

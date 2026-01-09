@@ -485,7 +485,7 @@ class _DailyRentCollectionInfoScreenState
     }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final selectionState = context.read<SelectionCubit>().state;
-       if (!widget.fetchDetails) {
+      if (!widget.fetchDetails) {
         // No cubit state, set defaults but don't overwrite existing values
         if (taxiNoController.text.trim().isEmpty) {
           taxiNoController.text = selectionState.taxiNo;
@@ -496,7 +496,7 @@ class _DailyRentCollectionInfoScreenState
         if (regNoController.text.trim().isEmpty) {
           regNoController.text = selectionState.regNo;
         }
-        if(numberPlateController.text.trim().isEmpty){
+        if (numberPlateController.text.trim().isEmpty) {
           numberPlateController.text = selectionState.taxiPlateNo;
         }
         final today = DateTime.now();
@@ -1359,9 +1359,6 @@ class _DailyRentCollectionInfoScreenState
                               errors = currentState.fieldErrors;
                             }
                             if (errors.isNotEmpty) {
-                              debugPrint(
-                                'Errors in form: ${errors.toString()}',
-                              );
                               if (context.mounted) {
                                 SnackBarHelper.showErrorSnackBar(
                                   context,

@@ -65,7 +65,9 @@ class MyApp extends StatelessWidget {
             BlocProvider<InventoryCubit>(create: (_) => InventoryCubit()),
             BlocProvider<AddEmployeeCubit>(create: (_) => AddEmployeeCubit()),
             BlocProvider<LoginCubit>(create: (_) => LoginCubit()..isLoggedIn()),
-            BlocProvider<FranchiseTransferCubit>(create: (_) => FranchiseTransferCubit()),
+            BlocProvider<FranchiseTransferCubit>(
+              create: (_) => FranchiseTransferCubit(),
+            ),
             BlocProvider<ProcedureCubit>(create: (_) => ProcedureCubit()),
             BlocProvider<PurchaseCubit>(create: (_) => PurchaseCubit()),
             BlocProvider<FuturePurchaseCubit>(

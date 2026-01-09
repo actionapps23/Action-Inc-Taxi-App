@@ -11,7 +11,6 @@ class DailyRentCubit extends Cubit<DailyRentState> {
 
   DailyRentCubit(this.dbService) : super(DailyRentInitial());
 
-
   Future<void> saveCarDetailInfo() async {
     final current = state;
     if (current is! DailyRentLoaded) return;

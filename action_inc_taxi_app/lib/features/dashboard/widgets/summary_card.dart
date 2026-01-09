@@ -69,7 +69,7 @@ class SummaryCard extends StatelessWidget {
                     icon: Icon(
                       icon,
                       color: AppColors.scaffold,
-                    size: max(8.w, 12),
+                      size: max(8.w, 12),
                     ),
                     onPressed: onPressed,
                   ),
@@ -86,29 +86,29 @@ class SummaryCard extends StatelessWidget {
                 style: AppTextStyles.bodySmall,
               ),
               Spacing.hSmall,
-             if (lastDayAmount != null)...[
-               Flexible(
-                child: PercentChangeIndicator(
-                  percentChange: HelperFunctions.percentChange(
-                    lastDayAmount!,
-                    amount,
+              if (lastDayAmount != null) ...[
+                Flexible(
+                  child: PercentChangeIndicator(
+                    percentChange: HelperFunctions.percentChange(
+                      lastDayAmount!,
+                      amount,
+                    ),
                   ),
                 ),
-              ),
-             ]
+              ],
             ],
           ),
           const SizedBox(height: 16),
-          if (lastDayLabel != null )
-           ResponsiveText(
+          if (lastDayLabel != null)
+            ResponsiveText(
               '$lastDayLabel',
               style: const TextStyle(
                 color: AppColors.scaffold,
                 fontSize: 15,
                 fontWeight: FontWeight.w400,
               ),
-          ),
-          if( lastDayLabel == null && lastDayAmount != null )
+            ),
+          if (lastDayLabel == null && lastDayAmount != null)
             ResponsiveText(
               '$lastDayLabel: $currencySymbol ${_formatNumber(lastDayAmount!)}',
               style: const TextStyle(
@@ -116,7 +116,7 @@ class SummaryCard extends StatelessWidget {
                 fontSize: 15,
                 fontWeight: FontWeight.w400,
               ),
-          ),
+            ),
         ],
       ),
     );

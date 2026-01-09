@@ -42,17 +42,57 @@ class _SelectionScreenState extends State<SelectionScreen> {
   }
 
   final List<Map<String, dynamic>> featureCards = [
-     {'title': "Rent a Car", 'id': 'rent_a_car', 'icon': AppAssets.carDetailsIcon},
-     {'title': "Car Details", 'id': 'car_details', 'icon': AppAssets.carDetailsIcon},
-     {'title': "Maintenance", 'id': 'maintenance', 'icon': AppAssets.maintenance},
-     {'title': "Inventory", 'id': 'inventory', 'icon': AppAssets.inventory},
-     {'title': "Taxi Inspection", 'id': 'taxi_inspection', 'icon': AppAssets.taxiInspection},
-     {'title': "Open Procedure", 'id': 'open_procedure', 'icon': AppAssets.openProcedure},
-     {'title': "Close Procedure", 'id': 'close_procedure', 'icon': AppAssets.closeProcedure},
-     {'title': "Renewal & Status", 'id': 'renewal_status', 'icon': AppAssets.renewalStatus},
-     {'title': "Purchase of Car", 'id': 'car_purchase', 'icon': AppAssets.carPurchase},
-     {'title': "Franchise Transfer", 'id': 'franchise_transfer', 'icon': AppAssets.franchiseTransfer},
-     {'title': "Future Purchase", 'id': 'future_purchase', 'icon': AppAssets.futurePurchase},
+    {
+      'title': "Rent a Car",
+      'id': 'rent_a_car',
+      'icon': AppAssets.carDetailsIcon,
+    },
+    {
+      'title': "Car Details",
+      'id': 'car_details',
+      'icon': AppAssets.carDetailsIcon,
+    },
+    {
+      'title': "Maintenance",
+      'id': 'maintenance',
+      'icon': AppAssets.maintenance,
+    },
+    {'title': "Inventory", 'id': 'inventory', 'icon': AppAssets.inventory},
+    {
+      'title': "Taxi Inspection",
+      'id': 'taxi_inspection',
+      'icon': AppAssets.taxiInspection,
+    },
+    {
+      'title': "Open Procedure",
+      'id': 'open_procedure',
+      'icon': AppAssets.openProcedure,
+    },
+    {
+      'title': "Close Procedure",
+      'id': 'close_procedure',
+      'icon': AppAssets.closeProcedure,
+    },
+    {
+      'title': "Renewal & Status",
+      'id': 'renewal_status',
+      'icon': AppAssets.renewalStatus,
+    },
+    {
+      'title': "Purchase of Car",
+      'id': 'car_purchase',
+      'icon': AppAssets.carPurchase,
+    },
+    {
+      'title': "Franchise Transfer",
+      'id': 'franchise_transfer',
+      'icon': AppAssets.franchiseTransfer,
+    },
+    {
+      'title': "Future Purchase",
+      'id': 'future_purchase',
+      'icon': AppAssets.futurePurchase,
+    },
   ];
 
   @override
@@ -153,20 +193,20 @@ class _SelectionScreenState extends State<SelectionScreen> {
                               children: [
                                 SizedBox(height: 18.h),
 
-                                  SizedBox(height: 12.h),
-                                  AppTextFormField(
-                                    controller: taxiPlateNoController,
-                                    hintText: 'Taxi Plate No.',
-                                    labelOnTop: true,
-                                    onChanged: (val) {
-                                      setState(() {});
-                                      selectionCubit.setTaxiPlateNo(val);
-                                    },
-                                  ),
-                                  SizedBox(height: 12.h),
+                                SizedBox(height: 12.h),
+                                AppTextFormField(
+                                  controller: taxiPlateNoController,
+                                  hintText: 'Taxi Plate No.',
+                                  labelOnTop: true,
+                                  onChanged: (val) {
+                                    setState(() {});
+                                    selectionCubit.setTaxiPlateNo(val);
+                                  },
+                                ),
+                                SizedBox(height: 12.h),
 
-                                 if(!isPurchase && !isFranchiseTransfer)...[
-                                   AppTextFormField(
+                                if (!isPurchase && !isFranchiseTransfer) ...[
+                                  AppTextFormField(
                                     controller: taxiNoController,
                                     hintText: 'Enter Taxi No.',
                                     labelOnTop: true,
@@ -185,8 +225,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
                                       selectionCubit.setRegNo(val);
                                     },
                                   ),
-                                 ]
-                                ,
+                                ],
                                 SizedBox(height: 24.h),
                                 AppButton(
                                   text: 'Enter',

@@ -64,16 +64,22 @@ class LoginCubit extends Cubit<LoginState> {
       emit(LoginFailure(e.toString()));
     }
   }
-  Future<void> updateEmployeePassword(String currentHashPassword, String newHashPassword) async {
+
+  Future<void> updateEmployeePassword(
+    String currentHashPassword,
+    String newHashPassword,
+  ) async {
     try {
       emit(UpdatePasswordLoading());
       final employeeID = await LocalStorage.getID();
-        await dbService.updateEmployeePassword(employeeID!, currentHashPassword, newHashPassword);
-        emit(UpdatePasswordSuccess());
-
+      await dbService.updateEmployeePassword(
+        employeeID!,
+        currentHashPassword,
+        newHashPassword,
+      );
+      emit(UpdatePasswordSuccess());
     } catch (e) {
       emit(UpdatePasswordFailure(e.toString()));
     }
   }
-
 }

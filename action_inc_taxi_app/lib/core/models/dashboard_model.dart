@@ -141,8 +141,10 @@ class DashboardModel {
       fleet2Amt: fleet2Amt ?? this.fleet2Amt,
       fleet3Amt: fleet3Amt ?? this.fleet3Amt,
       fleet4Amt: fleet4Amt ?? this.fleet4Amt,
-      totalFleetAmtForChart: totalFleetAmtForChart ?? this.totalFleetAmtForChart,
-      totalFleetAmtForStatsCard: totalFleetAmtForStatsCard ?? this.totalFleetAmtForStatsCard,
+      totalFleetAmtForChart:
+          totalFleetAmtForChart ?? this.totalFleetAmtForChart,
+      totalFleetAmtForStatsCard:
+          totalFleetAmtForStatsCard ?? this.totalFleetAmtForStatsCard,
       fleetIncomePreviousPeriod:
           fleetIncomePreviousPeriod ?? this.fleetIncomePreviousPeriod,
       totalMaintenanceFeesYesterday:

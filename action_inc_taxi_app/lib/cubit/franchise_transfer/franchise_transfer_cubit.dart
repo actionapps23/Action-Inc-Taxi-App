@@ -2,7 +2,6 @@ import 'package:action_inc_taxi_app/core/constants/app_constants.dart';
 import 'package:action_inc_taxi_app/core/models/field_entry_model.dart';
 import 'package:action_inc_taxi_app/cubit/franchise_transfer/farnchise_transfer_state.dart';
 import 'package:action_inc_taxi_app/services/franchise_transfer_service.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class FranchiseTransferCubit extends Cubit<FranchiseTransferState> {
@@ -15,7 +14,6 @@ class FranchiseTransferCubit extends Cubit<FranchiseTransferState> {
     try {
       final Map<String, List<FieldEntryModel>> data =
           await FranchiseTransferService.getAllChecklists(taxiPlateNumber);
-      debugPrint("Fetched all checklists data: $data");
 
       emit(
         AllDataLoaded(
@@ -25,7 +23,6 @@ class FranchiseTransferCubit extends Cubit<FranchiseTransferState> {
         ),
       );
     } catch (e) {
-      debugPrint("Error fetching checklists: $e");
       emit(FranchiseTransferError(message: e.toString()));
     }
   }
@@ -34,21 +31,20 @@ class FranchiseTransferCubit extends Cubit<FranchiseTransferState> {
     String taxiPlateNumber,
     FieldEntryModel updatedEntry,
     String collectionName,
-  ) async{
+  ) async {
     emit(FranchiseTransferLoading());
     try {
       await FranchiseTransferService.updateFranchiseTransferRecord(
         taxiPlateNumber,
         updatedEntry,
-        collectionName
+        collectionName,
       );
-    await getAllChecklists(taxiPlateNumber);
+      await getAllChecklists(taxiPlateNumber);
     } catch (e) {
-      debugPrint("Error updating purchase record: $e");
       emit(FranchiseTransferError(message: e.toString()));
     }
-    
   }
+
   Future<void> saveAllChecklists(
     String taxiPlateNumber,
     List<FieldEntryModel> pnpData,
@@ -75,14 +71,9 @@ class FranchiseTransferCubit extends Cubit<FranchiseTransferState> {
         ),
       ]);
       emit(
-        AllDataLoaded(
-          pnpData: pnpData,
-          ltfrbData: ltfrbData,
-          ltoData: ltoData,
-        ),
+        AllDataLoaded(pnpData: pnpData, ltfrbData: ltfrbData, ltoData: ltoData),
       );
     } catch (e) {
-      debugPrint("Error saving all checklists: $e");
       emit(FranchiseTransferError(message: e.toString()));
     }
   }

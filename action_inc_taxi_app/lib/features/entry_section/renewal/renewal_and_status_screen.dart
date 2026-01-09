@@ -150,9 +150,6 @@ class _RenewalAndStatusScreenState extends State<RenewalAndStatusScreen> {
                         // Ensure the table area gets a finite height.
                         LayoutBuilder(
                           builder: (context, constraints) {
-                            debugPrint(
-                              'RenewalAndStatusScreen table area constraints: $constraints',
-                            );
                             final double fallbackMaxHeight =
                                 MediaQuery.of(context).size.height * 0.6;
                             final double maxHeight =

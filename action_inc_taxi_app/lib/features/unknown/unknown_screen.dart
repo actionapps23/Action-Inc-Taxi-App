@@ -1,4 +1,3 @@
-
 import 'package:action_inc_taxi_app/core/theme/app_colors.dart';
 import 'package:action_inc_taxi_app/core/utils/device_utils.dart';
 import 'package:action_inc_taxi_app/core/widgets/buttons/app_button.dart';
@@ -14,32 +13,32 @@ class UnknownScreen extends StatelessWidget {
     final double iconSize = deviceUtils.isExtraSmallMobile
         ? 60
         : deviceUtils.isSmallMobile
-            ? 80
-            : deviceUtils.isTablet
-                ? 120
-                : 100;
+        ? 80
+        : deviceUtils.isTablet
+        ? 120
+        : 100;
     final double horizontalPadding = deviceUtils.isExtraSmallMobile
         ? 12
         : deviceUtils.isSmallMobile
-            ? 20
-            : 32;
+        ? 20
+        : 32;
     final double titleFontSize = deviceUtils.isExtraSmallMobile
         ? 18
         : deviceUtils.isSmallMobile
-            ? 22
-            : deviceUtils.isTablet
-                ? 32
-                : 28;
+        ? 22
+        : deviceUtils.isTablet
+        ? 32
+        : 28;
     final double messageFontSize = deviceUtils.isExtraSmallMobile
         ? 12
         : deviceUtils.isSmallMobile
-            ? 14
-            : 16;
+        ? 14
+        : 16;
     final double buttonFontSize = deviceUtils.isExtraSmallMobile
         ? 14
         : deviceUtils.isSmallMobile
-            ? 16
-            : 18;
+        ? 16
+        : 18;
     final double buttonPaddingV = deviceUtils.isExtraSmallMobile ? 8 : 14;
     final double buttonPaddingH = deviceUtils.isExtraSmallMobile ? 16 : 32;
 
@@ -51,7 +50,11 @@ class UnknownScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.help_outline, size: iconSize, color: AppColors.primary),
+              Icon(
+                Icons.help_outline,
+                size: iconSize,
+                color: AppColors.primary,
+              ),
               SizedBox(height: iconSize * 0.32),
               ResponsiveText(
                 'Oops! Unknown Screen',
@@ -65,7 +68,10 @@ class UnknownScreen extends StatelessWidget {
               SizedBox(height: 16),
               ResponsiveText(
                 'The page you are looking for does not exist or is currently unavailable.',
-                style: TextStyle(fontSize: messageFontSize, color: AppColors.textSecondary),
+                style: TextStyle(
+                  fontSize: messageFontSize,
+                  color: AppColors.textSecondary,
+                ),
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: iconSize * 0.4),
@@ -86,7 +92,10 @@ class UnknownScreen extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  padding: EdgeInsets.symmetric(horizontal: buttonPaddingH, vertical: buttonPaddingV),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: buttonPaddingH,
+                    vertical: buttonPaddingV,
+                  ),
                 ),
               ),
             ],

@@ -1,5 +1,6 @@
 import 'package:action_inc_taxi_app/core/models/fleet_income_model.dart';
 import 'package:action_inc_taxi_app/core/theme/app_text_styles.dart';
+import 'package:action_inc_taxi_app/core/utils/device_utils.dart';
 import 'package:action_inc_taxi_app/core/widgets/responsive_text_widget.dart';
 import 'package:action_inc_taxi_app/core/widgets/snackbar/spacing.dart';
 import 'package:action_inc_taxi_app/core/widgets/tabbar/tabbar.dart';
@@ -21,10 +22,13 @@ class _PieChartState extends State<PieChart> {
   int selectedTabIndex = 0;
   @override
   Widget build(BuildContext context) {
+    final deviceUtils = DeviceUtils(context);
     final double width = MediaQuery.of(context).size.width;
     final double cardPadding = width * 0.04;
     final double borderRadius = width * 0.05;
-    final double pieSize = width * 0.1;
+    final double pieSize = !deviceUtils.isMobile
+        ? width * 0.1
+        : (deviceUtils.getResponsiveWidth() / 3).sw;
     final double legendDotSize = width * 0.03;
     String selectedTabKey = 'daily';
     final DashboardCubit dashboardCubit = context.read<DashboardCubit>();
@@ -67,11 +71,12 @@ class _PieChartState extends State<PieChart> {
                     } else if (index == 2) {
                       selectedTabKey = 'monthly';
                     }
-                    dashboardCubit.fetchFleetAmounts(selectedTabKey, isForPieChart: true);
+                    dashboardCubit.fetchFleetAmounts(
+                      selectedTabKey,
+                      isForPieChart: true,
+                    );
                     selectedTabIndex = index;
-                    setState(() {
-                      
-                    });
+                    setState(() {});
                   },
                   selectedTabIndex: selectedTabIndex,
                 ),
@@ -101,18 +106,20 @@ class _PieChartState extends State<PieChart> {
                 children: [
                   Spacing.vLarge,
                   Row(
+                    mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      SizedBox(
-                        width: 20.w,
+                      Flexible(
                         child: ResponsiveText(
                           "Total Fleet Income",
                           style: AppTextStyles.bodySmall,
                         ),
                       ),
-                      ResponsiveText(
-                        "₱ $total",
-                        style: AppTextStyles.bodySmall,
+                      Flexible(
+                        child: ResponsiveText(
+                          "₱ $total",
+                          style: AppTextStyles.bodySmall,
+                        ),
                       ),
                     ],
                   ),

@@ -137,7 +137,9 @@ class _EntryFieldPopupState extends State<EntryFieldPopup> {
                       ),
                       Spacing.vLarge,
                       ResponsiveText(
-                        widget.isFromFutureCarPurchase ? "Slots we have" : "SOP",
+                        widget.isFromFutureCarPurchase
+                            ? "Slots we have"
+                            : "SOP",
                         style: AppTextStyles.bodyExtraSmall,
                       ),
                       Spacing.vSmall,
@@ -149,7 +151,9 @@ class _EntryFieldPopupState extends State<EntryFieldPopup> {
                       ),
                       Spacing.vLarge,
                       ResponsiveText(
-                        widget.isFromFutureCarPurchase ? "Cars we have" : "Fees",
+                        widget.isFromFutureCarPurchase
+                            ? "Cars we have"
+                            : "Fees",
                         style: AppTextStyles.bodyExtraSmall,
                       ),
                       Spacing.vSmall,
@@ -160,7 +164,7 @@ class _EntryFieldPopupState extends State<EntryFieldPopup> {
                         controller: _feesController,
                       ),
                       Spacing.vLarge,
-                  
+
                       if (!widget.isFromFutureCarPurchase) ...[
                         ResponsiveText(
                           "Timeline",
@@ -172,9 +176,6 @@ class _EntryFieldPopupState extends State<EntryFieldPopup> {
                           isReadOnly: true,
                           onTap: () {
                             showDatePickerDialog(context, _timelineController);
-                            debugPrint(
-                              "Picked date: \\${_timelineController.text}",
-                            );
                           },
                           controller: _timelineController,
                         ),
@@ -188,7 +189,8 @@ class _EntryFieldPopupState extends State<EntryFieldPopup> {
                               builder: (context, value, _) {
                                 return Checkbox(
                                   value: value,
-                                  onChanged: (v) => _isCompleted.value = v ?? false,
+                                  onChanged: (v) =>
+                                      _isCompleted.value = v ?? false,
                                 );
                               },
                             ),
@@ -200,7 +202,7 @@ class _EntryFieldPopupState extends State<EntryFieldPopup> {
                         ),
                         Spacing.vExtraLarge,
                       ],
-                  
+
                       if (widget.isFromFutureCarPurchase) ...[
                         BlocBuilder<FuturePurchaseCubit, FuturePurchaseState>(
                           bloc: widget.futurePurchaseCubit,
@@ -218,20 +220,31 @@ class _EntryFieldPopupState extends State<EntryFieldPopup> {
                                     : "Add",
                                 onPressed: () {
                                   if (widget.isUpdating) {
-                                    widget.futurePurchaseCubit!.updateFieldEntry(
-                                      widget.futurePurchaseModel!.copyWith(
-                                        franchiseName: _fieldTitleController.text,
-                                        slotsWeHave: int.parse(_sopController.text),
-                                        carsWeHave: int.parse(_feesController.text),
-                                      ),
-                                    );
+                                    widget.futurePurchaseCubit!
+                                        .updateFieldEntry(
+                                          widget.futurePurchaseModel!.copyWith(
+                                            franchiseName:
+                                                _fieldTitleController.text,
+                                            slotsWeHave: int.parse(
+                                              _sopController.text,
+                                            ),
+                                            carsWeHave: int.parse(
+                                              _feesController.text,
+                                            ),
+                                          ),
+                                        );
                                   } else {
                                     widget.futurePurchaseCubit!.addFieldEntry(
                                       FuturePurchaseModel(
                                         id: _fieldTitleController.text,
-                                        franchiseName: _fieldTitleController.text,
-                                        slotsWeHave: int.parse(_sopController.text),
-                                        carsWeHave: int.parse(_feesController.text),
+                                        franchiseName:
+                                            _fieldTitleController.text,
+                                        slotsWeHave: int.parse(
+                                          _sopController.text,
+                                        ),
+                                        carsWeHave: int.parse(
+                                          _feesController.text,
+                                        ),
                                       ),
                                     );
                                   }
@@ -259,7 +272,7 @@ class _EntryFieldPopupState extends State<EntryFieldPopup> {
                                 onPressed: () {
                                   final isCompleted = _isCompleted.value;
                                   if (widget.isUpdating) {
-                                    if(widget.onEdit != null){
+                                    if (widget.onEdit != null) {
                                       widget.onEdit!(
                                         widget.fieldEntryModel!.copyWith(
                                           title: _fieldTitleController.text,
@@ -275,7 +288,7 @@ class _EntryFieldPopupState extends State<EntryFieldPopup> {
                                       );
                                       Navigator.pop(context);
                                       return;
-                                    } 
+                                    }
                                     widget.fieldCubit!.updateFieldEntry(
                                       widget.fieldEntryModel!.copyWith(
                                         title: _fieldTitleController.text,
@@ -290,7 +303,7 @@ class _EntryFieldPopupState extends State<EntryFieldPopup> {
                                       ),
                                     );
                                   } else {
-                                    if(widget.onAdd != null){
+                                    if (widget.onAdd != null) {
                                       widget.onAdd!(
                                         FieldEntryModel(
                                           title: _fieldTitleController.text,

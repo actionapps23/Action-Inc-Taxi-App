@@ -17,7 +17,6 @@ class AppTextButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-
       onPressed: isLoading ? null : onPressed,
       child: isLoading
           ? SizedBox(
@@ -27,7 +26,7 @@ class AppTextButton extends StatelessWidget {
             )
           : ResponsiveText(
               text,
-              style:AppTextStyles.bodyExtraSmall.copyWith(
+              style: AppTextStyles.bodyExtraSmall.copyWith(
                 color: Theme.of(context).colorScheme.primary,
                 decoration: TextDecoration.underline,
               ),

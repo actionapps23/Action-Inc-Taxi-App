@@ -103,7 +103,6 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                               data: (purchaseState as PurchaseLoaded)
                                   .purchaseData,
                               showUpdateTaxiNumberButton: true,
-                              
                             ),
                             SizedBox(height: 24),
                             AppButton(
@@ -134,12 +133,12 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
       purchaseCubit.reset();
       await fieldCubit.loadFieldEntries();
       await purchaseCubit.getPurchaseRecord(selectionCubit.state.taxiPlateNo);
-      if(fieldCubit.state is FieldEntriesLoaded){
-        debugPrint("Field Entries Loaded: ${(fieldCubit.state as FieldEntriesLoaded).entries.length} entries");
-      }
+      if (fieldCubit.state is FieldEntriesLoaded) {}
       if (purchaseCubit.state is PurchaseLoaded) {
         final state = purchaseCubit.state as PurchaseLoaded;
-        if ((state.purchaseData.isEmpty || state.purchaseData.length != (fieldCubit.state as FieldEntriesLoaded).entries.length)  &&
+        if ((state.purchaseData.isEmpty ||
+                state.purchaseData.length !=
+                    (fieldCubit.state as FieldEntriesLoaded).entries.length) &&
             fieldCubit.state is FieldEntriesLoaded) {
           await purchaseCubit.savePurchaseRecord(
             selectionCubit.state.taxiPlateNo,
@@ -147,8 +146,6 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
           );
         }
       }
-    } catch (e) {
-      debugPrint("Error fetching purchase data: $e");
-    }
+    } catch (e) {}
   }
 }

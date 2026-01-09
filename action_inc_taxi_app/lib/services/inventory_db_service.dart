@@ -1,7 +1,6 @@
 import 'package:action_inc_taxi_app/core/models/inventory_item_model.dart';
 import 'package:action_inc_taxi_app/core/models/inventory_section_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 
 class InventoryDBService {
   static final String inventoryCollection = 'inventory';
@@ -52,7 +51,6 @@ class InventoryDBService {
       }
       return sections;
     } catch (e) {
-      debugPrint("Error fetching inventory data: $e");
       throw Exception("Error fetching inventory data: $e");
     }
   }
@@ -93,7 +91,7 @@ class InventoryDBService {
           .doc(inventorySectionModel.items[0].name)
           .update(inventorySectionModel.items[0].toJson());
     } catch (e) {
-      debugPrint("Error updating inventory item: $e");
+      ("Error updating inventory item: $e");
       throw Exception("Error updating inventory item: $e");
     }
   }

@@ -51,23 +51,27 @@ class _FranchiseTransferState extends State<FranchiseTransfer> {
     await fieldCubitForPNP.loadFieldEntries();
     await fieldCubitForLTO.loadFieldEntries();
     await fieldCubitForLTFRB.loadFieldEntries();
-    await franchiseTransferCubit.getAllChecklists(selectionCubit.state.taxiPlateNo);
+    await franchiseTransferCubit.getAllChecklists(
+      selectionCubit.state.taxiPlateNo,
+    );
 
     final fieldStateForPNP = fieldCubitForPNP.state;
     final fieldStateForLTFRB = fieldCubitForLTFRB.state;
     final fieldStateForLTO = fieldCubitForLTO.state;
     final franchiseState = franchiseTransferCubit.state;
 
-    final allDataLoaded = franchiseState is AllDataLoaded &&
+    final allDataLoaded =
+        franchiseState is AllDataLoaded &&
         fieldStateForPNP is FieldEntriesLoaded &&
         fieldStateForLTFRB is FieldEntriesLoaded &&
         fieldStateForLTO is FieldEntriesLoaded;
 
-    final needsToSaveChecklists = allDataLoaded && (
-      fieldStateForPNP.entries.length != franchiseState.pnpData.length ||
-      fieldStateForLTFRB.entries.length != franchiseState.ltfrbData.length ||
-      fieldStateForLTO.entries.length != franchiseState.ltoData.length
-    );
+    final needsToSaveChecklists =
+        allDataLoaded &&
+        (fieldStateForPNP.entries.length != franchiseState.pnpData.length ||
+            fieldStateForLTFRB.entries.length !=
+                franchiseState.ltfrbData.length ||
+            fieldStateForLTO.entries.length != franchiseState.ltoData.length);
 
     if (needsToSaveChecklists) {
       await franchiseTransferCubit.saveAllChecklists(
@@ -145,7 +149,9 @@ class _FranchiseTransferState extends State<FranchiseTransfer> {
                               state is FieldInitial ||
                               state is FieldEntryAdding ||
                               state is FieldEntryDeleting ||
-                              state is FieldEntryUpdating || franchiseTransferState is FranchiseTransferLoading) ...[
+                              state is FieldEntryUpdating ||
+                              franchiseTransferState
+                                  is FranchiseTransferLoading) ...[
                             Spacing.vMedium,
                             Center(child: CircularProgressIndicator()),
                           ] else if (state is FieldError) ...[
@@ -156,18 +162,20 @@ class _FranchiseTransferState extends State<FranchiseTransfer> {
                           ] else if (state is FieldError) ...[
                             Spacing.vMedium,
                             ResponsiveText("Error: ${state.message}"),
-                          ] else if (franchiseTransferState is AllDataLoaded) ...[
+                          ] else if (franchiseTransferState
+                              is AllDataLoaded) ...[
                             ChecklistTable(
                               title: "LTFRB Process (Franchise Transfer)",
                               fieldCubit: fieldCubitForLTFRB,
                               data: franchiseTransferState.ltfrbData,
                               onEdit: (updatedItem) {
-                                franchiseTransferCubit.updateFranchiseTransferRecord(
-                                  selectionCubit.state.taxiPlateNo,
-                                  updatedItem,
-                                  AppConstants
-                                      .lftrbRecordForFranchiseTransferCollection,
-                                );
+                                franchiseTransferCubit
+                                    .updateFranchiseTransferRecord(
+                                      selectionCubit.state.taxiPlateNo,
+                                      updatedItem,
+                                      AppConstants
+                                          .lftrbRecordForFranchiseTransferCollection,
+                                    );
                               },
                             ),
                             ChecklistTable(
@@ -204,7 +212,7 @@ class _FranchiseTransferState extends State<FranchiseTransfer> {
                     },
                   ),
                 );
-              }
+              },
             ),
           ],
         ),

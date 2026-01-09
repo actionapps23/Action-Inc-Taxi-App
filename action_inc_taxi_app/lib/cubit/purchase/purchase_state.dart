@@ -5,6 +5,7 @@ class PurchaseState {}
 class PurchaseInitial extends PurchaseState {}
 
 class PurchaseLoading extends PurchaseState {}
+
 class PurchaseLoaded extends PurchaseState {
   final List<FieldEntryModel> purchaseData;
 
@@ -30,5 +31,3 @@ class AllDataLoaded extends PurchaseState {
     required this.ltoData,
   });
 }
-
-

@@ -181,23 +181,22 @@ class _InventorySceenState extends State<InventorySceen> {
                                 ),
                               ),
                               Spacing.hLarge,
-                              Flexible(child:
-                              AppOutlineButton(
-                                    borderColor: AppColors.scaffold,
-                                    label: "Add New Item",
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 12,
-                                      vertical: 8,
-                                    ),
-                                    onPressed: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) =>
-                                            AddInventoryPopup(),
-                                      );
-                                    },
-                                  ),)
-                             
+                              Flexible(
+                                child: AppOutlineButton(
+                                  borderColor: AppColors.scaffold,
+                                  label: "Add New Item",
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 8,
+                                  ),
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => AddInventoryPopup(),
+                                    );
+                                  },
+                                ),
+                              ),
                             ],
                           ),
                           Spacing.vLarge,
