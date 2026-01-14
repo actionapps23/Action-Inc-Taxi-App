@@ -90,7 +90,11 @@ class SelectionCubit extends Cubit<SelectionState> {
     }
     switch (selectedIndex) {
       case 0:
-        Navigator.pushNamed(context, AppRoutes.carDetail);
+        Navigator.pushNamed(
+          context,
+          AppRoutes.carDetail,
+          arguments: CarDetailRouteArgs(fetchDetails: false),
+        );
         break;
       case 1:
         Navigator.pushNamed(

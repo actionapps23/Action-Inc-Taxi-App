@@ -161,6 +161,7 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                                             'Rental Information',
                                             'Renewal Date',
                                           ],
+                                          selectedTabIndex: carDetailCubit.state.selectedIndex,
                                           onTabSelected: (int index) {},
                                         ),
                                       ],
