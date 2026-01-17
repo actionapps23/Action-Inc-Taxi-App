@@ -126,8 +126,8 @@ class _DailyRentCollectionInfoScreenState
     'paymentCash': (v) {
       final raw = (v ?? '').replaceAll(RegExp(r'[^0-9\.]'), '');
       final d = double.tryParse(raw);
-      if (d == null || d <= 0) {
-        return 'Payment in cash is required and must be greater than 0.';
+      if (d == null) {
+        return 'Payment in cash is required';
       }
       return null;
     },
@@ -272,6 +272,9 @@ class _DailyRentCollectionInfoScreenState
     if (numberPlateController.text.trim().isEmpty) {
       errors['numberPlate'] = 'Number plate is required.';
     }
+    if(regNoController.text.trim().isEmpty) {
+      errors['regNo'] = 'Registration number is required.';
+    }
     if (secondDriverCnicController.text.trim().isEmpty &&
         secondDriverNameController.text.trim().isNotEmpty) {
       errors['secondDriverCnic'] =
@@ -302,9 +305,9 @@ class _DailyRentCollectionInfoScreenState
       errors['carWashFees'] = 'Car wash fees must be greater than 0.';
     }
     // Payment validation
-    if (paymentCashController.text.trim().isEmpty || paymentCashCents <= 0) {
+    if (paymentCashController.text.trim().isEmpty) {
       errors['paymentCash'] =
-          'Payment in cash is required and must be greater than 0.';
+          'Payment in cash is required';
     }
     if (paymentGCashCents < 0) {
       errors['paymentGCash'] = 'Payment in G-Cash must be 0 or greater.';
@@ -1362,7 +1365,7 @@ class _DailyRentCollectionInfoScreenState
                               if (context.mounted) {
                                 SnackBarHelper.showErrorSnackBar(
                                   context,
-                                  'Please fix the errors in the form.',
+                                 errors.values.first
                                 );
                               }
                               return;
