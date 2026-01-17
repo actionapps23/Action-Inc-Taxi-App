@@ -638,7 +638,7 @@ class DbService {
       } else if (taxiPlateNo.isNotEmpty) {
         final q = await _firestore
             .collection(carsCollection)
-            .where('car.plateNumber', isEqualTo: taxiPlateNo.toLowerCase())
+            .where('car.plateNumber', isEqualTo: taxiPlateNo.toUpperCase())
             .limit(1)
             .get();
         if (q.docs.isEmpty) return null;
