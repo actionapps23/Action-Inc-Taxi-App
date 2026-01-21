@@ -40,8 +40,8 @@ post_install do |installer|
       # Set minimum deployment target
       config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '14.0'
 
-      # EXCLUDE arm64 for simulator to fix CI/Apple Silicon build errors
-      config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'arm64'
+      # EXCLUDE arm64 for simulator to fix CI/Apple Silicon build errors (commented out for Xcode compatibility)
+      # config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'arm64'
     end
   end
 end
