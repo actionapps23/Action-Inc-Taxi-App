@@ -30,6 +30,10 @@ target 'Runner' do
   use_modular_headers!
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+
+  # Pin gRPC pods for Xcode 16 compatibility
+  pod 'gRPC-C++', '~> 1.62.0'
+  pod 'gRPC-Core', '~> 1.62.0'
 end
 
 post_install do |installer|
